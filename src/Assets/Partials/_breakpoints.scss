@@ -1,29 +1,41 @@
+/* Mixins for all breakpoints that can be used for responsiveness */
+
+/* Mixin for extra small devices like iphone 4s,se */
 @mixin xs {
   @media (min-width: $xs) {
     @content;
   }
 }
+
+/* Mixin for small devices majorly all mobile devices  */
 @mixin sm {
   @media (min-width: $sm) {
     @content;
   }
 }
+
+/* Mixin for medium devices majorly all tablet devices  */
 @mixin md {
   @media (min-width: $md) {
     @content;
   }
 }
+
+/* Mixin for large devices majorly all laptop devices  */
 @mixin lg {
   @media (min-width: $lg) {
     @content;
   }
 }
+
+/* Mixin for extra large devices majorly all PC screens  */
 @mixin xl {
   @media (min-width: $xl) {
     @content;
   }
 }
 
+/* Mixin for specific breakpoint screen */
 @mixin breakpoint($bp: 0) {
   @media (min-width: $bp) {
     @content;

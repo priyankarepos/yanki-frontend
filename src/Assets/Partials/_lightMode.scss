@@ -1,0 +1,28 @@
+/* Separating light mode styles for ease of color, bg, border-color changing */
+.home.light {
+  background: $light-bg;
+
+  main {
+    .query-form {
+      .input-field {
+        background: $light;
+        border: 1px solid $light-search-border;
+      }
+
+      .control-buttons {
+        button {
+          background: $dark;
+          color: $light;
+        }
+        .reset {
+          background: transparent;
+          color: $light-reset;
+        }
+      }
+    }
+
+    .allZmans {
+      background: $light;
+    }
+  }
+}

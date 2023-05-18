@@ -24,7 +24,7 @@ body {
 
     /* Styles for theme toggle buttons  */
     .toggle {
-      position: absolute;
+      position: fixed;
       top: 10px;
       right: 10px;
       background: transparent;
@@ -37,6 +37,10 @@ body {
         animation: slideInFromAngle 0.5s ease-in-out;
         transition: animation 0.5s ease-in-out;
       }
+    }
+    /* Increasing Height if there are all zman times, class null due to error is null when we get all times */
+    &.null {
+      height: 100%;
     }
   }
 }

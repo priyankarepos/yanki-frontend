@@ -1,3 +1,4 @@
+// Main home page component
 import React, { useState } from "react";
 // Importing Logo component
 import Logo from "./Logo";
@@ -10,9 +11,9 @@ import LightSearchIcon from "../Assets/images/Icon-search-light.svg";
 // SVG Search icon for dark theme
 import DarkSearchIcon from "../Assets/images/Icon-search-dark.svg";
 // Answer component
-import Answer from "./Answer";
+import AllZmans from "./AllZmans";
 // Custom hook
-import { useSubmitForm } from "../Hooks/useSubmitForm";
+import { useFormSubmit } from "../Hooks/useFormSubmit";
 
 const Homepage = () => {
   // All the states for interactivity
@@ -33,7 +34,7 @@ const Homepage = () => {
   };
 
   // Using custom hook for handling form submission robustly
-  const { isLoading, error, submitForm } = useSubmitForm();
+  const { isLoading, error, submitForm } = useFormSubmit();
 
   // Function for toggling theme
   const toggleTheme = () => {
@@ -67,8 +68,9 @@ const Homepage = () => {
     }
   };
   return (
-    <div className={`home ${theme} ${formSubmitted}`}>
+    <div className={`home ${theme} ${formSubmitted} ${answer.ErrMsg}`}>
       <button className="toggle" onClick={toggleTheme}>
+        {/* Thematically rendering toggle theme icon */}
         {theme === "light" ? (
           <LightModeOutlinedIcon />
         ) : (
@@ -76,27 +78,44 @@ const Homepage = () => {
         )}
       </button>
       <main>
+        {/* Rendering logo component and passing necessary props */}
         <Logo
           theme={theme}
           logoContainerStyle={logoContainerStyles}
           logoStyles={logoStyles}
         />
+        {/* Search bar form not separated due many dependencies */}
         <form className="query-form" onSubmit={handleFormSubmit}>
           <div className="input-field">
+            {/* Thematically rendering search icon */}
             {theme === "light" ? (
-              <img src={LightSearchIcon} height={22} alt="search icon" />
+              <img
+                src={LightSearchIcon}
+                height={22}
+                alt="search icon"
+                className="search-icon"
+              />
             ) : (
-              <img src={DarkSearchIcon} height={22} alt="search icon" />
+              <img
+                src={DarkSearchIcon}
+                height={22}
+                alt="search icon"
+                className="search-icon"
+              />
             )}
+            {/* Search bar input */}
             <input
               type="text"
               placeholder="What is shabbat time in Jerusalem on this friday?"
               name="searchQuery"
+              className="searchQuery"
               autoFocus
+              required
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
           </div>
+          {/* Rendering control button on changing input */}
           {searchQuery && (
             <div className="control-buttons">
               <button type="submit">Submit</button>
@@ -106,7 +125,15 @@ const Homepage = () => {
             </div>
           )}
         </form>
-        
+        {/* Rendering allZman as soon as search form is submitted */}
+        {formSubmitted && (
+          <AllZmans
+            isLoading={isLoading}
+            error={error}
+            answer={answer}
+            theme={theme}
+          />
+        )}
       </main>
     </div>
   );
