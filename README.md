@@ -1,5 +1,11 @@
 # Yanki AI frontend
 
+The Yanki-frontend is a React 18.0 project that offers users accurate and up-to-date Jewish prayer times and related religious observances with an exceptional user interface.
+
+To retrieve prayer times for a specific location and date, simply input the location ID and date in the search bar. The application will then provide you with the prayer times for that particular location and date.
+
+Experience the convenience of accessing prayer times and religious observances effortlessly through our user-friendly interface. Stay connected to your faith with Yanki-frontend.
+
 ## Available Scripts
 
 In the project directory, you can run:
