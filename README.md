@@ -1,14 +1,24 @@
 # Yanki AI frontend
 
-## Available Scripts
+The Yanki-frontend is a React 18.0 project that offers users accurate and up-to-date Jewish prayer times and related religious observances with an exceptional user interface.
 
-In the project directory, you can run:
+To retrieve prayer times for a specific location and date, simply input the location ID and date in the search bar. The application will then provide you with the prayer times for that particular location and date.
 
-### `npm install`
+Experience the convenience of accessing prayer times and religious observances effortlessly through our user-friendly interface. Stay connected to your faith with Yanki-frontend.
+
+## Project Setup:
+
+First clone the repository:
+
+    git clone https://github.com/Szirdok/yanki-frontend.git
+
+Now Inside the project directory, you can run:
+
+    npm install
 
 This command install all the required dependencies to run the project
 
-### `npm start`
+    npm start
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -16,12 +26,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+    npm run build
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -31,7 +36,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+    npm run eject
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
