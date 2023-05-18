@@ -1,0 +1,41 @@
+/* Separate styles for Dark mode */
+.home.dark {
+  /* using color variable*/
+  background: $dark-bg;
+
+  /* changing color of toggle icon */
+  .toggle {
+    color: $light;
+  }
+
+  /* Mainly color, border-color and background styles for main */
+  main {
+    .query-form {
+      .input-field {
+        background: $dark-text-bg;
+        border: 1px solid $dark-search-border;
+
+        input {
+          background: $dark-text-bg;
+          color: $light;
+        }
+      }
+
+      .control-buttons {
+        button {
+          background: $light;
+          color: $dark-bg;
+        }
+        .reset {
+          background: transparent;
+          color: $dark-reset;
+        }
+      }
+    }
+
+    .allZmans {
+      background: $dark-text-bg;
+      color: $light;
+    }
+  }
+}

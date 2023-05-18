@@ -1,0 +1,46 @@
+/* All basic styles */
+
+/* Resetting margin and padding with universal selector */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Basic styles for body */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+
+  /* Basic styles for Home component */
+  .home {
+    width: 100%;
+    height: 100vh;
+    transition: all 0.4s ease;
+
+    /* Styles for theme toggle buttons  */
+    .toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+
+      /* Styles for svg icons of theme toggle buttons */
+      svg {
+        font-size: 2.5em;
+        animation: slideInFromAngle 0.5s ease-in-out;
+        transition: animation 0.5s ease-in-out;
+      }
+    }
+    /* Increasing Height if there are all zman times, class null due to error is null when we get all times */
+    &.null {
+      height: 100%;
+    }
+  }
+}

@@ -1,7 +1,9 @@
+import Homepage from "./Components/Homepage";
+
 function App() {
   return (
     <div className="App">
-      <h1>Yanki AI</h1>
+      <Homepage />
     </div>
   );
 }

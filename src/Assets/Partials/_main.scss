@@ -1,0 +1,143 @@
+/* Separating styles for main component */
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 50em;
+  transition: all 0.4s ease;
+
+  /* Styles for extra small devices */
+  @include xs {
+    width: calc(100% - 1em);
+  }
+
+  /* Styles for small devices */
+  @include sm {
+    width: calc(100% - 5em);
+  }
+
+  /* Styles for medium devices */
+  @include md {
+    width: calc(100% - 15em);
+  }
+
+  /* Styles for large devices */
+  @include lg {
+    width: calc(100% - 15em);
+  }
+
+  /* Styles for extra large devices */
+  @include xl {
+    width: calc(100% - 35em);
+  }
+
+  /* Styles for screen above 1400px */
+  @include breakpoint(1400px) {
+    width: 50em;
+  }
+
+  /* Styles for logo component */
+  .logoContainer {
+    .logo {
+      @include xs {
+        margin-top: 10em;
+      }
+
+      @include breakpoint(1400px) {
+        margin: 10em auto 1em;
+      }
+    }
+  }
+
+  /* Styles for search form */
+  .query-form {
+    width: 100%;
+    margin: 1em 0;
+
+    /* styles for input field */
+    .input-field {
+      border-radius: 50px;
+      width: 100%;
+      padding: 1em;
+      margin-bottom: 1em;
+      transition: all 0.4s ease;
+
+      /* Style for extra small devices */
+      @include xs {
+        padding: 10px;
+      }
+
+      /* Styles for search icon */
+      .search-icon {
+        margin: 5px 0 0 0;
+        height: 22px;
+
+        /* Style for extra small devices */
+        @include xs {
+          height: 1em;
+        }
+
+        /* Style for small devices */
+        @include sm {
+          height: 18px;
+        }
+      }
+      /* Styles for searchQuery input */
+      .searchQuery {
+        border: 0;
+        margin: 0 10px;
+        transition: all 0.4s ease;
+
+        /* Style for extra small devices */
+        @include xs {
+          font-size: 1em;
+          width: 85%;
+          margin-left: 5px;
+        }
+
+        /* Style for small devices */
+        @include sm {
+          font-size: 18px;
+          margin-left: 10px;
+        }
+
+        /* Style for screens above 1400px */
+        @include breakpoint(1400px) {
+          font-size: 22px;
+          width: 90%;
+        }
+
+        /* resetting input outline on focus */
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    /* Styles for buttons */
+    .control-buttons {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: reverse-flex-end;
+
+      button {
+        padding: 10px 22px;
+        margin: auto 10px;
+        font-size: 18px;
+        border: 0;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  /* Importing styles of allZmans component */
+  @import "./allZmans";
+}
