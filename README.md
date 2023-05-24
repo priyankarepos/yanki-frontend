@@ -10,7 +10,7 @@ Experience the convenience of accessing prayer times and religious observances e
 
 First clone the repository:
 
-    git clone https://github.com/Szirdok/yanki-frontend.git
+    git clone https://github.com/SZirdok1/yanki-frontend.git
 
 Now Inside the project directory, you can run:
 
