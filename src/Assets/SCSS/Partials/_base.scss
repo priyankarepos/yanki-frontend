@@ -40,7 +40,37 @@ body {
     }
     /* Increasing Height if there are all zman times, class null due to error is null when we get all times */
     &.null {
-      height: 100%;
+      height: 830vh;
+
+      @include xs {
+        width: 100%;
+        overflow-x: hidden;
+        height: 771vh;
+      }
+
+      @include breakpoint(390px) {
+        height: 575vh;
+      }
+      @include breakpoint(414px) {
+        height: 575vh;
+      }
+      @include sm {
+        height: 600vh;
+      }
+
+      @include md {
+        height: 400vh;
+      }
+      @include lg {
+        height: 855vh;
+      }
+      @include xl {
+        height: 640vh;
+      }
+
+      @include breakpoint(1400px) {
+        height: 530vh;
+      }
     }
   }
 }
