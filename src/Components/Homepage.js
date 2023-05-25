@@ -53,13 +53,8 @@ const Homepage = () => {
     setFormSubmitted(true); // Setting form submit flag
     e.preventDefault(); // Preventing from reloading page
 
-    let formData = {
-      locationId: searchQuery.slice(0, 8),
-      inputDate: searchQuery.slice(9),
-    };
-
     try {
-      const response = await submitForm(formData);
+      const response = await submitForm(searchQuery);
       // Access the response data here
       setAnswer(response); // Set the answer state
     } catch (error) {
