@@ -15,7 +15,7 @@ export const useFormSubmit = () => {
 
     // Using try catch for asynchronous api call
     try {
-      const response = await axios.post(BASE_URL, data, {
+      const response = await axios.post(BASE_URL, String(data), {
         headers: { "Content-Type": "application/json" },
       });
 

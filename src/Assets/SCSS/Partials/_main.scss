@@ -137,6 +137,11 @@ main {
       }
     }
   }
+  .loading {
+    align-self: center;
+    height: 5em;
+    animation: rotate 2s infinite linear;
+  }
 
   /* Importing styles of allZmans component */
   @import "./allZmans";

@@ -8,10 +8,12 @@ import DarkLoadingSVG from "../Assets/images/loading-dark.svg";
 // Destructuring theme prop
 const Loader = ({ theme }) => {
   // Conditionally rendering loading image
-  return theme === "light" ? (
-    <img className="loading" src={LightLoadingSVG} alt="Loading svg" />
-  ) : (
-    <img className="loading" src={DarkLoadingSVG} alt="Loading svg" />
+  return (
+    <img
+      className="loading"
+      src={theme === "light" ? LightLoadingSVG : DarkLoadingSVG}
+      alt="Loading svg"
+    />
   );
 };
 
