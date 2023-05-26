@@ -53,22 +53,18 @@ const Homepage = () => {
     setFormSubmitted(true); // Setting form submit flag
     e.preventDefault(); // Preventing from reloading page
 
-    let formData = {
-      locationId: searchQuery.slice(0, 8),
-      inputDate: searchQuery.slice(9),
-    };
-
     try {
-      const response = await submitForm(formData);
+      const response = await submitForm(searchQuery);
       // Access the response data here
       setAnswer(response); // Set the answer state
     } catch (error) {
       // handle any errors
-      console.log(error);
     }
   };
   return (
-    <div className={`home ${theme} ${formSubmitted} ${answer.ErrMsg}`}>
+    <div
+      className={`home ${theme} ${formSubmitted} ${answer && answer.ErrMsg}`}
+    >
       <button className="toggle" onClick={toggleTheme}>
         {/* Thematically rendering toggle theme icon */}
         {theme === "light" ? (
@@ -88,21 +84,12 @@ const Homepage = () => {
         <form className="query-form" onSubmit={handleFormSubmit}>
           <div className="input-field">
             {/* Thematically rendering search icon */}
-            {theme === "light" ? (
-              <img
-                src={LightSearchIcon}
-                height={22}
-                alt="search icon"
-                className="search-icon"
-              />
-            ) : (
-              <img
-                src={DarkSearchIcon}
-                height={22}
-                alt="search icon"
-                className="search-icon"
-              />
-            )}
+            <img
+              src={theme === "light" ? LightSearchIcon : DarkSearchIcon}
+              height={22}
+              alt="search icon"
+              className="search-icon"
+            />
             {/* Search bar input */}
             <input
               type="text"

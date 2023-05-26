@@ -13,19 +13,11 @@ export const useFormSubmit = () => {
     setIsLoading(true); // Setting the loading flag
     setError(null); // Initially setting error to null
 
-    let locationId = data.locationId; // Setting location id from form data
-    let inputDate = data.inputDate; // Setting date from form data
-
-    let API_URL; // Declaring variable for api call
-    // Setting api url as per inputDate
-    if (inputDate === "") {
-      API_URL = `${BASE_URL}?locationId=${locationId}`;
-    } else {
-      API_URL = `${BASE_URL}?locationId=${locationId}&inputDate=${inputDate}`;
-    }
     // Using try catch for asynchronous api call
     try {
-      const response = await axios.post(API_URL);
+      const response = await axios.post(BASE_URL, String(data), {
+        headers: { "Content-Type": "application/json" },
+      });
 
       // handling the API response
       const responseData = response.data;
