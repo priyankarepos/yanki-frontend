@@ -8,21 +8,12 @@ const Logo = ({ theme, logoContainerStyle, logoStyles }) => {
   return (
     <div className="logoContainer" style={logoContainerStyle}>
       {/* Redering logo conditionally */}
-      {theme === "light" ? (
-        <img
-          src={Lightlogo}
-          style={logoStyles}
-          className="logo"
-          alt="Yanki logo"
-        />
-      ) : (
-        <img
-          src={Darklogo}
-          style={logoStyles}
-          className="logo"
-          alt="Yanki logo"
-        />
-      )}
+      <img
+        src={theme === "light" ? Lightlogo : Darklogo}
+        style={logoStyles}
+        className="logo"
+        alt="Yanki logo"
+      />
     </div>
   );
 };
