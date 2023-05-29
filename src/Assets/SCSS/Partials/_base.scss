@@ -42,35 +42,18 @@ body {
     &.null {
       height: 155vh;
 
-      // @include xs {
-      //   width: 100%;
-      //   overflow-x: hidden;
-      //   height: 771vh;
-      // }
+      @include xs {
+        width: 100%;
+        overflow-x: hidden;
+        height: 165vh;
+      }
 
-      // @include breakpoint(390px) {
-      //   height: 575vh;
-      // }
-      // @include breakpoint(414px) {
-      //   height: 575vh;
-      // }
-      // @include sm {
-      //   height: 600vh;
-      // }
-
-      // @include md {
-      //   height: 400vh;
-      // }
-      // @include lg {
-      //   height: 855vh;
-      // }
-      // @include xl {
-      //   height: 640vh;
-      // }
-
-      // @include breakpoint(1400px) {
-      //   height: 530vh;
-      // }
+      @include sm {
+        height: 100vh;
+      }
     }
+
+    /* Importing footer styles*/
+    @import "./footer";
   }
 }

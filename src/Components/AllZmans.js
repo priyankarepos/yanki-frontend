@@ -13,7 +13,6 @@ const AllZmans = ({ isLoading, answer, theme, error }) => {
     return (
       <section className="allZmans">
         <p>Inappropriate input, try again</p>
-        {/* <p>{error.response.data}</p> */}
       </section>
     );
   }
@@ -41,7 +40,7 @@ const AllZmans = ({ isLoading, answer, theme, error }) => {
           <SingleZman zmans={answer.Zman} />
         </>
       ) : (
-        // Displaying error message
+        // Displaying myZmanim error message
         <p>{answer.ErrMsg}</p>
       )}
     </section>
