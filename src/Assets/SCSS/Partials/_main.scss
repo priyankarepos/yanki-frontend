@@ -6,7 +6,6 @@ main {
   align-items: center;
   margin: 0 auto;
   width: 50em;
-  transition: all 0.4s ease;
 
   /* Styles for extra small devices */
   @include xs {
@@ -62,7 +61,6 @@ main {
       width: 100%;
       padding: 1em;
       margin-bottom: 1em;
-      transition: all 0.4s ease;
 
       /* Style for extra small devices */
       @include xs {
@@ -88,7 +86,6 @@ main {
       .searchQuery {
         border: 0;
         margin: 0 10px;
-        transition: all 0.4s ease;
 
         /* Style for extra small devices */
         @include xs {
@@ -129,7 +126,6 @@ main {
         border: 0;
         border-radius: 30px;
         cursor: pointer;
-        transition: all 0.4s ease;
 
         &:focus {
           outline: none;
