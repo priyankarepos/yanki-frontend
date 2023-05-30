@@ -1,9 +1,16 @@
 footer {
   position: absolute;
   bottom: 0;
-  margin: 0 0 0 1em;
+  left: 43%;
+  margin: 0 0 40px 60px;
+
+  p {
+    font-size: 12px;
+    margin-left: 5em;
+  }
 
   img {
-    width: 70%;
+    width: 45%;
+    transition-delay: width 5s ease;
   }
 }

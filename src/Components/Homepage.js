@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 // Custom hook
 import { useFormSubmit } from "../Hooks/useFormSubmit";
-// Importing MyZmanim logo
-import myZmanim from "../Assets/images/myZmanim.png";
+
 // Importing Logo component
 import Logo from "./Logo";
 // Toggle theme sun-light icon from material icons google
@@ -16,6 +15,8 @@ import LightSearchIcon from "../Assets/images/Icon-search-light.svg";
 import DarkSearchIcon from "../Assets/images/Icon-search-dark.svg";
 // Answer component
 import AllZmans from "./AllZmans";
+// Footer component
+import Footer from "./Footer";
 
 const Homepage = () => {
   // All the states for interactivity
@@ -124,10 +125,7 @@ const Homepage = () => {
           />
         )}
       </main>
-      <footer>
-        <p>Powered by</p>
-        <img src={myZmanim} alt="MyZmanim" />
-      </footer>
+      <Footer theme={theme} />
     </div>
   );
 };
