@@ -34,9 +34,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Create or Update CloudFront Invalidations
-        uses: aws-actions/aws-cloudfront-invalidate-action@v1
+        uses: softprops/action-aws-cloudfront-invalidate@v1
         with:
-          distribution-id: E2QWZEI47J8W9O
+          distribution: E2QWZEI47J8W9O
           paths: '/*'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
