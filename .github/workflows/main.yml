@@ -3,7 +3,7 @@ name: ReactJS CI/CD Pipeline
 on:
   push:
     branches:
-      - dev  
+      - dev
 
 jobs:
   build:
@@ -34,9 +34,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Create or Update CloudFront Invalidations
-        uses: dawidd6/action-cloudfront-invalidate@v1
+        uses: aws-actions/aws-cloudfront-invalidate-action@v1
         with:
-          distribution: E2QWZEI47J8W9O
+          distribution-id: E2QWZEI47J8W9O
           paths: '/*'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
