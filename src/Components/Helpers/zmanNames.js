@@ -12,7 +12,6 @@ let zmanNames = {
   SunsetDefault: "Sunset",
   NightShabbos: "Nightfall - 3 stars emerge",
   Night72fix: "Nightfall - 72 minutes",
-  TomorrowNightShabbos: "Shabbat ends",
 };
 
 export default zmanNames;
