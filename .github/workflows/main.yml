@@ -46,3 +46,4 @@ jobs:
           aws configure set default.region ${{ secrets.AWS_REGION }}
           aws cloudfront create-invalidation --distribution-id E2QWZEI47J8W9O --paths '/*'
 
+#
