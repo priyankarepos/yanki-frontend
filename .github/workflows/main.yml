@@ -36,9 +36,9 @@ jobs:
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --follow-symlinks --delete
+          args: --follow-symlinks --delete --source-dir=src/build/
         env:
-          AWS_S3_BUCKET: storage-bucket-promact
+          AWS_S3_BUCKET: storage-bucket-yanki
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
