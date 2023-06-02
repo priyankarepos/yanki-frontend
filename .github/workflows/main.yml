@@ -36,7 +36,7 @@ jobs:
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --follow-symlinks --delete --source-dir=src/build/
+          args: --follow-symlinks --delete 
         env:
           AWS_S3_BUCKET: storage-bucket-yanki
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
