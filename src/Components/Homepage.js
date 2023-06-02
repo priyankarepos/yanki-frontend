@@ -55,7 +55,7 @@ const Homepage = () => {
       <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       <main>
         {/* Rendering logo component and passing necessary props */}
-        <Logo theme={theme} searchQuery={searchQuery} answer={zmanAnswer} />
+        <Logo theme={theme} fetchError={fetchError} answer={zmanAnswer} />
         {/* Search bar form not separated due many dependencies */}
         <SearchForm
           theme={theme}

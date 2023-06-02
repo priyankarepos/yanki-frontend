@@ -11,13 +11,14 @@
   /* Mainly color, border-color and background styles for main */
   main {
     .query-form {
+      color: $light;
       .input-field {
         background: $dark-text-bg;
         border: 1px solid $dark-search-border;
 
         input {
-          background: $dark-text-bg;
           color: $light;
+          background: $dark-text-bg;
         }
       }
 
@@ -41,5 +42,11 @@
 
   footer {
     color: $light;
+
+    .contactUs {
+      a {
+        color: $light;
+      }
+    }
   }
 }

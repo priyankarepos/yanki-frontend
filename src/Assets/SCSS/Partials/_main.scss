@@ -41,7 +41,7 @@ main {
   .logoContainer {
     .logo {
       @include xs {
-        margin-top: 10em;
+        margin-top: 4em;
       }
 
       @include breakpoint(1400px) {

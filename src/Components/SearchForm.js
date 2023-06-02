@@ -9,7 +9,6 @@ const SearchForm = ({
   handleFormSubmit,
   resetStyles,
 }) => {
-  
   return (
     <form className="query-form" onSubmit={handleFormSubmit}>
       <div className="input-field">
@@ -21,7 +20,7 @@ const SearchForm = ({
 
         <input
           type="text"
-          placeholder="What time is shabbat in Jerusalem on next friday?"
+          placeholder="What time is Shabbat in Jerusalem on next friday?"
           name="searchQuery"
           className="searchQuery"
           autoFocus
@@ -29,6 +28,10 @@ const SearchForm = ({
           onChange={e => setSearchQuery(e.target.value)}
         />
       </div>
+      <p>
+        A smart chatbot that provides responses exclusively from endorsed
+        orthodox Jewish sources.
+      </p>
       {searchQuery && (
         <div className="control-buttons">
           <button type="submit">Submit</button>

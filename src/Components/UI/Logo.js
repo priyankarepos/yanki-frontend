@@ -4,16 +4,16 @@ import LightYankilogo from "../../Assets/images/logo-light.svg"; // SVG Logo for
 import DarkYankilogo from "../../Assets/images/logo-dark.svg"; // SVG Logo for dark theme
 
 // Destructuring props to access directly
-const Logo = ({ theme, searchQuery, answer }) => {
+const Logo = ({ theme, fetchError, answer }) => {
   // CSS in Js for event specific styles
   // Style for Logo based on search bar is empty or not
   const logoStyles = {
-    width: answer ? "" : "15em",
+    width: answer || fetchError ? "" : "15em",
   };
 
   // Style for Logo position based on Answer section is present or not
   const logoContainerStyle = {
-    alignSelf: answer ? "flex-start" : "center",
+    alignSelf: answer || fetchError ? "flex-start" : "center",
   };
 
   return (

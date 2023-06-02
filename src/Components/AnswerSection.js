@@ -27,7 +27,6 @@ const AnswerSection = ({
   }
 
   if (error) {
-    console.log(error);
     return (
       <section className="answer-section">
         {error.code === "ERR_BAD_RESPONSE" ? (
@@ -39,7 +38,7 @@ const AnswerSection = ({
           <p>
             As an AI, I don't have the capability to answer that. My responses
             are based on the information and knowledge provided. Try asking me
-            in a different way or contact the team to suggest more features
+            in a different way or contact the team to suggest more features.
           </p>
         )}
       </section>
