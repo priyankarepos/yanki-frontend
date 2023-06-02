@@ -25,7 +25,7 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: npm install @emotion/react
+        run: npm install @emotion/react react-scripts
         
         # Existing steps below
         
