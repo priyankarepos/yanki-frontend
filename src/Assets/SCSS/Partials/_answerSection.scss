@@ -1,0 +1,45 @@
+.answer-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 1em;
+  font-size: 22px;
+  line-height: 1.6;
+  height: max-content;
+  border: 0;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+
+  .candle {
+    width: 10em;
+    height: 10em;
+  }
+
+  .candle.false {
+    display: none;
+  }
+
+  @include xs {
+    .candle {
+      display: none;
+    }
+    font-size: 1em;
+  }
+
+  @include sm {
+    font-size: 18px;
+  }
+
+  @include md {
+    font-size: 20px;
+  }
+
+  @include lg {
+    font-size: 22px;
+    .candle {
+      display: block;
+    }
+  }
+}

@@ -41,7 +41,7 @@ main {
   .logoContainer {
     .logo {
       @include xs {
-        margin-top: 10em;
+        margin-top: 4em;
       }
 
       @include breakpoint(1400px) {
@@ -50,95 +50,14 @@ main {
     }
   }
 
-  /* Styles for search form */
-  .query-form {
-    width: 100%;
-    margin: 1em 0;
-
-    /* styles for input field */
-    .input-field {
-      border-radius: 50px;
-      width: 100%;
-      padding: 1em;
-      margin-bottom: 1em;
-
-      /* Style for extra small devices */
-      @include xs {
-        padding: 10px;
-      }
-
-      /* Styles for search icon */
-      .search-icon {
-        margin: 5px 0 0 0;
-        height: 22px;
-
-        /* Style for extra small devices */
-        @include xs {
-          height: 1em;
-        }
-
-        /* Style for small devices */
-        @include sm {
-          height: 18px;
-        }
-      }
-      /* Styles for searchQuery input */
-      .searchQuery {
-        border: 0;
-        margin: 0 10px;
-
-        /* Style for extra small devices */
-        @include xs {
-          font-size: 1em;
-          width: 85%;
-          margin-left: 5px;
-        }
-
-        /* Style for small devices */
-        @include sm {
-          font-size: 18px;
-          margin-left: 10px;
-        }
-
-        /* Style for screens above 1400px */
-        @include breakpoint(1400px) {
-          font-size: 22px;
-          width: 90%;
-        }
-
-        /* resetting input outline on focus */
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-
-    /* Styles for buttons */
-    .control-buttons {
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: reverse-flex-end;
-
-      button {
-        padding: 10px 22px;
-        margin: auto 10px;
-        font-size: 18px;
-        border: 0;
-        border-radius: 30px;
-        cursor: pointer;
-
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-  }
   .loading {
     align-self: center;
     height: 5em;
     animation: rotate 2s infinite linear;
   }
 
-  /* Importing styles of allZmans component */
-  @import "./allZmans";
+  /* Search form styles */
+  @import "./searchForm";
+  /* Answer section styles */
+  @import "./answerSection";
 }

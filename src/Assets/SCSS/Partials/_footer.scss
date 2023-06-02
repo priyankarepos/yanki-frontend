@@ -1,13 +1,32 @@
 footer {
-  position: absolute;
-  bottom: 0;
-  margin: 0 0 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 5em;
+  width: 100%;
+  font-size: 12px;
 
-  p {
-    font-size: 12px;
+  .myZmanim {
+    margin: 1em 0 0 5em;
+
+    img {
+      width: 45%;
+    }
   }
 
-  img {
-    width: 45%;
+  .contactUs {
+    margin: 0 5em 0 0;
+    text-align: center;
+    text-decoration: none;
+
+    a {
+      color: $dark;
+      font-weight: 550;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }

@@ -1,40 +1,25 @@
 // Main home page component
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // Custom hook
 import { useFormSubmit } from "../Hooks/useFormSubmit";
-
+// ThemeToggle component
+import ThemeToggle from "./UI/ThemeToggle";
 // Importing Logo component
-import Logo from "./Logo";
-// Toggle theme sun-light icon from material icons google
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-// Toggle theme moon-dark icon from material icons google
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-// SVG Search icon for light theme
-import LightSearchIcon from "../Assets/images/Icon-search-light.svg";
-// SVG Search icon for dark theme
-import DarkSearchIcon from "../Assets/images/Icon-search-dark.svg";
-// Answer component
-import AllZmans from "./AllZmans";
+import Logo from "./UI/Logo";
+// Search Form component
+import SearchForm from "./SearchForm";
+// Answer Section component
+import AnswerSection from "./AnswerSection";
 // Footer component
-import Footer from "./Footer";
+import Footer from "./UI/Footer";
 
 const Homepage = () => {
   // All the states for interactivity
   const [theme, setTheme] = useState("light"); // State for theme toggle
   const [searchQuery, setSearchQuery] = useState(""); // State for search bar input
-  const [answer, setAnswer] = useState(""); // State for Answer section
-  const [formSubmitted, setFormSubmitted] = useState(false); // Bool state for checking if form is submitted
-
-  // CSS in Js for event specific styles
-  // Style for Logo based on search bar is empty or not
-  const logoStyles = {
-    width: searchQuery ? "" : "15em",
-  };
-
-  // Style for Logo position based on Answer section is present or not
-  const logoContainerStyles = {
-    alignSelf: answer ? "flex-start" : "center",
-  };
+  const [isFormSubmitted, setFormSubmitted] = useState(false); // Bool state for checking if form is submitted
+  const [zmanAnswer, setZmanAnswer] = useState(""); // State for Answer section
+  const [fetchError, setFetchError] = useState(null); // State for error handling
 
   // Using custom hook for handling form submission robustly
   const { isLoading, error, submitForm } = useFormSubmit();
@@ -48,82 +33,44 @@ const Homepage = () => {
   const resetStyles = () => {
     setSearchQuery(""); // Resetting searchbar input
     setFormSubmitted(false); // Resetting flag for form submission
-    setAnswer(""); // Resetting Answer state
+    setZmanAnswer(""); // Resetting Answer state
+    setFetchError(""); // Resetting error state
   };
 
   // Function for handling form submission using custom hook
   const handleFormSubmit = async e => {
     setFormSubmitted(true); // Setting form submit flag
     e.preventDefault(); // Preventing from reloading page
-
-    try {
-      const response = await submitForm(searchQuery);
-      // Access the response data here
-      setAnswer(response); // Set the answer state
-    } catch (error) {
-      // handle any errors
-    }
+    const response = await submitForm(searchQuery);
+    // Access the response data here
+    setZmanAnswer(response); // Set the answer state
   };
+
+  useEffect(() => {
+    setFetchError(error);
+  }, [error]);
+
   return (
-    <div
-      className={`home ${theme} ${formSubmitted} ${answer && answer.ErrMsg}`}
-    >
-      <button className="toggle" onClick={toggleTheme}>
-        {/* Thematically rendering toggle theme icon */}
-        {theme === "light" ? (
-          <LightModeOutlinedIcon />
-        ) : (
-          <DarkModeOutlinedIcon />
-        )}
-      </button>
+    <div className={`home ${theme}`}>
+      <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       <main>
         {/* Rendering logo component and passing necessary props */}
-        <Logo
-          theme={theme}
-          logoContainerStyle={logoContainerStyles}
-          logoStyles={logoStyles}
-        />
+        <Logo theme={theme} fetchError={fetchError} answer={zmanAnswer} />
         {/* Search bar form not separated due many dependencies */}
-        <form className="query-form" onSubmit={handleFormSubmit}>
-          <div className="input-field">
-            {/* Thematically rendering search icon */}
-            <img
-              src={theme === "light" ? LightSearchIcon : DarkSearchIcon}
-              height={22}
-              alt="search icon"
-              className="search-icon"
-            />
-            {/* Search bar input */}
-            <input
-              type="text"
-              placeholder="What is shabbat time in Jerusalem on this friday?"
-              name="searchQuery"
-              className="searchQuery"
-              autoFocus
-              required
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-          {/* Rendering control button on changing input */}
-          {searchQuery && (
-            <div className="control-buttons">
-              <button type="submit">Submit</button>
-              <button className="reset" onClick={resetStyles}>
-                Reset
-              </button>
-            </div>
-          )}
-        </form>
-        {/* Rendering allZman as soon as search form is submitted */}
-        {formSubmitted && (
-          <AllZmans
-            isLoading={isLoading}
-            error={error}
-            answer={answer}
-            theme={theme}
-          />
-        )}
+        <SearchForm
+          theme={theme}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          handleFormSubmit={handleFormSubmit}
+          resetStyles={resetStyles}
+        />
+        <AnswerSection
+          isLoading={isLoading}
+          error={fetchError}
+          zmanAnswer={zmanAnswer}
+          theme={theme}
+          isFormSubmitted={isFormSubmitted}
+        />
       </main>
       <Footer theme={theme} />
     </div>

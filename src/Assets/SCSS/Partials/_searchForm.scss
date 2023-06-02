@@ -1,0 +1,77 @@
+.query-form {
+  width: 100%;
+  margin: 1em 0;
+
+  .input-field {
+    border-radius: 50px;
+    width: 100%;
+    padding: 1em;
+    margin-bottom: 1em;
+
+    @include xs {
+      padding: 10px;
+    }
+
+    img {
+      margin: 5px 0 0 0;
+      height: 22px;
+
+      @include xs {
+        height: 1em;
+      }
+
+      @include sm {
+        height: 18px;
+      }
+    }
+    input {
+      border: 0;
+      margin: 0 10px;
+
+      @include xs {
+        font-size: 1em;
+        width: 85%;
+        margin-left: 5px;
+      }
+
+      @include sm {
+        font-size: 18px;
+        margin-left: 10px;
+      }
+
+      @include breakpoint(1400px) {
+        font-size: 22px;
+        width: 90%;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+  p {
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .control-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: reverse-flex-end;
+    margin: 1em 0;
+
+    button {
+      padding: 10px 22px;
+      margin: auto 10px;
+      font-size: 18px;
+      border: 0;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}

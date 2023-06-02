@@ -28,6 +28,7 @@ body {
       right: 10px;
       background: transparent;
       border: none;
+      outline: none;
       cursor: pointer;
 
       /* Styles for svg icons of theme toggle buttons */
@@ -35,20 +36,6 @@ body {
         font-size: 2.5em;
         animation: slideInFromAngle 0.5s ease-in-out;
         transition: animation 0.5s ease-in-out;
-      }
-    }
-    /* Increasing Height if there are all zman times, class null due to error is null when we get all times */
-    &.null {
-      height: 155vh;
-
-      @include xs {
-        width: 100%;
-        overflow-x: hidden;
-        height: 165vh;
-      }
-
-      @include sm {
-        height: 100vh;
       }
     }
 
