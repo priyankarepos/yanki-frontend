@@ -25,13 +25,10 @@ jobs:
           node-version: 14
 
       - name: Install dependencies
-        run: |
-          # npm install react @emotion/react react-dom react-scripts
-          # npm install web-vitals
-           npm i
+        run: npm i
 
       - name: Build
-        run: npm run build
+        run: npm run build:dev
 
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
