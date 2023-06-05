@@ -16,17 +16,15 @@ footer {
   }
 
   .contactUs {
-    margin: 0 5em 0 0;
+    margin: 0 2.5em 0 0;
     text-align: center;
     text-decoration: none;
 
     a {
       color: $dark;
       font-weight: 550;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      font-size: 12px;
+      text-decoration: underline;
     }
   }
 }

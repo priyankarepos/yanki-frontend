@@ -26,9 +26,10 @@ const SearchForm = ({
           autoFocus
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
+          required
         />
       </div>
-      <p>
+      <p className="tagline">
         A smart chatbot that provides responses exclusively from endorsed
         orthodox Jewish sources.
       </p>
