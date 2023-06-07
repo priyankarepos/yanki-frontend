@@ -1,3 +1,4 @@
+/* Styles for footer component */
 footer {
   display: flex;
   justify-content: space-between;
@@ -7,6 +8,7 @@ footer {
   width: 100%;
   font-size: 12px;
 
+  /* Styles for partnership with myZmanim */
   .myZmanim {
     margin: 1em 0 0 5em;
 
@@ -15,6 +17,7 @@ footer {
     }
   }
 
+  /* Alignment for contactUs hyper link */
   .contactUs {
     margin: 0 2.5em 0 0;
     text-align: center;
