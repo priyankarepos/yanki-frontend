@@ -18,7 +18,7 @@ const Logo = ({ theme, fetchError, answer }) => {
 
   return (
     <div className="logoContainer" style={logoContainerStyle}>
-      {/* Rendering logo conditionally */}
+      {/* Rendering svg logo conditionally */}
       <img
         src={theme === "light" ? LightYankilogo : DarkYankilogo}
         style={logoStyles}

@@ -52,11 +52,12 @@ const Homepage = () => {
 
   return (
     <div className={`home ${theme}`}>
+      {/* Theme toggler */}
       <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       <main>
-        {/* Rendering logo component and passing necessary props */}
+        {/* Logo component */}
         <Logo theme={theme} fetchError={fetchError} answer={zmanAnswer} />
-        {/* Search bar form not separated due many dependencies */}
+        {/* Search form component */}
         <SearchForm
           theme={theme}
           searchQuery={searchQuery}
@@ -64,6 +65,7 @@ const Homepage = () => {
           handleFormSubmit={handleFormSubmit}
           resetStyles={resetStyles}
         />
+        {/* Answer section component */}
         <AnswerSection
           isLoading={isLoading}
           error={fetchError}
@@ -72,6 +74,7 @@ const Homepage = () => {
           isFormSubmitted={isFormSubmitted}
         />
       </main>
+      {/* Footer component */}
       <Footer theme={theme} />
     </div>
   );
