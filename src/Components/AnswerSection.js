@@ -4,6 +4,7 @@ import LightLoadingSVG from "../Assets/images/loading-light.svg";
 import DarkLoadingSVG from "../Assets/images/loading-dark.svg";
 import candles from "../Assets/images/candles.json";
 
+// Destructuring all the needful props
 const AnswerSection = ({
   isLoading,
   error,
@@ -11,11 +12,15 @@ const AnswerSection = ({
   theme,
   isFormSubmitted,
 }) => {
+  // State for displaying candle
   const [showCandle, setShowCandle] = useState(true);
 
+  // Handling toggle for displaying candle
   const toggleCandle = () => {
     setShowCandle(prev => !prev);
   };
+
+  // Rendering Loading svg
   if (isLoading) {
     return (
       <img
@@ -26,6 +31,7 @@ const AnswerSection = ({
     );
   }
 
+  // Render if there is error
   if (error) {
     return (
       <section className="answer-section">
@@ -45,10 +51,13 @@ const AnswerSection = ({
     );
   }
 
+  // Render if form is submitted and has the response with zman
   if (isFormSubmitted && zmanAnswer) {
     return (
       <section className="answer-section" onClick={toggleCandle}>
+        {/* Lottie component for displaying candle */}
         <Lottie animationData={candles} className={`candle ${showCandle}`} />
+        {/* Final response with zman time in sentence format */}
         <p>{zmanAnswer.response}</p>
       </section>
     );

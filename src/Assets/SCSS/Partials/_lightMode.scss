@@ -1,7 +1,9 @@
 /* Separating light mode styles for ease of color, bg, border-color changing */
 .home.light {
+  /* using color variable*/
   background: $light-bg;
 
+  /* Mainly color, border-color and background styles for main */
   main {
     .query-form {
       .input-field {

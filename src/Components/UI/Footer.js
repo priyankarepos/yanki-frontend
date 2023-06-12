@@ -3,12 +3,14 @@ import myZmanimLight from "../../Assets/images/myZmanim-light.png";
 import myZmanimDark from "../../Assets/images/myZmanim-dark.png";
 
 const Footer = ({ theme }) => {
-  const recipientEmail = "example@example.com";
+  const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
   const emailBody = "Email body";
 
   return (
+    // Semantic footer
     <footer>
+      {/* First container for partnership logo */}
       <div className="myZmanim">
         <p>In partnership with</p>
         <img
@@ -16,6 +18,7 @@ const Footer = ({ theme }) => {
           alt="MyZmanim"
         />
       </div>
+      {/* Container for contact us logo */}
       <div className="contactUs">
         <p>Submit your platform or content for revision,</p>
         <p>

@@ -1,3 +1,4 @@
+/* Styles for Answer section component */
 .answer-section {
   display: flex;
   flex-direction: row;
@@ -12,30 +13,37 @@
   cursor: pointer;
   transition: all 0.4s ease;
 
+  /* Resizing lottie image of Candle */
   .candle {
     width: 10em;
     height: 10em;
+
+    &.false {
+      display: none;
+    }
   }
 
-  .candle.false {
-    display: none;
-  }
-
+  /* Responsiveness for whole component using mixins  */
+  /* Extra small screens */
   @include xs {
+    font-size: 1em;
+
     .candle {
       display: none;
     }
-    font-size: 1em;
   }
 
+  /* Small screens */
   @include sm {
     font-size: 18px;
   }
 
+  /* Medium screens */
   @include md {
     font-size: 20px;
   }
 
+  /* Large screens */
   @include lg {
     font-size: 22px;
     .candle {

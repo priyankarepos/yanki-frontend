@@ -1,11 +1,9 @@
+/* Styles for search query form */
 .query-form {
   width: 100%;
   margin: 1em 0;
 
-  .tagline {
-    font-size: 14px;
-  }
-
+  /* Styles for input field div */
   .input-field {
     border-radius: 50px;
     width: 100%;
@@ -16,6 +14,7 @@
       padding: 10px;
     }
 
+    /* Arranging search icon */
     img {
       margin: 5px 0 0 0;
       height: 22px;
@@ -28,7 +27,9 @@
         height: 18px;
       }
     }
-    input {
+
+    /* Styles for Input field */
+    .searchQuery {
       border: 0;
       margin: 0 10px;
 
@@ -53,11 +54,15 @@
       }
     }
   }
-  p {
+
+  /* Styles for tagline */
+  .tagline {
+    font-size: 14px;
     font-weight: 500;
     text-align: center;
   }
 
+  /* Styles for control buttons like submit and reset */
   .control-buttons {
     display: flex;
     flex-direction: row-reverse;

@@ -40,16 +40,19 @@ main {
   /* Styles for logo component */
   .logoContainer {
     .logo {
+      /* Styles for extra small devices */
       @include xs {
         margin-top: 4em;
       }
 
+      /* Styles for screen above 1400px */
       @include breakpoint(1400px) {
         margin: 10em auto 1em;
       }
     }
   }
 
+  /* Styles for loading component */
   .loading {
     align-self: center;
     height: 5em;
