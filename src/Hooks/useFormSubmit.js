@@ -7,7 +7,6 @@ export const useFormSubmit = () => {
   const [isLoading, setIsLoading] = useState(false); // State for loading flag
   const [error, setError] = useState(null); // State for error handling
   const BASE_URL = process.env.REACT_APP_API_URL; // Accessing base url from .env
-  const API_URL = BASE_URL + "/api/GetMyZmanimWithNLP/getAllanswer";
 
   // Using async await due to api call
   const submitForm = async data => {
@@ -16,7 +15,7 @@ export const useFormSubmit = () => {
 
     // Using try catch for asynchronous api call
     try {
-      const response = await axios.post(API_URL, String(data), {
+      const response = await axios.post(BASE_URL, String(data), {
         headers: { "Content-Type": "application/json" },
       });
 
