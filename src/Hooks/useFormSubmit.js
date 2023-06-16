@@ -13,10 +13,11 @@ export const useFormSubmit = () => {
     setIsLoading(true); // Setting the loading flag
     setError(null); // Initially setting error to null
 
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // Using try catch for asynchronous api call
     try {
       const response = await axios.post(BASE_URL, String(data), {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", TimeZone: timezone },
       });
 
       // handling the API response
