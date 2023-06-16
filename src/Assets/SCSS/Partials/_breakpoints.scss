@@ -35,9 +35,17 @@
   }
 }
 
+/* Mixin for landscape modes */
+@mixin landscape {
+  @media (max-height: 600px) {
+    @content;
+  }
+}
+
 /* Mixin for specific breakpoint screen */
 @mixin breakpoint($bp: 0) {
   @media (min-width: $bp) {
     @content;
   }
 }
+

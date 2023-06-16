@@ -39,6 +39,16 @@ body {
       }
     }
 
+    /* Arranging height for landscape modes */
+    @include landscape {
+      height: 100%;
+    }
+
+    /* Arranging height for Nesthub device */
+    @media (width: 1024px) {
+      height: 126vh;
+    }
+
     /* Importing footer styles*/
     @import "./footer";
   }

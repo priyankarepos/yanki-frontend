@@ -7,6 +7,7 @@ footer {
   bottom: 5em;
   width: 100%;
   font-size: 12px;
+  z-index: 0;
   transition: all 0.4s ease;
 
   /* Styles for partnership with myZmanim */
@@ -20,7 +21,7 @@ footer {
 
   /* Alignment for contactUs hyper link */
   .contactUs {
-    margin: 0 2.5em 0 0;
+    margin: 0 2em 0 0;
     text-align: center;
     text-decoration: none;
 
@@ -30,5 +31,10 @@ footer {
       font-size: 12px;
       text-decoration: underline;
     }
+  }
+  @include landscape {
+    position: relative;
+    bottom: -10%;
+    margin: 3.5em 0 0 0;
   }
 }
