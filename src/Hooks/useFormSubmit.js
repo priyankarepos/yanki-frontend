@@ -1,8 +1,11 @@
 // useFormSubmit.js a custom hook
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios"; // Using axios for api calls
+import { Context } from "../App";
 
 export const useFormSubmit = () => {
+  // From context
+  const { userCity } = useContext(Context);
   // All state initialization
   const [isLoading, setIsLoading] = useState(false); // State for loading flag
   const [error, setError] = useState(null); // State for error handling
@@ -17,12 +20,15 @@ export const useFormSubmit = () => {
     // Using try catch for asynchronous api call
     try {
       const response = await axios.post(BASE_URL, String(data), {
-        headers: { "Content-Type": "application/json", TimeZone: timezone },
+        headers: {
+          "Content-Type": "application/json",
+          TimeZone: timezone,
+          usrCity: userCity,
+        },
       });
 
       // handling the API response
-      const responseData = response.data;
-
+      const responseData = response;
       // Resetting loading flag
       setIsLoading(false);
 
@@ -30,9 +36,8 @@ export const useFormSubmit = () => {
     } catch (error) {
       // Resetting loading flag
       setIsLoading(false);
-
       // handling any errors
-      setError(error);
+      error.response ? setError(error.response.data) : setError(error.message);
     }
   };
 

@@ -34,7 +34,8 @@
       }
     }
 
-    .answer-section {
+    .answer-section,
+    .error-section {
       background: $dark-text-bg;
       color: $light;
     }
