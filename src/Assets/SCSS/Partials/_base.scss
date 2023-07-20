@@ -38,8 +38,42 @@ body {
         transition: animation 0.5s ease-in-out;
       }
     }
+    /* Styles for main body when we have to display list of prayers */
     &.allPrayer {
-      height: 111vh;
+      overflow-x: hidden;
+      @include xs {
+        height: 130vh;
+      }
+
+      @include breakpoint(390px) {
+        height: 104vh;
+      }
+      @include breakpoint(414px) {
+        height: 100vh;
+      }
+      @include sm {
+        height: 132vh;
+      }
+
+      @include md {
+        height: 100vh;
+      }
+      @include lg {
+        height: 180vh;
+      }
+      @include xl {
+        height: 135vh;
+      }
+
+      @include breakpoint(1400px) {
+        height: 125vh;
+      }
+      footer {
+        @include xs {
+          position: relative;
+          bottom: 10px;
+        }
+      }
     }
 
     /* Arranging height for landscape modes */
@@ -53,6 +87,6 @@ body {
     }
 
     /* Importing footer styles*/
-    @import "./footer";
   }
+  @import "./footer";
 }
