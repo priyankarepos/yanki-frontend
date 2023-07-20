@@ -8,8 +8,12 @@ import ThemeToggle from "./UI/ThemeToggle";
 import Logo from "./UI/Logo";
 // Search Form component
 import SearchForm from "./SearchForm";
+// Loader Component
+import Loader from "./UI/Loader";
 // Answer Section component
 import AnswerSection from "./AnswerSection";
+// Error Component
+import Error from "./UI/Error";
 // Footer component
 import Footer from "./UI/Footer";
 
@@ -19,7 +23,8 @@ const Homepage = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search bar input
   const [isFormSubmitted, setFormSubmitted] = useState(false); // Bool state for checking if form is submitted
   const [zmanAnswer, setZmanAnswer] = useState(""); // State for Answer section
-  const [fetchError, setFetchError] = useState(null); // State for error handling
+  const [fetchError, setFetchError] = useState(""); // State for error handling
+  const [bgHeight, setBgHeight] = useState("");
 
   // Using custom hook for handling form submission robustly
   const { isLoading, error, submitForm } = useFormSubmit();
@@ -39,6 +44,8 @@ const Homepage = () => {
 
   // Function for handling form submission using custom hook
   const handleFormSubmit = async e => {
+    setZmanAnswer("");
+    setFetchError("");
     setFormSubmitted(true); // Setting form submit flag
     e.preventDefault(); // Preventing from reloading page
     const response = await submitForm(searchQuery);
@@ -50,8 +57,14 @@ const Homepage = () => {
     setFetchError(error);
   }, [error]);
 
+  useEffect(() => {
+    zmanAnswer && zmanAnswer.data.isAllPrayer
+      ? setBgHeight("allPrayer")
+      : setBgHeight("");
+  }, [zmanAnswer, bgHeight]);
+
   return (
-    <div className={`home ${theme}`}>
+    <div className={`home ${theme} ${bgHeight}`}>
       {/* Theme toggler */}
       <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       <main>
@@ -65,6 +78,10 @@ const Homepage = () => {
           handleFormSubmit={handleFormSubmit}
           resetStyles={resetStyles}
         />
+
+        {/* Rendering Loading svg */}
+        <Loader theme={theme} isLoading={isLoading} />
+
         {/* Answer section component */}
         <AnswerSection
           isLoading={isLoading}
@@ -73,6 +90,9 @@ const Homepage = () => {
           theme={theme}
           isFormSubmitted={isFormSubmitted}
         />
+
+        {/* Render if there is error */}
+        <Error error={error} />
       </main>
       {/* Footer component */}
       <Footer theme={theme} />

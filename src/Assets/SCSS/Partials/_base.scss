@@ -38,6 +38,9 @@ body {
         transition: animation 0.5s ease-in-out;
       }
     }
+    &.allPrayer {
+      height: 111vh;
+    }
 
     /* Arranging height for landscape modes */
     @include landscape {

@@ -1,5 +1,7 @@
 /* Styles for Answer section component */
-.answer-section {
+
+.answer-section,
+.error-section {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -13,6 +15,14 @@
   cursor: pointer;
   margin-bottom: 2em;
   transition: all 0.4s ease;
+
+  &.list {
+    flex-direction: column;
+    margin-bottom: 2em;
+    table {
+      width: 100%;
+    }
+  }
 
   /* Resizing lottie image of Candle */
   .candle {

@@ -1,0 +1,16 @@
+export const zmanName = {
+  Dawn: "Dawn",
+  EarliestTalisTefillin: "Earliest Talis & Tefillin",
+  Sunrise: "Sunrise",
+  LatestShemaMagenAvraham: "Latest Shema Magen Avraham",
+  LatestShemaGraBaalHaTanya: "Latest shema Gra & Baal HaTanya",
+  LatestShachrisGraBaalHaTanya: "Latest shachris Gra & Baal HaTanya",
+  Midday: "Midday",
+  EarliestMincha: "Earliest mincha",
+  PlagHamincha: "Plag hamincha",
+  Sunset: "Sunset",
+  Nightfall3StarsEmerge: "Nightfall - 3 stars emerge",
+  Nightfall72Minutes: "Nightfall - 72 minutes",
+  RTukaccinsky: "R' Tukaccinsky",
+  RMosheFeinstein: "R' Moshe Feinstein",
+};

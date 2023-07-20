@@ -6,7 +6,10 @@ import LightLoadingSVG from "../../Assets/images/loading-light.svg";
 import DarkLoadingSVG from "../../Assets/images/loading-dark.svg";
 
 // Destructuring theme prop
-const Loader = ({ theme }) => {
+const Loader = ({ theme, isLoading }) => {
+  if (!isLoading) {
+    return <></>;
+  }
   // Rendering loading svg
   return (
     <img
