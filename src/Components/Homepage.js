@@ -9,7 +9,8 @@ import Logo from "./UI/Logo";
 // Search Form component
 import SearchForm from "./SearchForm";
 // Loader Component
-import Loader from "./UI/Loader";
+import DarkLoader from "./UI/Loader/DarkLoader";
+import LightLoader from "./UI/Loader/LightLoader";
 // Answer Section component
 import AnswerSection from "./AnswerSection";
 // Error Component
@@ -19,7 +20,7 @@ import Footer from "./UI/Footer";
 
 const Homepage = () => {
   // All the states for interactivity
-  const [theme, setTheme] = useState("light"); // State for theme toggle
+  const [theme, setTheme] = useState("dark"); // State for theme toggle
   const [searchQuery, setSearchQuery] = useState(""); // State for search bar input
   const [isFormSubmitted, setFormSubmitted] = useState(false); // Bool state for checking if form is submitted
   const [zmanAnswer, setZmanAnswer] = useState(""); // State for Answer section
@@ -58,8 +59,10 @@ const Homepage = () => {
   }, [error]);
 
   useEffect(() => {
-    zmanAnswer && zmanAnswer.data.isAllPrayer
-      ? setBgHeight("allPrayer")
+    zmanAnswer
+      ? zmanAnswer.data.isAllPrayer
+        ? setBgHeight("allPrayer")
+        : setBgHeight("singlePrayer")
       : setBgHeight("");
   }, [zmanAnswer, bgHeight]);
 
@@ -80,8 +83,7 @@ const Homepage = () => {
         />
 
         {/* Rendering Loading svg */}
-        <Loader theme={theme} isLoading={isLoading} />
-
+        {isLoading && (theme === "light" ? <LightLoader /> : <DarkLoader />)}
         {/* Answer section component */}
         <AnswerSection
           isLoading={isLoading}

@@ -58,6 +58,10 @@ main {
     height: 5em;
     animation: rotate 2s infinite linear;
   }
+  .static-loader {
+    position: relative;
+    top: -51px;
+  }
 
   /* Search form styles */
   @import "./searchForm";

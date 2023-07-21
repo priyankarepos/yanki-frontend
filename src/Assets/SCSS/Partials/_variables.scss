@@ -5,15 +5,17 @@ $light: #fff;
 $dark: #000;
 
 $light-bg: #fafafa;
-$dark-bg: #26283e;
+$dark-bg: #063762;
 
 $light-search-border: #cecece;
-$dark-search-border: #4c4d54;
+$dark-search-border: $dark-bg;
 
-$dark-text-bg: #151728;
+$dark-text-bg: #13538b;
 
 $light-reset: #707070;
-$dark-reset: #c6c6c6;
+$dark-reset: #6fa8dd;
+
+$dark-placeholder: #6fa8dd;
 
 /* variables for all device breakpoints */
 $xs: 0;
