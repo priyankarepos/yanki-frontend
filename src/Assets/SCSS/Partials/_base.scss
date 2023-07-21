@@ -68,12 +68,6 @@ body {
       @include breakpoint(1400px) {
         height: 125vh;
       }
-      footer {
-        @include xs {
-          position: relative;
-          bottom: 10px;
-        }
-      }
     }
 
     /* Arranging height for landscape modes */
@@ -86,7 +80,8 @@ body {
       height: 126vh;
     }
 
+    @import "./main";
     /* Importing footer styles*/
+    @import "./footer";
   }
-  @import "./footer";
 }

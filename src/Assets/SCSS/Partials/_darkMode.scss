@@ -20,6 +20,10 @@
           color: $light;
           background: $dark-text-bg;
         }
+
+        ::placeholder {
+          color: $dark-placeholder;
+        }
       }
 
       .control-buttons {

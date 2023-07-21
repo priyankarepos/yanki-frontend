@@ -1,4 +1,5 @@
 export const zmanName = {
+  CandleLighting: "Candle lighting",
   Dawn: "Dawn",
   EarliestTalisTefillin: "Earliest Talis & Tefillin",
   Sunrise: "Sunrise",

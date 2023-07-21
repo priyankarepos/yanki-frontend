@@ -8,17 +8,17 @@
   width: 100%;
   padding: 1em;
   font-size: 22px;
-  line-height: 1.6;
-  height: max-content;
   border: 0;
   border-radius: 20px;
   cursor: pointer;
-  margin-bottom: 2em;
   transition: all 0.4s ease;
 
   &.list {
     flex-direction: column;
-    margin-bottom: 2em;
+    line-height: 1.6;
+    p {
+      text-align: center;
+    }
     table {
       width: 100%;
     }
@@ -34,6 +34,11 @@
     }
   }
 
+  p {
+    width: 40em;
+    line-height: 1.6;
+  }
+
   /* Responsiveness for whole component using mixins  */
   /* Extra small screens */
   @include xs {
@@ -41,6 +46,9 @@
 
     .candle {
       display: none;
+    }
+    p {
+      width: 100%;
     }
   }
 

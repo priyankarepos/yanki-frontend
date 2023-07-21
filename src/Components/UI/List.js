@@ -11,15 +11,9 @@ const List = ({ allZmans }) => {
       <table>
         <tbody>
           {allZmans.slice(1).map(([zman, time]) => (
-            <tr key={zman}>
-              <td key={zman} className="ZmanName">
-                {zmanName[zman]}
-              </td>
-              {zman === "City" ? (
-                <td key={time}>{String(time)}</td>
-              ) : (
-                <td key={time}>{String(time).slice(11, -3)}</td>
-              )}
+            <tr key={zman} className={zman}>
+              <td key={zman}>{zmanName[zman]}</td>
+              <td key={time}>{String(time).slice(11, -3)}</td>
             </tr>
           ))}
         </tbody>

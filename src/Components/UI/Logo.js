@@ -8,7 +8,7 @@ const Logo = ({ theme, fetchError, answer }) => {
   // CSS in Js for event specific styles
   // Style for Logo based on search bar is empty or not
   const logoStyles = {
-    width: answer || fetchError ? "" : "15em",
+    width: answer || fetchError ? "10em" : "15em",
   };
 
   // Style for Logo position based on Answer section is present or not
