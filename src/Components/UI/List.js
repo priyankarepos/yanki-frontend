@@ -1,6 +1,11 @@
 import React from "react";
 import { zmanName } from "../Helpers/Helper";
 const List = ({ allZmans }) => {
+  if (!allZmans[11][1]) {
+    allZmans = allZmans.filter(([zman, time]) => {
+      return zman !== "CandleLighting";
+    });
+  }
   return (
     <section className="answer-section list">
       <p>
