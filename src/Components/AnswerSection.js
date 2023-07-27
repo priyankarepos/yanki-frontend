@@ -19,7 +19,12 @@ const AnswerSection = ({ zmanAnswer, isFormSubmitted }) => {
       return (
         <section className="answer-section" onClick={toggleCandle}>
           {/* Lottie component for displaying candle */}
-          <Lottie animationData={candles} className={`candle ${showCandle}`} />
+          {zmanAnswer.data.isShabbat && (
+            <Lottie
+              animationData={candles}
+              className={`candle ${showCandle}`}
+            />
+          )}
           {/* Final response with zman time in sentence format */}
           <p>{zmanAnswer.data.response}</p>
         </section>

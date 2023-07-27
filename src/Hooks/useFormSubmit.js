@@ -19,13 +19,17 @@ export const useFormSubmit = () => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // Using try catch for asynchronous api call
     try {
-      const response = await axios.post(BASE_URL, String(data), {
-        headers: {
-          "Content-Type": "application/json",
-          TimeZone: timezone,
-          usrCity: userCity,
-        },
-      });
+      const response = await axios.post(
+        BASE_URL,
+        { prompt: data },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            TimeZone: timezone,
+            usrCity: userCity,
+          },
+        }
+      );
 
       // handling the API response
       const responseData = response;
@@ -36,8 +40,11 @@ export const useFormSubmit = () => {
     } catch (error) {
       // Resetting loading flag
       setIsLoading(false);
-      // handling any errors
-      error.response ? setError(error.response.data) : setError(error.message);
+      if (error.request.status === 0) {
+        setError(error.message);
+      } else {
+        setError(error.request.responseText);
+      }
     }
   };
 

@@ -72,7 +72,11 @@ body {
 
     /* Arranging height for landscape modes */
     @include landscape {
-      height: 100%;
+      height: 100vh;
+
+      &.singlePrayer {
+        height: 100%;
+      }
     }
 
     /* Arranging height for Nesthub device */
