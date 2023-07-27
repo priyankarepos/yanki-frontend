@@ -63,8 +63,10 @@ const Homepage = () => {
       ? zmanAnswer.data.isAllPrayer
         ? setBgHeight("allPrayer")
         : setBgHeight("singlePrayer")
+      : fetchError
+      ? setBgHeight("error")
       : setBgHeight("");
-  }, [zmanAnswer, bgHeight]);
+  }, [zmanAnswer, bgHeight, fetchError]);
 
   return (
     <div className={`home ${theme} ${bgHeight}`}>
@@ -94,7 +96,7 @@ const Homepage = () => {
         />
 
         {/* Render if there is error */}
-        <Error error={error} />
+        <Error error={fetchError} />
       </main>
       {/* Footer component */}
       <Footer theme={theme} />

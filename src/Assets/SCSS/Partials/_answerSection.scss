@@ -11,6 +11,7 @@
   border: 0;
   border-radius: 20px;
   cursor: pointer;
+  z-index: 1;
   transition: all 0.4s ease;
 
   &.list {
