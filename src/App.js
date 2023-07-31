@@ -19,7 +19,7 @@ function App() {
   const success = async pos => {
     const crd = pos.coords;
     const city = await axios.get(
-      `${nominatim_api}/reverse?format=json&lat=${crd.latitude}&lon=${crd.longitude}`
+      `${nominatim_api}/reverse?format=json&lat=${crd.latitude}&lon=${crd.longitude}&accept-language=en`
     );
     setUserCity(city.data.address.city);
   };
