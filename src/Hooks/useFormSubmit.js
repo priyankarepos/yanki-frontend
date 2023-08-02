@@ -5,7 +5,7 @@ import { Context } from "../App";
 
 export const useFormSubmit = () => {
   // From context
-  const { userCity } = useContext(Context);
+  const { userCity, isAllowed } = useContext(Context);
   // All state initialization
   const [isLoading, setIsLoading] = useState(false); // State for loading flag
   const [error, setError] = useState(null); // State for error handling
@@ -27,6 +27,7 @@ export const useFormSubmit = () => {
             "Content-Type": "application/json",
             TimeZone: timezone,
             usrCity: userCity,
+            "Location-Allowed": isAllowed,
           },
         }
       );

@@ -9,6 +9,7 @@ export const Context = createContext("");
 function App() {
   // State for User city
   const [userCity, setUserCity] = useState(null);
+  const [isAllowed, setIsAllowed] = useState("");
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -21,11 +22,13 @@ function App() {
     const city = await axios.get(
       `${nominatim_api}/reverse?format=json&lat=${crd.latitude}&lon=${crd.longitude}&accept-language=en`
     );
+    setIsAllowed("Location allowed");
     setUserCity(city.data.address.city);
   };
 
   // Error callback function
   const errors = err => {
+    setIsAllowed("Location denied");
     console.warn(`ERROR(${err.code}): ${err.message}`);
   };
 
@@ -38,6 +41,7 @@ function App() {
         } else if (result.state === "prompt") {
           //If prompt then the user will be asked to give permission
           navigator.geolocation.getCurrentPosition(success, errors, options);
+        } else if (result.state === "denied") {
         }
       });
     } else {
@@ -47,7 +51,7 @@ function App() {
   return (
     <div className="App">
       {/* Wrapping with context */}
-      <Context.Provider value={{ userCity }}>
+      <Context.Provider value={{ userCity, isAllowed }}>
         <Homepage />
       </Context.Provider>
     </div>
