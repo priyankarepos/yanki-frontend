@@ -5,7 +5,8 @@ import { Context } from "../App";
 
 export const useFormSubmit = () => {
   // From context
-  const { userCity, isAllowed } = useContext(Context);
+  const { userLatitude, userLongitude, isLocationAllowed } =
+    useContext(Context);
   // All state initialization
   const [isLoading, setIsLoading] = useState(false); // State for loading flag
   const [error, setError] = useState(null); // State for error handling
@@ -25,9 +26,10 @@ export const useFormSubmit = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            "Location-Allowed": isLocationAllowed,
             TimeZone: timezone,
-            usrCity: userCity,
-            "Location-Allowed": isAllowed,
+            "User-Lat": userLatitude,
+            "User-Long": userLongitude,
           },
         }
       );
