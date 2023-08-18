@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Homepage from "./Components/Homepage";
-import axios from "axios";
 import { createContext } from "react";
 
 // Exporting context
@@ -8,27 +7,25 @@ export const Context = createContext("");
 
 function App() {
   // State for User city
-  const [userCity, setUserCity] = useState(null);
-  const [isAllowed, setIsAllowed] = useState("");
+  const [userLatitude, setUserLatitude] = useState("");
+  const [userLongitude, setUserLongitude] = useState("");
+  const [isLocationAllowed, setIsLocationAllowed] = useState("");
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0,
   };
-  const nominatim_api = process.env.REACT_APP_NOMINATIM_API;
   // Success callback function
   const success = async pos => {
     const crd = pos.coords;
-    const city = await axios.get(
-      `${nominatim_api}/reverse?format=json&lat=${crd.latitude}&lon=${crd.longitude}&accept-language=en`
-    );
-    setIsAllowed("Location allowed");
-    setUserCity(city.data.address.city);
+    setIsLocationAllowed("Location allowed");
+    setUserLatitude(crd.latitude);
+    setUserLongitude(crd.longitude);
   };
 
   // Error callback function
   const errors = err => {
-    setIsAllowed("Location denied");
+    setIsLocationAllowed(`Location denied & Error message - ${err.message}`);
     console.warn(`ERROR(${err.code}): ${err.message}`);
   };
 
@@ -51,7 +48,9 @@ function App() {
   return (
     <div className="App">
       {/* Wrapping with context */}
-      <Context.Provider value={{ userCity, isAllowed }}>
+      <Context.Provider
+        value={{ userLatitude, userLongitude, isLocationAllowed }}
+      >
         <Homepage />
       </Context.Provider>
     </div>
