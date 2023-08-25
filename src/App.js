@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import Homepage from "./Components/Homepage";
+// import Homepage from "./Components/Homepage";
 import { createContext } from "react";
+import lightTheme from "./Themes/lightTheme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
 
 // Exporting context
 export const Context = createContext("");
@@ -16,7 +20,7 @@ function App() {
     maximumAge: 0,
   };
   // Success callback function
-  const success = async pos => {
+  const success = async (pos) => {
     const crd = pos.coords;
     setIsLocationAllowed("Location allowed");
     setUserLatitude(crd.latitude);
@@ -24,14 +28,14 @@ function App() {
   };
 
   // Error callback function
-  const errors = err => {
+  const errors = (err) => {
     setIsLocationAllowed(`Location denied & Error message - ${err.message}`);
     console.warn(`ERROR(${err.code}): ${err.message}`);
   };
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.permissions.query({ name: "geolocation" }).then(result => {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
         if (result.state === "granted") {
           //If granted then directly call function here
           navigator.geolocation.getCurrentPosition(success, errors, options);
@@ -46,14 +50,18 @@ function App() {
     }
   });
   return (
-    <div className="App">
-      {/* Wrapping with context */}
-      <Context.Provider
-        value={{ userLatitude, userLongitude, isLocationAllowed }}
-      >
-        <Homepage />
-      </Context.Provider>
-    </div>
+    <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <div className="App">
+        {/* Wrapping with context */}
+        <Context.Provider
+          value={{ userLatitude, userLongitude, isLocationAllowed }}
+        >
+          {/* <Homepage /> */}
+          <RouterProvider router={router} />
+        </Context.Provider>
+      </div>
+    </ThemeProvider>
   );
 }
 
