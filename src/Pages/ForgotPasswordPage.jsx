@@ -5,14 +5,25 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 import { useForm, Controller } from "react-hook-form";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { emailRegex } from "./../Utils/validations/validation";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitError, setIsSubmitError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
@@ -28,8 +39,31 @@ const ForgotPasswordPage = () => {
     console.log("error data: ", data);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("submit data: ", data);
+    try {
+      setIsSubmitting(true);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/Auth/forgot-password?email=${data.emailAddress}`
+      );
+
+      if (response.status === 200) {
+        navigate("/password-email-sent");
+        setIsSubmitting(false);
+        setIsSubmitError(false);
+        setErrorMsg("");
+      }
+    } catch (e) {
+      console.log(e);
+      setIsSubmitting(false);
+      setIsSubmitError(true);
+      if (e?.response?.data?.message) {
+        setErrorMsg(e?.response?.data?.message);
+      } else {
+        setErrorMsg("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -87,16 +121,31 @@ const ForgotPasswordPage = () => {
                         ? errors["emailAddress"].message
                         : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
+
+              {isSubmitError && (
+                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                  {errorMsg}
+                </Alert>
+              )}
+
               <Button
                 variant="contained"
                 type="submit"
                 fullWidth
                 sx={{ marginBottom: "21px" }}
+                disabled={isSubmitting}
               >
-                Reset password
+                {isSubmitting ? (
+                  <Box className="text-center">
+                    <CircularProgress size="0.875rem" />
+                  </Box>
+                ) : (
+                  "Reset password"
+                )}
               </Button>
             </form>
             <Link

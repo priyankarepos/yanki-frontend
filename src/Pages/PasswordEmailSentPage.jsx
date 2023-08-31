@@ -25,8 +25,14 @@ const PasswordEmailSentpage = () => {
                 marginBottom: "30px",
               }}
             />
-            <Typography variant="h5" className="text-center">
+            <Typography
+              variant="h5"
+              sx={{ marginBottom: "10px", textAlign: "center" }}
+            >
               Mail sent successfully
+            </Typography>
+            <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+              Please follow instructions in email to reset password.
             </Typography>
           </Box>
         </Box>

@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -14,10 +16,19 @@ import { useForm, Controller } from "react-hook-form";
 import { passwordRegex } from "../Utils/validations/validation";
 import { passwordPatterErrorMessage } from "../Utils/messages/commonMessages";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const ResetPasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitError, setIsSubmitError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const {
     control,
@@ -38,8 +49,42 @@ const ResetPasswordPage = () => {
     console.log("on error data: ", data);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("on submit data: ", data);
+    try {
+      setIsSubmitting(false);
+      const queryParamsObj = Object.fromEntries([...searchParams]);
+      const dataToSend = {
+        password: data.newPassword,
+        confirmPassword: data.confirmPassword,
+        email: queryParamsObj.email,
+        token: queryParamsObj.token.split(":")[0],
+      };
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/Auth/reset-password`,
+        dataToSend
+      );
+
+      if (response.status === 200) {
+        setIsSubmitting(false);
+        setIsSubmitError(false);
+        setErrorMsg("");
+        navigate("/reset-password-success");
+      }
+    } catch (e) {
+      console.log(e);
+      setIsSubmitting(false);
+      setIsSubmitError(true);
+      if (e?.response?.data?.InvalidToken) {
+        setErrorMsg(
+          "Link and Token is now invalid. Please go to forgot password page and fill email again for new link."
+        );
+      } else if (e?.response?.data?.message) {
+        setErrorMsg(e?.response?.data?.message);
+      } else {
+        setErrorMsg("Something went wrong");
+      }
+    }
   };
 
   return (
@@ -107,6 +152,7 @@ const ResetPasswordPage = () => {
                     helperText={
                       errors["newPassword"] ? errors["newPassword"].message : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -165,11 +211,21 @@ const ResetPasswordPage = () => {
                         ? errors["confirmPassword"].message
                         : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
+              {isSubmitError && (
+                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                  {errorMsg}
+                </Alert>
+              )}
               <Button variant="contained" type="submit" fullWidth>
-                Confirm
+                {isSubmitting ? (
+                  <CircularProgress size="0.875rem" />
+                ) : (
+                  "Confirm"
+                )}
               </Button>
             </form>
           </Box>

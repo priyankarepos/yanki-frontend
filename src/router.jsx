@@ -8,6 +8,8 @@ import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import PasswordEmailSentpage from "./Pages/PasswordEmailSentPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
+import ActiveAccountPage from "./Pages/ActiveAccountPage";
+import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/signinSuccess",
     element: <SigninSuccessPage />,
+  },
+  {
+    path: "/active-account",
+    element: <ActiveAccountPage />,
   },
   {
     path: "/login",
@@ -45,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPasswordPage />,
+  },
+  {
+    path: "/reset-password-success",
+    element: <ResetPasswordSuccessPage />,
   },
 ]);
 
