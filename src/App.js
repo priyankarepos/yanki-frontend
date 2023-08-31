@@ -3,11 +3,33 @@ import { useEffect, useState } from "react";
 import { createContext } from "react";
 import lightTheme from "./Themes/lightTheme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { RouterProvider } from "react-router-dom";
-import router from "./router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
+import LoginPage from "./Pages/LoginPage";
+import SigninPage from "./Pages/SigninPage";
+import TitlePage from "./Pages/TitlePage";
+import SigninSuccessPage from "./Pages/SigninSuccessPage";
+import ActiveAccountPage from "./Pages/ActiveAccountPage";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
+import PasswordEmailSentpage from "./Pages/PasswordEmailSentPage";
+import ResetPasswordPage from "./Pages/ResetPasswordPage";
+import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
+import Homepage from "./Components/Homepage";
+import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
+import HomePageMui from "./Pages/HomePageMui";
 
 // Exporting context
 export const Context = createContext("");
+
+window.onbeforeunload = function () {
+  const rememeberMe = window.localStorage.getItem(
+    process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+  );
+  if (rememeberMe === undefined || rememeberMe === "false") {
+    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+  }
+};
 
 function App() {
   // State for User city
@@ -58,7 +80,99 @@ function App() {
           value={{ userLatitude, userLongitude, isLocationAllowed }}
         >
           {/* <Homepage /> */}
-          <RouterProvider router={router} />
+          {/* <RouterProvider router={router} /> */}
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <AuthPagesProtection>
+                    <LoginPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/signin"
+                element={
+                  <AuthPagesProtection>
+                    <SigninPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/auth"
+                element={
+                  <AuthPagesProtection>
+                    <TitlePage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/signin-success"
+                element={
+                  <AuthPagesProtection>
+                    <SigninSuccessPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/active-account"
+                element={
+                  <AuthPagesProtection>
+                    <ActiveAccountPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <AuthPagesProtection>
+                    <ForgotPasswordPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/password-email-sent"
+                element={
+                  <AuthPagesProtection>
+                    <PasswordEmailSentpage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <AuthPagesProtection>
+                    <ResetPasswordPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/reset-password-success"
+                element={
+                  <AuthPagesProtection>
+                    <ResetPasswordSuccessPage />
+                  </AuthPagesProtection>
+                }
+              />
+              <Route
+                path="/backup-home"
+                element={
+                  <UserPagesProtection>
+                    <Homepage />
+                  </UserPagesProtection>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <UserPagesProtection>
+                    <HomePageMui />
+                  </UserPagesProtection>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
         </Context.Provider>
       </div>
     </ThemeProvider>

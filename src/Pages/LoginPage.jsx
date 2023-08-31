@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
@@ -19,9 +21,16 @@ import Link from "@mui/material/Link";
 import { emailRegex, passwordRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  const [loginErrorMsg, setLoginErrorMsg] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -40,8 +49,42 @@ const LoginPage = () => {
     console.log("error data: ", data);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("data: ", data);
+    try {
+      setLoginLoading(true);
+      const dataToSend = {
+        email: data.logInEmail,
+        password: data.logInPassword,
+      };
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/Auth/login`,
+        dataToSend
+      );
+
+      if (response.status === 200) {
+        // setLoginLoading(false);
+        window.localStorage.setItem(
+          process.env.REACT_APP_LOCALSTORAGE_REMEMBER,
+          JSON.stringify(data.logInRemeber)
+        );
+        window.localStorage.setItem(
+          process.env.REACT_APP_LOCALSTORAGE_TOKEN,
+          JSON.stringify(response.data)
+        );
+        navigate("/");
+      }
+      console.log("login response: ", response);
+    } catch (e) {
+      setLoginLoading(false);
+      console.log("login error: ", e);
+      setLoginError(true);
+      if (e.response.data) {
+        setLoginErrorMsg(e.response.data);
+      } else {
+        setLoginErrorMsg("Something went wrong");
+      }
+    }
   };
 
   return (
@@ -91,6 +134,7 @@ const LoginPage = () => {
                   helperText={
                     errors["logInEmail"] ? errors["logInEmail"].message : ""
                   }
+                  disabled={loginLoading}
                 />
               )}
             />
@@ -143,6 +187,7 @@ const LoginPage = () => {
                       ? errors["logInPassword"].message
                       : ""
                   }
+                  disabled={loginLoading}
                 />
               )}
             />
@@ -165,20 +210,21 @@ const LoginPage = () => {
               >
                 Forgot Password?
               </Link>
-              {/* <Typography
-                variant="body2"
-                gutterBottom
-                className="cursor-pointer"
-              >
-                Forgot Password?
-              </Typography> */}
             </Box>
+
+            {loginError && (
+              <Alert severity="error" sx={{ marginBottom: "10px" }}>
+                {loginErrorMsg}
+              </Alert>
+            )}
+
             <Button
               variant="contained"
               fullWidth
               onClick={handleSubmit(onSubmit, onError)}
+              disabled={loginLoading}
             >
-              Login
+              {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
             <Divider sx={{ marginY: "28px" }}>or</Divider>
             <Button variant="outlined" sx={{ marginBottom: "35px" }} fullWidth>

@@ -6,6 +6,8 @@ import Divider from "@mui/material/Divider";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -18,9 +20,16 @@ import Link from "@mui/material/Link";
 import { emailRegex, passwordRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [signinLoading, setSigninLoading] = useState(false);
+  const [signinError, setSigninError] = useState(false);
+  const [signinErrorMsg, setSigninErrorMsg] = useState("");
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -39,8 +48,36 @@ const SigninPage = () => {
     console.log("error data: ", data);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("data: ", data);
+    try {
+      setSigninLoading(true);
+      const dataToSend = {
+        userName: data.signInName,
+        email: data.signInEmail,
+        password: data.signInPassword,
+      };
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/Auth/register`,
+        dataToSend
+      );
+
+      console.log(response);
+
+      if (response.status === 200) {
+        navigate("/signin-success");
+      }
+    } catch (e) {
+      setSigninLoading(false);
+      setSigninError(true);
+      console.log(e);
+      if (e?.response?.data) {
+        setSigninErrorMsg(e.response.data);
+      } else {
+        setSigninErrorMsg("Something went wrong");
+      }
+    }
   };
 
   /* 
@@ -91,6 +128,7 @@ const SigninPage = () => {
                   helperText={
                     errors["signInName"] ? errors["signInName"].message : ""
                   }
+                  disabled={signinLoading}
                 />
               )}
             />
@@ -125,6 +163,7 @@ const SigninPage = () => {
                   helperText={
                     errors["signInEmail"] ? errors["signInEmail"].message : ""
                   }
+                  disabled={signinLoading}
                 />
               )}
             />
@@ -177,18 +216,30 @@ const SigninPage = () => {
                       ? errors["signInPassword"].message
                       : ""
                   }
+                  disabled={signinLoading}
                 />
               )}
             />
+            {signinError && (
+              <Alert severity="error" sx={{ marginBottom: "14px" }}>
+                {signinErrorMsg}
+              </Alert>
+            )}
             <Button
               variant="contained"
               fullWidth
               onClick={handleSubmit(onSubmit, onError)}
+              disabled={signinLoading}
             >
-              Sign up
+              {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
             </Button>
             <Divider sx={{ marginY: "28px" }}>or</Divider>
-            <Button variant="outlined" sx={{ marginBottom: "35px" }} fullWidth>
+            <Button
+              variant="outlined"
+              sx={{ marginBottom: "35px" }}
+              fullWidth
+              disabled={signinLoading}
+            >
               Google button from its library
             </Button>
             <Box className="text-center">
