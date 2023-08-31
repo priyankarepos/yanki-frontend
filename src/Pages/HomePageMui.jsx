@@ -15,6 +15,7 @@ import axios from "axios";
 import SentenceAnswer from "../Components/SentenceAnswer";
 import PrayerTimeListAnswer from "../Components/PrayerTimeListAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
+import ProfileCircle from "../Components/ProfileCircle";
 
 const HomePageMui = () => {
   const recipientEmail = "hello@yanki.ai";
@@ -90,6 +91,7 @@ const HomePageMui = () => {
   return (
     <>
       <Container maxWidth="xl">
+        <ProfileCircle />
         <Box>
           <Box
             sx={{
