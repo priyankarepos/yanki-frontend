@@ -17,6 +17,7 @@ import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
 import Homepage from "./Components/Homepage";
 import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
 import HomePageMui from "./Pages/HomePageMui";
+import ChangePasswordPage from "./Pages/ChangePasswordPage";
 
 // Exporting context
 export const Context = createContext("");
@@ -160,6 +161,14 @@ function App() {
                 element={
                   <UserPagesProtection>
                     <Homepage />
+                  </UserPagesProtection>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  <UserPagesProtection>
+                    <ChangePasswordPage />
                   </UserPagesProtection>
                 }
               />
