@@ -63,7 +63,7 @@ const ResetPasswordPage = () => {
         token: queryParamsObj.token.split(":")[0],
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/Auth/reset-password`,
+        `${process.env.REACT_APP_API_HOST}/api/auth/reset-password`,
         dataToSend
       );
 

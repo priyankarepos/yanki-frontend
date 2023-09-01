@@ -47,7 +47,7 @@ const ForgotPasswordPage = () => {
       setIsSubmitting(true);
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/Auth/forgot-password?email=${data.emailAddress}`
+        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${data.emailAddress}`
       );
 
       if (response.status === 200) {
