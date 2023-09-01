@@ -10,12 +10,12 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { useForm, Controller } from "react-hook-form";
 import { useContext, useState } from "react";
-import { Context } from "../App";
+import { Context, ThemeModeContext } from "../App";
 import axios from "axios";
 import SentenceAnswer from "../Components/SentenceAnswer";
 import PrayerTimeListAnswer from "../Components/PrayerTimeListAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
-import ProfileCircle from "../Components/ProfileCircle";
+// import ProfileCircle from "../Components/ProfileCircle";
 
 const HomePageMui = () => {
   const recipientEmail = "hello@yanki.ai";
@@ -29,6 +29,8 @@ const HomePageMui = () => {
 
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
+
+  const { themeMode } = useContext(ThemeModeContext);
 
   const {
     control,
@@ -46,7 +48,6 @@ const HomePageMui = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("onSubmit: ", data);
     try {
       setIsSubmitting(true);
       setIsError(false);
@@ -74,7 +75,6 @@ const HomePageMui = () => {
         setErrorMsg("");
       }
     } catch (error) {
-      console.log("error: ", error);
       setIsSubmitting(false);
       setIsError(true);
       setQueryAnswer(null);
@@ -91,17 +91,20 @@ const HomePageMui = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <ProfileCircle />
+        {/* <ProfileCircle /> */}
         <Box>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "4rem",
             }}
           >
-            <img src="/logo-dark.svg" style={{ width: "15em" }} alt="logo" />
+            <img
+              src={themeMode === "dark" ? "/logo-dark.svg" : "/logo-light.svg"}
+              style={{ width: "15em" }}
+              alt="logo"
+            />
           </Box>
           <Box
             sx={{
@@ -131,6 +134,7 @@ const HomePageMui = () => {
                     }}
                     sx={{ marginBottom: "1rem" }}
                     error={!!errors["searchQuery"]}
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -150,16 +154,31 @@ const HomePageMui = () => {
                   variant="outlined"
                   type="reset"
                   sx={{ marginRight: "1rem" }}
+                  disabled={isSubmitting}
                 >
                   Reset
                 </Button>
-                <Button variant="contained" type="submit">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
                   Submit
                 </Button>
               </Box>
             </form>
 
-            {isSubmitting && <CircularProgress />}
+            {isSubmitting && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
 
             {queryAnswer && !queryAnswer?.isAllPrayer && (
               <SentenceAnswer answer={queryAnswer} />
@@ -193,7 +212,11 @@ const HomePageMui = () => {
               <Typography variant="caption">In partnership with</Typography>
               <Box>
                 <img
-                  src="/myZmanim-dark.png"
+                  src={
+                    themeMode === "dark"
+                      ? "/myZmanim-dark.png"
+                      : "/myZmanim-light.png"
+                  }
                   alt="myZmanim"
                   style={{ width: "45%", maxWidth: "416px" }}
                 />

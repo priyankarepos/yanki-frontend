@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-// import Homepage from "./Components/Homepage";
-import { createContext } from "react";
+import { useEffect, useState, createContext, useMemo } from "react";
+import darkTheme from "./Themes/darkTheme";
 import lightTheme from "./Themes/lightTheme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -18,9 +17,16 @@ import Homepage from "./Components/Homepage";
 import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
 import HomePageMui from "./Pages/HomePageMui";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
+import AuthPageLayout from "./Components/Layout/AuthPageLayout";
+import UserPageLayout from "./Components/Layout/UserPageLayout";
 
 // Exporting context
 export const Context = createContext("");
+
+export const ThemeModeContext = createContext({
+  // themeMode: "",
+  // toggleThemeMode: () => {},
+});
 
 window.onbeforeunload = function () {
   const rememeberMe = window.localStorage.getItem(
@@ -37,6 +43,9 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
+
+  const [themeMode, setThemeMode] = useState("dark");
+
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -72,119 +81,161 @@ function App() {
       console.log("Geolocation is not supported by this browser.");
     }
   });
+
+  const toggleThemeMode = useMemo(
+    () => () => {
+      setThemeMode((prevMode) => (prevMode === "dark" ? "light" : "dark"));
+    },
+    []
+  );
+
+  const currentTheme = useMemo(() => {
+    if (themeMode === "dark") {
+      return darkTheme;
+    } else {
+      return lightTheme;
+    }
+  }, [themeMode]);
+
   return (
-    <ThemeProvider theme={lightTheme}>
-      <CssBaseline />
-      <div className="App">
-        {/* Wrapping with context */}
-        <Context.Provider
-          value={{ userLatitude, userLongitude, isLocationAllowed }}
-        >
-          {/* <Homepage /> */}
-          {/* <RouterProvider router={router} /> */}
-          <BrowserRouter>
-            <Routes>
-              <Route
-                path="/login"
-                element={
-                  <AuthPagesProtection>
-                    <LoginPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/signin"
-                element={
-                  <AuthPagesProtection>
-                    <SigninPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/auth"
-                element={
-                  <AuthPagesProtection>
-                    <TitlePage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/signin-success"
-                element={
-                  <AuthPagesProtection>
-                    <SigninSuccessPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/active-account"
-                element={
-                  <AuthPagesProtection>
-                    <ActiveAccountPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/forgot-password"
-                element={
-                  <AuthPagesProtection>
-                    <ForgotPasswordPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/password-email-sent"
-                element={
-                  <AuthPagesProtection>
-                    <PasswordEmailSentpage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/reset-password"
-                element={
-                  <AuthPagesProtection>
-                    <ResetPasswordPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/reset-password-success"
-                element={
-                  <AuthPagesProtection>
-                    <ResetPasswordSuccessPage />
-                  </AuthPagesProtection>
-                }
-              />
-              <Route
-                path="/backup-home"
-                element={
-                  <UserPagesProtection>
-                    <Homepage />
-                  </UserPagesProtection>
-                }
-              />
-              <Route
-                path="/change-password"
-                element={
-                  <UserPagesProtection>
-                    <ChangePasswordPage />
-                  </UserPagesProtection>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <UserPagesProtection>
-                    <HomePageMui />
-                  </UserPagesProtection>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
-        </Context.Provider>
-      </div>
-    </ThemeProvider>
+    <ThemeModeContext.Provider
+      value={{ themeMode, toggleThemeMode: toggleThemeMode }}
+    >
+      <ThemeProvider theme={currentTheme}>
+        <CssBaseline />
+        <div className="App">
+          {/* Wrapping with context */}
+          <Context.Provider
+            value={{ userLatitude, userLongitude, isLocationAllowed }}
+          >
+            {/* <Homepage /> */}
+            {/* <RouterProvider router={router} /> */}
+            <BrowserRouter>
+              <Routes>
+                <Route
+                  path="/login"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <LoginPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/signin"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <SigninPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/auth"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <TitlePage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/signin-success"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <SigninSuccessPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/active-account"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ActiveAccountPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/forgot-password"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ForgotPasswordPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/password-email-sent"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <PasswordEmailSentpage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/reset-password"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ResetPasswordPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/reset-password-success"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ResetPasswordSuccessPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/backup-home"
+                  element={
+                    <UserPagesProtection>
+                      <Homepage />
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/change-password"
+                  element={
+                    <UserPagesProtection>
+                      <UserPageLayout>
+                        <ChangePasswordPage />
+                      </UserPageLayout>
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <UserPagesProtection>
+                      <UserPageLayout>
+                        <HomePageMui />
+                      </UserPageLayout>
+                    </UserPagesProtection>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </Context.Provider>
+        </div>
+      </ThemeProvider>
+    </ThemeModeContext.Provider>
   );
 }
 

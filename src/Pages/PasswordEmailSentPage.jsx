@@ -1,8 +1,12 @@
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useContext } from "react";
+import { ThemeModeContext } from "../App";
 
 const PasswordEmailSentpage = () => {
+  const { themeMode } = useContext(ThemeModeContext);
+
   return (
     <>
       <Container maxWidth="xl">
@@ -12,10 +16,18 @@ const PasswordEmailSentpage = () => {
               className="w-full object-contain flex items-center justify-center"
               sx={{ marginBottom: "156px" }}
             >
-              <img src="/Group 14492.svg" alt="logo" />
+              <img
+                src={
+                  themeMode === "dark"
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                alt="logo"
+                style={{ width: "60%" }}
+              />
             </Box>
             <img
-              src="/Group 14524.svg"
+              src={themeMode === "dark" ? "/tick-dark.svg" : "/tick-light.svg"}
               alt="logo"
               style={{
                 maxWidth: "185px",

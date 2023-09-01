@@ -1,4 +1,5 @@
 import * as React from "react";
+import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -13,9 +14,24 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
+import ThemeSwitcher from "./UI/ThemeSwitcher";
 
-export default function AccountMenu() {
+export default function ProfielCircle() {
   const navigate = useNavigate();
+
+  const yankiUser = window.localStorage.getItem(
+    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+  );
+
+  let parsedUserObject;
+
+  try {
+    if (yankiUser) {
+      parsedUserObject = JSON.parse(yankiUser);
+    }
+  } catch (e) {
+    parsedUserObject = undefined;
+  }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -40,75 +56,87 @@ export default function AccountMenu() {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          textAlign: "center",
-          justifyContent: "right",
-          py: 2,
-        }}
-      >
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32, bgcolor: "white" }}>
-              <PersonIcon />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      </Box>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
+      <Container maxWidth="xl">
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            justifyContent: "right",
+            py: 2,
+          }}
+        >
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar sx={{ width: 32, height: 32 }}>
+                <PersonIcon />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
             },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <MenuItem>
-          <ListItemIcon>
-            <EmailOutlinedIcon fontSize="small" />
-          </ListItemIcon>
-          abc@mail.com
-        </MenuItem>
-        <MenuItem onClick={onClickChangePassword}>
-          <ListItemIcon>
-            <LockOutlinedIcon fontSize="small" />
-          </ListItemIcon>
-          Change Password
-        </MenuItem>
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          <MenuItem
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              cursor: "default",
+            }}
+          >
+            Dark mode: <ThemeSwitcher />
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <EmailOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            {parsedUserObject?.userObject?.userEmail || ""}
+          </MenuItem>
+          <MenuItem onClick={onClickChangePassword}>
+            <ListItemIcon>
+              <LockOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            Change Password
+          </MenuItem>
 
-        <Divider />
+          <Divider />
 
-        <MenuItem onClick={onClickLogout}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
+          <MenuItem onClick={onClickLogout}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+      </Container>
     </React.Fragment>
   );
 }

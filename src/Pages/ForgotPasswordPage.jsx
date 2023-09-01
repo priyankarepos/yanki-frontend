@@ -13,14 +13,17 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useForm, Controller } from "react-hook-form";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { emailRegex } from "./../Utils/validations/validation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ThemeModeContext } from "../App";
 
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const { themeMode } = useContext(ThemeModeContext);
 
   const navigate = useNavigate();
 
@@ -40,7 +43,6 @@ const ForgotPasswordPage = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("submit data: ", data);
     try {
       setIsSubmitting(true);
 
@@ -55,7 +57,6 @@ const ForgotPasswordPage = () => {
         setErrorMsg("");
       }
     } catch (e) {
-      console.log(e);
       setIsSubmitting(false);
       setIsSubmitError(true);
       if (e?.response?.data?.message) {
@@ -72,7 +73,15 @@ const ForgotPasswordPage = () => {
         <Box className="flex justify-center items-center h-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box className="w-full object-contain flex items-center justify-center marginY-54">
-              <img src="/Group 14492.svg" alt="logo" />
+              <img
+                src={
+                  themeMode === "dark"
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                alt="logo"
+                style={{ width: "60%" }}
+              />
             </Box>
             <Typography
               variant="h5"
