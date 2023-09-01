@@ -5,15 +5,18 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { ThemeModeContext } from "../App";
 
 const ActiveAccountPage = () => {
   const [activating, setActivating] = useState(false);
   const [errorOnActive, setErrorOnActive] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
   const [activationDone, setActivationDone] = useState(false);
+
+  const { themeMode } = useContext(ThemeModeContext);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -43,11 +46,9 @@ const ActiveAccountPage = () => {
         setErrorOnActive(false);
         setErrorMsg("");
       }
-      console.log("response: ", response);
     } catch (e) {
       setActivating(false);
       setErrorOnActive(true);
-      console.log(e);
       if (e.response.data) {
         setErrorMsg(e.response.data);
       } else {
@@ -66,7 +67,15 @@ const ActiveAccountPage = () => {
         <Box className="flex justify-center items-center h-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box className="w-full object-contain flex items-center justify-center marginY-54">
-              <img src="/Group 14492.svg" alt="logo" />
+              <img
+                src={
+                  themeMode === "dark"
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                alt="logo"
+                style={{ width: "60%" }}
+              />
             </Box>
             <Typography
               component="h1"
@@ -88,7 +97,7 @@ const ActiveAccountPage = () => {
             {errorOnActive && (
               <>
                 <Alert severity="error" sx={{ mb: 2 }}>
-                  {errorMsg}
+                  {JSON.stringify(errorMsg)}
                 </Alert>
                 <Button
                   variant="contained"

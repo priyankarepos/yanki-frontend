@@ -3,8 +3,12 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ThemeModeContext } from "../App";
 
 const SigninSuccessPage = () => {
+  const { themeMode } = useContext(ThemeModeContext);
+
   const navigate = useNavigate();
 
   const onLoginClick = () => {
@@ -23,7 +27,11 @@ const SigninSuccessPage = () => {
             }}
           >
             <img
-              src="/Group 14511.svg"
+              src={
+                themeMode === "dark"
+                  ? "/mail-sent-dark.svg"
+                  : "/mail-sent-light.svg"
+              }
               alt="logo"
               style={{
                 maxWidth: "185px",

@@ -20,15 +20,18 @@ import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
 import { emailRegex, passwordRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ThemeModeContext } from "../App";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
+
+  const { themeMode } = useContext(ThemeModeContext);
 
   const navigate = useNavigate();
 
@@ -50,7 +53,6 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("data: ", data);
     try {
       setLoginLoading(true);
       const dataToSend = {
@@ -74,10 +76,8 @@ const LoginPage = () => {
         );
         navigate("/");
       }
-      console.log("login response: ", response);
     } catch (e) {
       setLoginLoading(false);
-      console.log("login error: ", e);
       setLoginError(true);
       if (e.response.data) {
         setLoginErrorMsg(e.response.data);
@@ -93,7 +93,17 @@ const LoginPage = () => {
         <Box className="flex justify-center items-center h-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box className="w-full object-contain flex items-center justify-center marginY-54">
-              <img src="/Group 14492.svg" alt="logo" />
+              <img
+                src={
+                  themeMode === "dark"
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                alt="logo"
+                style={{
+                  width: "60%",
+                }}
+              />
             </Box>
             <Typography
               component="h1"

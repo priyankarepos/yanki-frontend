@@ -25,8 +25,6 @@ const PrayerTimeListAnswer = ({ answer }) => {
     return zmanName[zman] && time;
   });
 
-  console.log("list: ", list);
-
   return (
     <>
       <Box>

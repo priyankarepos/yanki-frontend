@@ -5,11 +5,10 @@ const white = "#FFF";
 const gunmetal = "#2A2b35";
 const melon = "#FFC9C9";
 const lightNavy = "#13538b";
-
-const lotion = "#FAFAFA"; // light bg
 /* 
 commenting unused color for now. These colors will be used as theme grows.
 
+const lotion = "#FAFAFA"; // light bg
 const black = "#000";
 const americanSilver = "#CECECE"; // light search border
 const yaleBlue = "#13538B"; // dark text
@@ -17,14 +16,19 @@ const darkSilver = "#707070"; // light reset
 const littleBoyBlue = "#6FA8DD"; // dark reset
 */
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
-      main: gunmetal,
+      main: white,
+      contrastText: gunmetal,
+    },
+    error: {
+      main: melon,
     },
     background: {
-      default: lotion,
-      paper: white,
+      default: darkMidnightBlue,
+      paper: lightNavy,
     },
   },
   components: {
@@ -61,11 +65,11 @@ const lightTheme = createTheme({
     MuiAvatar: {
       styleOverrides: {
         root: {
-          backgroundColor: gunmetal,
+          backgroundColor: white,
         },
       },
     },
   },
 });
 
-export default lightTheme;
+export default darkTheme;

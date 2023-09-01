@@ -15,9 +15,10 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { useForm, Controller } from "react-hook-form";
 import { passwordRegex } from "../Utils/validations/validation";
 import { passwordPatterErrorMessage } from "../Utils/messages/commonMessages";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ThemeModeContext } from "../App";
 
 const ResetPasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -26,6 +27,8 @@ const ResetPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const { themeMode } = useContext(ThemeModeContext);
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -50,7 +53,6 @@ const ResetPasswordPage = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("on submit data: ", data);
     try {
       setIsSubmitting(false);
       const queryParamsObj = Object.fromEntries([...searchParams]);
@@ -72,7 +74,6 @@ const ResetPasswordPage = () => {
         navigate("/reset-password-success");
       }
     } catch (e) {
-      console.log(e);
       setIsSubmitting(false);
       setIsSubmitError(true);
       if (e?.response?.data?.InvalidToken) {
@@ -96,7 +97,15 @@ const ResetPasswordPage = () => {
               className="w-full object-contain flex items-center justify-center"
               sx={{ marginBottom: "132px" }}
             >
-              <img src="/Group 14492.svg" alt="logo" />
+              <img
+                src={
+                  themeMode === "dark"
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                alt="logo"
+                style={{ width: "60%" }}
+              />
             </Box>
             <Typography
               variant="h5"

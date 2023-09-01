@@ -7,7 +7,6 @@ import Lottie from "lottie-react";
 import candles from "../Assets/images/candles.json";
 
 const SentenceAnswer = ({ answer }) => {
-  console.log("answer: ", answer);
   const [showCandle, setShowCandle] = useState(true);
 
   const toggleCandle = () => {
