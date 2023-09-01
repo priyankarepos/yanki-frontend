@@ -60,7 +60,7 @@ const LoginPage = () => {
         password: data.logInPassword,
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/Auth/login`,
+        `${process.env.REACT_APP_API_HOST}/api/auth/login`,
         dataToSend
       );
 

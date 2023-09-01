@@ -61,7 +61,7 @@ const SigninPage = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/Auth/register`,
+        `${process.env.REACT_APP_API_HOST}/api/auth/register`,
         dataToSend
       );
 

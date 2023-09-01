@@ -36,6 +36,7 @@ const HomePageMui = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -55,7 +56,7 @@ const HomePageMui = () => {
       setQueryAnswer(null);
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const response = await axios.post(
-        process.env.REACT_APP_API_URL,
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
         { prompt: data.searchQuery },
         {
           headers: {
@@ -78,14 +79,19 @@ const HomePageMui = () => {
       setIsSubmitting(false);
       setIsError(true);
       setQueryAnswer(null);
-      if (error.request.status === 0) {
+      if (error?.request?.status === 0) {
         setErrorMsg(error.message);
-      } else if (error.request.responseText) {
+      } else if (error?.request?.responseText) {
         setErrorMsg(error.request.responseText);
       } else {
         setErrorMsg("Something went wrong");
       }
     }
+  };
+
+  const onReset = () => {
+    reset();
+    setQueryAnswer(null);
   };
 
   return (
@@ -113,7 +119,7 @@ const HomePageMui = () => {
               marginY: "1.5rem",
             }}
           >
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <form onSubmit={handleSubmit(onSubmit, onError)} onReset={onReset}>
               <Controller
                 control={control}
                 name="searchQuery"
@@ -180,13 +186,16 @@ const HomePageMui = () => {
               </Box>
             )}
 
-            {queryAnswer && !queryAnswer?.isAllPrayer && (
+            {queryAnswer?.isSucess && queryAnswer?.contentResponse && (
               <SentenceAnswer answer={queryAnswer} />
             )}
 
+            {/* 
+              // This may not require as response is changed
             {queryAnswer && queryAnswer.isAllPrayer && (
               <PrayerTimeListAnswer answer={queryAnswer} />
             )}
+              */}
 
             {/* YouTube */}
 

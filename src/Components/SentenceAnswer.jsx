@@ -2,38 +2,48 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
-import { useState } from "react";
-import Lottie from "lottie-react";
-import candles from "../Assets/images/candles.json";
+import { useEffect, useState } from "react";
+// import Lottie from "lottie-react";
+// import candles from "../Assets/images/candles.json";
 
 const SentenceAnswer = ({ answer }) => {
-  const [showCandle, setShowCandle] = useState(true);
+  // const [showCandle, setShowCandle] = useState(true);
+  const [processedContentResponse, setProcessedContentResponse] = useState([]);
 
-  const toggleCandle = () => {
-    setShowCandle((prev) => !prev);
-  };
+  // const toggleCandle = () => {
+  //   setShowCandle((prev) => !prev);
+  // };
+
+  useEffect(() => {
+    try {
+      if (answer?.contentResponse) {
+        const answerArray = answer.contentResponse.split("\n");
+        setProcessedContentResponse(answerArray);
+      }
+    } catch (e) {}
+  }, [answer]);
 
   return (
     <>
-      <Box onClick={toggleCandle}>
+      <Box>
         <Paper
           sx={{
-            display: "flex",
-            alignItems: "center",
             p: 2,
-            cursor: "pointer",
           }}
         >
-          {answer.isShabbat && showCandle && (
+          {/* {answer?.isShabbat && showCandle && (
             <Lottie
               animationData={candles}
               style={{ width: "10rem", height: "10rem" }}
               // className={`candle ${showCandle}`}
             />
-          )}
-          <Typography variant="h6" component="div">
-            {answer.response}
-          </Typography>
+          )} */}
+
+          {processedContentResponse.map((ans, index) => (
+            <Typography variant="h6" component="div" key={index}>
+              {ans}
+            </Typography>
+          ))}
         </Paper>
       </Box>
     </>
