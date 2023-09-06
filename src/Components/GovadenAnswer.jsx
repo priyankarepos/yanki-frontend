@@ -105,27 +105,6 @@ const GovadenAnswer = ({ answer }) => {
                                                         ))
                                                         : 'N/A'}
                                                 </TableCell>
-                                                {/* <TableCell>
-                          {row.groupedByDayMinyanim[day]?.shachris
-                            ? row.groupedByDayMinyanim[day].shachris.map((time, index) => (
-                                <div key={index}>{time.displayTime}</div>
-                              ))
-                            : 'N/A'}
-                        </TableCell>
-                        <TableCell>
-                          {row.groupedByDayMinyanim[day]?.mincha
-                            ? row.groupedByDayMinyanim[day].mincha.map((time, index) => (
-                                <div key={index}>{time.displayTime}</div>
-                              ))
-                            : 'N/A'}
-                        </TableCell>
-                        <TableCell>
-                          {row.groupedByDayMinyanim[day]?.mariv
-                            ? row.groupedByDayMinyanim[day].mariv.map((time, index) => (
-                                <div key={index}>{time.displayTime}</div>
-                              ))
-                            : 'N/A'}
-                        </TableCell> */}
                                             </TableRow>
                                         ))}
                                     </TableBody>
