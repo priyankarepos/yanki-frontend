@@ -66,21 +66,27 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         // setLoginLoading(false);
+        if (!data.logInRemeber) {
+          window.sessionStorage.setItem(
+            process.env.REACT_APP_SESSIONSTORAGE_REFRESH,
+            JSON.stringify(true)
+          );
+        }
         window.localStorage.setItem(
           process.env.REACT_APP_LOCALSTORAGE_REMEMBER,
           JSON.stringify(data.logInRemeber)
         );
         window.localStorage.setItem(
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
-          JSON.stringify(response.data)
+          JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
       }
     } catch (e) {
       setLoginLoading(false);
       setLoginError(true);
-      if (e.response.data) {
-        setLoginErrorMsg(e.response.data);
+      if (e?.response?.data?.message) {
+        setLoginErrorMsg(e?.response?.data?.message);
       } else {
         setLoginErrorMsg("Something went wrong");
       }

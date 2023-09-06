@@ -1,4 +1,10 @@
-import { useEffect, useState, createContext, useMemo } from "react";
+import {
+  useEffect,
+  useState,
+  createContext,
+  useMemo,
+  useLayoutEffect,
+} from "react";
 import darkTheme from "./Themes/darkTheme";
 import lightTheme from "./Themes/lightTheme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -19,6 +25,7 @@ import HomePageMui from "./Pages/HomePageMui";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
+import axios from "axios";
 
 // Exporting context
 export const Context = createContext("");
@@ -28,15 +35,15 @@ export const ThemeModeContext = createContext({
   // toggleThemeMode: () => {},
 });
 
-window.onbeforeunload = function () {
-  const rememeberMe = window.localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_REMEMBER
-  );
-  if (rememeberMe === undefined || rememeberMe === "false") {
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
-  }
-};
+// window.onbeforeunload = function () {
+//   const rememeberMe = window.localStorage.getItem(
+//     process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+//   );
+//   if (rememeberMe === undefined || rememeberMe === "false") {
+//     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+//     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+//   }
+// };
 
 function App() {
   // State for User city
@@ -96,6 +103,34 @@ function App() {
       return lightTheme;
     }
   }, [themeMode]);
+
+  useLayoutEffect(() => {
+    let session = window.sessionStorage.getItem(
+      process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+    )
+      ? JSON.parse(
+          window.sessionStorage.getItem(
+            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          )
+        )
+      : "";
+
+    if (!session) {
+      const rememeberMe = window.localStorage.getItem(
+        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+      );
+      if (rememeberMe === undefined || rememeberMe === "false") {
+        window.localStorage.removeItem(
+          process.env.REACT_APP_LOCALSTORAGE_TOKEN
+        );
+        window.localStorage.removeItem(
+          process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        );
+      } else {
+      }
+    } else {
+    }
+  }, []);
 
   return (
     <ThemeModeContext.Provider
