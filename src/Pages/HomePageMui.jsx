@@ -80,7 +80,11 @@ const HomePageMui = () => {
       setIsError(true);
       setQueryAnswer(null);
       if (error?.request?.status === 0) {
-        setErrorMsg(error.message);
+        setErrorMsg(
+          typeof error?.message === "string"
+            ? error?.message
+            : "Something went wrong"
+        );
       } else if (error?.request?.responseText) {
         setErrorMsg(error.request.responseText);
       } else {
