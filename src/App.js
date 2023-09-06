@@ -26,6 +26,7 @@ import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
 import axios from "axios";
+import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 
 // Exporting context
 export const Context = createContext("");
@@ -44,6 +45,17 @@ export const ThemeModeContext = createContext({
 //     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
 //   }
 // };
+
+axios.interceptors.request.use((request) => {
+  const yankiUser = window.localStorage.getItem(
+    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+  );
+  if (yankiUser) {
+    const parsedYankiUser = JSON.parse(yankiUser);
+    request.headers.Authorization = `Bearer ${parsedYankiUser.token}`;
+  }
+  return request;
+});
 
 function App() {
   // State for User city
@@ -253,6 +265,16 @@ function App() {
                         <ChangePasswordPage />
                       </UserPageLayout>
                     </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/change-password-success"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ChangePasswordSuccessPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
                   }
                 />
                 <Route

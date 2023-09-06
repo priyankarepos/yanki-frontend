@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import Alert from "@mui/material/Alert";
 
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -16,11 +17,19 @@ import { passwordRegex } from "../Utils/validations/validation";
 import { passwordPatterErrorMessage } from "../Utils/messages/commonMessages";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ChangePasswordPage = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitError, setIsSubmitError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -42,8 +51,41 @@ const ChangePasswordPage = () => {
     console.log(data);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    try {
+      setIsSubmitting(true);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/auth/change-password`,
+        {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+          confirmNewPassword: data.confirmPassword,
+        }
+      );
+
+      if (response.status === 200) {
+        setIsSubmitting(false);
+        setIsSubmitError(false);
+        setErrorMsg("");
+        window.localStorage.removeItem(
+          process.env.REACT_APP_LOCALSTORAGE_TOKEN
+        );
+        window.localStorage.removeItem(
+          process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        );
+        navigate("/change-password-success");
+      }
+    } catch (e) {
+      console.log("e: ", e);
+      setIsSubmitError(false);
+      setIsSubmitError(true);
+      if (e?.response?.data?.message) {
+        setErrorMsg(e?.response?.data?.message);
+      } else {
+        setErrorMsg("Something went wrong");
+      }
+    }
   };
 
   return (
@@ -222,6 +264,12 @@ const ChangePasswordPage = () => {
                   />
                 )}
               />
+
+              {isSubmitError && (
+                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                  {errorMsg}
+                </Alert>
+              )}
 
               <Button
                 variant="contained"
