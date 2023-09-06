@@ -1,10 +1,10 @@
 import { createTheme } from "@mui/material";
 
-const darkMidnightBlue = "#063762"; // dark bg
+// const darkMidnightBlue = "#063762"; // dark bg
 const white = "#FFF";
 const gunmetal = "#2A2b35";
-const melon = "#FFC9C9";
-const lightNavy = "#13538b";
+// const melon = "#FFC9C9";
+// const lightNavy = "#13538b";
 
 const lotion = "#FAFAFA"; // light bg
 /* 
