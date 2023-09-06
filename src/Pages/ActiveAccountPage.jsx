@@ -47,10 +47,18 @@ const ActiveAccountPage = () => {
         setErrorMsg("");
       }
     } catch (e) {
+      console.log("e: ", e);
       setActivating(false);
       setErrorOnActive(true);
-      if (e.response.data) {
-        setErrorMsg(e.response.data);
+      if (e?.response?.data?.message) {
+        let message = e?.response?.data?.message;
+        if (e?.response?.status === 401) {
+          message =
+            message +
+            " " +
+            "Please login with your account email and password to receive new account activation link.";
+        }
+        setErrorMsg(message);
       } else {
         setErrorMsg("Something went wrong");
       }
@@ -97,7 +105,7 @@ const ActiveAccountPage = () => {
             {errorOnActive && (
               <>
                 <Alert severity="error" sx={{ mb: 2 }}>
-                  {JSON.stringify(errorMsg)}
+                  {errorMsg}
                 </Alert>
                 <Button
                   variant="contained"

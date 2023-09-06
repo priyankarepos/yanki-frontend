@@ -55,7 +55,6 @@ const SigninPage = () => {
     try {
       setSigninLoading(true);
       const dataToSend = {
-        userName: data.signInName,
         email: data.signInEmail,
         password: data.signInPassword,
       };
@@ -71,8 +70,8 @@ const SigninPage = () => {
     } catch (e) {
       setSigninLoading(false);
       setSigninError(true);
-      if (e?.response?.data) {
-        setSigninErrorMsg(e.response.data);
+      if (e?.response?.data?.message) {
+        setSigninErrorMsg(e?.response?.data?.message);
       } else {
         setSigninErrorMsg("Something went wrong");
       }
@@ -108,7 +107,7 @@ const SigninPage = () => {
             >
               Create your account
             </Typography>
-            <Controller
+            {/* <Controller
               control={control}
               name="signInName"
               rules={{
@@ -138,7 +137,7 @@ const SigninPage = () => {
                   disabled={signinLoading}
                 />
               )}
-            />
+            /> */}
             <Controller
               control={control}
               name="signInEmail"
