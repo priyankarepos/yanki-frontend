@@ -250,7 +250,7 @@ const LoginPage = () => {
               <Typography variant="subtitle1" display="block" gutterBottom>
                 Don't have an account?{" "}
                 <Link to="/signin" component={LinkBehavior} underline="none">
-                  <span className="font-bold cursor-pointer">Signin</span>
+                  <span className="font-bold cursor-pointer">SignUp</span>
                 </Link>
               </Typography>
             </Box>

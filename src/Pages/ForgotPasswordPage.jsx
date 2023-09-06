@@ -15,7 +15,6 @@ import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { emailRegex } from "./../Utils/validations/validation";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 
 const ForgotPasswordPage = () => {
@@ -24,8 +23,6 @@ const ForgotPasswordPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   const { themeMode } = useContext(ThemeModeContext);
-
-  const navigate = useNavigate();
 
   const {
     control,
@@ -45,16 +42,29 @@ const ForgotPasswordPage = () => {
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
-
+      const requestData = {
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+        confirmNewPassword: data.confirmPassword,
+      };
+  
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${data.emailAddress}`
+        '/api/auth/change-password',
+        requestData,
+        {
+          headers: {
+            'Content-Type': 'application/json', // Set the content type if needed
+            // Add any other headers if needed
+          },
+        }
       );
-
+  
       if (response.status === 200) {
-        navigate("/password-email-sent");
+        // Password change was successful
         setIsSubmitting(false);
         setIsSubmitError(false);
         setErrorMsg("");
+        // You can perform any additional actions here, e.g., redirect to a success page
       }
     } catch (e) {
       setIsSubmitting(false);

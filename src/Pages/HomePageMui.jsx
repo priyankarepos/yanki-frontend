@@ -9,12 +9,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { useForm, Controller } from "react-hook-form";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context, ThemeModeContext } from "../App";
 import axios from "axios";
 import SentenceAnswer from "../Components/SentenceAnswer";
-import PrayerTimeListAnswer from "../Components/PrayerTimeListAnswer";
+// import PrayerTimeListAnswer from "../Components/PrayerTimeListAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
+import GovadenAnswer from "../Components/GovadenAnswer";
+import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
 // import ProfileCircle from "../Components/ProfileCircle";
 
 const HomePageMui = () => {
@@ -26,7 +28,6 @@ const HomePageMui = () => {
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [queryAnswer, setQueryAnswer] = useState(null);
-
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
 
@@ -93,10 +94,21 @@ const HomePageMui = () => {
     }
   };
 
+  useEffect(() => {
+    if (queryAnswer?.isSucess===false) {
+      setIsError(true);
+      setErrorMsg(queryAnswer?.message);
+    }
+  }, [queryAnswer])
+  
+
   const onReset = () => {
     reset();
     setQueryAnswer(null);
+    setIsError(false);
   };
+
+
 
   return (
     <>
@@ -186,7 +198,7 @@ const HomePageMui = () => {
                   alignItems: "center",
                 }}
               >
-                <CircularProgress />
+                <Typography className="text-center"><CircularProgress /></Typography >
               </Box>
             )}
 
@@ -199,10 +211,16 @@ const HomePageMui = () => {
             {queryAnswer && queryAnswer.isAllPrayer && (
               <PrayerTimeListAnswer answer={queryAnswer} />
             )}
-              */}
+            */}
 
             {/* YouTube */}
+            {/* {!queryAnswer && (
+              <TorahanytimeAnswer />
+            )} */}
 
+            {queryAnswer?.isSucess && queryAnswer?.godavenPrayerDetails?.length && (
+              <GovadenAnswer answer={queryAnswer} />
+            )}
             {/* Hoday list */}
 
             {/* Prayer List */}

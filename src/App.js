@@ -121,10 +121,10 @@ function App() {
       process.env.REACT_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-          window.sessionStorage.getItem(
-            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
-          )
+        window.sessionStorage.getItem(
+          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
         )
+      )
       : "";
 
     if (!session) {
