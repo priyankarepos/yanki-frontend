@@ -121,10 +121,10 @@ function App() {
       process.env.REACT_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-        window.sessionStorage.getItem(
-          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          window.sessionStorage.getItem(
+            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          )
         )
-      )
       : "";
 
     if (!session) {
@@ -249,14 +249,14 @@ function App() {
                     </AuthPagesProtection>
                   }
                 />
-                <Route
+                {/* <Route
                   path="/backup-home"
                   element={
                     <UserPagesProtection>
                       <Homepage />
                     </UserPagesProtection>
                   }
-                />
+                /> */}
                 <Route
                   path="/change-password"
                   element={
