@@ -77,7 +77,7 @@ const ChangePasswordPage = () => {
         navigate("/change-password-success");
       }
     } catch (e) {
-      setIsSubmitError(false);
+      setIsSubmitting(false);
       setIsSubmitError(true);
       if (e?.response?.data?.message) {
         setErrorMsg(e?.response?.data?.message);
@@ -151,6 +151,7 @@ const ChangePasswordPage = () => {
                         ? errors["currentPassword"].message
                         : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -201,6 +202,7 @@ const ChangePasswordPage = () => {
                     helperText={
                       errors["newPassword"] ? errors["newPassword"].message : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -260,6 +262,7 @@ const ChangePasswordPage = () => {
                         ? errors["confirmPassword"].message
                         : ""
                     }
+                    disabled={isSubmitting}
                   />
                 )}
               />
