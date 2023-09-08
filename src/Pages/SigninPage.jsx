@@ -13,10 +13,12 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
-import { emailRegex, passwordRegex } from "../Utils/validations/validation";
+import { emailRegex, passwordRegex, phoneRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
@@ -42,6 +44,7 @@ const SigninPage = () => {
     defaultValues: {
       signInName: "",
       signInEmail: "",
+      signInPhone: "",
       signInPassword: "",
     },
   });
@@ -56,6 +59,8 @@ const SigninPage = () => {
       const dataToSend = {
         email: data.signInEmail,
         password: data.signInPassword,
+        fullName: data.signInName,
+        phoneNumber: data.signInPhone,
       };
 
       const response = await axios.post(
@@ -106,7 +111,7 @@ const SigninPage = () => {
             >
               Create your account
             </Typography>
-            {/* <Controller
+            <Controller
               control={control}
               name="signInName"
               rules={{
@@ -114,6 +119,14 @@ const SigninPage = () => {
                   value: true,
                   message: "Full name is required.",
                 },
+                minLength:{
+                  value: 3,
+                  message: "Full name should be at least 3 characters long."
+                },
+                maxLength:{
+                  value: 50,
+                  message: "Full name should not exceed 50 characters."
+                }
               }}
               render={({ field }) => (
                 <TextField
@@ -136,7 +149,38 @@ const SigninPage = () => {
                   disabled={signinLoading}
                 />
               )}
-            /> */}
+            />
+            <Controller
+              control={control}
+              name="signInPhone"
+              rules={{
+                pattern:{
+                  value: phoneRegex,
+                  message: "Invalid phone number format."
+                }
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="tel"
+                  placeholder="Phone number"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneIcon  />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                  sx={{ marginBottom: '10px' }}
+                  error={!!errors['signInPhone']}
+                  helperText={
+                    errors['signInPhone'] ? errors['signInPhone'].message : ''
+                  }
+                  disabled={signinLoading}
+                />
+              )}
+            />
             <Controller
               control={control}
               name="signInEmail"
