@@ -1,7 +1,58 @@
+import { useEffect, useState } from "react";
+import Homepage from "./Components/Homepage";
+import { createContext } from "react";
+
+// Exporting context
+export const Context = createContext("");
+
 function App() {
+  // State for User city
+  const [userLatitude, setUserLatitude] = useState("");
+  const [userLongitude, setUserLongitude] = useState("");
+  const [isLocationAllowed, setIsLocationAllowed] = useState("");
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+  // Success callback function
+  const success = async pos => {
+    const crd = pos.coords;
+    setIsLocationAllowed("Location allowed");
+    setUserLatitude(crd.latitude);
+    setUserLongitude(crd.longitude);
+  };
+
+  // Error callback function
+  const errors = err => {
+    setIsLocationAllowed(`Location denied & Error message - ${err.message}`);
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.permissions.query({ name: "geolocation" }).then(result => {
+        if (result.state === "granted") {
+          //If granted then directly call function here
+          navigator.geolocation.getCurrentPosition(success, errors, options);
+        } else if (result.state === "prompt") {
+          //If prompt then the user will be asked to give permission
+          navigator.geolocation.getCurrentPosition(success, errors, options);
+        } else if (result.state === "denied") {
+        }
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  });
   return (
     <div className="App">
-      <h1>Yanki AI</h1>
+      {/* Wrapping with context */}
+      <Context.Provider
+        value={{ userLatitude, userLongitude, isLocationAllowed }}
+      >
+        <Homepage />
+      </Context.Provider>
     </div>
   );
 }

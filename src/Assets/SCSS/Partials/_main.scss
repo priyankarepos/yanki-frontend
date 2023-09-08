@@ -1,0 +1,70 @@
+/* Separating styles for main component */
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 50em;
+
+  /* Styles for extra small devices */
+  @include xs {
+    width: calc(100% - 1em);
+  }
+
+  /* Styles for small devices */
+  @include sm {
+    width: calc(100% - 5em);
+  }
+
+  /* Styles for medium devices */
+  @include md {
+    width: calc(100% - 15em);
+  }
+
+  /* Styles for large devices */
+  @include lg {
+    width: calc(100% - 15em);
+  }
+
+  /* Styles for extra large devices */
+  @include xl {
+    width: calc(100% - 35em);
+  }
+
+  /* Styles for screen above 1400px */
+  @include breakpoint(1400px) {
+    width: 50em;
+  }
+
+  /* Styles for logo component */
+  .logoContainer {
+    .logo {
+      /* Styles for extra small devices */
+      @include xs {
+        margin-top: 4em;
+      }
+
+      /* Styles for screen above 1400px */
+      @include breakpoint(1400px) {
+        margin: 10em auto 1em;
+      }
+    }
+  }
+
+  /* Styles for loading component */
+  .loading {
+    align-self: center;
+    height: 5em;
+    animation: rotate 2s infinite linear;
+  }
+  .static-loader {
+    position: relative;
+    top: -51px;
+  }
+
+  /* Search form styles */
+  @import "./searchForm";
+  /* Answer section styles */
+  @import "./answerSection";
+}

@@ -1,0 +1,31 @@
+/* Separating light mode styles for ease of color, bg, border-color changing */
+.home.light {
+  /* using color variable*/
+  background: $light-bg;
+
+  /* Mainly color, border-color and background styles for main */
+  main {
+    .query-form {
+      .input-field {
+        background: $light;
+        border: 1px solid $light-search-border;
+      }
+
+      .control-buttons {
+        button {
+          background: $dark;
+          color: $light;
+        }
+        .reset {
+          background: transparent;
+          color: $light-reset;
+        }
+      }
+    }
+
+    .answer-section,
+    .error-section {
+      background: $light;
+    }
+  }
+}

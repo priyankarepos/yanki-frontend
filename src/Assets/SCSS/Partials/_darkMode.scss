@@ -1,0 +1,58 @@
+/* Separate styles for Dark mode */
+.home.dark {
+  /* using color variable*/
+  background: $dark-bg;
+
+  /* changing color of toggle icon */
+  .toggle {
+    color: $light;
+  }
+
+  /* Mainly color, border-color and background styles for main */
+  main {
+    .query-form {
+      color: $light;
+      .input-field {
+        background: $dark-text-bg;
+        border: 1px solid $dark-search-border;
+
+        input {
+          color: $light;
+          background: $dark-text-bg;
+        }
+
+        ::placeholder {
+          color: $dark-placeholder;
+        }
+      }
+
+      .control-buttons {
+        button {
+          background: $light;
+          color: $dark-bg;
+        }
+        .reset {
+          background: transparent;
+          color: $dark-reset;
+        }
+      }
+    }
+
+    .answer-section,
+    .error-section {
+      background: $dark-text-bg;
+      color: $light;
+    }
+  }
+
+  /* Colors for footer and children */
+  footer {
+    color: $light;
+
+    .contactUs {
+      a {
+        color: $light;
+      }
+    }
+  }
+}
