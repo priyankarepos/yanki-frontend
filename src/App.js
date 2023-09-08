@@ -27,6 +27,7 @@ import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
 import axios from "axios";
 import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
+import AdminDashboard from "./Admin/AdminDashboard";
 
 // Exporting context
 export const Context = createContext("");
@@ -306,14 +307,14 @@ function App() {
                     </AuthPagesProtection>
                   }
                 />
-                {/* <Route
+                <Route
                   path="/backup-home"
                   element={
                     <UserPagesProtection>
                       <Homepage />
                     </UserPagesProtection>
                   }
-                /> */}
+                />
                 <Route
                   path="/change-password"
                   element={
@@ -341,6 +342,14 @@ function App() {
                       <UserPageLayout>
                         <HomePageMui />
                       </UserPageLayout>
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <UserPagesProtection>
+                      <AdminDashboard />
                     </UserPagesProtection>
                   }
                 />
