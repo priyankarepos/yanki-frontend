@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135.662" height="152.538" viewBox="0 0 135.662 152.538">
+  <g id="Group_14524" data-name="Group 14524" transform="translate(-614.086 -298.584)">
+    <g id="Group_14522" data-name="Group 14522">
+      <line id="Line_9" data-name="Line 9" y1="13.534" x2="13.561" transform="matrix(0.602, -0.799, 0.799, 0.602, 706.313, 309.909)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+      <line id="Line_10" data-name="Line 10" x2="19.159" y2="0.02" transform="matrix(0.602, -0.799, 0.799, 0.602, 725.606, 319.932)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+      <line id="Line_11" data-name="Line 11" x2="13.534" y2="13.561" transform="matrix(0.602, -0.799, 0.799, 0.602, 730.278, 327.26)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+    </g>
+    <g id="Group_14523" data-name="Group 14523" transform="translate(1352.051 774.456) rotate(-178)">
+      <line id="Line_9-2" data-name="Line 9" y1="13.534" x2="13.561" transform="matrix(0.602, -0.799, 0.799, 0.602, 706.313, 309.909)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+      <line id="Line_10-2" data-name="Line 10" x2="19.159" y2="0.02" transform="matrix(0.602, -0.799, 0.799, 0.602, 725.606, 319.932)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+      <line id="Line_11-2" data-name="Line 11" x2="13.534" y2="13.561" transform="matrix(0.602, -0.799, 0.799, 0.602, 730.278, 327.26)" fill="none" stroke="#1a2e35" stroke-width="1"/>
+    </g>
+    <g id="Group_14521" data-name="Group 14521" transform="translate(0 -48)">
+      <circle id="Ellipse_22" data-name="Ellipse 22" cx="54" cy="54" r="54" transform="translate(631 372)" fill="#2a2b35"/>
+      <path id="Path_899" data-name="Path 899" d="M1036.938,482.858l-18.955-19.187,6.368-6.291,11.073,11.207,23-36.063,7.548,4.813Z" transform="matrix(0.985, 0.174, -0.174, 0.985, -261.67, -205.723)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
