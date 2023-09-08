@@ -16,7 +16,6 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 // import PrayerTimeListAnswer from "../Components/PrayerTimeListAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
-import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
 // import ProfileCircle from "../Components/ProfileCircle";
 
 const HomePageMui = () => {
@@ -95,20 +94,17 @@ const HomePageMui = () => {
   };
 
   useEffect(() => {
-    if (queryAnswer?.isSucess===false) {
+    if (queryAnswer?.isSucess === false) {
       setIsError(true);
       setErrorMsg(queryAnswer?.message);
     }
-  }, [queryAnswer])
-  
+  }, [queryAnswer]);
 
   const onReset = () => {
     reset();
     setQueryAnswer(null);
     setIsError(false);
   };
-
-
 
   return (
     <>
@@ -198,7 +194,9 @@ const HomePageMui = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography className="text-center"><CircularProgress /></Typography >
+                <Typography className="text-center">
+                  <CircularProgress />
+                </Typography>
               </Box>
             )}
 
@@ -218,9 +216,10 @@ const HomePageMui = () => {
               <TorahanytimeAnswer />
             )} */}
 
-            {queryAnswer?.isSucess && queryAnswer?.godavenPrayerDetails?.length && (
-              <GovadenAnswer answer={queryAnswer} />
-            )}
+            {queryAnswer?.isSucess &&
+              queryAnswer?.godavenPrayerDetails?.length && (
+                <GovadenAnswer answer={queryAnswer} />
+              )}
             {/* Hoday list */}
 
             {/* Prayer List */}
