@@ -46,6 +46,23 @@ export const ThemeModeContext = createContext({
 //   }
 // };
 
+const accepts401 = [
+  "/signin",
+  "/login",
+  "/active-account",
+  "/forgot-password",
+  "/reset-password",
+  "/change-password",
+];
+
+/* 
+  request interceptor
+
+  This interceptor will add Authorization header in request;
+  It will check whether token is present in local storage.
+  if yes, then it will add authorization header in request.
+  if no, then it will not modify the request
+*/
 axios.interceptors.request.use((request) => {
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -56,6 +73,46 @@ axios.interceptors.request.use((request) => {
   }
   return request;
 });
+
+/* 
+  response interceptor
+
+  This interceptor will intercept the response coming from backend.
+  Main purpose of this interceptor is to redirect user to the login page if,
+  response status 401 "Unathorized" received from api.
+
+  If ok response received from api, it will do nothing. And pass the response received.
+  If it gets error response other then 401 "Unauthorized", it will do nothing. And pass the error received.
+
+  If it get 401 "Unathorized", then it checks the pathname of the page that user is currently on.
+
+  if pathname is in the accepts401 array declared above in file. It will do nothing, and pass the error received.
+  else it will redirect user to the login page.
+*/
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const pathname = window.location.pathname;
+    if (
+      error?.response &&
+      error?.response?.status === 401 &&
+      !accepts401.includes(pathname)
+    ) {
+      window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(
+        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+      );
+      window.sessionStorage.removeItem(
+        process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+      );
+      window.location.replace("/login");
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
 
 function App() {
   // State for User city

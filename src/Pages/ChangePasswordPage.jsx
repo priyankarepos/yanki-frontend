@@ -77,7 +77,6 @@ const ChangePasswordPage = () => {
         navigate("/change-password-success");
       }
     } catch (e) {
-      console.log("e: ", e);
       setIsSubmitError(false);
       setIsSubmitError(true);
       if (e?.response?.data?.message) {
