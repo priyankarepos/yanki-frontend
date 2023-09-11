@@ -90,7 +90,7 @@ const ChangePasswordPage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Typography
               component="h1"

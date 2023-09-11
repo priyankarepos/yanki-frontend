@@ -11,7 +11,7 @@ const AuthPageHeader = () => {
             display: "flex",
             justifyContent: "right",
             alignItems: "center",
-            py: 2,
+            py: 1.5,
           }}
         >
           <ThemeSwitcher />

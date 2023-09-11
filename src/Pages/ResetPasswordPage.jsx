@@ -17,7 +17,11 @@ import { passwordRegex } from "../Utils/validations/validation";
 import { passwordPatterErrorMessage } from "../Utils/messages/commonMessages";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+  Link as RouterLink,
+} from "react-router-dom";
 import { ThemeModeContext } from "../App";
 
 const ResetPasswordPage = () => {
@@ -91,21 +95,26 @@ const ResetPasswordPage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box
               className="w-full object-contain flex items-center justify-center"
               sx={{ marginBottom: "132px" }}
             >
-              <img
-                src={
-                  themeMode === "dark"
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
-                alt="logo"
-                style={{ width: "60%" }}
-              />
+              <RouterLink
+                to="/auth"
+                className="w-full object-contain flex items-center justify-center"
+              >
+                <img
+                  src={
+                    themeMode === "dark"
+                      ? "/auth-logo-dark.svg"
+                      : "/auth-logo-light.svg"
+                  }
+                  alt="logo"
+                  style={{ width: "60%" }}
+                />
+              </RouterLink>
             </Box>
             <Typography
               variant="h5"

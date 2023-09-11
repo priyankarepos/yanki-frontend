@@ -70,7 +70,7 @@ const ForgotPasswordPage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box className="w-full object-contain flex items-center justify-center marginY-54">
               <img

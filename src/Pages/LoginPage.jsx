@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
+import Link from "@mui/material/Link";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
@@ -17,12 +18,11 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import { useForm, Controller } from "react-hook-form";
-import Link from "@mui/material/Link";
 import { emailRegex, passwordRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 
 const LoginPage = () => {
@@ -96,20 +96,25 @@ const LoginPage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
-            <Box className="w-full object-contain flex items-center justify-center marginY-54">
-              <img
-                src={
-                  themeMode === "dark"
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
-                alt="logo"
-                style={{
-                  width: "60%",
-                }}
-              />
+            <Box className="w-full object-contain flex items-center justify-center marginY-28">
+              <RouterLink
+                to="/auth"
+                className="w-full object-contain flex items-center justify-center"
+              >
+                <img
+                  src={
+                    themeMode === "dark"
+                      ? "/auth-logo-dark.svg"
+                      : "/auth-logo-light.svg"
+                  }
+                  alt="logo"
+                  style={{
+                    width: "60%",
+                  }}
+                />
+              </RouterLink>
             </Box>
             <Typography
               component="h1"
@@ -242,8 +247,8 @@ const LoginPage = () => {
             >
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
-            <Divider sx={{ marginY: "28px" }}>or</Divider>
-            <Button variant="outlined" sx={{ marginBottom: "35px" }} fullWidth>
+            <Divider sx={{ marginY: "20px" }}>or</Divider>
+            <Button variant="outlined" sx={{ marginBottom: "25px" }} fullWidth>
               Google button from its library
             </Button>
             <Box className="text-center">

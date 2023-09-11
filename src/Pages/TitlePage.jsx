@@ -22,7 +22,7 @@ const TitlePage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: 520 }}>
             <img
               src={
