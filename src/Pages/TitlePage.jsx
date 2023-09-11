@@ -70,7 +70,7 @@ const TitlePage = () => {
                 sx={{ marginY: { xs: "10px" } }}
                 onClick={onSigninClick}
               >
-                Signin
+                Sign up
               </Button>
             </Box>
           </Box>
