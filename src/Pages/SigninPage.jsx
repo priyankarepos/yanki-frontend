@@ -13,14 +13,20 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import PhoneIcon from "@mui/icons-material/Phone";
 
 import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
-import { emailRegex, passwordRegex } from "../Utils/validations/validation";
+import {
+  emailRegex,
+  passwordRegex,
+  phoneRegex,
+} from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 
 const SigninPage = () => {
@@ -42,6 +48,7 @@ const SigninPage = () => {
     defaultValues: {
       signInName: "",
       signInEmail: "",
+      signInPhone: "",
       signInPassword: "",
     },
   });
@@ -56,6 +63,8 @@ const SigninPage = () => {
       const dataToSend = {
         email: data.signInEmail,
         password: data.signInPassword,
+        fullName: data.signInName,
+        phoneNumber: data.signInPhone,
       };
 
       const response = await axios.post(
@@ -85,18 +94,23 @@ const SigninPage = () => {
   return (
     <>
       <Container maxWidth="xl">
-        <Box className="flex justify-center items-center h-screen">
+        <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
-            <Box className="w-full object-contain flex items-center justify-center marginY-54">
-              <img
-                src={
-                  themeMode === "dark"
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
-                alt="logo"
-                style={{ width: "60%" }}
-              />
+            <Box className="w-full object-contain flex items-center justify-center marginY-28">
+              <RouterLink
+                to="/auth"
+                className="w-full object-contain flex items-center justify-center"
+              >
+                <img
+                  src={
+                    themeMode === "dark"
+                      ? "/auth-logo-dark.svg"
+                      : "/auth-logo-light.svg"
+                  }
+                  alt="logo"
+                  style={{ width: "60%" }}
+                />
+              </RouterLink>
             </Box>
             <Typography
               component="h1"
@@ -106,13 +120,21 @@ const SigninPage = () => {
             >
               Create your account
             </Typography>
-            {/* <Controller
+            <Controller
               control={control}
               name="signInName"
               rules={{
                 required: {
                   value: true,
                   message: "Full name is required.",
+                },
+                minLength: {
+                  value: 3,
+                  message: "Full name should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Full name should not exceed 50 characters.",
                 },
               }}
               render={({ field }) => (
@@ -136,7 +158,38 @@ const SigninPage = () => {
                   disabled={signinLoading}
                 />
               )}
-            /> */}
+            />
+            <Controller
+              control={control}
+              name="signInPhone"
+              rules={{
+                pattern: {
+                  value: phoneRegex,
+                  message: "Invalid phone number format.",
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="tel"
+                  placeholder="Phone number"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                  sx={{ marginBottom: "10px" }}
+                  error={!!errors["signInPhone"]}
+                  helperText={
+                    errors["signInPhone"] ? errors["signInPhone"].message : ""
+                  }
+                  disabled={signinLoading}
+                />
+              )}
+            />
             <Controller
               control={control}
               name="signInEmail"
@@ -238,10 +291,10 @@ const SigninPage = () => {
             >
               {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
             </Button>
-            <Divider sx={{ marginY: "28px" }}>or</Divider>
+            <Divider sx={{ marginY: "20px" }}>or</Divider>
             <Button
               variant="outlined"
-              sx={{ marginBottom: "35px" }}
+              sx={{ marginBottom: "25px" }}
               fullWidth
               disabled={signinLoading}
             >

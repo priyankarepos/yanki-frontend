@@ -60,6 +60,7 @@ const ThemeSwitcher = () => {
     <ThemeSwitcherStyled
       onChange={() => toggleThemeMode()}
       checked={themeMode === "dark"}
+      name="theme-switcher"
     />
   );
 };

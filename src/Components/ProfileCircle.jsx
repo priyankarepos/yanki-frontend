@@ -39,8 +39,12 @@ export default function ProfielCircle() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (e) => {
+    if (e?.target?.name === "theme-switcher") {
+      return;
+    } else {
+      setAnchorEl(null);
+    }
   };
 
   const onClickChangePassword = () => {
@@ -117,6 +121,7 @@ export default function ProfielCircle() {
               alignItems: "center",
               cursor: "default",
             }}
+            name="dark-mode-switch"
           >
             Dark mode: <ThemeSwitcher />
           </MenuItem>
