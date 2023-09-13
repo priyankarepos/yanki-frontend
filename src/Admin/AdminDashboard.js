@@ -76,7 +76,9 @@ const AdminDashboard = () => {
   const [ascending, setAscending] = useState(false);
 
   useEffect(() => {
-    fetchData();
+    if (startDate && endDate) {
+      fetchData();
+    }
   }, [pageNumber, pageSize, ascending]);
 
   const fetchData = async () => {

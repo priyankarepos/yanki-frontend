@@ -19,7 +19,6 @@ import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import PasswordEmailSentpage from "./Pages/PasswordEmailSentPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
-import Homepage from "./Components/Homepage";
 import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
 import HomePageMui from "./Pages/HomePageMui";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
@@ -307,14 +306,14 @@ function App() {
                     </AuthPagesProtection>
                   }
                 />
-                <Route
+                {/* <Route
                   path="/backup-home"
                   element={
                     <UserPagesProtection>
                       <Homepage />
                     </UserPagesProtection>
                   }
-                />
+                /> */}
                 <Route
                   path="/change-password"
                   element={
