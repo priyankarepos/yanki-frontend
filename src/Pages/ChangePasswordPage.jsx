@@ -113,6 +113,11 @@ const ChangePasswordPage = () => {
                     value: passwordRegex,
                     message: passwordPatterErrorMessage,
                   },
+                  validate: {
+                    passwordMatch: (value) =>
+                      value !== watchNewPassword ||
+                      "Current password must be not equal to New password.",
+                  },
                 }}
                 render={({ field }) => (
                   <TextField
