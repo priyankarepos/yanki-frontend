@@ -28,6 +28,8 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
+import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -90,6 +92,37 @@ const SigninPage = () => {
     Box sizes for screen sizes. Maybe will use in future.
      md: "540px", lg: "720px", xl: "921px"
   */
+
+     const onSuccess = async (codeResponse) => {
+      try {
+        setSigninLoading(true);
+        const { access_token } = codeResponse;
+        console.log("access_token",access_token);
+        console.log("codeResponse",codeResponse);
+
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_HOST}/api/auth/google`,
+          { access_token }
+        );
+  
+        if (response.status === 200) {
+          navigate("/signin-success");
+        } else {
+          setSigninError(true);
+          setSigninErrorMsg("Authentication failed.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setSigninError(true);
+        setSigninErrorMsg("Something went wrong.");
+      } finally {
+        setSigninLoading(false);
+      }
+    };
+  
+    const login = useGoogleLogin({
+      onSuccess,
+    });
 
   return (
     <>
@@ -291,16 +324,17 @@ const SigninPage = () => {
             >
               {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
             </Button>
-            <Divider sx={{ marginY: "20px" }}>or</Divider>
+            <Divider sx={{ marginY: "28px" }}>or</Divider>
             <Button
               variant="outlined"
               sx={{ marginBottom: "25px" }}
               fullWidth
               disabled={signinLoading}
+              onClick={() => login()}
             >
-              Google button from its library
+              Sign Up with Google
             </Button>
-            <Box className="text-center">
+            <Box className="text-center" sx={{ marginTop: "25px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom>
                 Already have an account?&nbsp;
                 <Link to="/login" component={LinkBehavior} underline="none">
