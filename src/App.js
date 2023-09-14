@@ -46,7 +46,7 @@ export const ThemeModeContext = createContext({
 // };
 
 const accepts401 = [
-  "/signin",
+  "/signup",
   "/login",
   "/active-account",
   "/forgot-password",
@@ -226,7 +226,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/signin"
+                  path="/signup"
                   element={
                     <AuthPagesProtection>
                       <AuthPageLayout>
