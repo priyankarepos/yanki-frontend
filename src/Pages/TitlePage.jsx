@@ -12,7 +12,7 @@ const TitlePage = () => {
   const navigate = useNavigate();
 
   const onSigninClick = () => {
-    navigate("/signin");
+    navigate("/signup");
   };
 
   const onLoginClick = () => {
