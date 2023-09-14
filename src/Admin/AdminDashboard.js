@@ -26,7 +26,7 @@ const styles = {
     height: '100vh',
   },
   appBar: {
-    backgroundColor: '#1976D2',
+    backgroundColor: 'rgb(19 83 139);',
   },
   menuButton: {
     marginLeft: 'auto',

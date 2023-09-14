@@ -19,6 +19,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
+  // const [data,setData] = React.useState("")
+
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -33,6 +35,8 @@ export default function ProfielCircle() {
   } catch (e) {
     parsedUserObject = undefined;
   }
+
+  const userRoles = parsedUserObject?.userObject?.userRoles || "";
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -137,12 +141,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
-          <MenuItem onClick={onClickAdmin}>
+          {userRoles==="Admin" && <MenuItem onClick={onClickAdmin}>
             <ListItemIcon>
               <AdminPanelSettingsIcon fontSize="small" />
             </ListItemIcon>
             Go To Admin
-          </MenuItem>
+          </MenuItem>}
 
           <Divider />
 

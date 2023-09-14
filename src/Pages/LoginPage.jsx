@@ -53,6 +53,7 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log("data", data);
     try {
       setLoginLoading(true);
       const dataToSend = {
