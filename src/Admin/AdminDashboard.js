@@ -5,7 +5,6 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemText,
   Typography,
   CssBaseline,
   AppBar,
@@ -15,22 +14,12 @@ import {
   Paper,
   TextField,
   Button,
-  Select,
-  MenuItem,
   Pagination,
   Box
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkYankilogo from '../Assets/images/logo-dark.svg';
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+import SearchQueryReport from './SearchQueryReport';
 const styles = {
   adminDashboard: {
     display: 'flex',
@@ -68,7 +57,7 @@ const styles = {
 
 const AdminDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const [endDate, setEndDate] = useState(currentDate.toISOString().split('T')[0]);
@@ -76,7 +65,6 @@ const AdminDashboard = () => {
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [queryAnswer, setQueryAnswer] = useState(null);
-  console.log("queryAnswer", queryAnswer);
 
   // Pagination and sorting state
   const [pageNumber, setPageNumber] = useState(1);
@@ -136,12 +124,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // const handleReset = () => {
-  //   setStartDate(null);
-  //   setEndDate(currentDate.toISOString().split('T')[0]);
-  //   setQueryAnswer(null);
-  // };
-
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -168,12 +150,17 @@ const AdminDashboard = () => {
       <CssBaseline />
       <AppBar position="fixed" style={styles.appBar}>
         <Toolbar>
-          <img
-            src={DarkYankilogo}
-            style={styles.logoStyle}
-            className="logo"
-            alt="Yanki logo"
-          />
+          <Link
+            to="/"
+            style={{ textDecoration: 'none' }}
+          >
+            <img
+              src={DarkYankilogo}
+              style={styles.logoStyle}
+              className="logo"
+              alt="Yanki logo"
+            />
+          </Link>
           <IconButton
             edge="end"
             color="inherit"
@@ -187,17 +174,22 @@ const AdminDashboard = () => {
       </AppBar>
       <Drawer open={drawerOpen} onClose={toggleDrawer} variant="persistent">
         <div style={styles.sidebar}>
-          <img
-            src={DarkYankilogo}
-            style={{
-              ...styles.logoStyle,
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              marginBottom: '16px',
-            }}
-            className="logo"
-            alt="Yanki logo"
-          />
+          <Link
+            to="/"
+            style={{ textDecoration: 'none' }}
+          >
+            <img
+              src={DarkYankilogo}
+              style={{
+                ...styles.logoStyle,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginBottom: '16px',
+              }}
+              className="logo"
+              alt="Yanki logo"
+            />
+          </Link>
           <List>
             <Link
               to="/"
@@ -212,7 +204,7 @@ const AdminDashboard = () => {
                 to="/search"
                 style={{ textDecoration: 'none', color: '#fff' }}
               >
-                Search
+                Create Admin
               </Link>
             </ListItem>
           </List>
@@ -277,15 +269,6 @@ const AdminDashboard = () => {
               >
                 Submit
               </Button>
-              {/* <Button
-                variant="contained"
-                color="primary"
-                onClick={handleReset}
-                disabled={isSubmitting}
-                style={{ marginLeft:"8px" }}
-              >
-                Reset
-              </Button> */}
             </Grid>
           </Grid>
 
@@ -295,48 +278,9 @@ const AdminDashboard = () => {
             {errorMsg}
           </Typography>
         )}
-        {queryAnswer && (
-          <div>
-            {/* <p>Total Count: {queryAnswer.totalCount}</p>
-            <p>Page Number: {queryAnswer.pageNumber}</p>
-            <p>Page Size: {queryAnswer.pageSize}</p>
-            <p>Ascending: {queryAnswer && queryAnswer.ascending ? queryAnswer.ascending.toString() : 'N/A'}</p> */}
-            {queryAnswer == null ? (
-              <Grid container spacing={2} alignItems="center">
-                <Grid item>
-                  <Typography variant="body1">Please select a date range to view search queries.</Typography>
-                </Grid>
-              </Grid>
-            ) : (
-              queryAnswer && queryAnswer.data && queryAnswer.data.length > 0 ? (
-                <TableContainer sx={{ my: 2 }} component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Query</TableCell>
-                        {/* Add more table headers as needed */}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {queryAnswer.data.map((item) => (
-                        <TableRow key={item.id}>
-                          <TableCell>{item.id}</TableCell>
-                          <TableCell>{item.query}</TableCell>
-                          {/* Add more table cells for additional data */}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : (
-                <p>{queryAnswer}</p>
-              )
-            )}
-
-
-          </div>
-        )}
+        <Grid item xs={12}>
+          <SearchQueryReport queryAnswer={queryAnswer} />
+        </Grid>
         <Outlet />
         {queryAnswer && queryAnswer.totalCount > pageSize && (
           <div style={styles.pagination}>
