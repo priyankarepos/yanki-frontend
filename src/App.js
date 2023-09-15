@@ -121,7 +121,7 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
-  const [googleClientId, setGoogleClientId] = useState("1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com")
+  const googleClientId = "1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com";
 
   const [themeMode, setThemeMode] = useState("dark");
 
@@ -231,7 +231,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/signin"
+                    path="/signup"
                     element={
                       <AuthPagesProtection>
                         <AuthPageLayout>

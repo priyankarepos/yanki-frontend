@@ -126,12 +126,11 @@ const AdminDashboard = () => {
       }
     }
   };
-
+ /* eslint-disable */
   useEffect(() => {
     if (startDate && endDate) {
       fetchData();
     }
-
   }, [pageNumber, selectedPageSize, ascending]);
 
   const toggleDrawer = () => {

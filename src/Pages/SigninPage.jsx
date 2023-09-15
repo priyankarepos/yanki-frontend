@@ -28,7 +28,6 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
-import { GoogleLogin } from '@react-oauth/google';
 import { useGoogleLogin } from '@react-oauth/google';
 
 const SigninPage = () => {
