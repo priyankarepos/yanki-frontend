@@ -24,6 +24,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -94,6 +95,41 @@ const LoginPage = () => {
     }
   };
 
+  const onSuccess = async (codeResponse) => {
+    try {
+      setLoginLoading(true);
+      const { access_token } = codeResponse;
+      console.log("access_token",access_token)
+      console.log("codeResponse",codeResponse)
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+        { access_token }
+      );
+      if (response.status === 200) {
+        console.log("response", response.data.contentResponse);
+        // setLoginLoading(false);
+        window.localStorage.setItem(
+          process.env.REACT_APP_LOCALSTORAGE_TOKEN,
+          JSON.stringify(response.data.contentResponse)
+        )
+        navigate("/");
+       }else {
+        setLoginError(true);
+        setLoginErrorMsg("Authentication failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setLoginError(true);
+      setLoginErrorMsg("Something went wrong.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const login = useGoogleLogin({
+    onSuccess,
+  });
+
   return (
     <>
       <Container maxWidth="xl">
@@ -123,7 +159,7 @@ const LoginPage = () => {
               sx={{ marginBottom: "34px" }}
               className="text-center marginBottom-34"
             >
-              Welcome back!
+              Login your account
             </Typography>
             <Controller
               control={control}
@@ -248,14 +284,14 @@ const LoginPage = () => {
             >
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
-            <Divider sx={{ marginY: "20px" }}>or</Divider>
-            <Button variant="outlined" sx={{ marginBottom: "25px" }} fullWidth>
-              Google button from its library
+            <Divider sx={{ marginY: "28px" }}>or</Divider>
+            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px" }} fullWidth>
+              Login with google
             </Button>
-            <Box className="text-center">
+            <Box className="text-center" sx={{ marginTop: "28px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom>
                 Don't have an account?{" "}
-                <Link to="/signin" component={LinkBehavior} underline="none">
+                <Link to="/signup" component={LinkBehavior} underline="none">
                   <span className="font-bold cursor-pointer">SignUp</span>
                 </Link>
               </Typography>

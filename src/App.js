@@ -28,6 +28,7 @@ import axios from "axios";
 import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ChangeRole from "./Admin/ChangeRole";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Exporting context
 export const Context = createContext("");
@@ -48,7 +49,7 @@ export const ThemeModeContext = createContext({
 // };
 
 const accepts401 = [
-  "/signin",
+  "/signup",
   "/login",
   "/active-account",
   "/forgot-password",
@@ -120,6 +121,7 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
+  const [googleClientId, setGoogleClientId] = useState("1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com")
 
   const [themeMode, setThemeMode] = useState("dark");
 
@@ -179,10 +181,10 @@ function App() {
       process.env.REACT_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-          window.sessionStorage.getItem(
-            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
-          )
+        window.sessionStorage.getItem(
+          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
         )
+      )
       : "";
 
     if (!session) {
@@ -203,111 +205,112 @@ function App() {
   }, []);
 
   return (
-    <ThemeModeContext.Provider
-      value={{ themeMode, toggleThemeMode: toggleThemeMode }}
-    >
-      <ThemeProvider theme={currentTheme}>
-        <CssBaseline />
-        <div className="App">
-          {/* Wrapping with context */}
-          <Context.Provider
-            value={{ userLatitude, userLongitude, isLocationAllowed }}
-          >
-            {/* <Homepage /> */}
-            {/* <RouterProvider router={router} /> */}
-            <BrowserRouter>
-              <Routes>
-                <Route
-                  path="/login"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <LoginPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/signin"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <SigninPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/auth"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <TitlePage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/signin-success"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <SigninSuccessPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/active-account"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <ActiveAccountPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/forgot-password"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <ForgotPasswordPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/password-email-sent"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <PasswordEmailSentpage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/reset-password"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <ResetPasswordPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/reset-password-success"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <ResetPasswordSuccessPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                {/* <Route
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <ThemeModeContext.Provider
+        value={{ themeMode, toggleThemeMode: toggleThemeMode }}
+      >
+        <ThemeProvider theme={currentTheme}>
+          <CssBaseline />
+          <div className="App">
+            {/* Wrapping with context */}
+            <Context.Provider
+              value={{ userLatitude, userLongitude, isLocationAllowed }}
+            >
+              {/* <Homepage /> */}
+              {/* <RouterProvider router={router} /> */}
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    path="/login"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <LoginPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/signin"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <SigninPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/auth"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <TitlePage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/signin-success"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <SigninSuccessPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/active-account"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <ActiveAccountPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/forgot-password"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <ForgotPasswordPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/password-email-sent"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <PasswordEmailSentpage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <ResetPasswordPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/reset-password-success"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <ResetPasswordSuccessPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  {/* <Route
                   path="/backup-home"
                   element={
                     <UserPagesProtection>
@@ -367,6 +370,7 @@ function App() {
         </div>
       </ThemeProvider>
     </ThemeModeContext.Provider>
+  </GoogleOAuthProvider>
   );
 }
 
