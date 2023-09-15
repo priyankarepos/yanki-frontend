@@ -101,12 +101,18 @@ const LoginPage = () => {
       console.log("access_token",access_token)
       console.log("codeResponse",codeResponse)
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/google`,
+        `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
         { access_token }
       );
       if (response.status === 200) {
+        console.log("response", response.data.contentResponse);
+        // setLoginLoading(false);
+        window.localStorage.setItem(
+          process.env.REACT_APP_LOCALSTORAGE_TOKEN,
+          JSON.stringify(response.data.contentResponse)
+        )
         navigate("/");
-      } else {
+       }else {
         setLoginError(true);
         setLoginErrorMsg("Authentication failed.");
       }

@@ -101,12 +101,12 @@ const SigninPage = () => {
         console.log("codeResponse",codeResponse);
 
         const response = await axios.post(
-          `${process.env.REACT_APP_API_HOST}/api/auth/google`,
+          `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
           { access_token }
         );
   
         if (response.status === 200) {
-          navigate("/signin-success");
+          navigate("/login");
         } else {
           setSigninError(true);
           setSigninErrorMsg("Authentication failed.");
