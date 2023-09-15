@@ -119,7 +119,7 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
-  const [googleClientId, setGoogleClientId] = useState("319583384185-n3dtqla9d1s4lbk5t8cqvjo0e6p5ub4o.apps.googleusercontent.com")
+  const [googleClientId, setGoogleClientId] = useState("1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com")
 
   const [themeMode, setThemeMode] = useState("dark");
 
