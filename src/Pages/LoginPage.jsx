@@ -158,7 +158,7 @@ const LoginPage = () => {
               sx={{ marginBottom: "34px" }}
               className="text-center marginBottom-34"
             >
-              Welcome back!
+              Login your account
             </Typography>
             <Controller
               control={control}
@@ -290,7 +290,7 @@ const LoginPage = () => {
             <Box className="text-center" sx={{ marginTop: "28px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom>
                 Don't have an account?{" "}
-                <Link to="/signin" component={LinkBehavior} underline="none">
+                <Link to="/signup" component={LinkBehavior} underline="none">
                   <span className="font-bold cursor-pointer">SignUp</span>
                 </Link>
               </Typography>
