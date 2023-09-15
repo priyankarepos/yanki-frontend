@@ -26,6 +26,8 @@ import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
 import axios from "axios";
 import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
+import AdminDashboard from "./Admin/AdminDashboard";
+import ChangeRole from "./Admin/ChangeRole";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Exporting context
@@ -316,43 +318,59 @@ function App() {
                     </UserPagesProtection>
                   }
                 /> */}
-                  <Route
-                    path="/change-password"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <ChangePasswordPage />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/change-password-success"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ChangePasswordSuccessPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <HomePageMui />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                </Routes>
-              </BrowserRouter>
-            </Context.Provider>
-          </div>
-        </ThemeProvider>
-      </ThemeModeContext.Provider>
-    </GoogleOAuthProvider>
+                <Route
+                  path="/change-password"
+                  element={
+                    <UserPagesProtection>
+                      <UserPageLayout>
+                        <ChangePasswordPage />
+                      </UserPageLayout>
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/change-password-success"
+                  element={
+                    <AuthPagesProtection>
+                      <AuthPageLayout>
+                        <ChangePasswordSuccessPage />
+                      </AuthPageLayout>
+                    </AuthPagesProtection>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <UserPagesProtection>
+                      <UserPageLayout>
+                        <HomePageMui />
+                      </UserPageLayout>
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <UserPagesProtection>
+                      <AdminDashboard />
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/change-role"
+                  element={
+                    <UserPagesProtection>
+                      <ChangeRole />
+                    </UserPagesProtection>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </Context.Provider>
+        </div>
+      </ThemeProvider>
+    </ThemeModeContext.Provider>
+  </GoogleOAuthProvider>
   );
 }
 
