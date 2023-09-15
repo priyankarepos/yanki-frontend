@@ -27,6 +27,7 @@ import UserPageLayout from "./Components/Layout/UserPageLayout";
 import axios from "axios";
 import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 import AdminDashboard from "./Admin/AdminDashboard";
+import ChangeRole from "./Admin/ChangeRole";
 
 // Exporting context
 export const Context = createContext("");
@@ -349,6 +350,14 @@ function App() {
                   element={
                     <UserPagesProtection>
                       <AdminDashboard />
+                    </UserPagesProtection>
+                  }
+                />
+                <Route
+                  path="/change-role"
+                  element={
+                    <UserPagesProtection>
+                      <ChangeRole />
                     </UserPagesProtection>
                   }
                 />

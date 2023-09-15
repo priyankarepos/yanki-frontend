@@ -9,7 +9,17 @@ import {
   TableCell,
   TableBody,
   Paper,
+  Tooltip
 } from '@mui/material';
+
+const cellStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '600px', // Adjust the width at which scrolling should start
+  position: 'relative',
+  width:'100%'
+};
 
 const SearchQueryReport = ({ queryAnswer }) => {
 
@@ -33,15 +43,19 @@ const SearchQueryReport = ({ queryAnswer }) => {
                     <TableRow>
                       <TableCell>ID</TableCell>
                       <TableCell>Query</TableCell>
-                      {/* Add more table headers as needed */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {queryAnswer.data.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>{item.id}</TableCell>
-                        <TableCell>{item.query}</TableCell>
-                        {/* Add more table cells for additional data */}
+                        <TableCell>
+                          <Tooltip title={item.query} arrow>
+                            <div style={cellStyle}>
+                              {item.query}
+                            </div>
+                          </Tooltip>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

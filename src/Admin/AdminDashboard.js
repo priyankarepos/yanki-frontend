@@ -15,11 +15,17 @@ import {
   TextField,
   Button,
   Pagination,
-  Box
+  Box,
+  CircularProgress,
+  ListItemText,
+  ListItemIcon,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkYankilogo from '../Assets/images/logo-dark.svg';
 import SearchQueryReport from './SearchQueryReport';
+import HomeIcon from '@mui/icons-material/Home';
+import CreateAdminIcon from '@mui/icons-material/PersonAdd';
+
 const styles = {
   adminDashboard: {
     display: 'flex',
@@ -56,11 +62,13 @@ const styles = {
 };
 
 const AdminDashboard = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [startDate, setStartDate] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [startDate, setStartDate] = useState('');
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
-  const [endDate, setEndDate] = useState(currentDate.toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(
+    currentDate.toISOString().split('T')[0]
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -68,14 +76,9 @@ const AdminDashboard = () => {
 
   // Pagination and sorting state
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [ascending, setAscending] = useState(false);
+  const [selectedPageSize, setSelectedPageSize] = useState(10);
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      fetchData();
-    }
-  }, [pageNumber, pageSize, ascending]);
+  const [ascending, setAscending] = useState(true);
 
   const fetchData = async () => {
     try {
@@ -93,7 +96,7 @@ const AdminDashboard = () => {
             startDate: startDate,
             endDate: endDate,
             pageNumber: pageNumber,
-            pageSize: pageSize,
+            pageSize: selectedPageSize,
             ascending: ascending,
           },
           headers: {
@@ -124,6 +127,13 @@ const AdminDashboard = () => {
     }
   };
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchData();
+    }
+
+  }, [pageNumber, selectedPageSize, ascending]);
+
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -143,6 +153,10 @@ const AdminDashboard = () => {
 
   const handleSortingChange = (event) => {
     setAscending(event.target.value === 'asc');
+  };
+
+  const handlePageSizeChange = (event) => {
+    setSelectedPageSize(event.target.value);
   };
 
   return (
@@ -191,28 +205,28 @@ const AdminDashboard = () => {
             />
           </Link>
           <List>
-            <Link
-              to="/"
-              style={{ textDecoration: 'none', color: '#fff' }}
-            >
+            <Link to="/" style={{ textDecoration: 'none', color: '#fff' }}>
               <ListItem button>
-                Home
+                <ListItemIcon>
+                  <HomeIcon /> {/* Add your HomeIcon component */}
+                </ListItemIcon>
+                <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <ListItem button>
-              <Link
-                to="/search"
-                style={{ textDecoration: 'none', color: '#fff' }}
-              >
-                Create Admin
-              </Link>
-            </ListItem>
+            <Link to="/change-role" style={{ textDecoration: 'none', color: '#fff' }}>
+              <ListItem button>
+                <ListItemIcon>
+                  <CreateAdminIcon /> {/* Add your CreateAdminIcon component */}
+                </ListItemIcon>
+                <ListItemText primary="Create Admin" />
+              </ListItem>
+            </Link>
           </List>
         </div>
       </Drawer>
       <Box style={{ ...styles.content, marginLeft: contentMargin }}>
         <Toolbar />
-        <Typography variant="h6" sx={{ py: 2 }}>Search Query Report</Typography>
+        <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
         <Paper sx={{ p: 2 }}>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
@@ -225,7 +239,7 @@ const AdminDashboard = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                style={{ width: '100%' }}
+                fullWidth
               />
             </Grid>
             <Grid item xs={3}>
@@ -238,10 +252,10 @@ const AdminDashboard = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                style={{ width: '100%' }}
+                fullWidth
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <TextField
                 select
                 label="Sort Order"
@@ -253,25 +267,50 @@ const AdminDashboard = () => {
                 SelectProps={{
                   native: true,
                 }}
-                style={{ width: '100%' }}
+                fullWidth
               >
                 <option value="asc">Ascending</option>
                 <option value="desc">Descending</option>
               </TextField>
             </Grid>
-            <Grid item xs={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={2}>
+              <TextField
+                select
+                label="Queries per Page"
+                value={selectedPageSize}
+                onChange={handlePageSizeChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                SelectProps={{
+                  native: true,
+                }}
+                fullWidth
+                disabled={
+                  (queryAnswer?.totalCount <= 10 && selectedPageSize > queryAnswer?.totalCount) ||
+                  (pageNumber * selectedPageSize >= queryAnswer?.totalCount)
+                }
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={30}>30</option>
+                <option value={50}>50</option>
+              </TextField>
+
+
+            </Grid>
+            <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={fetchData}
                 disabled={isSubmitting}
-                style={{ width: '80%', maxWidth: '120px' }}
+                style={{ width: '100%', maxWidth: '120px' }}
               >
-                Submit
+                {isSubmitting ? <CircularProgress size={24} /> : 'Submit'}
               </Button>
             </Grid>
           </Grid>
-
         </Paper>
         {isError && (
           <Typography variant="body1" color="error">
@@ -282,10 +321,10 @@ const AdminDashboard = () => {
           <SearchQueryReport queryAnswer={queryAnswer} />
         </Grid>
         <Outlet />
-        {queryAnswer && queryAnswer.totalCount > pageSize && (
+        {queryAnswer && queryAnswer.totalCount > selectedPageSize && (
           <div style={styles.pagination}>
             <Pagination
-              count={Math.ceil(queryAnswer.totalCount / pageSize)}
+              count={Math.ceil(queryAnswer.totalCount / selectedPageSize)} // Use selectedPageSize
               page={pageNumber}
               onChange={handlePageChange}
               color="primary"
