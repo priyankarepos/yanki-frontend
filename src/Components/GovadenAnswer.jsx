@@ -48,14 +48,14 @@ const GovadenAnswer = ({ answer }) => {
                     </TableCell>
                     <TableCell component="th" scope="row">
                         <Tooltip title={row.name}>
-                            <div style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ maxWidth: 350, textTransform: 'capitalize' }}>
                                 {row.name}
                             </div>
                         </Tooltip>
                     </TableCell>
                     <TableCell>
                         <Tooltip title={row.formatted_address}>
-                            <div style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ maxWidth: 350 }}>
                                 {row.formatted_address}
                             </div>
                         </Tooltip>
@@ -89,21 +89,21 @@ const GovadenAnswer = ({ answer }) => {
                                                         ? filterRegularTimes(row.groupedByDayMinyanim[day].shachris).map((time, index) => (
                                                             <div key={index}>{time.displayTime}</div>
                                                         ))
-                                                        : 'N/A'}
+                                                        : 'Not Available'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {row.groupedByDayMinyanim[day]?.mincha
                                                         ? filterRegularTimes(row.groupedByDayMinyanim[day].mincha).map((time, index) => (
                                                             <div key={index}>{time.displayTime}</div>
                                                         ))
-                                                        : 'N/A'}
+                                                        : 'Not Available'}
                                                 </TableCell>
                                                 <TableCell>
                                                     {row.groupedByDayMinyanim[day]?.mariv
                                                         ? filterRegularTimes(row.groupedByDayMinyanim[day].mariv).map((time, index) => (
                                                             <div key={index}>{time.displayTime}</div>
                                                         ))
-                                                        : 'N/A'}
+                                                        : 'Not Available'}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
