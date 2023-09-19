@@ -15,6 +15,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import ThemeSwitcher from "./UI/ThemeSwitcher";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ export default function ProfielCircle() {
     parsedUserObject = undefined;
   }
 
+  const userRoles = parsedUserObject?.userObject?.userRoles || "";
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -50,6 +53,11 @@ export default function ProfielCircle() {
     handleClose();
     navigate("/change-password");
   };
+
+  const onClickAdmin = () => {
+    handleClose();
+    navigate("/admin");
+  }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
@@ -131,6 +139,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
+          {userRoles==="Admin" && <MenuItem onClick={onClickAdmin}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon fontSize="small" />
+            </ListItemIcon>
+            Go To Admin Panel
+          </MenuItem>}
 
           <Divider />
 
