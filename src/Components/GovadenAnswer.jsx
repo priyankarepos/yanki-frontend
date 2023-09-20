@@ -48,14 +48,14 @@ const GovadenAnswer = ({ answer }) => {
                     </TableCell>
                     <TableCell component="th" scope="row">
                         <Tooltip title={row.name}>
-                            <div style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ maxWidth: 350, textTransform: 'capitalize' }}>
                                 {row.name}
                             </div>
                         </Tooltip>
                     </TableCell>
                     <TableCell>
                         <Tooltip title={row.formatted_address}>
-                            <div style={{ maxWidth: 250, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ maxWidth: 350 }}>
                                 {row.formatted_address}
                             </div>
                         </Tooltip>
@@ -73,9 +73,9 @@ const GovadenAnswer = ({ answer }) => {
                                     <TableHead>
                                         <TableRow sx={{ '& > *': { borderBottom: '1px solid #3f7baf' } }}>
                                             <TableCell><Typography>Day</Typography></TableCell>
-                                            <TableCell><Typography>Shachris</Typography></TableCell>
+                                            <TableCell><Typography>Shacharis</Typography></TableCell>
                                             <TableCell><Typography>Mincha</Typography></TableCell>
-                                            <TableCell><Typography>Mariv</Typography></TableCell>
+                                            <TableCell><Typography>Maariv</Typography></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
