@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { Typography, Switch, FormControlLabel } from '@mui/material';
+import { Typography, Switch, FormControlLabel, Tooltip } from '@mui/material';
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { styled } from '@mui/system';
@@ -11,6 +11,7 @@ const StyledCarouselItem = styled('div')(({ theme }) => ({
     textAlign: 'center',
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
+    marginTop: '10px',
     borderRadius: theme.shape.borderRadius,
     '& iframe': {
         width: '100%',
@@ -19,173 +20,103 @@ const StyledCarouselItem = styled('div')(({ theme }) => ({
     },
 }));
 
-const TorahanytimeAnswer = () => {
+const TorahanytimeAnswer = ({ answer }) => {
     const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
-
-    const data = {
-        "isSucess": true,
-        "message": null,
-        "videoResult": null,
-        "godavenPrayerDetails": null,
-        "torahAnytimeLectureDtos": {
-            "timed_out": false,
-            "hits": {
-                "hits": [
-                    {
-                        "_id": "99999",
-                        "video": true,
-                        "audio": false,
-                        "audioAndVideo": false,
-                        "_source": {
-                            "title": "Video True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": "https://www.torahanytime.com/embed",
-                            "audio_url": null
-                        }
-                    },
-                    {
-                        "_id": "99918",
-                        "video": false,
-                        "audio": true,
-                        "audioAndVideo": false,
-                        "_source": {
-                            "title": "Audio True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": null,
-                            "audio_url": "https://www.torahanytime.com/embed"
-                        }
-                    },
-                    {
-                        "_id": "99846",
-                        "video": false,
-                        "audio": false,
-                        "audioAndVideo": true,
-                        "_source": {
-                            "title": "Audio And Video True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": "https://www.torahanytime.com/embed",
-                            "audio_url": "https://www.torahanytime.com/embed"
-                        }
-                    },
-                    {
-                        "_id": "99997",
-                        "video": true,
-                        "audio": false,
-                        "audioAndVideo": false,
-                        "_source": {
-                            "title": "Video True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": "https://www.torahanytime.com/embed",
-                            "audio_url": null
-                        }
-                    },
-                    {
-                        "_id": "99998",
-                        "video": true,
-                        "audio": false,
-                        "audioAndVideo": false,
-                        "_source": {
-                            "title": "Video True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": "https://www.torahanytime.com/embed",
-                            "audio_url": null
-                        }
-                    },
-                    {
-                        "_id": "99847",
-                        "video": false,
-                        "audio": false,
-                        "audioAndVideo": true,
-                        "_source": {
-                            "title": "Audio And Video True",
-                            "speaker_name": "R. Shay Tahan",
-                            "language_name": "English",
-                            "vimeo_video_links": "https://www.torahanytime.com/embed",
-                            "audio_url": "https://www.torahanytime.com/embed"
-                        }
-                    },
-                ]
-            }
-        },
-        "contentResponse": null
-    };
+    const data = answer?.torahAnytimeLectures?.hits?.hits || [];
+    const isAudio = answer?.torahAnytimeLectures?.isAudio || "";
+    const isVideo = answer?.torahAnytimeLectures?.isVideo || "";
 
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
-            items: 3
+            items: 3,
+            slidesToSlide: 3
         },
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
-            items: 3
+            items: 3,
+            slidesToSlide: 3
         },
         tablet: {
             breakpoint: { max: 1024, min: 464 },
-            items: 2
+            items: 2,
+            slidesToSlide: 2
         },
         mobile: {
             breakpoint: { max: 464, min: 0 },
-            items: 1
-        }
+            items: 1,
+        },
     };
 
     return (
         <Box>
             <Paper sx={{ p: 2 }}>
-                <div>
-                    <FormControlLabel
-                        control={<Switch checked={showAudioAndVideo} onChange={() => setShowAudioAndVideo(!showAudioAndVideo)} />}
-                        label="Show Audio and Video Together"
-                    />
-                </div>
+                {isVideo && isAudio && (
+                    <div>
+                        <FormControlLabel
+                            control={<Switch checked={showAudioAndVideo} onChange={() => setShowAudioAndVideo(!showAudioAndVideo)} />}
+                            label={`Choose Your Experience: ${!showAudioAndVideo ? "Audio Available" : "Video Available"}`}
+                        />
+                    </div>
+                )}
                 <Carousel responsive={responsive}>
-                    {data.torahAnytimeLectureDtos?.hits?.hits.map((item) => (
+                    {data?.map((item) => (
                         <StyledCarouselItem key={item._id} className='youtube-box'>
-                            <Typography variant="h6" component="div">{item._source.title}</Typography>
-                            <Typography>Speaker: {item._source.speaker_name}</Typography>
-
-                            {/* Check for video */}
-                            {item.video && (
+                            {isVideo && !isAudio && (
                                 <iframe
                                     title={item._source.title}
-                                    src={`${item._source.vimeo_video_links}?v=${item._id}`}
+                                    src={`https://www.torahanytime.com/embed/?v=${item._id}`}
                                     frameBorder="0"
                                     allowFullScreen
                                 ></iframe>
                             )}
-
-                            {/* Check for audio */}
-                            {item.audio && (
+                            {isAudio && !isVideo && (
                                 <iframe
                                     title={item._source.title}
-                                    src={`${item._source.audio_url}?a=${item._id}`}
+                                    src={`https://www.torahanytime.com/embed/?a=${item._id}`}
                                     frameBorder="0"
+                                    allowFullScreen
                                 ></iframe>
                             )}
-
-                            {/* Check for audio and video */}
-                            {item.audioAndVideo && (
+                            {isAudio && isVideo && (
                                 <div>
-                                    {!showAudioAndVideo ? (
+                                    {showAudioAndVideo ? (
                                         <iframe
                                             title={item._source.title}
-                                            src={`${item._source.vimeo_video_links}?v=${item._id}`}
+                                            src={`https://www.torahanytime.com/embed/?a=${item._id}`}
                                             frameBorder="0"
+                                            allowFullScreen
                                         ></iframe>
                                     ) : (
-                                        <iframe
-                                            title={item._source.title}
-                                            src={`${item._source.vimeo_video_links}?a=${item._id}`}
-                                            frameBorder="0"
-                                        ></iframe>
+                                        <Tooltip title="Click to switch to video">
+                                            <iframe
+                                                title={item._source.title}
+                                                src={`https://www.torahanytime.com/embed/?v=${item._id}`}
+                                                frameBorder="0"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </Tooltip>
                                     )}
                                 </div>
                             )}
+
+                            <Typography sx={{ pt: 2 }} variant="h6" component="div">
+                                <Tooltip title={item._source.title}>
+                                    <div style={{
+                                        maxWidth: 300,
+                                        maxHeight: '70px', // Two lines of text
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        display: '-webkit-box',
+                                        '-webkit-line-clamp': 2, // Limit to two lines
+                                        '-webkit-box-orient': 'vertical',
+                                        textAlign: 'left'
+                                    }}>
+                                        {item._source.title}
+                                    </div>
+                                </Tooltip>
+                            </Typography>
+                            <Typography style={{ textAlign: 'left' }}>Speaker: {item._source.speaker_name}</Typography>
                         </StyledCarouselItem>
                     ))}
                 </Carousel>
@@ -195,4 +126,5 @@ const TorahanytimeAnswer = () => {
 };
 
 export default TorahanytimeAnswer;
+
 
