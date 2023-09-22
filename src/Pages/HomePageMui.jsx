@@ -5,9 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-
 import SearchIcon from "@mui/icons-material/Search";
-
 import { useForm, Controller } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { Context, ThemeModeContext } from "../App";
@@ -17,6 +15,7 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
 // import ProfileCircle from "../Components/ProfileCircle";
+import TorahanytimeAnswer from "../Components/TorahanytimeAnswer"
 
 const HomePageMui = () => {
   const recipientEmail = "hello@yanki.ai";
@@ -215,10 +214,10 @@ const HomePageMui = () => {
             )}
             */}
 
-            {/* YouTube */}
-            {/* {!queryAnswer && (
-              <TorahanytimeAnswer />
-            )} */}
+            {queryAnswer?.isSucess &&
+              queryAnswer?.torahAnytimeLectures?.hits?.hits?.length && (
+                <TorahanytimeAnswer answer={queryAnswer} />
+              )}
 
             {queryAnswer?.isSucess &&
               queryAnswer?.godavenPrayerDetails?.length && (
