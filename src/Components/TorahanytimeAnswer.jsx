@@ -108,7 +108,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                 <Carousel responsive={responsive}>
                     {data?.length && data?.map((item) => (
                         <StyledCarouselItem key={item._id} className="youtube-box">
-                            {isVideo && !isAudio && (
+                            {isVideo && !isAudio && item._source.vimeo_video_links && item._source.vimeo_video_links?.length &&  (
                                 <div key={item._id}>
                                     {item?._id <= fixedId ? (
                                         <Vimeo
@@ -143,19 +143,19 @@ const TorahanytimeAnswer = ({ answer }) => {
                             {isAudio && !isVideo && (
                                 <audio
                                     ref={ref => audioRefs.current[item._id] = ref}
-                                    src={item._source.audio_url}
+                                    src={item._source.audio_url && item._source.audio_url?.length && item._source.audio_url}
                                     controls
                                     width="100%"
                                     height="30px"
                                     onPlay={() => handlePlayMedia(item._source.audio_url, 'audio', item._id)}
                                 />
                             )}
-                            {isAudio && isVideo && (
+                            {isAudio && isVideo && item._source.vimeo_video_links && item._source.vimeo_video_links?.length &&  (
                                 <div>
                                     {showAudioAndVideo ? (
                                         <audio
                                             ref={ref => audioRefs.current[item._id] = ref}
-                                            src={item._source.audio_url}
+                                            src={item._source.audio_url && item._source.audio_url?.length && item._source.audio_url}
                                             controls
                                             width="100%"
                                             height="30px"
