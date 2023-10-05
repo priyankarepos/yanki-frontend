@@ -70,27 +70,12 @@ const TorahanytimeAnswer = ({ answer }) => {
         }
     };
 
-
     const handlePlayMedia = (mediaUrl, type, itemId) => {
         if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === itemId) {
             pauseCurrentlyPlayingMedia();
         } else {
             pauseCurrentlyPlayingMedia();
-
-            if (type === 'video' && itemId <= fixedId) {
-                setCurrentlyPlayingMedia({ url: mediaUrl, type, itemId });
-            } else {
-                if (currentlyPlayingMedia && currentlyPlayingMedia.type === 'video' && currentlyPlayingMedia.itemId <= fixedId) {
-                    const vimeoVideoId = currentlyPlayingMedia.itemId;
-                    const vimeoVideoRef = videoRefs.current[vimeoVideoId];
-                    if (vimeoVideoRef && vimeoVideoRef.pauseVideo) {
-                        vimeoVideoRef.pauseVideo();
-                        pauseCurrentlyPlayingMedia();
-                    }
-                }
-
-                setCurrentlyPlayingMedia({ url: mediaUrl, type, itemId });
-            }
+            setCurrentlyPlayingMedia({ url: mediaUrl, type, itemId });
         }
     };
 
@@ -127,18 +112,14 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             ref={ref => videoRefs.current[item._id] = ref}
                                             video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
                                             width="100%"
-                                            height="300px"
+                                            height="150px"
                                             autoplay={false}
                                             controls={true}
                                             showByline={false}
                                             showTitle={false}
                                             showPortrait={false}
                                             loop={false}
-                                            autopause={0}
-                                            badge={false}
-                                            showLike={false}
-                                            showWatchLater={false}
-                                            showShare={false}
+                                            autopause={1}
                                             onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'video', item._id)}
                                         />
                                     ) : (
@@ -148,7 +129,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             src={item._source.vimeo_video_links[0]}
                                             controls
                                             width="100%"
-                                            height="195px"
+                                            height="150px"
                                             onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], 'video', item._id)}
                                         />
                                     )}
@@ -183,28 +164,23 @@ const TorahanytimeAnswer = ({ answer }) => {
                                                         ref={ref => videoRefs.current[item._id] = ref}
                                                         video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
                                                         width="100%"
-                                                        height="300px"
+                                                        height="150px"
                                                         autoplay={false}
                                                         controls={true}
                                                         showByline={false}
                                                         showTitle={false}
                                                         showPortrait={false}
                                                         loop={false}
-                                                        autopause={0}
-                                                        badge={false}
-                                                        showLike={false}
-                                                        showWatchLater={false}
-                                                        showShare={false}
+                                                        autopause={1}
                                                         onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'video', item._id)}
                                                     />
                                                 ) : (
                                                     <video
-                                                        key={item._id}
                                                         ref={ref => videoRefs.current[item._id] = ref}
                                                         src={item._source.vimeo_video_links[0]}
                                                         controls
                                                         width="100%"
-                                                        height="195px"
+                                                        height="150px"
                                                         onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], 'video', item._id)}
                                                     />
                                                 )}
