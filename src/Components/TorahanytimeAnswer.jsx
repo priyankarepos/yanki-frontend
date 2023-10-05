@@ -107,7 +107,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                     </div>
                 )}
                 <Carousel responsive={responsive}>
-                    {data?.map((item) => (
+                    {data?.length && data?.map((item) => (
                         <StyledCarouselItem key={item._id} className="youtube-box">
                             {isVideo && !isAudio && (
                                 <div key={item._id}>
@@ -167,19 +167,21 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             <div key={item._id}>
                                                 {item?._id <= fixedId ? (
                                                     <Vimeo
-                                                        ref={ref => videoRefs.current[item._id] = ref}
-                                                        video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
-                                                        width="100%"
-                                                        height="150px"
-                                                        autoplay={false}
-                                                        controls={true}
-                                                        showByline={false}
-                                                        showTitle={false}
-                                                        showPortrait={false}
-                                                        loop={false}
-                                                        autopause={true}
-                                                        onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'video', item._id)}
-                                                    />
+                                                    id={item._id}
+                                                    ref={ref => vimeoRefs.current[item._id] = ref}
+                                                    video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
+                                                    width="100%"
+                                                    height="150px"
+                                                    autoplay={false}
+                                                    controls={true}
+                                                    showByline={false}
+                                                    showTitle={false}
+                                                    showPortrait={false}
+                                                    loop={false}
+                                                    autopause={true}
+                                                    // paused={false}
+                                                    onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'vimeo', item._id)}
+                                                />
                                                 ) : (
                                                     <video
                                                         ref={ref => videoRefs.current[item._id] = ref}
