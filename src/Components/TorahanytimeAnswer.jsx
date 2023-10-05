@@ -34,7 +34,6 @@ const TorahanytimeAnswer = ({ answer }) => {
     const audioRefs = useRef({});
     const videoRefs = useRef({});
     const vimeoRefs = useRef({});
-    const vimeoPlayerRef = useRef();
 
 
     const responsive = {
@@ -66,10 +65,10 @@ const TorahanytimeAnswer = ({ answer }) => {
           } else if (currentlyPlayingMedia.type === 'video') {
             const videoRef = videoRefs.current[currentlyPlayingMedia.itemId];
             if (videoRef && typeof videoRef.pause === 'function') {
-              videoRef.pause();
+                videoRef.pause();
             }
-          } else if (currentlyPlayingMedia.type === 'vimeo' && vimeoPlayerRef.current) {
-            vimeoPlayerRef.current.pause();
+          } else if (currentlyPlayingMedia.type === 'vimeo' ) {
+            vimeoRefs.current[currentlyPlayingMedia.itemId].player.pause();
           }
           setCurrentlyPlayingMedia(null);
         }
@@ -114,6 +113,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 <div key={item._id}>
                                     {item?._id <= fixedId ? (
                                         <Vimeo
+                                            id={item._id}
                                             ref={ref => vimeoRefs.current[item._id] = ref}
                                             video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
                                             width="100%"
@@ -125,6 +125,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             showPortrait={false}
                                             loop={false}
                                             autopause={true}
+                                            // paused={false}
                                             onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'vimeo', item._id)}
                                         />
                                     ) : (
