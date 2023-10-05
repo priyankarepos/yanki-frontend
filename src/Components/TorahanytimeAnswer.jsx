@@ -25,7 +25,6 @@ const TorahanytimeAnswer = ({ answer }) => {
     const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
     const data = answer?.torahAnytimeLectures?.hits?.hits || [];
     const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
-    console.log("currentlyPlayingMedia", currentlyPlayingMedia);
     const fixedId = 23200;
 
     const isAudio = answer?.torahAnytimeLectures?.isAudio || false;
