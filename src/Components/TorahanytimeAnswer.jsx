@@ -25,6 +25,7 @@ const TorahanytimeAnswer = ({ answer }) => {
     const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
     const data = answer?.torahAnytimeLectures?.hits?.hits || [];
     const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
+    console.log("currentlyPlayingMedia", currentlyPlayingMedia);
     const fixedId = 23200;
 
     const isAudio = answer?.torahAnytimeLectures?.isAudio || false;
@@ -32,6 +33,9 @@ const TorahanytimeAnswer = ({ answer }) => {
 
     const audioRefs = useRef({});
     const videoRefs = useRef({});
+    const vimeoRefs = useRef({});
+    const vimeoPlayerRef = useRef();
+
 
     const responsive = {
         superLargeDesktop: {
@@ -55,20 +59,21 @@ const TorahanytimeAnswer = ({ answer }) => {
         },
     };
 
-
     const pauseCurrentlyPlayingMedia = () => {
         if (currentlyPlayingMedia) {
-            if (currentlyPlayingMedia.type === 'audio' && audioRefs.current[currentlyPlayingMedia.itemId]) {
-                audioRefs.current[currentlyPlayingMedia.itemId].pause();
-            } else if (currentlyPlayingMedia.type === 'video') {
-                const videoRef = videoRefs.current[currentlyPlayingMedia.itemId];
-                if (videoRef && typeof videoRef.pause === 'function') {
-                    videoRef.pause();
-                }
+          if (currentlyPlayingMedia.type === 'audio' && audioRefs.current[currentlyPlayingMedia.itemId]) {
+            audioRefs.current[currentlyPlayingMedia.itemId].pause();
+          } else if (currentlyPlayingMedia.type === 'video') {
+            const videoRef = videoRefs.current[currentlyPlayingMedia.itemId];
+            if (videoRef && typeof videoRef.pause === 'function') {
+              videoRef.pause();
             }
-            setCurrentlyPlayingMedia(null);
+          } else if (currentlyPlayingMedia.type === 'vimeo' && vimeoPlayerRef.current) {
+            vimeoPlayerRef.current.pause();
+          }
+          setCurrentlyPlayingMedia(null);
         }
-    };
+      };
 
     const handlePlayMedia = (mediaUrl, type, itemId) => {
         if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === itemId) {
@@ -109,7 +114,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 <div key={item._id}>
                                     {item?._id <= fixedId ? (
                                         <Vimeo
-                                            ref={ref => videoRefs.current[item._id] = ref}
+                                            ref={ref => vimeoRefs.current[item._id] = ref}
                                             video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
                                             width="100%"
                                             height="150px"
@@ -119,8 +124,8 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             showTitle={false}
                                             showPortrait={false}
                                             loop={false}
-                                            autopause={1}
-                                            onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'video', item._id)}
+                                            autopause={true}
+                                            onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'vimeo', item._id)}
                                         />
                                     ) : (
                                         <video
@@ -171,7 +176,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                                         showTitle={false}
                                                         showPortrait={false}
                                                         loop={false}
-                                                        autopause={1}
+                                                        autopause={true}
                                                         onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], 'video', item._id)}
                                                     />
                                                 ) : (
