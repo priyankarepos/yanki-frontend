@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import {
   Drawer,
   List,
@@ -23,8 +23,9 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkYankilogo from '../Assets/images/logo-dark.svg';
 import SearchQueryReport from './SearchQueryReport';
-import HomeIcon from '@mui/icons-material/Home';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import CreateAdminIcon from '@mui/icons-material/PersonAdd';
+import "./AdminStyle.css"
 
 const styles = {
   adminDashboard: {
@@ -41,7 +42,7 @@ const styles = {
     flexGrow: 1,
   },
   sidebar: {
-    width: '250px',
+    width: '270px',
     padding: '16px',
     color: '#fff',
   },
@@ -126,7 +127,7 @@ const AdminDashboard = () => {
       }
     }
   };
- /* eslint-disable */
+  /* eslint-disable */
   useEffect(() => {
     if (startDate && endDate) {
       fetchData();
@@ -136,7 +137,7 @@ const AdminDashboard = () => {
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
-  const contentMargin = drawerOpen ? '250px' : '0';
+  const contentMargin = drawerOpen ? '272px' : '0';
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -204,22 +205,31 @@ const AdminDashboard = () => {
             />
           </Link>
           <List>
-            <Link to="/" style={{ textDecoration: 'none', color: '#fff' }}>
-              <ListItem button>
-                <ListItemIcon>
-                  <HomeIcon /> {/* Add your HomeIcon component */}
+            <NavLink
+              to="/admin"
+              style={{ textDecoration: 'none', color: '#fff' }}
+              activeClassName="active"
+              exact
+            >
+              <ListItem button className='highlightStyle'>
+                <ListItemIcon style={{ minWidth: "40px" }}>
+                  <AssignmentIcon />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <ListItemText primary="Search Querry Report" />
               </ListItem>
-            </Link>
-            <Link to="/change-role" style={{ textDecoration: 'none', color: '#fff' }}>
-              <ListItem button>
-                <ListItemIcon>
-                  <CreateAdminIcon /> {/* Add your CreateAdminIcon component */}
+            </NavLink>
+            <NavLink
+              to="/change-role"
+              style={{ textDecoration: 'none', color: '#fff' }}
+              activeClassName="active"
+            >
+              <ListItem button className='highlightStyle'>
+                <ListItemIcon style={{ minWidth: "40px" }}>
+                  <CreateAdminIcon />
                 </ListItemIcon>
                 <ListItemText primary="Create Admin" />
               </ListItem>
-            </Link>
+            </NavLink>
           </List>
         </div>
       </Drawer>
