@@ -215,7 +215,7 @@ const AdminDashboard = () => {
                 <ListItemIcon style={{ minWidth: "40px" }}>
                   <AssignmentIcon />
                 </ListItemIcon>
-                <ListItemText primary="Search Querry Report" />
+                <ListItemText primary="Search Query Report" />
               </ListItem>
             </NavLink>
             <NavLink
