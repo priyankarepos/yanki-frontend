@@ -1,9 +1,9 @@
-import AuthPageHeader from "../UI/AuthPageHeader";
+// import AuthPageHeader from "../UI/AuthPageHeader";
 
 const AuthPageLayout = ({ children }) => {
   return (
     <>
-      <AuthPageHeader />
+      {/* <AuthPageHeader /> */}
       {children}
     </>
   );

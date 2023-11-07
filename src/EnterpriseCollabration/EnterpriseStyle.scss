@@ -1,0 +1,24 @@
+.EnterpriseCategorySelect div {
+    display: flex;
+}
+
+.custom-focused-label.Mui-focused {
+    background-color: #fff !important;
+  }
+
+  .enterpriseFormBox .css-p1nw1t-MuiInputBase-input-MuiOutlinedInput-input{
+    color: #6fa8dd !important;
+  }  
+
+  .enterpriseFormBox ::placeholder {
+    color: #6fa8dd; /* Change this to the color you want */
+  }  
+
+  .enterpriseFormBox .react-tagsinput{
+    padding: 0;
+    border: none;
+  }
+
+  .enterpriseFormBox .react-tagsinput-tag {
+    display: none;
+}

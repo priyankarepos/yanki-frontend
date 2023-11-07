@@ -12,7 +12,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
 import LoginPage from "./Pages/LoginPage";
 import SigninPage from "./Pages/SigninPage";
-import TitlePage from "./Pages/TitlePage";
+// import TitlePage from "./Pages/TitlePage";
 import SigninSuccessPage from "./Pages/SigninSuccessPage";
 import ActiveAccountPage from "./Pages/ActiveAccountPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
@@ -20,7 +20,7 @@ import PasswordEmailSentpage from "./Pages/PasswordEmailSentPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
 import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
-import HomePageMui from "./Pages/HomePageMui";
+// import HomePageMui from "./Pages/HomePageMui";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
@@ -29,6 +29,13 @@ import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ChangeRole from "./Admin/ChangeRole";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import NewHomePageMui from "./Pages/NewHomePageMui";
+import NewTitlePage from "./Pages/NewTitlePage";
+import EnterpriseSignup from "./Pages/EnterpriseSignup";
+import EnterpriseDashboard from "./EnterpriseCollabration/EnterpriseDashboard";
+import EnterprisePendingStatusPage from "./Pages/EnterprisePendingStatusPage";
+import EnterpriseProfile from "./EnterpriseCollabration/EnterpriseProfile";
+import Departments from "./EnterpriseCollabration/Departments";
 
 // Exporting context
 export const Context = createContext("");
@@ -55,6 +62,7 @@ const accepts401 = [
   "/forgot-password",
   "/reset-password",
   "/change-password",
+  "/enterprise-signup",
 ];
 
 /* 
@@ -124,6 +132,10 @@ function App() {
   const googleClientId = "1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com";
 
   const [themeMode, setThemeMode] = useState("dark");
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   const options = {
     enableHighAccuracy: true,
@@ -214,7 +226,7 @@ function App() {
           <div className="App">
             {/* Wrapping with context */}
             <Context.Provider
-              value={{ userLatitude, userLongitude, isLocationAllowed }}
+              value={{ userLatitude, userLongitude, isLocationAllowed, toggleDrawer, drawerOpen }}
             >
               {/* <Homepage /> */}
               {/* <RouterProvider router={router} /> */}
@@ -245,7 +257,8 @@ function App() {
                     element={
                       <AuthPagesProtection>
                         <AuthPageLayout>
-                          <TitlePage />
+                          {/* <TitlePage /> */}
+                          <NewTitlePage />
                         </AuthPageLayout>
                       </AuthPagesProtection>
                     }
@@ -318,59 +331,102 @@ function App() {
                     </UserPagesProtection>
                   }
                 /> */}
-                <Route
-                  path="/change-password"
-                  element={
-                    <UserPagesProtection>
-                      <UserPageLayout>
-                        <ChangePasswordPage />
-                      </UserPageLayout>
-                    </UserPagesProtection>
-                  }
-                />
-                <Route
-                  path="/change-password-success"
-                  element={
-                    <AuthPagesProtection>
-                      <AuthPageLayout>
-                        <ChangePasswordSuccessPage />
-                      </AuthPageLayout>
-                    </AuthPagesProtection>
-                  }
-                />
-                <Route
-                  path="/"
-                  element={
-                    <UserPagesProtection>
-                      <UserPageLayout>
-                        <HomePageMui />
-                      </UserPageLayout>
-                    </UserPagesProtection>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <UserPagesProtection>
-                      <AdminDashboard />
-                    </UserPagesProtection>
-                  }
-                />
-                <Route
-                  path="/change-role"
-                  element={
-                    <UserPagesProtection>
-                      <ChangeRole />
-                    </UserPagesProtection>
-                  }
-                />
-              </Routes>
-            </BrowserRouter>
-          </Context.Provider>
-        </div>
-      </ThemeProvider>
-    </ThemeModeContext.Provider>
-  </GoogleOAuthProvider>
+                  <Route
+                    path="/change-password"
+                    element={
+                      <UserPagesProtection>
+                        <UserPageLayout>
+                          <ChangePasswordPage />
+                        </UserPageLayout>
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/change-password-success"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <ChangePasswordSuccessPage />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/"
+                    element={
+                      <UserPagesProtection>
+                        <UserPageLayout>
+                          {/* <HomePageMui /> */}
+                          <NewHomePageMui />
+                        </UserPageLayout>
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin"
+                    element={
+                      <UserPagesProtection>
+                        <AdminDashboard />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/change-role"
+                    element={
+                      <UserPagesProtection>
+                        <ChangeRole />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/enterprise-signup"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <EnterpriseSignup />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/enterprise"
+                    element={
+                      <UserPagesProtection>
+                        <EnterpriseDashboard />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/enterprise-status-pending"
+                    element={
+                      <UserPagesProtection>
+                        <EnterprisePendingStatusPage />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/enterprise/enterprise-profile"
+                    element={
+                      <UserPagesProtection>
+                        <EnterpriseProfile />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/enterprise/departments"
+                    element={
+                      <UserPagesProtection>
+                        <Departments />
+                      </UserPagesProtection>
+                    }
+                  />
+                </Routes>
+              </BrowserRouter>
+            </Context.Provider>
+          </div>
+        </ThemeProvider>
+      </ThemeModeContext.Provider>
+    </GoogleOAuthProvider>
   );
 }
 
