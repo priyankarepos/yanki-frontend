@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
     Drawer,
@@ -12,6 +12,7 @@ import {
     Box,
     ListItemText,
     ListItemIcon,
+    useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkYankilogo from '../Assets/images/logo-dark.svg';
@@ -21,6 +22,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
+import throttle from 'lodash/throttle';
 
 const styles = {
     enterpriseDashboard: {
@@ -59,28 +61,46 @@ const styles = {
 };
 
 const EnterpriseDashboard = () => {
-    const {  toggleDrawer, drawerOpen } = useContext(Context);
+    const { setDrawerOpen, drawerOpen } = useContext(Context);
     // const [drawerOpen, setDrawerOpen] = useState(true);
     // const [isDropdownOpen, setDropdownOpen] = useState(true);
 
     const navigate = useNavigate();
 
-    // const toggleDrawer = () => {
-    //     setDrawerOpen(!drawerOpen);
-    // };
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
+
+    const throttledToggleDrawer = throttle(toggleDrawer, 200);
+    useEffect(() => {
+        if (isSmallScreen && !drawerOpen) {
+            setDrawerOpen(false);
+        }
+    }, [isSmallScreen, drawerOpen, setDrawerOpen]);
+
+    useEffect(() => {
+        window.addEventListener("resize", throttledToggleDrawer);
+        return () => {
+            window.removeEventListener("resize", throttledToggleDrawer);
+        };
+    }, [throttledToggleDrawer]);
 
     // const toggleDropdown = () => {
     //     setDropdownOpen(!isDropdownOpen);
     // };
 
+
     return (
         <div style={styles.enterpriseDashboard}>
             <CssBaseline />
-            <AppBar position="fixed" style={styles.appBar}>
+            <AppBar position="fixed" style={styles.appBar} className='appBarSmallScreen'>
                 <Toolbar>
-                    <Link
+                    {/* <Link
                         to="/"
                         style={{ textDecoration: 'none', width: "270px", }}
+                        className="logoStyleSmallScreen"
                     >
                         <img
                             src={DarkYankilogo}
@@ -88,9 +108,9 @@ const EnterpriseDashboard = () => {
                             className="logo"
                             alt="Yanki logo"
                         />
-                    </Link>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "calc(100% - 270px)" }}>
-                    <Typography variant="h6">Networking Interface</Typography>
+                    </Link> */}
+                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0",  }}>
+                        { <Typography variant="h6">Networking Interface</Typography>}
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -103,6 +123,7 @@ const EnterpriseDashboard = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
+
             <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
@@ -132,11 +153,11 @@ const EnterpriseDashboard = () => {
                         <Collapse in={isDropdownOpen} sx={{marginLeft:"20px",}}>
                             <List>
                                 <NavLink
-                                    to="/enterprise/enterprise-profile"
+                                    to="/enterprise/profile"
                                     style={{ textDecoration: 'none', color: '#fff' }}
                                     activeClassName="active"
                                 >
-                                    <ListItem button onClick={()=>navigate("/enterprise/enterprise-profile")}>
+                                    <ListItem button onClick={()=>navigate("/enterprise/profile")}>
                                         <ListItemIcon>
                                             <BusinessIcon />
                                         </ListItemIcon>
@@ -160,11 +181,11 @@ const EnterpriseDashboard = () => {
                     </List> */}
                     <List>
                         <NavLink
-                            to="/enterprise/enterprise-profile"
+                            to="/enterprise/profile"
                             style={{ textDecoration: 'none', color: '#fff' }}
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/enterprise-profile")}>
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
                                 <ListItemIcon>
                                     <BusinessIcon />
                                 </ListItemIcon>

@@ -20,7 +20,7 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
 import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
-import { useForm, Controller } from "react-hook-form";
+// import { useForm, Controller } from "react-hook-form";
 import { useContext } from "react";
 import { Context, ThemeModeContext } from "../App";
 import AddIcon from "@mui/icons-material/Add";
@@ -62,33 +62,18 @@ const NewHomePageMui = () => {
   const { userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
   const { themeMode } = useContext(ThemeModeContext);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      searchQuery: searchQuery,
-    },
-  });
 
-  const onError = (data) => {
-    console.log("onError: ", data);
-  };
-
-  const onSubmit = async (data) => {
-    console.log("data", data);
+  const onSubmit = async () => {
     try {
       setIsSubmitting(true);
       setIsError(false);
       setErrorMsg("");
       setQueryAnswer(null);
+  
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
-        { prompt: data.searchQuery },
+        { prompt: searchQuery }, // Use searchQuery directly
         {
           headers: {
             "Content-Type": "application/json",
@@ -99,7 +84,7 @@ const NewHomePageMui = () => {
           },
         }
       );
-
+  
       if (response.status === 200) {
         setIsSubmitting(false);
         setQueryAnswer(response.data);
@@ -131,11 +116,11 @@ const NewHomePageMui = () => {
     }
   }, [queryAnswer]);
 
-  const onReset = () => {
-    reset();
-    setQueryAnswer(null);
-    setIsError(false);
-  };
+//   const onReset = () => {
+//     reset();
+//     setQueryAnswer(null);
+//     setIsError(false);
+//   };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -414,78 +399,67 @@ const NewHomePageMui = () => {
                 ))}
               </Carousel>
             )}
-            <form onSubmit={handleSubmit(onSubmit, onError)} onReset={onReset}>
-              <Controller
-                control={control}
-                name="searchQuery"
-                rules={{ required: { value: true } }}
-                render={({ field }) => (
-                  <Box
+            <form>
+              <Box
+                sx={{
+                  bottom: 0,
+                  backgroundColor: "transparent",
+                  boxShadow: "none",
+                  zIndex: 1000,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <TextField
+                  fullWidth
+                  name="searchQuery"
+                  value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="What time is Shabbat in Jerusalem on next Friday?"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    marginBottom: "1rem",
+                    backgroundColor: themeMode === "dark" ? "#063762" : "#fff",
+                    color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                    borderRadius: "50px",
+                    fontSize,
+                  }}
+                  error={isError}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    textAlign: "center",
+                    justifyContent: "right",
+                    paddingBottom: "16px",
+                  }}
+                >
+                  <IconButton
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                    onClick={onSubmit}
                     sx={{
-                      bottom: 0,
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      zIndex: 1000,
-                      display: "flex",
-                      alignItems: "center",
+                      marginLeft: "16px",
+                      marginTop: "0px",
+                      backgroundColor: themeMode === "dark" ? "#6fa8dd" : "#fff",
+                      color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
                     }}
                   >
-                    <TextField
-                      {...field}
-                      variant="outlined"
-                      fullWidth
-                      name="searchQuery"
-                      // value={searchQuery}
-                      // onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="What time is Shabbat in Jerusalem on next Friday?"
-                      required
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        marginBottom: "1rem",
-                        backgroundColor:
-                          themeMode === "dark" ? "#063762" : "#fff",
-                        color: themeMode === "dark" ? "#fff" : "#2a2b35",
-                        borderRadius: "50px",
-                        fontSize,
-                      }}
-                      error={!!errors["searchQuery"]}
-                      disabled={isSubmitting}
-                    />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                        justifyContent: "right",
-                        paddingBottom: "16px",
-                      }}
-                    >
-                      <IconButton
-                        variant="contained"
-                        type="submit"
-                        disabled={isSubmitting}
-                        sx={{
-                          marginLeft: "16px",
-                          marginTop: "0px",
-                          backgroundColor: themeMode === "dark" ? "#6fa8dd" : "#fff",
-                          color: themeMode === "dark" ? "#fff" : "#2a2b35",
-                          "&:hover": {
-                            backgroundColor: "primary.dark",
-                          },
-                        }}
-                      >
-                        <SendIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                )}
-              />
+                    <SendIcon />
+                  </IconButton>
+                </Box>
+              </Box>
             </form>
           </Box>
         </Box>

@@ -36,6 +36,9 @@ import EnterpriseDashboard from "./EnterpriseCollabration/EnterpriseDashboard";
 import EnterprisePendingStatusPage from "./Pages/EnterprisePendingStatusPage";
 import EnterpriseProfile from "./EnterpriseCollabration/EnterpriseProfile";
 import Departments from "./EnterpriseCollabration/Departments";
+import AdminSearchRepostPage from "./Admin/AdminSearchReportPage";
+import AdminEnterpriseRequest from "./Admin/EnterpriseRequest";
+import AdminEnterpriseCategory from "./Admin/EnterpriseCategory";
 
 // Exporting context
 export const Context = createContext("");
@@ -133,9 +136,9 @@ function App() {
 
   const [themeMode, setThemeMode] = useState("dark");
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
+  // const toggleDrawer = () => {
+  //   setDrawerOpen(!drawerOpen);
+  // };
 
   const options = {
     enableHighAccuracy: true,
@@ -226,7 +229,7 @@ function App() {
           <div className="App">
             {/* Wrapping with context */}
             <Context.Provider
-              value={{ userLatitude, userLongitude, isLocationAllowed, toggleDrawer, drawerOpen }}
+              value={{ userLatitude, userLongitude, isLocationAllowed, setDrawerOpen, drawerOpen }}
             >
               {/* <Homepage /> */}
               {/* <RouterProvider router={router} /> */}
@@ -397,7 +400,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/enterprise-status-pending"
+                    path="/enterprise-status"
                     element={
                       <UserPagesProtection>
                         <EnterprisePendingStatusPage />
@@ -405,7 +408,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/enterprise/enterprise-profile"
+                    path="/enterprise/profile"
                     element={
                       <UserPagesProtection>
                         <EnterpriseProfile />
@@ -417,6 +420,30 @@ function App() {
                     element={
                       <UserPagesProtection>
                         <Departments />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/search-query-report"
+                    element={
+                      <UserPagesProtection>
+                        <AdminSearchRepostPage />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/enterprise-request"
+                    element={
+                      <UserPagesProtection>
+                        <AdminEnterpriseRequest />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/enterprise-categories"
+                    element={
+                      <UserPagesProtection>
+                        <AdminEnterpriseCategory />
                       </UserPagesProtection>
                     }
                   />

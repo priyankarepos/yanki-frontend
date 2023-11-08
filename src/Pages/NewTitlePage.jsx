@@ -40,7 +40,7 @@ const NewTitlePage = () => {
     setActiveTab(newValue);
   };
 
-  const onSigninClick = () => {
+  const onSignupClick = () => {
     navigate("/signup");
   };
 
@@ -48,7 +48,7 @@ const NewTitlePage = () => {
     navigate("/login");
   };
 
-  const onEnterpriseSigninClick = () => {
+  const onEnterpriseSignupClick = () => {
     navigate("/enterprise-signup");
   }
 
@@ -141,7 +141,7 @@ const NewTitlePage = () => {
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
-                    onClick={onSigninClick}
+                    onClick={onSignupClick}
                     style={{backgroundColor: "#13538b", color: "lightblue"}}
                   >
                     Sign up
@@ -167,7 +167,7 @@ const NewTitlePage = () => {
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
-                    onClick={onEnterpriseSigninClick}
+                    onClick={onEnterpriseSignupClick}
                     style={{backgroundColor: "#13538b", color: "lightblue", border:"1px solid lightblue",}}
                   >
                     Enterprise Sign up

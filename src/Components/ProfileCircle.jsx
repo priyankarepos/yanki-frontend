@@ -57,7 +57,7 @@ export default function ProfielCircle() {
 
   const onClickAdmin = () => {
     handleClose();
-    navigate("/admin");
+    navigate("/admin/search-query-report");
   }
 
   const onClickLogout = () => {
@@ -69,7 +69,7 @@ export default function ProfielCircle() {
 
   const onClickNetworkingInterface = () => {
     handleClose();
-    navigate("/enterprise/enterprise-profile")
+    navigate("/enterprise/profile")
   }
 
 

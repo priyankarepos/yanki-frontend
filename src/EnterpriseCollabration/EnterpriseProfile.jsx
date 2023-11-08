@@ -6,6 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
+import { FormControl, Select, MenuItem } from '@mui/material';
 
 const styles = {
   inputField: {
@@ -51,6 +52,7 @@ const styles = {
 
 const EnterpriseProfile = () => {
   const [tags, setTags] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const { drawerOpen } = useContext(Context);
 
   console.log("drawerOpen", drawerOpen);
@@ -108,8 +110,8 @@ const EnterpriseProfile = () => {
           My Enterprise Profile
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <InputLabel style={styles.label}>Enterprise Namet</InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
+            <InputLabel style={styles.label}>Enterprise Name</InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
@@ -126,7 +128,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Enterprise point of contact</InputLabel>
             <Controller
               control={control}
@@ -167,7 +169,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Email Address</InputLabel>
             <Controller
               control={control}
@@ -185,7 +187,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Phone Number</InputLabel>
             <Controller
               control={control}
@@ -203,7 +205,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Website URL</InputLabel>
             <Controller
               control={control}
@@ -222,7 +224,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>WhatsApp Phone Number</InputLabel>
             <Controller
               control={control}
@@ -240,7 +242,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Instagram Username</InputLabel>
             <Controller
               control={control}
@@ -258,7 +260,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>LinkedIn Username</InputLabel>
             <Controller
               control={control}
@@ -299,9 +301,9 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Enterprise Categories</InputLabel>
-            <Controller
+            {/* <Controller
               control={control}
               name="EnterpriseCategories"
               render={({ field }) => (
@@ -315,9 +317,31 @@ const EnterpriseProfile = () => {
                   helperText={errors['EnterpriseCategories'] ? errors['EnterpriseCategories'].message : ''}
                 />
               )}
-            />
+            /> */}
+            <FormControl fullWidth>
+              <Select
+                value={selectedCategory}
+                onChange={(event) => setSelectedCategory(event.target.value)}
+                displayEmpty
+                sx={{ ...styles.inputField }}
+                className='EnterpriseCategorySelect'
+              >
+                <MenuItem value="">
+                  Select an Enterprise Category
+                </MenuItem>
+                <MenuItem value="category1">
+                  Category 1
+                </MenuItem>
+                <MenuItem value="category2">
+                  Category 2
+                </MenuItem>
+                <MenuItem value="category3">
+                  Category 3
+                </MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Business Hours Opening Time</InputLabel>
             <Controller
               control={control}
@@ -336,7 +360,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Business Hours Closing Time</InputLabel>
             <Controller
               control={control}
@@ -354,7 +378,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Founded Year</InputLabel>
             <Controller
               control={control}
@@ -372,7 +396,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Religious Certifications</InputLabel>
             <Controller
               control={control}

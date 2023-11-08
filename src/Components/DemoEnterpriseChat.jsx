@@ -9,12 +9,11 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
 
     const handleSendEmail = async (enterprise) => {
-        console.log("enterprise", enterprise);
         try {
             // Prepare the request data
             const requestData = {
                 enterpriseName: enterprise?.enterpriseName,
-                enterpriseEmail: enterprise.email,
+                enterpriseEmail: enterprise?.email,
             };
 
             // Make a POST request to the API
