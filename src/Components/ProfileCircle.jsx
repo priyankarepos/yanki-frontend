@@ -16,6 +16,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import ThemeSwitcher from "./UI/ThemeSwitcher";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -56,15 +57,21 @@ export default function ProfielCircle() {
 
   const onClickAdmin = () => {
     handleClose();
-    navigate("/admin");
+    navigate("/admin/search-query-report");
   }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
     handleClose();
-    navigate("/login");
+    navigate("/auth");
   };
+
+  const onClickNetworkingInterface = () => {
+    handleClose();
+    navigate("/enterprise/profile")
+  }
+
 
   return (
     <React.Fragment>
@@ -145,6 +152,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
+          <MenuItem onClick={onClickNetworkingInterface}>
+            <ListItemIcon>
+              <Diversity2Icon fontSize="small" />
+            </ListItemIcon>
+            Networking Interface
+          </MenuItem>
 
           <Divider />
 
