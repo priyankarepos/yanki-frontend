@@ -136,9 +136,10 @@ function App() {
 
   const [themeMode, setThemeMode] = useState("dark");
   const [drawerOpen, setDrawerOpen] = useState(true);
-  // const toggleDrawer = () => {
-  //   setDrawerOpen(!drawerOpen);
-  // };
+  const localStorageTab = sessionStorage.getItem('activeTab');
+  const initialTab = localStorageTab ? parseInt(localStorageTab, 10) : 0;
+
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   const options = {
     enableHighAccuracy: true,
@@ -183,13 +184,40 @@ function App() {
     []
   );
 
+  let parsedUserObject;
+
+  const userRoles = parsedUserObject?.userObject?.userRoles || "";
+
+  console.log("userRoles", userRoles);
+
+  // const currentTheme = useMemo(() => {
+  //   if (activeTab === 0 ) {
+  //     return darkTheme;
+  //   } else if (activeTab === 1) {
+  //     return lightTheme;
+  //   } else {
+  //     return darkTheme;
+  //   }
+  // }, [activeTab]);
+
   const currentTheme = useMemo(() => {
-    if (themeMode === "dark") {
-      return darkTheme;
+    // Check if userRoles include 'Enterprise'
+    const isEnterpriseUser = userRoles.includes('Enterprise');
+
+    // If user is an enterprise user, apply light theme
+    if (isEnterpriseUser) {
+        return lightTheme;
     } else {
-      return lightTheme;
+        // Otherwise, check the activeTab
+        if (activeTab === 1) {
+            // Apply light theme for activeTab 1
+            return lightTheme;
+        } else {
+            // Apply dark theme for all other cases
+            return darkTheme;
+        }
     }
-  }, [themeMode]);
+}, [activeTab, userRoles]);
 
   useLayoutEffect(() => {
     let session = window.sessionStorage.getItem(
@@ -229,7 +257,7 @@ function App() {
           <div className="App">
             {/* Wrapping with context */}
             <Context.Provider
-              value={{ userLatitude, userLongitude, isLocationAllowed, setDrawerOpen, drawerOpen }}
+              value={{ userLatitude, userLongitude, isLocationAllowed, setDrawerOpen, drawerOpen, activeTab, setActiveTab }}
             >
               {/* <Homepage /> */}
               {/* <RouterProvider router={router} /> */}
@@ -261,7 +289,7 @@ function App() {
                       <AuthPagesProtection>
                         <AuthPageLayout>
                           {/* <TitlePage /> */}
-                          <NewTitlePage />
+                          <NewTitlePage activeTab={activeTab} setActiveTab={setActiveTab} />
                         </AuthPageLayout>
                       </AuthPagesProtection>
                     }

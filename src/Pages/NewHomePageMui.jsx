@@ -52,7 +52,7 @@ const styles = {
 
 const NewHomePageMui = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
-
+  const { activeTab } = useContext(Context);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -184,7 +184,7 @@ const NewHomePageMui = () => {
       <AppBar
         position="fixed"
         sx={{
-          background: themeMode === "dark" ? "#063762" : "#fff",
+          background: activeTab === 0 ? "#063762" : "#fff",
           boxShadow: "none",
         }}
       >
@@ -200,7 +200,11 @@ const NewHomePageMui = () => {
             }}
           >
             <img
-              src={themeMode === "dark" ? "/logo-dark.svg" : "/logo-light.svg"}
+              src={
+                activeTab === 0
+                  ? "/auth-logo-dark.svg"
+                  : "/auth-logo-light.svg"
+              }
               style={{ width: queryAnswer ? "10em" : "10em" }}
               alt="logo"
             />
@@ -209,7 +213,7 @@ const NewHomePageMui = () => {
               color="inherit"
               aria-label="menu"
               onClick={toggleDrawer}
-              style={styles.menuButton}
+              style={{...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor'}}
             >
               <MenuIcon />
             </IconButton>
@@ -235,8 +239,10 @@ const NewHomePageMui = () => {
             <Link to="/" style={{ textDecoration: "none" }}>
               <img
                 src={
-                  themeMode === "dark" ? "/logo-dark.svg" : "/logo-light.svg"
-                }
+                    activeTab === 0
+                      ? "/auth-logo-dark.svg"
+                      : "/auth-logo-light.svg"
+                  }
                 style={{ width: queryAnswer ? "10em" : "10em" }}
                 alt="logo"
               />
@@ -246,7 +252,7 @@ const NewHomePageMui = () => {
               color="inherit"
               aria-label="menu"
               onClick={toggleDrawer}
-              style={styles.menuButton}
+              style={{...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor'}}
             >
               <MenuIcon />
             </IconButton>
@@ -255,8 +261,8 @@ const NewHomePageMui = () => {
             color="primary"
             style={{
               backgroundColor:
-                themeMode === "dark" ? "#13416a" : "#2a2b35",
-              color: themeMode === "dark" ? "#fff" : "#fff",
+                activeTab === 0 ? "#13416a" : "#eaf5ff",
+              color: activeTab === 0 ? "#fff" : "#72a9de",
               padding: "14px",
               borderRadius: "8px",
               cursor: "pointer",
@@ -275,14 +281,15 @@ const NewHomePageMui = () => {
             &nbsp; New Chat
           </IconButton>
           <Box sx={{ marginTop: "25px" }}>
-            <span style={{ color: themeMode === "dark" ? "#6fa8dd" : "gray" }}>
+            <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
               Recent Chat
             </span>
             <IconButton
               color="primary"
               style={{
-                backgroundColor: themeMode === "dark" ? "#13416a" : "#2a2b35",
-                color: themeMode === "dark" ? "#fff" : "#fff",
+                backgroundColor:
+                activeTab === 0 ? "#13416a" : "#eaf5ff",
+              color: activeTab === 0 ? "#fff" : "#72a9de",
                 padding: "11px",
                 borderRadius: "8px",
                 cursor: "pointer",
@@ -307,7 +314,7 @@ const NewHomePageMui = () => {
         style={{
           ...styles.content,
           marginLeft: contentMargin,
-          backgroundColor: themeMode === "dark" ? "#063762" : "#fff",
+          backgroundColor: activeTab === 0 ? "#063762" : "#fff",
         }}
       >
         <Toolbar style={{minHeight: "0px",}} />
@@ -318,7 +325,7 @@ const NewHomePageMui = () => {
             // margin: paperMargin,
             padding: "20px",
             height: "90vh",
-            background: themeMode === "dark" ? "#0d416f" : "#2a2b35",
+            background: activeTab === 0 ? "#13416a" : "#eaf5ff",
             borderRadius: "20px",
             // position: "relative",
             bottom: "20px",
@@ -379,8 +386,8 @@ const NewHomePageMui = () => {
                     onClick={() => handleQuestionClick(question.text)}
                     style={{
                       backgroundColor:
-                        themeMode === "dark" ? "#063762" : "#fff",
-                      color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                        activeTab === 0 ? "#063762" : "#fff",
+                      color: activeTab === 0 ? "#fff" : "#72a9de",
                       padding: "8px 16px",
                       borderRadius: "12px",
                       cursor: "pointer",
@@ -409,6 +416,7 @@ const NewHomePageMui = () => {
                   display: "flex",
                   alignItems: "center",
                 }}
+                className = "searchBorderRemove"
               >
                 <TextField
                   fullWidth
@@ -425,8 +433,8 @@ const NewHomePageMui = () => {
                   }}
                   sx={{
                     marginBottom: "1rem",
-                    backgroundColor: themeMode === "dark" ? "#063762" : "#fff",
-                    color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                    backgroundColor: activeTab === 0 ? "#063762" : "#fff",
+                    color: activeTab === 0 ? "#fff" : "#72a9de",
                     borderRadius: "50px",
                     fontSize,
                   }}
@@ -449,8 +457,8 @@ const NewHomePageMui = () => {
                     sx={{
                       marginLeft: "16px",
                       marginTop: "0px",
-                      backgroundColor: themeMode === "dark" ? "#6fa8dd" : "#fff",
-                      color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                      backgroundColor: activeTab === 0 ? "#6fa8dd" : "#fff",
+                      color: activeTab === 0 ? "#fff" : "#72a9de",
                       "&:hover": {
                         backgroundColor: "primary.dark",
                       },

@@ -23,8 +23,28 @@ import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { ThemeModeContext } from "../App";
+import { Context, ThemeModeContext } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
+import "./Style.scss";
+
+// const styles = {
+//   inputField: {
+//     backgroundColor: '#eaf5ff',
+//     border: '1px solid #6fa8dd',
+//     borderRadius: '8px',
+//     marginBottom: '16px',
+//     color: "#8bbae5",
+//     width: "100%"
+//   },
+// };
+
+const linkStyle = {
+  color: "#457bac",
+  fontSize: "15px",
+  textDecoration: "none",
+  paddingRight: "20px",
+  borderRight: "1px solid #457bac",
+};
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +53,9 @@ const LoginPage = () => {
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
 
   const { themeMode } = useContext(ThemeModeContext);
+  const { activeTab } = useContext(Context);
+
+  console.log("activeTab", activeTab);
 
   const navigate = useNavigate();
 
@@ -99,8 +122,8 @@ const LoginPage = () => {
     try {
       setLoginLoading(true);
       const { access_token } = codeResponse;
-      console.log("access_token",access_token)
-      console.log("codeResponse",codeResponse)
+      console.log("access_token", access_token)
+      console.log("codeResponse", codeResponse)
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
         { access_token }
@@ -113,7 +136,7 @@ const LoginPage = () => {
           JSON.stringify(response.data.contentResponse)
         )
         navigate("/");
-       }else {
+      } else {
         setLoginError(true);
         setLoginErrorMsg("Authentication failed.");
       }
@@ -142,7 +165,7 @@ const LoginPage = () => {
               >
                 <img
                   src={
-                    themeMode === "dark"
+                    activeTab === 0
                       ? "/auth-logo-dark.svg"
                       : "/auth-logo-light.svg"
                   }
@@ -156,7 +179,7 @@ const LoginPage = () => {
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "34px" }}
+              sx={{ marginBottom: "34px", textAlign: "center", fontWeight: "bold", color: "#72a9de", }}
               className="text-center marginBottom-34"
             >
               Login your account
@@ -176,18 +199,19 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
+                sx={{marginBottom: "10px"}}
+                  className={activeTab === 1 ? 'InputFieldColor' : ''}
                   {...field}
                   type="outlined"
                   placeholder="Email address"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <MailOutlineIcon />
+                        <MailOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                       </InputAdornment>
                     ),
                   }}
                   fullWidth
-                  sx={{ marginBottom: "10px" }}
                   error={!!errors["logInEmail"]}
                   helperText={
                     errors["logInEmail"] ? errors["logInEmail"].message : ""
@@ -212,13 +236,16 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
+                  className={activeTab === 1 ? 'InputFieldColor' : ''}
+                  sx={{marginBottom: "10px"}}
                   {...field}
+                  style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                   type="outlined"
                   placeholder="Password"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <HttpsOutlinedIcon />
+                        <HttpsOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -228,9 +255,9 @@ const LoginPage = () => {
                           edge="end"
                         >
                           {showPassword ? (
-                            <VisibilityOffOutlinedIcon />
+                            <VisibilityOffOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                           ) : (
-                            <VisibilityOutlinedIcon />
+                            <VisibilityOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                           )}
                         </IconButton>
                       </InputAdornment>
@@ -238,7 +265,6 @@ const LoginPage = () => {
                     type: showPassword ? "text" : "password",
                   }}
                   fullWidth
-                  sx={{ marginBottom: "10px" }}
                   error={!!errors["logInPassword"]}
                   helperText={
                     errors["logInPassword"]
@@ -251,6 +277,7 @@ const LoginPage = () => {
             />
             <Box className="flex justify-between items-center w-full">
               <FormControlLabel
+                style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                 control={
                   <Controller
                     control={control}
@@ -265,6 +292,7 @@ const LoginPage = () => {
                 component={LinkBehavior}
                 underline="none"
                 variant="body2"
+                style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
               >
                 Forgot Password?
               </Link>
@@ -289,14 +317,26 @@ const LoginPage = () => {
               Login with google
             </Button>
             <Box className="text-center" sx={{ marginTop: "28px" }}>
-              <Typography variant="subtitle1" display="block" gutterBottom>
+              <Typography variant="subtitle1" display="block" gutterBottom style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
                 Don't have an account?{" "}
-                <Link to="/signup" component={LinkBehavior} underline="none">
-                  <span className="font-bold cursor-pointer">SignUp</span>
+                <Link to={activeTab === 1 ? "/enterprise-signup" : "/signup"} component={LinkBehavior} underline="none">
+                  <span className="font-bold cursor-pointer" style={{ color: activeTab === 1 ? '#13538b' : 'defaultIconColor' }}>SignUp</span>
                 </Link>
               </Typography>
             </Box>
           </Box>
+
+        </Box>
+        <Box sx={{ textAlign: "center", marginY: "20px" }}>
+          <Link to="/terms-of-use" style={linkStyle}>
+            Terms of Use
+          </Link>
+          <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+            Privacy Policy
+          </Link>
+          <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
+            hello@yanki.ai
+          </Link>
         </Box>
       </Container>
     </>

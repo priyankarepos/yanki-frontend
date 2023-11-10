@@ -1,5 +1,5 @@
 import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import { Context } from '../App';
 import AdminDashboard from './AdminDashboard';
@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 
 const styles = {
     tableContainer: {
@@ -75,61 +76,135 @@ const styles = {
 
 const AdminEnterpriseCategory = () => {
     const { drawerOpen } = useContext(Context);
-
-    const [dummyData, setDummyData] = useState([
-        {
-            id: 1,
-            categoryName: 'category 1',
-        },
-        {
-            id: 2,
-            categoryName: 'category 2',
-        },
-        // Add more dummy data as needed
-    ]);
+    const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+    console.log("enterpriseCategories", enterpriseCategories);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [categoryName, setCategoryName] = useState('');
     const [editCategoryId, setEditCategoryId] = useState(null);
+    const [isDataFetched, setIsDataFetched] = useState(false);
 
     const handleEditDepartment = (id) => {
-        // Open the modal for editing the category
-        const category = dummyData.find((category) => category.id === id);
+        const category = enterpriseCategories.find((category) => category.id === id);
         setCategoryName(category.categoryName);
         setEditCategoryId(id);
         setIsModalOpen(true);
     };
 
-    const handleDeleteDepartment = (id) => {
-        // Delete the category
-        // const updatedData = dummyData.filter((category) => category.id !== id);
-        // Update your state or API here
+    const handleDeleteDepartment = async (id) => {
+        try {
+            // Delete the category
+            const response = await axios.delete(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${id}`
+            );
+
+            if (response.status === 200) {
+                const updatedCategories = enterpriseCategories.filter((category) => category.id !== id);
+                setEnterpriseCategories(updatedCategories);
+            } else {
+                console.error('Failed to delete enterprise category');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
-    const handleSaveCategory = () => {
-        if (editCategoryId !== null) {
-            // Update the category
-            const updatedData = dummyData.map((category) => {
-                if (category.id === editCategoryId) {
-                    return { ...category, categoryName };
-                }
-                return category;
-            });
-            // Update your state or API here
-            setDummyData(updatedData); // Update the state
-        } else {
-            // Add a new category
-            const newCategory = {
-                id: dummyData.length + 1,
-                categoryName,
-            };
-            const updatedData = [...dummyData, newCategory];
-            // Update your state or API here
-            setDummyData(updatedData); // Update the state
+    const handleAddCategory = async () => {
+        setIsModalOpen(true)
+        try {
+            // Call the API to add a new category
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`,
+                { name: categoryName }
+            );
+
+            if (response.status === 200) {
+                // Update the state with the new category
+                const newCategory = response.data;
+                setEnterpriseCategories([...enterpriseCategories, newCategory]);
+                setIsModalOpen(false);
+                setCategoryName('');
+            } else {
+                console.error('Failed to add enterprise category');
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-        setIsModalOpen(false);
-        setCategoryName(''); // Clear the category name input
     };
+
+    useEffect(() => {
+        const fetchEnterpriseCategories = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+                );
+
+                if (response.status === 200) {
+                    setEnterpriseCategories(response.data);
+                } else {
+                    console.error('Failed to fetch enterprise categories');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchEnterpriseCategories();
+    }, []);
+
+    const handleSaveCategory = async () => {
+        try {
+            if (editCategoryId !== null) {
+                // Update the category
+                const response = await axios.put(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category/${editCategoryId}`,
+                    { categoryName }
+                );
+    
+                if (response.status === 200) {
+                    const updatedCategories = enterpriseCategories.map((category) => {
+                        if (category.id === editCategoryId) {
+                            return { ...category, categoryName };
+                        }
+                        return category;
+                    });
+                    setEnterpriseCategories(updatedCategories);
+                } else {
+                    console.error('Failed to update enterprise category');
+                }
+            } else {
+                // Add a new category
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`,
+                    { name: categoryName }
+                );
+    
+                if (response.status === 200) {
+                    const newCategory = response.data;
+                    setEnterpriseCategories([...enterpriseCategories, newCategory]);
+                } else {
+                    console.error('Failed to add enterprise category');
+                }
+            }
+            setIsModalOpen(false);
+            setCategoryName(''); // Clear the category name input
+    
+            // Fetch updated categories after the save button is clicked
+            const updatedResponse = await axios.get(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+            );
+    
+            if (updatedResponse.status === 200) {
+                setEnterpriseCategories(updatedResponse.data);
+            } else {
+                console.error('Failed to fetch updated enterprise categories');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    
+    
 
 
 
@@ -144,7 +219,7 @@ const AdminEnterpriseCategory = () => {
                         <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
                             Enterprise Categories
                         </Typography>
-                        <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={() => setIsModalOpen(true)}>
+                        <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddCategory}>
                             <AddIcon /> Add
                         </IconButton>
 
@@ -158,9 +233,9 @@ const AdminEnterpriseCategory = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {dummyData.map((row) => (
+                            {enterpriseCategories.map((row) => (
                                     <TableRow key={row.id}>
-                                        <TableCell style={styles.cell}>{row.categoryName}</TableCell>
+                                        <TableCell style={styles.cell}>{row.name}</TableCell>
                                         <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                                             <IconButton onClick={() => handleEditDepartment(row.id)}>
                                                 <EditIcon />

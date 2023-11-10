@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import { useNavigate, Link } from "react-router-dom";
-import { ThemeModeContext } from "../App";
+import { Context, ThemeModeContext } from "../App";
 import axios from "axios";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -31,22 +31,36 @@ import "./Style.scss"
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+const styles = {
+    inputField: {
+        backgroundColor: '#eaf5ff',
+        border: '1px solid #6fa8dd',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        color: "#8bbae5",
+        with: "100%"
+    },
+};
+
 const linkStyle = {
     color: "#457bac",
     fontSize: "15px",
     textDecoration: "none",
     paddingRight: "20px",
     borderRight: "1px solid #457bac",
-  };
+};
 
 const EnterpriseSignup = () => {
     const { themeMode } = useContext(ThemeModeContext);
+    const { activeTab } = useContext(Context);
     const [showPassword, setShowPassword] = useState(false);
     const [signinLoading, setSigninLoading] = useState(false);
     const [signinError, setSigninError] = useState(false);
     const [signinErrorMsg, setSigninErrorMsg] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [isTermsAccepted, setTermsAccepted] = useState(false);
+    const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+    console.log("enterpriseCategories", enterpriseCategories);
     const {
         control,
         handleSubmit,
@@ -67,12 +81,69 @@ const EnterpriseSignup = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchEnterpriseCategories = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+                );
+
+                console.log('API Response:', response.data);
+
+                if (response.status === 200) {
+                    setEnterpriseCategories(response.data);
+                } else {
+                    console.error("Failed to fetch enterprise categories");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        fetchEnterpriseCategories();
+    }, []);
+
     const onError = (data) => {
         console.log("error data: ", data);
     };
 
     const onSubmit = async (data) => {
-        console.log("data: ", data);
+        try {
+            setSigninLoading(true);
+
+            // Prepare the data to be sent in the request body
+            const dataToSend = {
+                email: data.Email,
+                password: data.Password,
+                fullName: data.UserName,
+                phoneNumber: data.PhoneNumber,
+                enterpriseName: data.EnterpriseName,
+                contactPersonName: data.PointOfContact,
+                website: data.Website,
+                categoryId: selectedCategory,
+                isTermAndPrivacy: isTermsAccepted,
+            };
+
+            // Make the POST request
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_HOST}/api/auth/register`,
+                dataToSend
+            );
+
+            if (response.status === 200) {
+                // Registration successful, navigate to the success page
+                navigate("/signin-success");
+            }
+        } catch (error) {
+            // Handle errors
+            setSigninLoading(false);
+            setSigninError(true);
+            if (error?.response?.data?.message) {
+                setSigninErrorMsg(error?.response?.data?.message);
+            } else {
+                setSigninErrorMsg("Something went wrong");
+            }
+        }
     };
 
     const handleTermsAcceptance = () => {
@@ -122,11 +193,7 @@ const EnterpriseSignup = () => {
                                 className="w-full object-contain flex items-center justify-center"
                             >
                                 <img
-                                    src={
-                                        themeMode === "dark"
-                                            ? "/auth-logo-dark.svg"
-                                            : "/auth-logo-light.svg"
-                                    }
+                                    src={"/auth-logo-light.svg"}
                                     alt="logo"
                                     style={{ width: "35%" }}
                                 />
@@ -135,8 +202,8 @@ const EnterpriseSignup = () => {
                         <Typography
                             component="h1"
                             variant="h5"
-                            sx={{ marginBottom: "34px" }}
                             className="text-center marginBottom-34"
+                            sx={{ marginBottom: "34px", textAlign: "center", fontWeight: "bold", color: "#72a9de", }}
                         >
                             Create your account
                         </Typography>
@@ -151,17 +218,17 @@ const EnterpriseSignup = () => {
                                     render={({ field }) => (
                                         <TextField
                                             {...field}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             type="outlined"
                                             placeholder="User Name"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <PersonOutlineIcon />
+                                                        <PersonOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
                                             error={!!errors["UserName"]}
                                             helperText={errors["UserName"] ? errors["UserName"].message : ""}
                                             disabled={signinLoading}
@@ -184,7 +251,7 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <HttpsOutlinedIcon />
+                                                        <HttpsOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                                 endAdornment: (
@@ -204,7 +271,7 @@ const EnterpriseSignup = () => {
                                                 type: showPassword ? "text" : "password",
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "14px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Password"]}
                                             helperText={errors["Password"] ? errors["Password"].message : ""}
                                             disabled={signinLoading}
@@ -227,12 +294,12 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <MailOutlineIcon />
+                                                        <MailOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Email"]}
                                             helperText={errors["Email"] ? errors["Email"].message : ""}
                                             disabled={signinLoading}
@@ -255,12 +322,12 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <PhoneIcon />
+                                                        <PhoneIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["PhoneNumber"]}
                                             helperText={errors["PhoneNumber"] ? errors["PhoneNumber"].message : ""}
                                             disabled={signinLoading}
@@ -283,12 +350,12 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <BusinessIcon />
+                                                        <BusinessIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["EnterpriseName"]}
                                             helperText={
                                                 errors["EnterpriseName"]
@@ -315,12 +382,12 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <AccountCircleIcon />
+                                                        <AccountCircleIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["PointOfContact"]}
                                             helperText={
                                                 errors["PointOfContact"]
@@ -347,12 +414,12 @@ const EnterpriseSignup = () => {
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <LinkIcon />
+                                                        <LinkIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Website"]}
                                             helperText={errors["Website"] ? errors["Website"].message : ""}
                                             disabled={signinLoading}
@@ -366,7 +433,7 @@ const EnterpriseSignup = () => {
                                         value={selectedCategory}
                                         onChange={(event) => setSelectedCategory(event.target.value)}
                                         displayEmpty
-                                        sx={{ marginBottom: "10px" }}
+                                        sx={activeTab === 1 && { ...styles.inputField }}
                                         className='EnterpriseCategorySelect'
                                     >
                                         <MenuItem value="">
@@ -375,24 +442,14 @@ const EnterpriseSignup = () => {
                                             </ListItemIcon>
                                             Select an Enterprise Category
                                         </MenuItem>
-                                        <MenuItem value="category1">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 1
-                                        </MenuItem>
-                                        <MenuItem value="category2">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 2
-                                        </MenuItem>
-                                        <MenuItem value="category3">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 3
-                                        </MenuItem>
+                                        {enterpriseCategories.map((category) => (
+                                            <MenuItem key={category.id} value={category.id}>
+                                                <ListItemIcon>
+                                                    <CategoryIcon />
+                                                </ListItemIcon>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -441,7 +498,7 @@ const EnterpriseSignup = () => {
                             <Typography sx={{ textAlign: "center", color: "#72a9de", }} variant="subtitle1" display="block" gutterBottom>
                                 Already have an account?
                                 <Link to="/login" component={LinkBehavior} underline="none">
-                                    <span className="font-bold cursor-pointer" style={{ color: themeMode === "dark" ? "#fff" : "#000" }}> Login</span>
+                                    <span className="font-bold cursor-pointer" style={{ color: activeTab === "0" ? "#fff" : "#13538b" }}> Login</span>
                                 </Link>
                             </Typography>
                         </Box>

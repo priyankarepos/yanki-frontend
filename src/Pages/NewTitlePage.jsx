@@ -3,8 +3,8 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate, Link } from "react-router-dom";
-import { useContext, useState } from "react";
-import { ThemeModeContext } from "../App";
+import { useContext } from "react";
+import { Context, ThemeModeContext } from "../App";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Carousel from "react-multi-carousel";
@@ -22,21 +22,16 @@ const linkStyle = {
   borderRight: "1px solid #457bac",
 };
 
-// const lastLinkStyle = {
-//   ...linkStyle,
-//   borderRight: "none",
-// };
-
 const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
+  const { setActiveTab, activeTab } = useContext(Context);
 
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(0);
-  console.log("activeTab", activeTab);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const handleChangeTab = (event, newValue) => {
+    sessionStorage.setItem('activeTab', newValue.toString());
     setActiveTab(newValue);
   };
 
