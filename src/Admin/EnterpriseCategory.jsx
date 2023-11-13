@@ -93,7 +93,6 @@ const AdminEnterpriseCategory = () => {
     const [editCategoryId, setEditCategoryId] = useState(null);
 
     const handleEditDepartment = (id) => {
-        // Open the modal for editing the category
         const category = dummyData.find((category) => category.id === id);
         setCategoryName(category.categoryName);
         setEditCategoryId(id);
