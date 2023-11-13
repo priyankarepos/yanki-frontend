@@ -8,14 +8,14 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
 
-const SearchHistoryItem = ({ query, response, errorMsg, isError }) => {
-  console.log("response", response);
+const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
+
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
+       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
         <div style={{ padding: "10px" }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: "#fff" }} />
@@ -23,7 +23,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, isError }) => {
           </Box>
         </div>
       </Paper>
-      {isTorahAnswer && (
+      { isTorahAnswer && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
@@ -60,7 +60,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, isError }) => {
             <ErrorAnswer errorMsg={response.message} />
           </div>
         )}
-      </Paper>
+      </Paper> 
 
     </div>
   );
