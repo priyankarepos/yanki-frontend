@@ -64,6 +64,7 @@ export default function ProfielCircle() {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
     handleClose();
     navigate("/auth");
+    sessionStorage.removeItem("selectedChatId");
   };
 
   const onClickNetworkingInterface = () => {
