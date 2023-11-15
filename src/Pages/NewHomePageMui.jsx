@@ -220,7 +220,6 @@ const NewHomePageMui = () => {
                                     videoResult: gptResponse.VideoResult,
                                 }
                             }
-
                         };
                     });
 
@@ -323,6 +322,7 @@ const NewHomePageMui = () => {
     };
 
     const chatContainerRef = useRef(null);
+    const searchBoxRef = useRef(null);
 
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
@@ -518,9 +518,9 @@ const NewHomePageMui = () => {
                         style={{
                             width: "100%",
                             marginX: "auto",
-                            minHeight: "63vh",
+                            minHeight: "67vh",
                             overflowY: "auto",
-                            maxHeight: "63vh",
+                            maxHeight: "67vh",
                         }}>
                         <Box>
                             {searchHistory.map((entry, index) => (
