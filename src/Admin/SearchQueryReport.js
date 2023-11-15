@@ -41,7 +41,7 @@ const SearchQueryReport = ({ queryAnswer }) => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>ID</TableCell>
+                      <TableCell>Sl No</TableCell>
                       <TableCell>Query</TableCell>
                     </TableRow>
                   </TableHead>
