@@ -3,17 +3,19 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useNavigate, Link } from "react-router-dom";
-import { useContext, useState } from "react";
-import { ThemeModeContext } from "../App";
+import { useContext } from "react";
+import { Context, ThemeModeContext } from "../App";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import partnershipLogoDarkOne from "../Assets/images/myZmanim-dark.png"
-import partnershipLogoLightOne from "../Assets/images/myZmanim-light.png"
+import partnershipLogoLightOne from "../Assets/images/partnet-logo4.png";
+import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
+import partnershipLogoLightThree from "../Assets/images/partnet-logo2.png";
+import partnershipLogoLightFour from "../Assets/images/partnet-logo3.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import "./Style.scss"
-    
+import "./Style.scss";
+
 const linkStyle = {
   color: "#457bac",
   fontSize: "15px",
@@ -22,21 +24,16 @@ const linkStyle = {
   borderRight: "1px solid #457bac",
 };
 
-// const lastLinkStyle = {
-//   ...linkStyle,
-//   borderRight: "none",
-// };
-
 const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
+  const { setActiveTab, activeTab } = useContext(Context);
 
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(0);
-  console.log("activeTab", activeTab);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const handleChangeTab = (event, newValue) => {
+    sessionStorage.setItem('activeTab', newValue.toString());
     setActiveTab(newValue);
   };
 
@@ -50,17 +47,13 @@ const NewTitlePage = () => {
 
   const onEnterpriseSignupClick = () => {
     navigate("/enterprise-signup");
-  }
+  };
 
   const partnershipLogos = [
-    { id: 1, imageSrcDark: partnershipLogoDarkOne, imageSrcLight: partnershipLogoLightOne, altText: "Partner 1" },
-    { id: 2, imageSrc: "partner2.png", altText: "Partner 2" },
-    { id: 3, imageSrc: "partner3.png", altText: "Partner 3" },
-    { id: 4, imageSrc: "partner4.png", altText: "Partner 4" },
-    { id: 5, imageSrc: "partner5.png", altText: "Partner 5" },
-    { id: 6, imageSrc: "partner6.png", altText: "Partner 6" },
-    { id: 7, imageSrc: "partner7.png", altText: "Partner 7" },
-    { id: 8, imageSrc: "partner8.png", altText: "Partner 8" },
+    { id: 1, imageSrc: partnershipLogoLightOne, altText: "Partner 1" },
+    { id: 2, imageSrc: partnershipLogoLightTwo, altText: "Partner 2" },
+    { id: 3, imageSrc: partnershipLogoLightThree, altText: "Partner 3" },
+    { id: 4, imageSrc: partnershipLogoLightFour, altText: "Partner 4" },
     // Add more partnership logos as needed
   ];
 
@@ -83,12 +76,13 @@ const NewTitlePage = () => {
     },
   };
 
-
   return (
     <>
-      <Container maxWidth="xl" sx={{backgroundColor : activeTab === 0 ? "#063762" : "#fff", paddingBottom: "15px",}}>
+      <Container
+        maxWidth="xl"
+      >
         <Box className="flex justify-center items-center min-h-70-screen">
-          <Box sx={{ maxWidth: 520 }}>
+          <Box sx={{ maxWidth: isLargeScreen ? 520 : "100%" }}>
             <img
               src={activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"}
               alt="logo"
@@ -105,12 +99,17 @@ const NewTitlePage = () => {
             <Typography
               variant="body1"
               component="h1"
-              sx={{ textAlign: "center", fontWeight: "bold", color: "#72a9de", }}
+              sx={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#72a9de",
+                fontSize:"16px",
+              }}
             >
               The internet by the Halacha,<br />
               A smart chatbot for all your Jewish lifestyle and community needs
             </Typography>
-            <Box sx={{ marginTop: "30px" }}>
+            <Box sx={{ marginTop: isLargeScreen ? "30px" : "20px" }}>
               <Tabs
                 value={activeTab}
                 onChange={handleChangeTab}
@@ -119,22 +118,44 @@ const NewTitlePage = () => {
                 centered
                 className="tabStyle"
               >
-                <Tab label="User" sx={{ fontWeight: 'bold', color: activeTab === 0 ? "#72a9de" : '' , }} style={{color: "#72a9de",}} />
-                <Tab label="Enterprise" sx={{ fontWeight: 'bold', color: activeTab === 1 ? "#72a9de" : '' , }} style={{color: "#72a9de",}} />
+                <Tab
+                  label="User"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#72a9de",
+                    fontSize:"16px", 
+                    textTransform: "capitalize",
+                  }}
+                />
+                <Tab
+                  label="Enterprise"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#72a9de",
+                    fontSize:"16px", 
+                    textTransform: "capitalize",
+                  }}
+                />
               </Tabs>
               {activeTab === 0 && (
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  maxWidth: "400px",
-                  marginTop: "30px",
-                  marginX: "auto"
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    maxWidth: "400px",
+                    marginTop: "30px",
+                    marginX: "auto",
+                  }}
+                >
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onLoginClick}
-                    style={{backgroundColor: "#13538b", color: "lightblue"}}
+                    style={{
+                      backgroundColor: "#13538b",
+                      color: "lightblue",
+                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                    }}
                   >
                     Login
                   </Button>
@@ -142,25 +163,36 @@ const NewTitlePage = () => {
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onSignupClick}
-                    style={{backgroundColor: "#13538b", color: "lightblue"}}
+                    style={{
+                      backgroundColor: "#13538b",
+                      color: "lightblue",
+                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                    }}
                   >
                     Sign up
                   </Button>
                 </Box>
               )}
               {activeTab === 1 && (
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  maxWidth: "400px",
-                  marginTop: "30px",
-                  marginX: "auto"
-                }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    maxWidth: "300px",
+                    marginTop: "30px",
+                    marginX: "auto",
+                  }}
+                >
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onLoginClick}
-                    style={{backgroundColor: "#13538b", color: "lightblue", border:"1px solid lightblue",}}
+                    style={{
+                      backgroundColor: "#13538b",
+                      color: "lightblue",
+                      border: "1px solid lightblue",
+                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                    }}
                   >
                     Login
                   </Button>
@@ -168,21 +200,31 @@ const NewTitlePage = () => {
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onEnterpriseSignupClick}
-                    style={{backgroundColor: "#13538b", color: "lightblue", border:"1px solid lightblue",}}
+                    style={{
+                      backgroundColor: "#13538b",
+                      color: "lightblue",
+                      border: "1px solid lightblue",
+                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                    }}
                   >
-                    Enterprise Sign up
+                    Sign up
                   </Button>
                 </Box>
               )}
             </Box>
-            <Box sx={{ marginTop: "50px" }}>
+            <Box sx={{ marginTop: isLargeScreen ? "50px" : "30px" }}>
               <Typography
                 variant="body1"
-                sx={{ textAlign: "center", marginBottom: "30px", color: !themeMode ? "#fff" : "#72a9de", }}
+                sx={{
+                  textAlign: "center",
+                  marginBottom: "30px",
+                  color: !themeMode ? "#fff" : "#72a9de",
+                  fontSize: isLargeScreen ? "1rem" : "0.9rem", // Adjusted font size for smaller screens
+                }}
               >
                 In Partnership With :
               </Typography>
-              <Carousel
+              {/* <Carousel
                 responsive={responsive}
                 swipeable={true}
                 draggable={false}
@@ -195,25 +237,43 @@ const NewTitlePage = () => {
                 {partnershipLogos.map((partner) => (
                   <div key={partner.id}>
                     <img
-                      src={
-                        themeMode === "dark"
-                          ? partner.imageSrcDark
-                          : partner.imageSrcLight
-                      }
+                      src={partner.imageSrc}
                       alt={partner.altText}
                       style={{ maxWidth: "100%", height: "auto" }}
                     />
                   </div>
                 ))}
-              </Carousel>
+              </Carousel> */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  flexWrap: "wrap",
+                }}
+              >
+                {partnershipLogos.map((partner) => (
+                  <img
+                    key={partner.id}
+                    src={partner.imageSrc}
+                    alt={partner.altText}
+                    style={{
+                      maxWidth: isLargeScreen ? "120px" : "80px",
+                      margin: "10px",
+                    }}
+                  />
+                ))}
+              </Box>
             </Box>
           </Box>
         </Box>
-        <Box sx={{ textAlign: "center", marginY: "20px" }}>
+        <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
           <Link to="/terms-of-use" style={linkStyle}>
             Terms of Use
           </Link>
-          <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+          <Link
+            to="/privacy-policy"
+            style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px" }}
+          >
             Privacy Policy
           </Link>
           <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>

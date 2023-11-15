@@ -55,6 +55,7 @@ const styles = {
     fontSize: '16px',
     fontWeight: 'normal',
     color: '#fff',
+    backgroundColor: "#13538b"
   },
 };
 
@@ -286,10 +287,10 @@ const Departments = () => {
                       </TableCell>
                       <TableCell style={styles.cell}>
                         <IconButton onClick={() => handleEditDepartment(index)}>
-                          <EditIcon />
+                          <EditIcon style={{ color:'#fff',}} />
                         </IconButton>
                         <IconButton onClick={() => handleDeleteDepartment(index)}>
-                          <DeleteIcon />
+                          <DeleteIcon style={{ color: '#fff',}} />
                         </IconButton>
                       </TableCell>
                     </TableRow>

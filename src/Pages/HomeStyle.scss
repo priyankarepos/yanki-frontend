@@ -43,3 +43,8 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .searchBorderRemove .css-9425fu-MuiOutlinedInput-notchedOutline, .searchBorderRemove .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+    position: absolute;
+    border-color: transparent !important;
+  }

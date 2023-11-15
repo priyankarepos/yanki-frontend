@@ -7,19 +7,22 @@ import { Box } from "@mui/system";
 import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
+import { Context } from "../App";
 
 const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
+
+  const { activeTab } = React.useContext(Context);
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
+       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: activeTab === 0 ? "#063762" : "#8bbae5",}}>
         <div style={{ padding: "10px" }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: "#fff" }} />
-            <Typography style={{ fontSize: "18px", color: "#fff" }}>{query}</Typography>
+            <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#fff", }} />
+            <Typography style={{ fontSize: "18px", color: activeTab === 0 ? "#fff" : "#fff", }}>{query}</Typography>
           </Box>
         </div>
       </Paper>

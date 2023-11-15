@@ -124,7 +124,7 @@ const EnterpriseDashboard = () => {
                 </Toolbar>
             </AppBar>
 
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
+            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img
@@ -187,7 +187,7 @@ const EnterpriseDashboard = () => {
                         >
                             <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
                                 <ListItemIcon>
-                                    <BusinessIcon />
+                                    <BusinessIcon style={{ color:'#fff',}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Profile" />
                             </ListItem>
@@ -199,7 +199,7 @@ const EnterpriseDashboard = () => {
                         >
                             <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
                                 <ListItemIcon>
-                                    <AccountBalanceIcon />
+                                    <AccountBalanceIcon style={{ color:'#fff',}} />
                                 </ListItemIcon>
                                 <ListItemText primary="Departments" />
                             </ListItem>

@@ -57,6 +57,11 @@ const lightTheme = createTheme({
           backgroundColor: "#13538b",
           border: "1px solid #6fa8dd",
           color: "#77addf",
+          '&:hover': {
+            backgroundColor: '#13538b', // Change the background color on hover
+            color: '#77addf', // Change the text color on hover
+            border: "1px solid #77addf",
+          },
         },
       },
     },

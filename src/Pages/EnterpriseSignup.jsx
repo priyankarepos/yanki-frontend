@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import { useNavigate, Link } from "react-router-dom";
-import { ThemeModeContext } from "../App";
+import { Context, ThemeModeContext } from "../App";
 import axios from "axios";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -25,11 +25,28 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Grid, FormControl, Select, MenuItem, ListItemIcon } from '@mui/material';
+import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import {
+    emailRegex,
+    passwordRegex,
+    phoneRegex,
+} from "../Utils/validations/validation";
+import { InputLabel, FormHelperText } from '@mui/material';
+
+const styles = {
+    inputField: {
+        // backgroundColor: '#eaf5ff',
+        // border: '1px solid #6fa8dd',
+        borderRadius: '8px',
+        marginBottom: '10px',
+        // color: "#8bbae5",
+        with: "100%"
+    },
+};
 
 const linkStyle = {
     color: "#457bac",
@@ -37,16 +54,19 @@ const linkStyle = {
     textDecoration: "none",
     paddingRight: "20px",
     borderRight: "1px solid #457bac",
-  };
+};
 
 const EnterpriseSignup = () => {
     const { themeMode } = useContext(ThemeModeContext);
+    const { activeTab } = useContext(Context);
     const [showPassword, setShowPassword] = useState(false);
     const [signinLoading, setSigninLoading] = useState(false);
     const [signinError, setSigninError] = useState(false);
     const [signinErrorMsg, setSigninErrorMsg] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [isTermsAccepted, setTermsAccepted] = useState(false);
+    const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+    console.log("enterpriseCategories", enterpriseCategories);
     const {
         control,
         handleSubmit,
@@ -67,12 +87,68 @@ const EnterpriseSignup = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchEnterpriseCategories = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+                );
+
+                console.log('API Response:', response.data);
+
+                if (response.status === 200) {
+                    setEnterpriseCategories(response.data);
+                } else {
+                    console.error("Failed to fetch enterprise categories");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        fetchEnterpriseCategories();
+    }, []);
+
     const onError = (data) => {
         console.log("error data: ", data);
     };
 
     const onSubmit = async (data) => {
-        console.log("data: ", data);
+        try {
+            setSigninLoading(true);
+
+            // Prepare the data to be sent in the request body
+            const dataToSend = {
+                email: data.Email,
+                password: data.Password,
+                fullName: data.UserName,
+                phoneNumber: data.PhoneNumber,
+                enterpriseName: data.EnterpriseName,
+                contactPersonName: data.PointOfContact,
+                website: data.Website,
+                categoryId: selectedCategory,
+                isTermAndPrivacy: isTermsAccepted,
+            };
+
+            // Make the POST request
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_HOST}/api/auth/register`,
+                dataToSend
+            );
+
+            if (response.status === 200) {
+                navigate("/signin-success");
+            }
+        } catch (error) {
+            // Handle errors
+            setSigninLoading(false);
+            setSigninError(true);
+            if (error?.response?.data?.message) {
+                setSigninErrorMsg(error?.response?.data?.message);
+            } else {
+                setSigninErrorMsg("Something went wrong");
+            }
+        }
     };
 
     const handleTermsAcceptance = () => {
@@ -110,33 +186,37 @@ const EnterpriseSignup = () => {
         onSuccess,
     });
 
+    const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
 
     return (
         <>
             <Container maxWidth="xl">
                 <Box className="flex justify-center items-center min-h-70-screen">
-                    <Box sx={{ maxWidth: "700px", width: { sm: "700px" } }}>
+                    <Box sx={{ maxWidth: isLargeScreen ? 620 : "100%" }}>
                         <Box className="w-full object-contain flex items-center justify-center marginY-28">
                             <Link
                                 to="/auth"
                                 className="w-full object-contain flex items-center justify-center"
                             >
                                 <img
-                                    src={
-                                        themeMode === "dark"
-                                            ? "/auth-logo-dark.svg"
-                                            : "/auth-logo-light.svg"
-                                    }
+                                    src={"/auth-logo-light.svg"}
                                     alt="logo"
-                                    style={{ width: "35%" }}
+                                    style={{
+                                        width: "100%",
+                                        maxWidth: isLargeScreen ? "250px" : "200px",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                        display: "block",
+                                    }}
                                 />
                             </Link>
                         </Box>
                         <Typography
                             component="h1"
                             variant="h5"
-                            sx={{ marginBottom: "34px" }}
                             className="text-center marginBottom-34"
+                            sx={{ marginBottom: "34px", textAlign: "center", fontWeight: "bold", color: "#72a9de", }}
                         >
                             Create your account
                         </Typography>
@@ -146,22 +226,31 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="UserName"
                                     rules={{
-                                        // Add validation rules for UserName field
+                                        required: "User Name is required.",
+                                        minLength: {
+                                            value: 3,
+                                            message: "User Name should be at least 3 characters long.",
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: "User Name should not exceed 50 characters.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             type="outlined"
                                             placeholder="User Name"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <PersonOutlineIcon />
+                                                        <PersonOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
                                             error={!!errors["UserName"]}
                                             helperText={errors["UserName"] ? errors["UserName"].message : ""}
                                             disabled={signinLoading}
@@ -174,17 +263,26 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Password"
                                     rules={{
-                                        // Add validation rules for Password field
+                                        required: {
+                                            value: true,
+                                            message: "Password is required",
+                                        },
+                                        pattern: {
+                                            value: passwordRegex,
+                                            message:
+                                                "Password must have length of atleast 8 characters. It must contain uppercase letter, lowercase letter, special character and digit.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Password"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <HttpsOutlinedIcon />
+                                                        <HttpsOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                                 endAdornment: (
@@ -204,7 +302,7 @@ const EnterpriseSignup = () => {
                                                 type: showPassword ? "text" : "password",
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "14px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Password"]}
                                             helperText={errors["Password"] ? errors["Password"].message : ""}
                                             disabled={signinLoading}
@@ -217,22 +315,30 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Email"
                                     rules={{
-                                        // Add validation rules for Email field
+                                        required: {
+                                            value: true,
+                                            message: "Email address is required.",
+                                        },
+                                        pattern: {
+                                            value: emailRegex,
+                                            message: "Enter valid email address.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Email"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <MailOutlineIcon />
+                                                        <MailOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Email"]}
                                             helperText={errors["Email"] ? errors["Email"].message : ""}
                                             disabled={signinLoading}
@@ -245,22 +351,30 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="PhoneNumber"
                                     rules={{
-                                        // Add validation rules for PhoneNumber field
+                                        required: {
+                                            value: true,
+                                            message: "Phone number is required.",
+                                        },
+                                        pattern: {
+                                            value: phoneRegex,
+                                            message: "Invalid phone number format.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Phone Number"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <PhoneIcon />
+                                                        <PhoneIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["PhoneNumber"]}
                                             helperText={errors["PhoneNumber"] ? errors["PhoneNumber"].message : ""}
                                             disabled={signinLoading}
@@ -273,22 +387,23 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="EnterpriseName"
                                     rules={{
-                                        // Add validation rules for EnterpriseName field
+                                        required: "Enterprise Name is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Enterprise Name"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <BusinessIcon />
+                                                        <BusinessIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["EnterpriseName"]}
                                             helperText={
                                                 errors["EnterpriseName"]
@@ -305,22 +420,23 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="PointOfContact"
                                     rules={{
-                                        // Add validation rules for PointOfContact field
+                                        required: "Enterprise person of contact name is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Enterprises person of contact"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <AccountCircleIcon />
+                                                        <AccountCircleIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["PointOfContact"]}
                                             helperText={
                                                 errors["PointOfContact"]
@@ -337,22 +453,23 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Website"
                                     rules={{
-                                        // Add validation rules for Website field
+                                        required: "Website URL is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Website"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
-                                                        <LinkIcon />
+                                                        <LinkIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                     </InputAdornment>
                                                 ),
                                             }}
                                             fullWidth
-                                            sx={{ marginBottom: "10px" }}
+                                            sx={activeTab === 1 && { ...styles.inputField }}
                                             error={!!errors["Website"]}
                                             helperText={errors["Website"] ? errors["Website"].message : ""}
                                             disabled={signinLoading}
@@ -360,7 +477,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} className='EnterpriseError'>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
@@ -375,26 +492,19 @@ const EnterpriseSignup = () => {
                                             </ListItemIcon>
                                             Select an Enterprise Category
                                         </MenuItem>
-                                        <MenuItem value="category1">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 1
-                                        </MenuItem>
-                                        <MenuItem value="category2">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 2
-                                        </MenuItem>
-                                        <MenuItem value="category3">
-                                            <ListItemIcon>
-                                                <CategoryIcon />
-                                            </ListItemIcon>
-                                            Category 3
-                                        </MenuItem>
+                                        {enterpriseCategories.map((category) => (
+                                            <MenuItem key={category.id} value={category.id}>
+                                                <ListItemIcon>
+                                                    <CategoryIcon />
+                                                </ListItemIcon>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
+
+
+
                             </Grid>
 
                         </Grid>
@@ -441,7 +551,7 @@ const EnterpriseSignup = () => {
                             <Typography sx={{ textAlign: "center", color: "#72a9de", }} variant="subtitle1" display="block" gutterBottom>
                                 Already have an account?
                                 <Link to="/login" component={LinkBehavior} underline="none">
-                                    <span className="font-bold cursor-pointer" style={{ color: themeMode === "dark" ? "#fff" : "#000" }}> Login</span>
+                                    <span className="font-bold cursor-pointer" style={{ color: activeTab === "0" ? "#fff" : "#13538b" }}> Login</span>
                                 </Link>
                             </Typography>
                         </Box>

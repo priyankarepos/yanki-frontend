@@ -30,6 +30,14 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
 
+const linkStyle = {
+  color: "#457bac",
+  fontSize: "15px",
+  textDecoration: "none",
+  paddingRight: "20px",
+  borderRight: "1px solid #457bac",
+};
+
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [signinLoading, setSigninLoading] = useState(false);
@@ -342,6 +350,17 @@ const SigninPage = () => {
               </Typography>
             </Box>
           </Box>
+        </Box>
+        <Box sx={{ textAlign: "center", marginY: "20px" }}>
+          <Link to="/terms-of-use" style={linkStyle}>
+            Terms of Use
+          </Link>
+          <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+            Privacy Policy
+          </Link>
+          <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
+            hello@yanki.ai
+          </Link>
         </Box>
       </Container>
     </>

@@ -83,22 +83,22 @@ const AdminSearchRepostPage = () => {
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-user-report`,
-        {
-          params: {
-            startDate: startDate,
-            endDate: endDate,
-            pageNumber: pageNumber,
-            pageSize: selectedPageSize,
-            ascending: ascending,
-          },
-          headers: {
-            'Content-Type': 'application/json',
-            TimeZone: timezone,
-          },
-        }
-      );
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-user-report`,
+            {
+            params: {
+                startDate: startDate,
+                endDate: endDate,
+                pageNumber: pageNumber,
+                pageSize: selectedPageSize,
+                ascending: ascending,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                TimeZone: timezone,
+            },
+            }
+        );
 
       if (response.status === 200) {
         setIsSubmitting(false);
