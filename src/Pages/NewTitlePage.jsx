@@ -142,7 +142,7 @@ const NewTitlePage = () => {
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    maxWidth: "400px",
+                    maxWidth: "300px",
                     marginTop: "30px",
                     marginX: "auto",
                   }}
