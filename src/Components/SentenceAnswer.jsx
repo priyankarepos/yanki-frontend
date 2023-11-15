@@ -40,7 +40,7 @@ const SentenceAnswer = ({ answer }) => {
           )} */}
 
           {processedContentResponse.map((ans, index) => (
-            <Typography variant="h6" component="div" key={index}>
+            <Typography variant="h6" component="div" key={index} style={{fontSize: "16px",}}>
               {ans}
             </Typography>
           ))}

@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 
-const darkMidnightBlue = "#063762"; // dark bg
+const darkMidnightBlue = "#022b4f"; // dark bg
 const white = "#FFF";
 const gunmetal = "#1d4a72";
 const melon = "#FFC9C9";

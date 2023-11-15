@@ -79,7 +79,7 @@ const GovadenAnswer = ({ answer }) => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {Object.keys(row.groupedByDayMinyanim).map((day) => (
+                                        {row.groupedByDayMinyanim && Object.keys(row.groupedByDayMinyanim).map((day) => (
                                             <TableRow key={day} sx={{ '& > *': { borderBottom: '1px solid #3f7baf' } }}>
                                                 <TableCell component="th" scope="row">
                                                     {dayNameMapping[day] || day}

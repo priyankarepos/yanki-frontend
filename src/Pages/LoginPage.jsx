@@ -26,6 +26,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Context } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
+import GoogleIcon from '@mui/icons-material/Google';
 
 // const styles = {
 //   inputField: {
@@ -74,7 +75,7 @@ const LoginPage = () => {
   const onError = (data) => {
     console.log("error data: ", data);
   };
-  
+
   const onSubmit = async (data) => {
     console.log("data", data);
     try {
@@ -198,7 +199,7 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
-                sx={{marginBottom: "10px"}}
+                  sx={{ marginBottom: "10px" }}
                   className={activeTab === 1 ? 'InputFieldColor' : ''}
                   {...field}
                   type="outlined"
@@ -236,7 +237,6 @@ const LoginPage = () => {
               render={({ field }) => (
                 <TextField
                   className={activeTab === 1 ? 'InputFieldColor' : ''}
-                  sx={{marginBottom: "10px"}}
                   {...field}
                   style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                   type="outlined"
@@ -274,7 +274,7 @@ const LoginPage = () => {
                 />
               )}
             />
-            <Box className="flex justify-between items-center w-full">
+            <Box className="flex justify-between items-center w-full" sx={{marginY: "15px",}}>
               <FormControlLabel
                 style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                 control={
@@ -308,12 +308,13 @@ const LoginPage = () => {
               fullWidth
               onClick={handleSubmit(onSubmit, onError)}
               disabled={loginLoading}
+              sx={{textTransform: "capitalize",}}
             >
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
             <Divider sx={{ marginY: "28px" }}>or</Divider>
-            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px" }} fullWidth>
-              Login with google
+            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}} fullWidth>
+              <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
             </Button>
             <Box className="text-center" sx={{ marginTop: "28px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>

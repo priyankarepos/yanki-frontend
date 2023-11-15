@@ -18,11 +18,11 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: activeTab === 0 ? "#063762" : "#8bbae5",}}>
+       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
         <div style={{ padding: "10px" }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#fff", }} />
-            <Typography style={{ fontSize: "18px", color: activeTab === 0 ? "#fff" : "#fff", }}>{query}</Typography>
+            <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
+            <Typography style={{ fontSize: "16px", color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{query}</Typography>
           </Box>
         </div>
       </Paper>
