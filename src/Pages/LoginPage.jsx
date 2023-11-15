@@ -23,7 +23,7 @@ import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { Context, ThemeModeContext } from "../App";
+import { Context } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 
@@ -52,7 +52,6 @@ const LoginPage = () => {
   const [loginError, setLoginError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
 
-  const { themeMode } = useContext(ThemeModeContext);
   const { activeTab } = useContext(Context);
 
   console.log("activeTab", activeTab);

@@ -331,7 +331,7 @@ const NewHomePageMui = () => {
                 }}
             >
                 <Toolbar>
-                    <Box
+                    {!drawerOpen &&<Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -350,7 +350,7 @@ const NewHomePageMui = () => {
                             style={{ width: queryAnswer ? "10em" : "10em" }}
                             alt="logo"
                         />
-                        {!drawerOpen &&<IconButton
+                        <IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
@@ -358,8 +358,8 @@ const NewHomePageMui = () => {
                             style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                         >
                             <MenuIcon />
-                        </IconButton>}
-                    </Box>
+                        </IconButton>
+                    </Box>}
                     <ProfileCircle />
                 </Toolbar>
             </AppBar>
@@ -370,7 +370,7 @@ const NewHomePageMui = () => {
                 className="sidebarStyle"
             >
                 <div style={styles.sidebar}>
-                    <Box
+                    {drawerOpen &&<Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -389,7 +389,7 @@ const NewHomePageMui = () => {
                                 alt="logo"
                             />
                         </Link>
-                        {drawerOpen && <IconButton
+                        <IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
@@ -397,8 +397,8 @@ const NewHomePageMui = () => {
                             style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                         >
                             <MenuIcon />
-                        </IconButton>}
-                    </Box>
+                        </IconButton>
+                    </Box>}
                     <IconButton
                         color="primary"
                         style={{

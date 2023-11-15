@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { Context, ThemeModeContext } from "../App";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Carousel from "react-multi-carousel";
+// import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import partnershipLogoLightOne from "../Assets/images/partnet-logo4.png";
 import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
@@ -57,24 +57,24 @@ const NewTitlePage = () => {
     // Add more partnership logos as needed
   ];
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 3,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 2,
-    },
-  };
+//   const responsive = {
+//     superLargeDesktop: {
+//       breakpoint: { max: 4000, min: 3000 },
+//       items: 5,
+//     },
+//     desktop: {
+//       breakpoint: { max: 3000, min: 1024 },
+//       items: 4,
+//     },
+//     tablet: {
+//       breakpoint: { max: 1024, min: 464 },
+//       items: 3,
+//     },
+//     mobile: {
+//       breakpoint: { max: 464, min: 0 },
+//       items: 2,
+//     },
+//   };
 
   return (
     <>
