@@ -155,7 +155,7 @@ const AdminDashboard = () => {
                                 <ListItemText primary="Create Admin" />
                             </ListItem>
                         </NavLink>
-                        <NavLink
+                        {/* <NavLink
                             to="/admin/enterprise-request"
                             style={{ textDecoration: 'none', color: '#fff' }}
                             activeClassName="active"
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Categories" />
                             </ListItem>
-                        </NavLink>
+                        </NavLink> */}
                     </List>
 
                 </div>

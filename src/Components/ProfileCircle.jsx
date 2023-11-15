@@ -8,8 +8,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { useContext } from "react";
-
 import Logout from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -67,6 +65,7 @@ export default function ProfielCircle() {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
     handleClose();
     navigate("/auth");
+    sessionStorage.removeItem("selectedChatId");
   };
 
   const onClickNetworkingInterface = () => {
@@ -148,18 +147,18 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
-          {userRoles==="Admin" && <MenuItem onClick={onClickAdmin}>
+          {userRoles==="Admin" && activeTab === 0 && <MenuItem onClick={onClickAdmin}>
             <ListItemIcon>
               <AdminPanelSettingsIcon fontSize="small" />
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
-          {userRoles==="Enterprise" &&<MenuItem onClick={onClickNetworkingInterface}>
+          {/* {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
             <ListItemIcon>
               <Diversity2Icon fontSize="small" />
             </ListItemIcon>
             Networking Interface
-          </MenuItem>}
+          </MenuItem>} */}
 
           <Divider />
 

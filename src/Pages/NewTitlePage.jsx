@@ -178,7 +178,7 @@ const NewTitlePage = () => {
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    maxWidth: "400px",
+                    maxWidth: "300px",
                     marginTop: "30px",
                     marginX: "auto",
                   }}
@@ -224,7 +224,7 @@ const NewTitlePage = () => {
               >
                 In Partnership With :
               </Typography>
-              <Carousel
+              {/* <Carousel
                 responsive={responsive}
                 swipeable={true}
                 draggable={false}
@@ -243,7 +243,26 @@ const NewTitlePage = () => {
                     />
                   </div>
                 ))}
-              </Carousel>
+              </Carousel> */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                  flexWrap: "wrap",
+                }}
+              >
+                {partnershipLogos.map((partner) => (
+                  <img
+                    key={partner.id}
+                    src={partner.imageSrc}
+                    alt={partner.altText}
+                    style={{
+                      maxWidth: isLargeScreen ? "120px" : "80px",
+                      margin: "10px",
+                    }}
+                  />
+                ))}
+              </Box>
             </Box>
           </Box>
         </Box>
