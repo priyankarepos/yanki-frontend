@@ -96,7 +96,7 @@ const TorahanytimeAnswer = ({ answer }) => {
 
     return (
         <Box>
-            <Paper sx={{ p: 2 }}>
+            <Paper sx={{ p: 2,  }} >
                 {isVideo && isAudio && (
                     <div>
                         <FormControlLabel

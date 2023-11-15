@@ -20,7 +20,7 @@ const linkStyle = {
   color: "#457bac",
   fontSize: "15px",
   textDecoration: "none",
-  paddingRight: "20px",
+  paddingRight: "10px",
   borderRight: "1px solid #457bac",
 };
 
@@ -101,7 +101,7 @@ const NewTitlePage = () => {
               component="h1"
               sx={{
                 textAlign: "center",
-                fontWeight: "bold",
+                fontWeight: "medium",
                 color: "#72a9de",
                 fontSize:"16px",
               }}
@@ -153,8 +153,9 @@ const NewTitlePage = () => {
                     onClick={onLoginClick}
                     style={{
                       backgroundColor: "#13538b",
-                      color: "lightblue",
-                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                      color: "#fff",
+                      fontSize: "0.9rem", 
+                      textTransform: "capitalize"// Adjusted font size for smaller screens
                     }}
                   >
                     Login
@@ -165,8 +166,9 @@ const NewTitlePage = () => {
                     onClick={onSignupClick}
                     style={{
                       backgroundColor: "#13538b",
-                      color: "lightblue",
-                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                      color: "#fff",
+                      fontSize: "0.9rem",
+                      textTransform: "capitalize" // Adjusted font size for smaller screens
                     }}
                   >
                     Sign up
@@ -191,7 +193,8 @@ const NewTitlePage = () => {
                       backgroundColor: "#13538b",
                       color: "lightblue",
                       border: "1px solid lightblue",
-                      fontSize: "0.9rem", // Adjusted font size for smaller screens
+                      fontSize: "0.9rem",
+                      textTransform: "capitalize",
                     }}
                   >
                     Login
@@ -205,6 +208,7 @@ const NewTitlePage = () => {
                       color: "lightblue",
                       border: "1px solid lightblue",
                       fontSize: "0.9rem", // Adjusted font size for smaller screens
+                      textTransform: "capitalize",
                     }}
                   >
                     Sign up
@@ -258,7 +262,7 @@ const NewTitlePage = () => {
                     alt={partner.altText}
                     style={{
                       maxWidth: isLargeScreen ? "120px" : "80px",
-                      margin: "10px",
+                      margin: "5px",
                     }}
                   />
                 ))}
@@ -272,7 +276,7 @@ const NewTitlePage = () => {
           </Link>
           <Link
             to="/privacy-policy"
-            style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px" }}
+            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
           >
             Privacy Policy
           </Link>

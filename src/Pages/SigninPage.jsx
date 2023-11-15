@@ -29,6 +29,7 @@ import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const linkStyle = {
   color: "#457bac",
@@ -334,12 +335,12 @@ const SigninPage = () => {
             <Divider sx={{ marginY: "28px" }}>or</Divider>
             <Button
               variant="outlined"
-              sx={{ marginBottom: "25px" }}
               fullWidth
               disabled={signinLoading}
               onClick={() => login()}
+              sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}}
             >
-              Sign Up with Google
+              <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
             </Button>
             <Box className="text-center" sx={{ marginTop: "25px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom>

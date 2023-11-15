@@ -36,6 +36,7 @@ import {
     phoneRegex,
 } from "../Utils/validations/validation";
 import { InputLabel, FormHelperText } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const styles = {
     inputField: {
@@ -539,12 +540,12 @@ const EnterpriseSignup = () => {
                             <Divider sx={{ marginY: "28px" }}>or</Divider>
                             <Button
                                 variant="outlined"
-                                sx={{ marginBottom: "25px" }}
+                                sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}}
                                 fullWidth
                                 disabled={signinLoading}
                                 onClick={() => login()}
                             >
-                                Sign Up with Google
+                                <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
                             </Button>
                         </Box>
                         <Box className="text-center" sx={{ marginTop: "25px" }}>

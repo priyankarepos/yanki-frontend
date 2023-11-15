@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Outlet, Link } from "react-router-dom";
 import {
@@ -188,6 +188,8 @@ const NewHomePageMui = () => {
             const firstChatId = storedChatId;
             handleChatSessionClick(firstChatId);
             setInitialChatOpen(false);
+
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [initialChatOpen, chatSessions]);
 
@@ -320,18 +322,42 @@ const NewHomePageMui = () => {
         },
     };
 
+    const chatContainerRef = useRef(null);
+
+    useEffect(() => {
+        const chatContainerNode = chatContainerRef.current;
+    
+        const scrollToBottom = () => {
+            chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+        };
+    
+        scrollToBottom();
+    
+        chatContainerNode.style.scrollBehavior = 'auto';
+    
+        const observer = new MutationObserver(scrollToBottom);
+        observer.observe(chatContainerNode, { childList: true, subtree: true });
+    
+        // Clean up
+        return () => {
+            chatContainerNode.style.scrollBehavior = 'smooth';
+            observer.disconnect();
+        };
+    }, []); 
+
+
     return (
         <Box style={styles.adminDashboard}>
             <CssBaseline />
             <AppBar
                 position="fixed"
                 sx={{
-                    background: activeTab === 0 ? "#063762" : "#fff",
+                    background: activeTab === 0 ? "#022b4f" : "#fff",
                     boxShadow: "none",
                 }}
             >
                 <Toolbar>
-                    {!drawerOpen &&<Box
+                    {!drawerOpen && <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -370,7 +396,7 @@ const NewHomePageMui = () => {
                 className="sidebarStyle"
             >
                 <div style={styles.sidebar}>
-                    {drawerOpen &&<Box
+                    {drawerOpen && <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -470,7 +496,7 @@ const NewHomePageMui = () => {
                 style={{
                     ...styles.content,
                     marginLeft: contentMargin,
-                    backgroundColor: activeTab === 0 ? "#063762" : "#fff",
+                    backgroundColor: activeTab === 0 ? "#022b4f" : "#fff",
                 }}
             >
                 <Toolbar style={{ minHeight: "0px", }} />
@@ -480,40 +506,32 @@ const NewHomePageMui = () => {
                         marginX: "auto",
                         // margin: paperMargin,
                         padding: "20px",
-                        height: "90vh",
+                        height: "100vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
                         // position: "relative",
                         bottom: "20px",
-                        marginTop: "15px",
+                        marginTop: "0px",
                     }}
                 >
-                    <Box className="answerBox">
-
-
-                        {/* {queryAnswer?.isSucess && queryAnswer?.contentResponse && (
-                            <SentenceAnswer answer={queryAnswer} />
-                        )}
-
-                        {queryAnswer?.isSucess &&
-                            queryAnswer?.torahAnytimeLectures?.hits?.hits?.length && (
-                                <TorahanytimeAnswer answer={queryAnswer} />
-                            )}
-
-                        {queryAnswer?.isSucess &&
-                            queryAnswer?.godavenPrayerDetails?.length && (
-                                <GovadenAnswer answer={queryAnswer} />
-                            )}
-
-                        {queryAnswer?.isSucess && queryAnswer?.enterprises?.length && (
-                            <DemoEnterpriseChat answer={queryAnswer} />
-                        )} */}
-
-                        {/* {isError && <ErrorAnswer errorMsg={errorMsg} />} */}
-
+                    <Box className="answerBox" ref={chatContainerRef}
+                        style={{
+                            width: "100%",
+                            marginX: "auto",
+                            minHeight: "63vh",
+                            overflowY: "auto",
+                            maxHeight: "63vh",
+                        }}>
                         <Box>
                             {searchHistory.map((entry, index) => (
-                                <SearchHistoryItem key={index} query={entry.query} response={entry?.response?.response} errorMsg={errorMsg} isError={isError} searchQuery={searchQuery} />
+                                <SearchHistoryItem
+                                    key={index}
+                                    query={entry.query}
+                                    response={entry?.response?.response}
+                                    errorMsg={errorMsg}
+                                    isError={isError}
+                                    searchQuery={searchQuery}
+                                />
                             ))}
                         </Box>
                         {isSubmitting && (
@@ -598,7 +616,7 @@ const NewHomePageMui = () => {
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <SearchIcon  style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}/>
+                                                <SearchIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                             </InputAdornment>
                                         ),
                                     }}
@@ -644,7 +662,7 @@ const NewHomePageMui = () => {
                 </Box>
             </Box>
             <Outlet />
-        </Box>
+        </Box >
     );
 };
 
