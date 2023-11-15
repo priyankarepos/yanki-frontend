@@ -27,6 +27,8 @@ import "./HomeStyle.scss";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SearchHistoryItem from "./SearchHistoryItem";
+// import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 const styles = {
     sidebar: {
@@ -49,6 +51,7 @@ const NewHomePageMui = () => {
     const [drawerOpen, setDrawerOpen] = useState(true);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    console.log("isSubmitting",isSubmitting);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [queryAnswer, setQueryAnswer] = useState(null);
@@ -59,17 +62,20 @@ const NewHomePageMui = () => {
     const [searchHistory, setSearchHistory] = useState([]);
     const [chatSessions, setChatSessions] = useState([]);
     const [selectedChatId, setSelectedChatId] = useState(null);
+    // const [pageNumber, setPageNumber] = useState(0)
+    // const [hasMore, setHasMore] = useState(true);
+    const [initialChatOpen, setInitialChatOpen] = useState(true);
 
     console.log("chatSessions", chatSessions);
 
-     const onSubmit = async () => {
+    const onSubmit = async () => {
         try {
             setIsSubmitting(true);
             setIsError(false);
             setErrorMsg("");
             setQueryAnswer(null);
             setSearchQuery("");
-    
+
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const chatIdToUse = selectedChatId || (searchHistory.length > 0 ? searchHistory[0].chatId : null);
             console.log("chatIdToUse", chatIdToUse);
@@ -87,24 +93,30 @@ const NewHomePageMui = () => {
                     },
                 }
             );
-    
+
             if (response.status === 200) {
                 setIsSubmitting(false);
                 setQueryAnswer(response.data);
                 setIsError(false);
                 setErrorMsg("");
-    
+
                 const newChatId = response.data.chatId;
 
                 if (!selectedChatId && !searchHistory.length) {
                     setSelectedChatId(newChatId);
                 }
-    
+
+                // setChatSessions((prevSessions) => [
+                //     { id: newChatId, name: `${searchQuery}...` },
+                //     ...prevSessions,
+                // ]);
+
                 setSearchHistory((prevHistory) => [
                     ...prevHistory,
                     { query: searchQuery, response: response.data },
                 ]);
             }
+
         } catch (error) {
             setIsSubmitting(false);
             setIsError(true);
@@ -130,10 +142,10 @@ const NewHomePageMui = () => {
         setQueryAnswer(null);
         setSearchQuery("");
         setSearchHistory([]);
-        // setChatSessions([]); // Clear chat sessions
-        setSelectedChatId(null); // Set selected chat to null
+        setSelectedChatId(null); 
+        sessionStorage.removeItem("selectedChatId");
     };
-    
+
 
     useEffect(() => {
         if (queryAnswer?.isSucess === false) {
@@ -145,18 +157,41 @@ const NewHomePageMui = () => {
     const fetchChatSessions = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=1&pageSize=20`
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=1&pageSize=500`
             );
 
             if (response.status === 200) {
-                setChatSessions(response.data.chatList);
+                // const newChatSessions = response.data.chatList;
+
+                // if (newChatSessions.length === 0) {
+                //     setHasMore(false);
+                // } else {
+                //     setChatSessions(newChatSessions);
+                //     setPageNumber((pageNumber) => pageNumber + 1);
+                // }
+
+                if (response.status === 200) {
+                    setChatSessions(response.data.chatList);
+                }
             }
         } catch (error) {
             console.error("Error fetching chat sessions:", error);
         }
     };
 
+
+    useEffect(() => {
+        if (initialChatOpen && chatSessions.length > 0) {
+            const storedChatId = sessionStorage.getItem("selectedChatId");
+            // const firstChatId = storedChatId || chatSessions[0].id;
+            const firstChatId = storedChatId;
+            handleChatSessionClick(firstChatId);
+            setInitialChatOpen(false);
+        }
+    }, [initialChatOpen, chatSessions]);
+
     const handleChatSessionClick = async (chatId) => {
+        sessionStorage.setItem("selectedChatId", chatId);
         setSelectedChatId(chatId);
         try {
             const response = await axios.get(
@@ -170,8 +205,8 @@ const NewHomePageMui = () => {
                     const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
                         const gptResponse = JSON.parse(chatEntry.gptResponse);
                         return {
-                            query: chatEntry.userQuery, 
-                            response:{
+                            query: chatEntry.userQuery,
+                            response: {
                                 chatId: chatEntry.chatId,
                                 response: {
                                     contentResponse: gptResponse.ContentResponse,
@@ -182,15 +217,15 @@ const NewHomePageMui = () => {
                                     videoResult: gptResponse.VideoResult,
                                 }
                             }
-                            
+
                         };
                     });
 
-                    setSearchHistory(parsedChatHistory);
+                    setSearchHistory([...parsedChatHistory].reverse());
 
                     const allResponses = parsedChatHistory.flat();
-
-                    setSearchHistory(allResponses);
+    
+                    setSearchHistory([...allResponses].reverse());
 
                 } catch (parseError) {
                     console.error("Error parsing chat history:", parseError);
@@ -199,7 +234,7 @@ const NewHomePageMui = () => {
             }
         } catch (error) {
             console.error("Error fetching chat history:", error);
-          
+
         }
     };
     const fetchChatHistory = async (chatId) => {
@@ -220,7 +255,7 @@ const NewHomePageMui = () => {
 
     useEffect(() => {
         fetchChatSessions();
-    }, [ isSubmitting]);
+    }, [isSubmitting])
 
     useEffect(() => {
         if (selectedChatId) {
@@ -385,33 +420,43 @@ const NewHomePageMui = () => {
                         <span style={{ color: themeMode === "dark" ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
+                        {/* <InfiniteScroll
+                            dataLength={chatSessions.length}
+                            next={fetchChatSessions}
+                            hasMore={hasMore}
+                            loader={<Typography><CircularProgress /></Typography>}
+                        >
+                            
+                        </InfiniteScroll> */}
                         {chatSessions.map((chatSession) => (
-                            <IconButton
-                                key={chatSession.id}
-                                color="primary"
-                                style={{
-                                    backgroundColor:
-                                        themeMode === "dark" ? "#13416a" : "#2a2b35",
-                                    color: themeMode === "dark" ? "#fff" : "#fff",
-                                    padding: "11px",
-                                    borderRadius: "8px",
-                                    cursor: "pointer",
-                                    display: "flex",
-                                    width: "100%",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    fontSize,
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                    marginTop: "10px",
-                                }}
-                                onClick={() => handleChatSessionClick(chatSession.id)}
-                            >
-                                <ChatBubbleIcon />
-                                &nbsp; {chatSession.name}
-                            </IconButton>
-                        ))}
+                                <IconButton
+                                    key={chatSession.id}
+                                    color="primary"
+                                    style={{
+                                        backgroundColor:
+                                            themeMode === "dark" ? "#13416a" : "#2a2b35",
+                                        color: themeMode === "dark" ? "#fff" : "#fff",
+                                        padding: "11px",
+                                        borderRadius: "8px",
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        fontSize,
+                                        justifyContent: "flex-start",
+                                        alignItems: "center",
+                                        marginTop: "10px",
+                                    }}
+                                    onClick={() => handleChatSessionClick(chatSession.id)}
+                                >
+                                    <ChatBubbleIcon />
+                                    <Typography style={{
+                                        width: "200px",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden", textAlign: "left"
+                                    }}>&nbsp; {chatSession.name}</Typography>
+                                </IconButton>
+                            ))}
+
                     </Box>
                 </div>
             </Drawer>
@@ -542,7 +587,7 @@ const NewHomePageMui = () => {
                                     name="searchQuery"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="What time is Shabbat in Jerusalem on next Friday?"
+                                    placeholder="Message Yanki.."
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
