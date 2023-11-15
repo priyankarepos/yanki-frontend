@@ -25,19 +25,25 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Grid, FormControl, Select, MenuItem, ListItemIcon } from '@mui/material';
+import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import {
+    emailRegex,
+    passwordRegex,
+    phoneRegex,
+} from "../Utils/validations/validation";
+import { InputLabel, FormHelperText } from '@mui/material';
 
 const styles = {
     inputField: {
-        backgroundColor: '#eaf5ff',
-        border: '1px solid #6fa8dd',
+        // backgroundColor: '#eaf5ff',
+        // border: '1px solid #6fa8dd',
         borderRadius: '8px',
-        marginBottom: '16px',
-        color: "#8bbae5",
+        marginBottom: '10px',
+        // color: "#8bbae5",
         with: "100%"
     },
 };
@@ -131,7 +137,6 @@ const EnterpriseSignup = () => {
             );
 
             if (response.status === 200) {
-                // Registration successful, navigate to the success page
                 navigate("/signin-success");
             }
         } catch (error) {
@@ -181,12 +186,14 @@ const EnterpriseSignup = () => {
         onSuccess,
     });
 
+    const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
 
     return (
         <>
             <Container maxWidth="xl">
                 <Box className="flex justify-center items-center min-h-70-screen">
-                    <Box sx={{ maxWidth: "700px", width: { sm: "700px" } }}>
+                    <Box sx={{ maxWidth: isLargeScreen ? 620 : "100%" }}>
                         <Box className="w-full object-contain flex items-center justify-center marginY-28">
                             <Link
                                 to="/auth"
@@ -195,7 +202,13 @@ const EnterpriseSignup = () => {
                                 <img
                                     src={"/auth-logo-light.svg"}
                                     alt="logo"
-                                    style={{ width: "35%" }}
+                                    style={{
+                                        width: "100%",
+                                        maxWidth: isLargeScreen ? "250px" : "200px",
+                                        marginLeft: "auto",
+                                        marginRight: "auto",
+                                        display: "block",
+                                    }}
                                 />
                             </Link>
                         </Box>
@@ -213,10 +226,19 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="UserName"
                                     rules={{
-                                        // Add validation rules for UserName field
+                                        required: "User Name is required.",
+                                        minLength: {
+                                            value: 3,
+                                            message: "User Name should be at least 3 characters long.",
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: "User Name should not exceed 50 characters.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             sx={activeTab === 1 && { ...styles.inputField }}
                                             type="outlined"
@@ -241,10 +263,19 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Password"
                                     rules={{
-                                        // Add validation rules for Password field
+                                        required: {
+                                            value: true,
+                                            message: "Password is required",
+                                        },
+                                        pattern: {
+                                            value: passwordRegex,
+                                            message:
+                                                "Password must have length of atleast 8 characters. It must contain uppercase letter, lowercase letter, special character and digit.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Password"
@@ -284,10 +315,18 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Email"
                                     rules={{
-                                        // Add validation rules for Email field
+                                        required: {
+                                            value: true,
+                                            message: "Email address is required.",
+                                        },
+                                        pattern: {
+                                            value: emailRegex,
+                                            message: "Enter valid email address.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Email"
@@ -312,10 +351,18 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="PhoneNumber"
                                     rules={{
-                                        // Add validation rules for PhoneNumber field
+                                        required: {
+                                            value: true,
+                                            message: "Phone number is required.",
+                                        },
+                                        pattern: {
+                                            value: phoneRegex,
+                                            message: "Invalid phone number format.",
+                                        },
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Phone Number"
@@ -340,10 +387,11 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="EnterpriseName"
                                     rules={{
-                                        // Add validation rules for EnterpriseName field
+                                        required: "Enterprise Name is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Enterprise Name"
@@ -372,10 +420,11 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="PointOfContact"
                                     rules={{
-                                        // Add validation rules for PointOfContact field
+                                        required: "Enterprise person of contact name is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Enterprises person of contact"
@@ -404,10 +453,11 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="Website"
                                     rules={{
-                                        // Add validation rules for Website field
+                                        required: "Website URL is required.",
                                     }}
                                     render={({ field }) => (
                                         <TextField
+                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
                                             {...field}
                                             type="outlined"
                                             placeholder="Website"
@@ -427,13 +477,13 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} className='EnterpriseError'>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
                                         onChange={(event) => setSelectedCategory(event.target.value)}
                                         displayEmpty
-                                        sx={activeTab === 1 && { ...styles.inputField }}
+                                        sx={{ marginBottom: "10px" }}
                                         className='EnterpriseCategorySelect'
                                     >
                                         <MenuItem value="">
@@ -452,6 +502,9 @@ const EnterpriseSignup = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
+
+
+
                             </Grid>
 
                         </Grid>

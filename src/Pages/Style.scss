@@ -1,5 +1,17 @@
 .EnterpriseCategorySelect div {
     display: flex;
+    padding: 8px;
+    align-items: center;
+    border: 1px solid #6fa8dd;
+    justify-content: flex-start;
+}
+
+.EnterpriseCategorySelect .css-cveggr-MuiListItemIcon-root {
+    min-width: 32px;
+}
+
+.EnterpriseCategorySelect .MuiListItemIcon-root.css-cveggr-MuiListItemIcon-root {
+    border: none;
 }
 
 .tabStyle .css-y5szmw-MuiTabs-indicator {
@@ -13,6 +25,10 @@
     background-color : #72a9de !important;
 }
 
+.tabStyle .Mui-selected {
+    color: #72a9de !important ;
+}
+
 .InputFieldColor input {
     color: #13538b !important;
 }
@@ -21,7 +37,17 @@
     background-color: #eaf5ff;
     border: 1px solid #6fa8dd;
     border-radius: 8px;
-    margin-bottom: 16px;
     color: #8bbae5;
     width: 100%;
+}
+
+.EnterpriseInputFieldColor .MuiInputBase-root{
+    color: #72a9de;
+    border: 1px solid #72a9de;
+    border-radius: 8px;
+}
+
+.EnterpriseError .css-1wc848c-MuiFormHelperText-root{
+    color: red !important;
+    line-height: 0 !important;
 }
