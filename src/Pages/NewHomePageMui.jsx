@@ -350,7 +350,7 @@ const NewHomePageMui = () => {
                             style={{ width: queryAnswer ? "10em" : "10em" }}
                             alt="logo"
                         />
-                        <IconButton
+                        {!drawerOpen &&<IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
@@ -358,7 +358,7 @@ const NewHomePageMui = () => {
                             style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                         >
                             <MenuIcon />
-                        </IconButton>
+                        </IconButton>}
                     </Box>
                     <ProfileCircle />
                 </Toolbar>
@@ -389,7 +389,7 @@ const NewHomePageMui = () => {
                                 alt="logo"
                             />
                         </Link>
-                        <IconButton
+                        {drawerOpen && <IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
@@ -397,7 +397,7 @@ const NewHomePageMui = () => {
                             style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                         >
                             <MenuIcon />
-                        </IconButton>
+                        </IconButton>}
                     </Box>
                     <IconButton
                         color="primary"

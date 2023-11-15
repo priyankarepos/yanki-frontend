@@ -527,7 +527,7 @@ const EnterpriseSignup = () => {
                                 label="I accept the terms of use and privacy policy"
                             />
                         </Box>
-                        <Box sx={{ maxWidth: "400px", marginX: "auto", marginTop: "25px", }}>
+                        <Box sx={{ maxWidth: "350px", marginX: "auto", marginTop: "25px", }}>
                             <Button
                                 variant="contained"
                                 fullWidth

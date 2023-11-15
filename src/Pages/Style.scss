@@ -8,17 +8,19 @@
 
 .EnterpriseCategorySelect .css-cveggr-MuiListItemIcon-root {
     min-width: 20px;
+    border: none;
 }
 
 .EnterpriseCategorySelect .css-1f8bwsm {
     min-width: 20px !important;
+    border: none;
 }
 
 .EnterpriseCategorySelect .MuiListItemIcon-root.css-cveggr-MuiListItemIcon-root {
     border: none;
 }
 
-.tabStyle .css-y5szmw-MuiTabs-indicator {
+.tabStyle span.MuiTabs-indicator {
     position: absolute;
     height: 2px;
     bottom: 0;
