@@ -272,11 +272,11 @@ const NewHomePageMui = () => {
     const initialQuestions = [
         { id: 1, text: "What time is candle lighting?" },
         { id: 2, text: "Where is the next Minyan near me ?" },
-        { id: 3, text: "Display mincha in sphard nusach " },
-        { id: 4, text: "Play a class by Rabbi Paysach Krohn " },
-        { id: 5, text: "Play a shiur about Rosh Hashana" },
+        { id: 3, text: "Display mincha in sphard nusach. " },
+        { id: 4, text: "Play a class by Rabbi Paysach Krohn. " },
+        { id: 5, text: "Play a shiur about Rosh Hashana." },
         { id: 6, text: "What is the date for purim ?" },
-        { id: 7, text: "Tell me everything you can do" },
+        { id: 7, text: "Tell me everything you can do." },
     ];
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
