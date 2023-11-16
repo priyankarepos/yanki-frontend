@@ -27,7 +27,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
         </div>
       </Paper>
       { isTorahAnswer && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper id="abcd" elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
           </div>
@@ -49,7 +49,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.enterprises?.length && (
+      {response?.isSucess && response?.enterprises?.length > 0 && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <DemoEnterpriseChat answer={response} />
