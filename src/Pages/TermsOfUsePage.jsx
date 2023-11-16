@@ -45,7 +45,7 @@ const TermsOfUse = () => {
                     }}>
                         <Box
                             className="w-full object-contain flex items-center justify-center"
-                            sx={{ marginBottom: "15px" }}
+                            sx={{ marginBottom: "25px" }}
                         >
                             <RouterLink
                                 to="/auth"
