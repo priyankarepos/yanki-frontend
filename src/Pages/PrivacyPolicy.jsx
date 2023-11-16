@@ -45,7 +45,7 @@ const PrivacyPolicy = () => {
                     }}>
                         <Box
                             className="w-full object-contain flex items-center justify-center"
-                            sx={{ marginBottom: "15px" }}
+                            sx={{ marginBottom: "25px" }}
                         >
                             <RouterLink
                                 to="/auth"
@@ -71,7 +71,7 @@ const PrivacyPolicy = () => {
                                 lineHeight: "1.6",
                                 fontWeight: "700",
                                 fontSize: "22px",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Privacy Policy
@@ -98,7 +98,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Information We Collect
@@ -125,7 +125,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             How We Use Information
@@ -188,7 +188,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Information Sharing and Disclosure
@@ -236,7 +236,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Data Retention
@@ -263,7 +263,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "15px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Your Rights
@@ -290,7 +290,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Changes to this Policy
@@ -317,7 +317,7 @@ const PrivacyPolicy = () => {
                                 fontSize: "16px",
                                 lineHeight: "1.6",
                                 fontWeight: "700",
-                                color: activeTab === 0 ? "#fff" : "#13538b",
+                                color: activeTab === 0 ? "#fff" : "#6fa8dd",
                             }}
                         >
                             Contact Us
