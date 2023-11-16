@@ -27,6 +27,7 @@ import { Context } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 import GoogleIcon from '@mui/icons-material/Google';
+import { useMediaQuery } from "@mui/material";
 
 // const styles = {
 //   inputField: {
@@ -53,9 +54,13 @@ const LoginPage = () => {
   const [loginError, setLoginError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
 
-  const { activeTab } = useContext(Context);
+  const recipientEmail = "hello@yanki.ai";
+  const emailSubject = "Email subject";
+  const emailBody = "Email body";
 
-  console.log("activeTab", activeTab);
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+
+  const { activeTab } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -274,7 +279,7 @@ const LoginPage = () => {
                 />
               )}
             />
-            <Box className="flex justify-between items-center w-full" sx={{marginY: "15px",}}>
+            <Box className="flex justify-between items-center w-full" sx={{ marginY: "15px", }}>
               <FormControlLabel
                 style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                 control={
@@ -308,13 +313,13 @@ const LoginPage = () => {
               fullWidth
               onClick={handleSubmit(onSubmit, onError)}
               disabled={loginLoading}
-              sx={{textTransform: "capitalize",}}
+              sx={{ textTransform: "capitalize", }}
             >
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
             <Divider sx={{ marginY: "28px" }}>or</Divider>
-            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}} fullWidth>
-              <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
+            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }} fullWidth>
+              <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
             </Button>
             <Box className="text-center" sx={{ marginTop: "28px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
@@ -327,16 +332,26 @@ const LoginPage = () => {
           </Box>
 
         </Box>
-        <Box sx={{ textAlign: "center", marginY: "20px" }}>
-          <Link to="/terms-of-use" style={linkStyle}>
+        <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
+          <Link to="/terms-of-use" style={linkStyle} component={LinkBehavior}>
             Terms of Use
           </Link>
-          <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+          <Link
+            to="/privacy-policy"
+            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
+            component={LinkBehavior}
+          >
             Privacy Policy
           </Link>
-          <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
-            hello@yanki.ai
-          </Link>
+          <Typography variant="caption">
+            <a style={{ ...linkStyle, borderRight: "none" }}
+              href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              hello@yanki.ai
+            </a>
+          </Typography>
         </Box>
       </Container>
     </>

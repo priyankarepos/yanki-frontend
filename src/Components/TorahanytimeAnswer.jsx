@@ -37,7 +37,7 @@ const TorahanytimeAnswer = ({ answer }) => {
 
     const responsive = {
         superLargeDesktop: {
-            breakpoint: { max: 4000, min: 3000 },
+            breakpoint: { max: 6000, min: 3000 },
             items: 3,
             slidesToSlide: 3
         },
@@ -94,20 +94,35 @@ const TorahanytimeAnswer = ({ answer }) => {
         });
     };
 
+    const [switchDisabled, setSwitchDisabled] = useState(false);
+
+
     return (
-        <Box>
+        <Box onClick={(e) => e.stopPropagation()}>
             <Paper sx={{ p: 2,  }} >
                 {isVideo && isAudio && (
                     <div>
-                        <FormControlLabel
-                            control={<Switch checked={showAudioAndVideo} onChange={() => setShowAudioAndVideo(!showAudioAndVideo)} />}
-                            label={`Choose Your Experience: ${!showAudioAndVideo ? "Audio Available" : "Video Available"}`}
-                        />
-                    </div>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={showAudioAndVideo}
+                                onChange={() => {
+                                    setSwitchDisabled(true);
+                                    setShowAudioAndVideo(!showAudioAndVideo);
+                                    setTimeout(() => {
+                                        setSwitchDisabled(false);
+                                    }, 500); // Adjust the delay as needed
+                                }}
+                                disabled={switchDisabled}
+                            />
+                        }
+                        label={`Choose Your Experience: ${!showAudioAndVideo ? "Audio Available" : "Video Available"}`}
+                    />
+                </div>
                 )}
                 <Carousel responsive={responsive}>
                     {data?.length && data?.map((item) => (
-                        <StyledCarouselItem key={item._id} className="youtube-box">
+                        <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
                             {isVideo && !isAudio && item._source.vimeo_video_links && item._source.vimeo_video_links?.length &&  (
                                 <div key={item._id}>
                                     {item?._id <= fixedId ? (

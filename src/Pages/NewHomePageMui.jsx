@@ -67,8 +67,6 @@ const NewHomePageMui = () => {
     // const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
 
-    console.log("chatSessions", chatSessions);
-
     const onSubmit = async () => {
         try {
             setIsSubmitting(true);
@@ -79,7 +77,6 @@ const NewHomePageMui = () => {
 
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const chatIdToUse = selectedChatId || (searchHistory.length > 0 ? searchHistory[0].chatId : null);
-            console.log("chatIdToUse", chatIdToUse);
             const response = await axios.post(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
                 { prompt: searchQuery },
@@ -273,12 +270,13 @@ const NewHomePageMui = () => {
         setSearchQuery(question);
     };
     const initialQuestions = [
-        { id: 1, text: "What time is latest shachris ?" },
-        { id: 2, text: "Where is the next minyan nere me ?" },
+        { id: 1, text: "For: What time is candle lighting?" },
+        { id: 2, text: "Where is the next Minyan nere me ?" },
         { id: 3, text: "Display mincha in sphard nusach ?" },
-        { id: 4, text: "Play a class of Rabbi Krohn ?" },
-        { id: 5, text: "Play something about roash hasana" },
+        { id: 4, text: "Play a class by Rabbi Paysach Krohn ?" },
+        { id: 5, text: "Play a shiur about Rosh Hashana" },
         { id: 6, text: "What is the date for purim" },
+        { id: 7, text: "Tell me everything you can do" },
     ];
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
@@ -322,7 +320,6 @@ const NewHomePageMui = () => {
     };
 
     const chatContainerRef = useRef(null);
-    const searchBoxRef = useRef(null);
 
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
@@ -579,7 +576,7 @@ const NewHomePageMui = () => {
                                                 activeTab === 0 ? "#fff" : "#fff",
                                             color: activeTab === 0 ? "#13416a" : "#063762",
                                             padding: "8px 16px",
-                                            borderRadius: "12px",
+                                            borderRadius: "50px",
                                             cursor: "pointer",
                                             textAlign: "left",
                                             display: "block",

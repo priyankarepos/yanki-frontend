@@ -30,6 +30,8 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleIcon from '@mui/icons-material/Google';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 const linkStyle = {
   color: "#457bac",
@@ -44,6 +46,10 @@ const SigninPage = () => {
   const [signinLoading, setSigninLoading] = useState(false);
   const [signinError, setSigninError] = useState(false);
   const [signinErrorMsg, setSigninErrorMsg] = useState("");
+
+  const recipientEmail = "hello@yanki.ai";
+  const emailSubject = "Email subject";
+  const emailBody = "Email body";
 
   const { themeMode } = useContext(ThemeModeContext);
 
@@ -60,6 +66,7 @@ const SigninPage = () => {
       signInEmail: "",
       signInPhone: "",
       signInPassword: "",
+      signTermsAndCondition: "",
     },
   });
 
@@ -75,6 +82,7 @@ const SigninPage = () => {
         password: data.signInPassword,
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
+        isTermAndPrivacy: data.signTermsAndCondition
       };
 
       const response = await axios.post(
@@ -101,36 +109,36 @@ const SigninPage = () => {
      md: "540px", lg: "720px", xl: "921px"
   */
 
-     const onSuccess = async (codeResponse) => {
-      try {
-        setSigninLoading(true);
-        const { access_token } = codeResponse;
-        console.log("access_token",access_token);
-        console.log("codeResponse",codeResponse);
+  const onSuccess = async (codeResponse) => {
+    try {
+      setSigninLoading(true);
+      const { access_token } = codeResponse;
+      console.log("access_token", access_token);
+      console.log("codeResponse", codeResponse);
 
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
-          { access_token }
-        );
-  
-        if (response.status === 200) {
-          navigate("/login");
-        } else {
-          setSigninError(true);
-          setSigninErrorMsg("Authentication failed.");
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+        { access_token }
+      );
+
+      if (response.status === 200) {
+        navigate("/login");
+      } else {
         setSigninError(true);
-        setSigninErrorMsg("Something went wrong.");
-      } finally {
-        setSigninLoading(false);
+        setSigninErrorMsg("Authentication failed.");
       }
-    };
-  
-    const login = useGoogleLogin({
-      onSuccess,
-    });
+    } catch (error) {
+      console.error("Error:", error);
+      setSigninError(true);
+      setSigninErrorMsg("Something went wrong.");
+    } finally {
+      setSigninLoading(false);
+    }
+  };
+
+  const login = useGoogleLogin({
+    onSuccess,
+  });
 
   return (
     <>
@@ -324,6 +332,31 @@ const SigninPage = () => {
                 {signinErrorMsg}
               </Alert>
             )}
+            <Box sx={{ textAlign: "left", marginTop: "0px", marginBottom: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
+              <Controller
+                control={control}
+                name="signTermsAndCondition"
+                rules={{ required: "You must accept the terms and conditions." }}
+                render={({ field }) => (
+                  <>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          {...field}
+                          color="primary"
+                        />
+                      }
+                      label="I accept the terms and conditions"
+                    />
+                    {errors.signTermsAndCondition && (
+                      <Typography variant="body2" color="error">
+                        {errors.signTermsAndCondition.message}
+                      </Typography>
+                    )}
+                  </>
+                )}
+              />
+            </Box>
             <Button
               variant="contained"
               fullWidth
@@ -338,9 +371,9 @@ const SigninPage = () => {
               fullWidth
               disabled={signinLoading}
               onClick={() => login()}
-              sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}}
+              sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
             >
-              <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
+              <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
             </Button>
             <Box className="text-center" sx={{ marginTop: "25px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom>
@@ -352,16 +385,26 @@ const SigninPage = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ textAlign: "center", marginY: "20px" }}>
-          <Link to="/terms-of-use" style={linkStyle}>
+        <Box sx={{ textAlign: "center", marginY: "10px" }}>
+          <Link to="/terms-of-use" style={linkStyle} component={LinkBehavior}>
             Terms of Use
           </Link>
-          <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+          <Link
+            to="/privacy-policy"
+            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
+            component={LinkBehavior}
+          >
             Privacy Policy
           </Link>
-          <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
-            hello@yanki.ai
-          </Link>
+          <Typography variant="caption">
+            <a style={{ ...linkStyle, borderRight: "none" }}
+              href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              hello@yanki.ai
+            </a>
+          </Typography>
         </Box>
       </Container>
     </>

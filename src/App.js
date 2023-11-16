@@ -39,6 +39,8 @@ import Departments from "./EnterpriseCollabration/Departments";
 import AdminSearchRepostPage from "./Admin/AdminSearchReportPage";
 import AdminEnterpriseRequest from "./Admin/EnterpriseRequest";
 import AdminEnterpriseCategory from "./Admin/EnterpriseCategory";
+import TermsOfUse from "./Pages/TermsOfUsePage";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
 
 // Exporting context
 export const Context = createContext("");
@@ -188,8 +190,6 @@ function App() {
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
 
-  console.log("userRoles", userRoles);
-
   // const currentTheme = useMemo(() => {
   //   if (activeTab === 0 ) {
   //     return darkTheme;
@@ -206,18 +206,18 @@ function App() {
 
     // If user is an enterprise user, apply light theme
     if (isEnterpriseUser) {
-        return lightTheme;
+      return lightTheme;
     } else {
-        // Otherwise, check the activeTab
-        if (activeTab === 1) {
-            // Apply light theme for activeTab 1
-            return lightTheme;
-        } else {
-            // Apply dark theme for all other cases
-            return darkTheme;
-        }
+      // Otherwise, check the activeTab
+      if (activeTab === 1) {
+        // Apply light theme for activeTab 1
+        return lightTheme;
+      } else {
+        // Apply dark theme for all other cases
+        return darkTheme;
+      }
     }
-}, [activeTab, userRoles]);
+  }, [activeTab, userRoles]);
 
   useLayoutEffect(() => {
     let session = window.sessionStorage.getItem(
@@ -473,6 +473,26 @@ function App() {
                       <UserPagesProtection>
                         <AdminEnterpriseCategory />
                       </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/terms-of-use"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <TermsOfUse />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/privacy-policy"
+                    element={
+                      <AuthPagesProtection>
+                        <AuthPageLayout>
+                          <PrivacyPolicy />
+                        </AuthPageLayout>
+                      </AuthPagesProtection>
                     }
                   />
                 </Routes>

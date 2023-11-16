@@ -35,7 +35,6 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-import { InputLabel, FormHelperText } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 
 const styles = {
@@ -65,9 +64,11 @@ const EnterpriseSignup = () => {
     const [signinError, setSigninError] = useState(false);
     const [signinErrorMsg, setSigninErrorMsg] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
-    const [isTermsAccepted, setTermsAccepted] = useState(false);
     const [enterpriseCategories, setEnterpriseCategories] = useState([]);
     console.log("enterpriseCategories", enterpriseCategories);
+    const recipientEmail = "hello@yanki.ai";
+    const emailSubject = "Email subject";
+    const emailBody = "Email body";
     const {
         control,
         handleSubmit,
@@ -83,6 +84,7 @@ const EnterpriseSignup = () => {
             PhoneNumber: "",
             Email: "",
             Password: "",
+            signTermsAndCondition: "",
         },
     });
 
@@ -128,7 +130,7 @@ const EnterpriseSignup = () => {
                 contactPersonName: data.PointOfContact,
                 website: data.Website,
                 categoryId: selectedCategory,
-                isTermAndPrivacy: isTermsAccepted,
+                isTermAndPrivacy: data.signTermsAndCondition
             };
 
             // Make the POST request
@@ -150,10 +152,6 @@ const EnterpriseSignup = () => {
                 setSigninErrorMsg("Something went wrong");
             }
         }
-    };
-
-    const handleTermsAcceptance = () => {
-        setTermsAccepted(!isTermsAccepted);
     };
 
     const onSuccess = async (codeResponse) => {
@@ -517,15 +515,28 @@ const EnterpriseSignup = () => {
                             </Alert>
                         )}
                         <Box sx={{ textAlign: "center", marginTop: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={isTermsAccepted}
-                                        onChange={handleTermsAcceptance}
-                                        color="primary"
-                                    />
-                                }
-                                label="I accept the terms of use and privacy policy"
+                            <Controller
+                                control={control}
+                                name="signTermsAndCondition"
+                                rules={{ required: "You must accept the terms and conditions." }}
+                                render={({ field }) => (
+                                    <>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    {...field}
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="I accept the terms and conditions"
+                                        />
+                                        {errors.signTermsAndCondition && (
+                                            <Typography variant="body2" color="error">
+                                                {errors.signTermsAndCondition.message}
+                                            </Typography>
+                                        )}
+                                    </>
+                                )}
                             />
                         </Box>
                         <Box sx={{ maxWidth: "350px", marginX: "auto", marginTop: "25px", }}>
@@ -540,12 +551,12 @@ const EnterpriseSignup = () => {
                             <Divider sx={{ marginY: "28px" }}>or</Divider>
                             <Button
                                 variant="outlined"
-                                sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize",color: "#72a9de",}}
+                                sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
                                 fullWidth
                                 disabled={signinLoading}
                                 onClick={() => login()}
                             >
-                                <GoogleIcon style={{width: "18px", paddingBottom: "2px",}} /> &nbsp;Google
+                                <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
                             </Button>
                         </Box>
                         <Box className="text-center" sx={{ marginTop: "25px" }}>
@@ -556,16 +567,25 @@ const EnterpriseSignup = () => {
                                 </Link>
                             </Typography>
                         </Box>
-                        <Box sx={{ textAlign: "center", marginY: "20px" }}>
+                        <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
                             <Link to="/terms-of-use" style={linkStyle}>
                                 Terms of Use
                             </Link>
-                            <Link to="/privacy-policy" style={{ ...linkStyle, marginRight: "20px", marginLeft: "20px", }}>
+                            <Link
+                                to="/privacy-policy"
+                                style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
+                            >
                                 Privacy Policy
                             </Link>
-                            <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
-                                hello@yanki.ai
-                            </Link>
+                            <Typography variant="caption">
+                                <a style={{ ...linkStyle, borderRight: "none" }}
+                                    href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    hello@yanki.ai
+                                </a>
+                            </Typography>
                         </Box>
                     </Box>
                 </Box >

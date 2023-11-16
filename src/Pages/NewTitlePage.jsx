@@ -28,6 +28,10 @@ const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
   const { setActiveTab, activeTab } = useContext(Context);
 
+  const recipientEmail = "hello@yanki.ai";
+  const emailSubject = "Email subject";
+  const emailBody = "Email body";
+
   const navigate = useNavigate();
 
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
@@ -101,12 +105,13 @@ const NewTitlePage = () => {
               component="h1"
               sx={{
                 textAlign: "center",
-                fontWeight: "medium",
+                fontWeight: "600",
                 color: "#72a9de",
                 fontSize:"16px",
+                lineHeight: "28px",
               }}
             >
-              The internet by the Halacha,<br />
+              The internet by the Halacha.<br />
               A smart chatbot for all your Jewish lifestyle and community needs
             </Typography>
             <Box sx={{ marginTop: isLargeScreen ? "30px" : "20px" }}>
@@ -280,9 +285,15 @@ const NewTitlePage = () => {
           >
             Privacy Policy
           </Link>
-          <Link to="/" style={{ ...linkStyle, borderRight: "none" }}>
-            hello@yanki.ai
-          </Link>
+          <Typography variant="caption">
+                <a style={{ ...linkStyle, borderRight: "none" }}
+                  href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  hello@yanki.ai
+                </a>
+              </Typography>
         </Box>
       </Container>
     </>
