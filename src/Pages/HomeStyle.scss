@@ -1,0 +1,50 @@
+.sidebarStyle div {
+    border-right: none;
+}
+
+.fixedSearchBox {
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: 0px auto 10px;
+    width: 100%;
+    max-width: 92%;
+}
+
+.carousel-item {
+    margin-right: 15px;
+    margin-bottom: 20px;
+  }
+
+//   .answerBox.MuiBox-root.css-0 {
+//     // height: 100%;
+//     overflow-y: auto;
+//     min-height: 67vh;
+//     max-height: 67vh;
+// }
+
+/* width */
+::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .searchBorderRemove .css-9425fu-MuiOutlinedInput-notchedOutline, .searchBorderRemove .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+    position: absolute;
+    border-color: transparent !important;
+  }

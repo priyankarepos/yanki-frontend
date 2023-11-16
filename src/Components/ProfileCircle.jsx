@@ -8,7 +8,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-
 import Logout from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -16,9 +15,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import ThemeSwitcher from "./UI/ThemeSwitcher";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
+import { Context } from "../App";
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
+  const { activeTab } = React.useContext(Context);
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -35,7 +37,6 @@ export default function ProfielCircle() {
   }
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -56,15 +57,22 @@ export default function ProfielCircle() {
 
   const onClickAdmin = () => {
     handleClose();
-    navigate("/admin");
+    navigate("/admin/search-query-report");
   }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
     handleClose();
-    navigate("/login");
+    navigate("/auth");
+    sessionStorage.removeItem("selectedChatId");
   };
+
+  const onClickNetworkingInterface = () => {
+    handleClose();
+    navigate("/enterprise/profile")
+  }
+
 
   return (
     <React.Fragment>
@@ -87,7 +95,7 @@ export default function ProfielCircle() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>
+              <Avatar sx={{ width: 32, height: 32, backgroundColor: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
                 <PersonIcon />
               </Avatar>
             </IconButton>
@@ -116,7 +124,7 @@ export default function ProfielCircle() {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem
+          {/* <MenuItem
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -126,7 +134,7 @@ export default function ProfielCircle() {
             name="dark-mode-switch"
           >
             Dark mode: <ThemeSwitcher />
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem>
             <ListItemIcon>
               <EmailOutlinedIcon fontSize="small" />
@@ -139,12 +147,18 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
-          {userRoles==="Admin" && <MenuItem onClick={onClickAdmin}>
+          {userRoles==="Admin" && activeTab === 0 && <MenuItem onClick={onClickAdmin}>
             <ListItemIcon>
               <AdminPanelSettingsIcon fontSize="small" />
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
+          {/* {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
+            <ListItemIcon>
+              <Diversity2Icon fontSize="small" />
+            </ListItemIcon>
+            Networking Interface
+          </MenuItem>} */}
 
           <Divider />
 

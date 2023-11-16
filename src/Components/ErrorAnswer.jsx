@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
 const ErrorAnswer = ({ errorMsg }) => {
+  console.log("errorMsg",errorMsg);
   return (
     <>
       <Box>
@@ -13,7 +14,7 @@ const ErrorAnswer = ({ errorMsg }) => {
             p: 2,
           }}
         >
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" style={{fontSize: "16px",}}>
             {errorMsg}
           </Typography>
         </Paper>

@@ -1,0 +1,63 @@
+.EnterpriseCategorySelect div {
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    border: 1px solid #6fa8dd;
+    justify-content: flex-start;
+}
+
+.EnterpriseCategorySelect .css-cveggr-MuiListItemIcon-root {
+    min-width: 20px;
+    border: none;
+}
+
+.EnterpriseCategorySelect .css-1f8bwsm {
+    min-width: 20px !important;
+    border: none;
+}
+
+.EnterpriseCategorySelect .MuiListItemIcon-root.css-cveggr-MuiListItemIcon-root {
+    border: none;
+}
+
+.tabStyle span.MuiTabs-indicator {
+    position: absolute;
+    height: 2px;
+    bottom: 0;
+    background-color: #72a9de;
+}
+
+.tabStyle span.MuiTabs-indicator.css-1dpyo67-MuiTabs-indicator{
+    background-color : #72a9de !important;
+}
+
+.tabStyle .Mui-selected {
+    color: #72a9de !important ;
+}
+
+.InputFieldColor input {
+    color: #13538b !important;
+}
+
+.InputFieldColor .MuiInputBase-root{
+    background-color: #eaf5ff;
+    border: 1px solid #6fa8dd;
+    border-radius: 8px;
+    color: #8bbae5;
+    width: 100%;
+}
+
+.EnterpriseInputFieldColor .MuiInputBase-root{
+    color: #72a9de;
+    border: 1px solid #72a9de;
+    border-radius: 8px;
+}
+
+.EnterpriseError .css-1wc848c-MuiFormHelperText-root{
+    color: red !important;
+    line-height: 0 !important;
+}
+
+.privacy-policy .css-qklaqr-MuiListItemIcon-root {
+    min-width: 32px;
+}  

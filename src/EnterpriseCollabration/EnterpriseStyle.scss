@@ -1,0 +1,51 @@
+.EnterpriseCategorySelect div {
+    display: flex;
+}
+
+.custom-focused-label.Mui-focused {
+    background-color: #fff !important;
+  }
+
+  .enterpriseFormBox .css-p1nw1t-MuiInputBase-input-MuiOutlinedInput-input{
+    color: #6fa8dd !important;
+  }  
+
+  .enterpriseFormBox ::placeholder {
+    color: #6fa8dd; /* Change this to the color you want */
+  }  
+
+  .enterpriseFormBox .react-tagsinput{
+    padding: 0;
+    border: none;
+  }
+
+  .enterpriseFormBox .react-tagsinput-tag {
+    display: none;
+}
+
+.EnterpriseCategorySelect div {
+    color: #6fa8dd;
+}
+
+.enterpriseSidebar .css-2ug087-MuiPaper-root-MuiDrawer-paper{
+    background-color: #13538b;
+}
+
+
+/* responsive.css */
+
+/* For small screens (max-width: 567px) */
+
+@media (max-width: 567px) {
+  
+    .logoStyleSmallScreen {
+      display: none !important;
+    }
+  
+    .titleSmallScreen {
+      width: 100% !important;
+      h6 {
+        font-size: 18px;
+      }
+    }
+  }

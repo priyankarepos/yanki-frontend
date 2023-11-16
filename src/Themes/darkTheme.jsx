@@ -1,10 +1,10 @@
 import { createTheme } from "@mui/material";
 
-const darkMidnightBlue = "#063762"; // dark bg
+const darkMidnightBlue = "#022b4f"; // dark bg
 const white = "#FFF";
-const gunmetal = "#2A2b35";
+const gunmetal = "#1d4a72";
 const melon = "#FFC9C9";
-const lightNavy = "#13538b";
+const lightNavy = "#0d416f";
 /* 
 commenting unused color for now. These colors will be used as theme grows.
 
@@ -27,8 +27,8 @@ const darkTheme = createTheme({
       main: melon,
     },
     background: {
-      default: darkMidnightBlue,
-      paper: lightNavy,
+      default: lightNavy,
+      paper: darkMidnightBlue,
     },
   },
   components: {

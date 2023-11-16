@@ -31,7 +31,7 @@ const lightTheme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          borderRadius: "12px !important",
+          borderRadius: "12 !important",
         },
       },
     },
@@ -54,6 +54,14 @@ const lightTheme = createTheme({
         root: {
           height: "48px",
           borderRadius: "12px",
+          backgroundColor: "#13538b",
+          border: "1px solid #6fa8dd",
+          color: "#77addf",
+          '&:hover': {
+            backgroundColor: '#13538b', // Change the background color on hover
+            color: '#77addf', // Change the text color on hover
+            border: "1px solid #77addf",
+          },
         },
       },
     },

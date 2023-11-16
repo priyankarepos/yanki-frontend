@@ -4,6 +4,7 @@ import {
     Drawer,
     List,
     ListItem,
+    Typography,
     CssBaseline,
     AppBar,
     Toolbar,
@@ -15,14 +16,12 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkYankilogo from '../Assets/images/logo-dark.svg';
-import "./AdminStyle.css"
-import "../EnterpriseCollabration/EnterpriseStyle.scss"
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CreateAdminIcon from '@mui/icons-material/PersonAdd';
+import "../Admin/AdminStyle.css"
+import "./EnterpriseStyle.scss"
+import BusinessIcon from '@mui/icons-material/Business';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
-import RuleIcon from '@mui/icons-material/Rule';
-import CategoryIcon from '@mui/icons-material/Category';
 import throttle from 'lodash/throttle';
 
 const styles = {
@@ -31,8 +30,8 @@ const styles = {
         height: '100vh',
     },
     appBar: {
-        backgroundColor: '#13538b  ',
-        color: "#fff",
+        backgroundColor: '#fff  ',
+        color: "#2f587c",
     },
     menuButton: {
         marginLeft: 'auto',
@@ -41,7 +40,7 @@ const styles = {
         flexGrow: 1,
     },
     sidebar: {
-        width: '280px',
+        width: '270px',
         padding: '16px',
         color: '#fff',
     },
@@ -61,8 +60,10 @@ const styles = {
     },
 };
 
-const AdminDashboard = () => {
+const EnterpriseDashboard = () => {
     const { setDrawerOpen, drawerOpen } = useContext(Context);
+    // const [drawerOpen, setDrawerOpen] = useState(true);
+    // const [isDropdownOpen, setDropdownOpen] = useState(true);
 
     const navigate = useNavigate();
 
@@ -86,14 +87,20 @@ const AdminDashboard = () => {
         };
     }, [throttledToggleDrawer]);
 
+    // const toggleDropdown = () => {
+    //     setDropdownOpen(!isDropdownOpen);
+    // };
+
+
     return (
         <div style={styles.enterpriseDashboard}>
             <CssBaseline />
             <AppBar position="fixed" style={styles.appBar} className='appBarSmallScreen'>
                 <Toolbar>
-                    <Link
+                    {/* <Link
                         to="/"
                         style={{ textDecoration: 'none', width: "270px", }}
+                        className="logoStyleSmallScreen"
                     >
                         <img
                             src={DarkYankilogo}
@@ -101,8 +108,9 @@ const AdminDashboard = () => {
                             className="logo"
                             alt="Yanki logo"
                         />
-                    </Link>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "calc(100% - 270px)" }}>
+                    </Link> */}
+                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0",  }}>
+                        { <Typography variant="h6">Networking Interface</Typography>}
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -115,7 +123,8 @@ const AdminDashboard = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
+
+            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img
@@ -130,61 +139,82 @@ const AdminDashboard = () => {
                             alt="Yanki logo"
                         />
                     </Link>
+                    {/* <List>
+                        <ListItem
+                            button
+                            className="highlightStyle"
+                            onClick={toggleDropdown}
+                        >
+                            <ListItemIcon>
+                                <NetworkWifiIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Networking Interface" />
+                        </ListItem>
+                        <Collapse in={isDropdownOpen} sx={{marginLeft:"20px",}}>
+                            <List>
+                                <NavLink
+                                    to="/enterprise/profile"
+                                    style={{ textDecoration: 'none', color: '#fff' }}
+                                    activeClassName="active"
+                                >
+                                    <ListItem button onClick={()=>navigate("/enterprise/profile")}>
+                                        <ListItemIcon>
+                                            <BusinessIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Enterprise Profile" />
+                                    </ListItem>
+                                </NavLink>
+                                <NavLink
+                                    to="/enterprise/departments"
+                                    style={{ textDecoration: 'none', color: '#fff' }}
+                                    activeClassName="active"
+                                >
+                                    <ListItem button>
+                                        <ListItemIcon>
+                                            <AccountBalanceIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Departments" />
+                                    </ListItem>
+                                </NavLink>
+                            </List>
+                        </Collapse>
+                    </List> */}
                     <List>
                         <NavLink
-                            to="/admin/search-query-report"
+                            to="/enterprise/profile"
                             style={{ textDecoration: 'none', color: '#fff' }}
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/search-query-report")}>
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
                                 <ListItemIcon>
-                                    <AssignmentIcon />
+                                    <BusinessIcon style={{ color:'#fff',}}/>
                                 </ListItemIcon>
-                                <ListItemText primary="Search Query Report" />
+                                <ListItemText primary="Enterprise Profile" />
                             </ListItem>
                         </NavLink>
                         <NavLink
-                            to="/change-role"
+                            to="/enterprise/departments"
                             style={{ textDecoration: 'none', color: '#fff' }}
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/change-role")}>
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
                                 <ListItemIcon>
-                                    <CreateAdminIcon />
+                                    <AccountBalanceIcon style={{ color:'#fff',}} />
                                 </ListItemIcon>
-                                <ListItemText primary="Create Admin" />
+                                <ListItemText primary="Departments" />
                             </ListItem>
                         </NavLink>
-                        {/* <NavLink
-                            to="/admin/enterprise-request"
-                            style={{ textDecoration: 'none', color: '#fff' }}
-                            activeClassName="active"
-                        >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/enterprise-request")}>
-                                <ListItemIcon>
-                                    <RuleIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Enterprise Request" />
-                            </ListItem>
-                        </NavLink>
-                        <NavLink
-                            to="/admin/enterprise-categories"
-                            style={{ textDecoration: 'none', color: '#fff' }}
-                            activeClassName="active"
-                        >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/enterprise-categories")}>
-                                <ListItemIcon>
-                                    <CategoryIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Enterprise Categories" />
-                            </ListItem>
-                        </NavLink> */}
                     </List>
 
                 </div>
             </Drawer>
+            {/* <Box style={{ ...styles.content, marginLeft: contentMargin }}>
+                <Toolbar />
+                <EnterpriseProfile />
+                <Outlet />
+            </Box> */}
         </div>
     );
 };
 
-export default AdminDashboard;
+export default EnterpriseDashboard;

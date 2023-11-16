@@ -48,7 +48,7 @@ const GovadenAnswer = ({ answer }) => {
                     </TableCell>
                     <TableCell component="th" scope="row">
                         <Tooltip title={row.name}>
-                        <div style={{ maxWidth: 350, textTransform: 'capitalize' }}>
+                        <div style={{ maxWidth: 350 }}>
                                 {row.name}
                             </div>
                         </Tooltip>
@@ -79,7 +79,7 @@ const GovadenAnswer = ({ answer }) => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {Object.keys(row.groupedByDayMinyanim).map((day) => (
+                                        {row.groupedByDayMinyanim && Object.keys(row.groupedByDayMinyanim).map((day) => (
                                             <TableRow key={day} sx={{ '& > *': { borderBottom: '1px solid #3f7baf' } }}>
                                                 <TableCell component="th" scope="row">
                                                     {dayNameMapping[day] || day}
