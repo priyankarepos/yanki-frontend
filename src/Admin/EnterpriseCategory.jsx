@@ -7,6 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { Context } from '../App';
+import {
+  CircularProgress,
+} from '@mui/material';
 
 const styles = {
     tableContainer: {
@@ -78,15 +81,15 @@ const AdminEnterpriseCategory = () => {
   const [enterpriseCategories, setEnterpriseCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
-  const [editCategoryId, setEditCategoryId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [editCategoryId, setEditCategoryId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  console.log("enterpriseCategories", enterpriseCategories);
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        setIsLoading(true);
         const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`);
 
         if (response.status === 200) {
@@ -98,16 +101,14 @@ const AdminEnterpriseCategory = () => {
         console.error('Error fetching enterprise categories:', error);
         setSnackbarMessage('Error fetching enterprise categories');
         setSnackbarOpen(true);
-      } finally {
-        setIsLoading(false);
       }
     };
-
     fetchEnterpriseCategories();
-  }, []);
+  }, [isModalOpen]);
 
-  const handleEditCategory = (id) => {
+  const handleEdit = (id) => {
     const category = enterpriseCategories.find((category) => category.id === id);
+    console.log("category", category);
     setCategoryName(category.name);
     setEditCategoryId(id);
     setIsModalOpen(true);
@@ -142,20 +143,22 @@ const AdminEnterpriseCategory = () => {
 
   const handleSaveCategory = async () => {
     try {
-      const apiUrl = editCategoryId
-        ? `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`
-        : `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
-      const response = await axios.post(apiUrl, { id: editCategoryId, name: categoryName });
-
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
+  
+      const response = await axios.post(apiUrl, { name: categoryName });
+  
       if (response.status === 200) {
-        const updatedCategories = editCategoryId
-          ? enterpriseCategories.map((category) => (category.id === editCategoryId ? response.data : category))
-          : [...enterpriseCategories, response.data];
-
-        setEnterpriseCategories(updatedCategories);
+        const newCategory = response.data;
+  
+        // Update state with the new category
+        setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
+  
         setIsModalOpen(false);
         setCategoryName('');
+        setEditCategoryId(''); // Reset editCategoryId after successful save
+  
+        setSnackbarMessage('Category saved successfully');
+        setSnackbarOpen(true);
       } else {
         console.error('Failed to save enterprise category');
         setSnackbarMessage('Failed to save enterprise category');
@@ -167,6 +170,44 @@ const AdminEnterpriseCategory = () => {
       setSnackbarOpen(true);
     }
   };
+  
+  
+
+  const handleUpdate = async () => {
+    try {
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
+  
+      const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
+  
+      if (response.status === 200) {
+        const updatedCategory = response.data;
+  
+        // Update state with the new category
+        setEnterpriseCategories((prevCategories) => {
+          const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
+  
+          setIsModalOpen(false);
+          setCategoryName('');
+          setEditCategoryId(null); // Reset editCategoryId after successful save
+  
+          return updatedCategories;
+        });
+  
+        setSnackbarMessage('Category updated successfully');
+        setSnackbarOpen(true);
+      } else {
+        console.error('Failed to update enterprise category');
+        setSnackbarMessage('Failed to update enterprise category');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSnackbarMessage('Error updating enterprise category');
+      setSnackbarOpen(true);
+    }
+  };
+  
+  
 
   const contentMargin = drawerOpen ? '0' : '0';
 
@@ -192,11 +233,11 @@ const AdminEnterpriseCategory = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {enterpriseCategories.map((row) => (
+              {enterpriseCategories.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell style={styles.cell}>{row.name}</TableCell>
                     <TableCell style={{ ...styles.cell, textAlign: "right", }}>
-                      <IconButton onClick={() => handleEditCategory(row.id)}>
+                      <IconButton onClick={() => handleEdit(row.id)}>
                         <EditIcon />
                       </IconButton>
                       <IconButton onClick={() => handleDeleteCategory(row.id)}>
@@ -232,7 +273,7 @@ const AdminEnterpriseCategory = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleSaveCategory}
+              onClick={editCategoryId !== null ? handleUpdate : handleSaveCategory}
               style={styles.modalButton}
             >
               {editCategoryId !== null ? "Save Changes" : "Save & Add"}

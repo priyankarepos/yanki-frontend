@@ -20,7 +20,7 @@ const SentenceAnswer = ({ answer }) => {
         const answerArray = answer.contentResponse.split("\n");
         setProcessedContentResponse(answerArray);
       }
-    } catch (e) {}
+    } catch (e) { }
   }, [answer]);
 
   return (
@@ -39,8 +39,12 @@ const SentenceAnswer = ({ answer }) => {
             />
           )} */}
 
+          <Typography variant="h6" component="div" style={{ fontSize: "16px" }}>
+            {answer?.message}
+          </Typography>
+
           {processedContentResponse.map((ans, index) => (
-            <Typography variant="h6" component="div" key={index} style={{fontSize: "16px",}}>
+            <Typography variant="h6" component="div" key={index} style={{ fontSize: "16px", }}>
               {ans}
             </Typography>
           ))}
