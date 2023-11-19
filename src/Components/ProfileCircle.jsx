@@ -153,12 +153,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
-          {/* {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
+          {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
             <ListItemIcon>
               <Diversity2Icon fontSize="small" />
             </ListItemIcon>
             Networking Interface
-          </MenuItem>} */}
+          </MenuItem>}
 
           <Divider />
 
