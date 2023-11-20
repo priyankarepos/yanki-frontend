@@ -13,7 +13,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
-import ThemeSwitcher from "./UI/ThemeSwitcher";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Context } from "../App";

@@ -211,6 +211,9 @@ const EnterpriseSignup = () => {
                                 />
                             </Link>
                         </Box>
+                        <Typography component="h1"
+                            className="text-center marginBottom-34"
+                            sx={{ marginBottom: "15px", textAlign: "center", fontWeight: "600", color: "#72a9de", }}>Welcome! If you are a nonprofit or for profit organization, school, business or any kind of entity that offers products or services to the Orthodox Jewish community worldwide and you’d like to use Yanki as a platform to reach your target, please submit the following information to analyze your request, the acceptance process takes between 2-7 days. </Typography>
                         <Typography
                             component="h1"
                             variant="h5"
