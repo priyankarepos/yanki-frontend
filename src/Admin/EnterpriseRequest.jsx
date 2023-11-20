@@ -205,7 +205,7 @@ const AdminEnterpriseRequest = () => {
                                     <TableCell style={styles.headerCell}>Enterprise Name</TableCell>
                                     <TableCell style={styles.headerCell}>Email</TableCell>
                                     <TableCell style={styles.headerCell}>Phone Number</TableCell>
-                                    <TableCell style={styles.headerCell}>Owner Name</TableCell>
+                                    <TableCell style={styles.headerCell}>Contact Person</TableCell>
                                     <TableCell style={styles.headerCell}>Website</TableCell>
                                     <TableCell style={styles.headerCell}>Request Date</TableCell>
                                     <TableCell style={styles.headerCell}>Status</TableCell>

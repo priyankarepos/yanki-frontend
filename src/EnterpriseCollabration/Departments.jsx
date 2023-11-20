@@ -255,7 +255,7 @@ const Departments = () => {
       console.log("tagsAsString", tagsAsString);
 
       const payload = {
-        departmentId: formData.DepartmentId,
+        departmentId: selectedDepartmentData?.departmentId,
         departmentName: formData.DepartmentName,
         departmentHeadName: formData.NameOfRepresentative,
         departmentEmail: formData.EmailAddress,
