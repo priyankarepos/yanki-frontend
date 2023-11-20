@@ -13,6 +13,7 @@ import {
     Box,
     CircularProgress,
     useMediaQuery,
+    Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -66,6 +67,8 @@ const NewHomePageMui = () => {
     // const [pageNumber, setPageNumber] = useState(0)
     // const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
+
+    const isLargeScreen = useMediaQuery("(min-width: 400px)");
 
     const onSubmit = async () => {
         try {
@@ -304,18 +307,22 @@ const NewHomePageMui = () => {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
             items: 4,
+            partialVisibilityGutter: 40,
         },
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
             items: 3,
+            partialVisibilityGutter: 30,
         },
         tablet: {
             breakpoint: { max: 1024, min: 464 },
             items: 2,
+            partialVisibilityGutter: 20,
         },
         mobile: {
             breakpoint: { max: 464, min: 0 },
             items: 1,
+            partialVisibilityGutter: 10,
         },
     };
 
@@ -572,23 +579,24 @@ const NewHomePageMui = () => {
                                         key={question.id}
                                         onClick={() => handleQuestionClick(question.text)}
                                         style={{
-                                            backgroundColor:
-                                                activeTab === 0 ? "#fff" : "#fff",
+                                            backgroundColor: activeTab === 0 ? "#fff" : "#fff",
                                             color: activeTab === 0 ? "#13416a" : "#063762",
                                             padding: "8px 16px",
                                             borderRadius: "50px",
                                             cursor: "pointer",
                                             textAlign: "left",
-                                            display: "block",
-                                            width: "100%",
-                                            textOverflow: "ellipsis",
+                                            display: "inline",
+                                            width: isLargeScreen ? "100%" : "70%",
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                             fontSize: "16px",
                                             textTransform: "none",
                                         }}
                                     >
+                                        <Tooltip title={question.text}>
                                         {question.text}
+                                        </Tooltip>
                                     </Button>
                                 ))}
                             </Carousel>
