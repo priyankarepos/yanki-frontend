@@ -1,5 +1,5 @@
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,IconButton } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Table, Snackbar, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard'
 import { useForm, Controller } from 'react-hook-form';
@@ -8,6 +8,7 @@ import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from "axios";
 
 const styles = {
   inputField: {
@@ -62,61 +63,272 @@ const styles = {
 const Departments = () => {
   const [tags, setTags] = useState([]);
   const { drawerOpen } = useContext(Context);
+  // const [enterpriseTags, setEnterpriseTags] = useState([]);
+  const [selectedDepartmentData, setSelectedDepartmentData] = useState({});
+  const [departmentID, setDepartmentID] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  console.log("selectedDepartmentData", selectedDepartmentData);
+  const enterpriseId = sessionStorage.getItem('enterpriseId');
+  console.log("tags", tags);
 
   const {
     control,
-    // handleSubmit,
+    handleSubmit,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      DepartmentName: "",
-      NameOfRepresentative: "",
-      EmailAddress: "",
-      DepartmentDescription: "",
-      DepartmentIdentificationKeywords: [],
+      DepartmentName: selectedDepartmentData?.departmentName || "",
+      NameOfRepresentative: selectedDepartmentData?.departmentHeadName || "",
+      EmailAddress: selectedDepartmentData?.departmentEmail || "",
+      DepartmentDescription: selectedDepartmentData?.departmentDescription || "",
+      DepartmentIdentificationKeywords: selectedDepartmentData?.departmentKeywords || [],
     },
   });
+
+  const checkEnterpriseKeyword = async (tag) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${tag}`
+      );
+
+      // Handle the response here
+      console.log('Keyword Check Response:', response.data);
+      setSnackbarOpen(true);
+      setSnackbarMessage('Keyword Check Response:', response.data);
+
+      if (response.status === 200) {
+        // Check if the keyword already exists
+        const keywordExists = response.data.exists;
+
+        console.log("keywordExists", keywordExists);
+
+        if (keywordExists) {
+          // Handle the case where the keyword already exists
+          console.log('Keyword already exists:', tag);
+          setSnackbarMessage('Keyword already exists:', tag);
+          setSnackbarOpen(true);
+        } else {
+          // Handle the case where the keyword doesn't exist
+          console.log('Keyword does not exist:', tag);
+          setSnackbarMessage('Keyword does not exist:', tag);
+          setSnackbarOpen(true);
+
+          // Update the state only when the keyword doesn't exist
+          // setEnterpriseTags((prevTags) => [...prevTags, tag]);
+          setTags((prevTags) => [...prevTags, tag]);
+        }
+      } else {
+        // Handle the case where the API request is not successful
+        console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      // Handle errors
+      console.error('Error checking enterprise keyword:', error);
+      setSnackbarMessage('Error checking enterprise keyword:', error);
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleAddTag = async (tag) => {
+    try {
+      const response = await checkEnterpriseKeyword(tag);
+  
+      if (response && response.isSuccess && response.isAvailable) {
+        // Tag is available, add it to the state only if it doesn't exist
+        setTags((prevTags) => {
+          const uniqueTags = new Set([...prevTags, tag]);
+          return [...uniqueTags];
+        });
+      } else {
+        // Handle the case where the tag is not available
+        console.log('Tag not available:', tag);
+        // You can show a message or perform any other action if needed
+      }
+    } catch (error) {
+      // Handle errors
+      console.error('Error handling tag:', error);
+      setSnackbarOpen(true);
+    }
+  };
+  
+  
+  
 
   const handleRemoveTag = (tag) => {
     // Function to remove a tag
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
+    setSnackbarMessage('Tag removed successfully');
+    setSnackbarOpen(true);
   };
 
   const contentMargin = drawerOpen ? '0' : '0';
 
-  const [departmentsData, setDepartmentsData] = useState([
-    {
-      DepartmentName: 'Customer Service',
-      NameOfRepresentative: 'John Deo',
-      EmailAddress: 'john@example.com',
-      DepartmentDescription: 'This is the customer service department.',
-      DepartmentIdentificationKeywords: ['Service', 'Customer', 'Support'],
-    },
-    {
-      DepartmentName: 'Customer Service',
-      NameOfRepresentative: 'John Deo',
-      EmailAddress: 'john@example.com',
-      DepartmentDescription: 'This is the customer service department.',
-      DepartmentIdentificationKeywords: ['Service', 'Customer', 'Support'],
-    },
-    // Add more department data as needed
-  ]);
+  const [departmentsData, setDepartmentsData] = useState([]);
 
-  const handleEditDepartment = (index) => {
-    // Handle edit action for the department at the specified index
-    // You can open a dialog or navigate to an edit page for editing
-    console.log('Edit department at index:', index);
+  console.log("departmentsData", departmentsData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments`
+        );
+
+        if (response.status === 200) {
+          // Assuming the response data is an array of departments
+          setDepartmentsData(response.data);
+        } else {
+          console.error('Failed to fetch departments:', response.statusText);
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        console.error('Error occurred while fetching departments:', error.message);
+        setSnackbarOpen(true);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  const handleEditDepartment = async (index, departmentId) => {
+    const department = departmentsData[index];
+    console.log("department", department);
+    setDepartmentID(departmentId);
+
+    // Use the department object directly
+    setSelectedDepartmentData(department);
+
+    setValue("DepartmentName", department.departmentName || "");
+    setValue("NameOfRepresentative", department.departmentHeadName || "");
+    setValue("EmailAddress", department.departmentEmail || "");
+    setValue("DepartmentDescription", department.departmentDescription || "");
+    // Split the departmentKeywords string into an array
+    const keywordsArray = department.departmentKeywords.split(',');
+    console.log("keywordsArray", keywordsArray);
+    // Set the state with the array of keywords
+    setTags(keywordsArray);
+    setValue("DepartmentIdentificationKeywords", keywordsArray || []);
   };
 
-  const handleDeleteDepartment = (index) => {
-    // Handle delete action for the department at the specified index
-    // You can show a confirmation dialog before deleting
-    const updatedDepartments = [...departmentsData];
-    updatedDepartments.splice(index, 1);
-    setDepartmentsData(updatedDepartments);
+
+
+  const handleDeleteDepartment = async (index, departmentId) => {
+    try {
+      // Assuming departmentId is available in your departmentsData array
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
+
+      const response = await axios.delete(apiUrl);
+
+      if (response.status === 200) {
+        console.log('Department deleted successfully.');
+        setSnackbarMessage('Department deleted successfully');
+        setSnackbarOpen(true);
+        setSelectedDepartmentData({})
+
+        // Update the state to remove the deleted department
+        const updatedDepartments = [...departmentsData];
+        updatedDepartments.splice(index, 1);
+        setDepartmentsData(updatedDepartments);
+      } else {
+        console.error('Failed to delete department:', response.statusText);
+        setSnackbarMessage('Failed to delete department:');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error deleting department:', error.message);
+    }
   };
+
+  const handleSaveDepartment = async (data) => {
+    const formData = getValues();
+    console.log("dataaaaaaaaaaaa", formData);
+    try {
+      const tagsAsString = tags.join(',');
+      console.log("tagsAsString", tagsAsString);
+
+      const payload = {
+        departmentId: formData.DepartmentId,
+        departmentName: formData.DepartmentName,
+        departmentHeadName: formData.NameOfRepresentative,
+        departmentEmail: formData.EmailAddress,
+        departmentDescription: formData.DepartmentDescription,
+        departmentKeywords: tagsAsString,
+        enterpriseId: enterpriseId,
+      };
+
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
+        payload
+      );
+
+      console.log('Update Department Details Response:', response.data);
+
+
+      if (response.status === 200) {
+        console.log('Department details updated successfully');
+        setSnackbarMessage('Department details updated successfully');
+        setSnackbarOpen(true);
+      } else {
+        console.error(`Failed to update Department details. Status: ${response.status}`);
+        setSnackbarMessage(`Failed to update Department details. Status: ${response.status}`);
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error updating Department details:', error.message);
+      setSnackbarMessage('Error updating Department details:', error.message);
+      setSnackbarOpen(true);
+    }
+  };
+
+
+
+
+  const onSubmit = async (data) => {
+    console.log("=====================", data);
+    try {
+      const tagsAsString = tags.join(','); // Corrected here
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
+
+      const requestBody = {
+        departmentId: data.DepartmentId,
+        departmentName: data.DepartmentName,
+        departmentHeadName: data.NameOfRepresentative,
+        departmentEmail: data.EmailAddress,
+        departmentDescription: data.DepartmentDescription,
+        departmentKeywords: tagsAsString,
+        enterpriseId: enterpriseId,
+      };
+
+      const response = await axios.post(apiUrl, requestBody);
+
+      if (response.status === 200) {
+        const result = response.data;
+        setDepartmentsData([...departmentsData, result]);
+        setTags([]);
+        setSnackbarMessage('Department added successfully,');
+        setSnackbarOpen(true);
+      } else {
+        console.error('API error:', response.statusText);
+        setSnackbarMessage('API error:', response.statusTex);
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error occurred while fetching API:', error.message);
+      setSnackbarMessage('Error occurred while fetching API:', error.message);
+      setSnackbarOpen(true);
+    }
+  };
+
+
+
 
   return (
     <Box style={{ display: "flex", backgroundColor: '#fff' }}>
@@ -209,13 +421,13 @@ const Departments = () => {
             <InputLabel style={styles.label}>Enterprise identification keywords</InputLabel>
             <Controller
               control={control}
-              name="EnterpriseIdentificationKeywords"
+              name="DepartmentIdentificationKeywords"
               render={({ field }) => (
                 <div>
                   <TagsInput
                     value={tags}
-                    onChange={setTags}
-                    addKeys={[13, 9]}
+                    onChange={(newTags) => setTags(newTags)}
+                    addKeys={[13, 9]} // Enter and Tab keys to add tags
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -227,11 +439,20 @@ const Departments = () => {
                         outline: 'none',
                         height: "60px",
                       },
+                      ...field,
+                      onKeyDown: (e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          e.persist();
+                          handleAddTag(e.target.value);
+                          field.onChange(''); // Clear the input after adding the tag using react-hook-form
+                        }
+                      },
                     }}
                   />
                   <div style={styles.tagsContainer}>
-                    {tags.map((tag) => (
-                      <div key={tag} style={styles.tag}>
+                    { tags.map((tag, index) => (
+                      <div key={`${tag}-${index}`} style={styles.tag}>
                         <span style={styles.tagText}>{tag}</span>
                         <span
                           style={styles.removeTag}
@@ -249,15 +470,16 @@ const Departments = () => {
           <Grid item xs={3}>
             <Button
               variant="outlined"
-              sx={{ marginY: { xs: "10px" } }}
-              fullWidth
-              style={{ backgroundColor: "#13538b", color: "lightblue" }}
+              sx={{ marginY: { xs: "10px" }, width: "150px", }}
+              color="primary"
+              onClick={departmentID !== null ? handleSaveDepartment : handleSubmit(onSubmit)}
+              style={styles.modalButton}
             >
-              Save
+              {departmentID !== null ? "Save Changes" : "Save"}
             </Button>
           </Grid>
           <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
-          <Box className="enterpriseTableBox" sx={{padding: '16px' }}>
+          <Box className="enterpriseTableBox" sx={{ padding: '16px' }}>
             <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#13538b' }}>
               Add Departments
             </Typography>
@@ -278,19 +500,19 @@ const Departments = () => {
                 <TableBody>
                   {departmentsData.map((department, index) => (
                     <TableRow key={index}>
-                      <TableCell style={styles.cell}>{department.DepartmentName}</TableCell>
-                      <TableCell style={styles.cell}>{department.NameOfRepresentative}</TableCell>
-                      <TableCell style={styles.cell}>{department.EmailAddress}</TableCell>
-                      <TableCell style={styles.cell}>{department.DepartmentDescription}</TableCell>
+                      <TableCell style={styles.cell}>{department.departmentName}</TableCell>
+                      <TableCell style={styles.cell}>{department.departmentHeadName}</TableCell>
+                      <TableCell style={styles.cell}>{department.departmentEmail}</TableCell>
+                      <TableCell style={styles.cell}>{department.departmentDescription}</TableCell>
                       <TableCell style={styles.cell}>
-                        {department.DepartmentIdentificationKeywords.join(', ')}
+                        {department.departmentKeywords}
                       </TableCell>
                       <TableCell style={styles.cell}>
-                        <IconButton onClick={() => handleEditDepartment(index)}>
-                          <EditIcon style={{ color:'#fff',}} />
+                        <IconButton onClick={() => handleEditDepartment(index, department.departmentId, department)}>
+                          <EditIcon style={{ color: '#fff', }} />
                         </IconButton>
-                        <IconButton onClick={() => handleDeleteDepartment(index)}>
-                          <DeleteIcon style={{ color: '#fff',}} />
+                        <IconButton onClick={() => handleDeleteDepartment(index, department.departmentId)}>
+                          <DeleteIcon style={{ color: '#fff', }} />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -301,6 +523,12 @@ const Departments = () => {
           </Grid>
         </Grid>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Box>
   )
 }
