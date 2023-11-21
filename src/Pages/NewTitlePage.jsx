@@ -86,7 +86,7 @@ const NewTitlePage = () => {
         maxWidth="xl"
       >
         <Box className="flex justify-center items-center min-h-70-screen">
-          <Box sx={{ maxWidth: isLargeScreen ? 520 : "100%" }}>
+          <Box sx={{ maxWidth:"100%" }}>
             <img
               src={activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"}
               alt="logo"
@@ -266,8 +266,8 @@ const NewTitlePage = () => {
                     src={partner.imageSrc}
                     alt={partner.altText}
                     style={{
-                      maxWidth: isLargeScreen ? "120px" : "80px",
-                      margin: "5px",
+                      maxWidth: isLargeScreen ? "150px" : "120px",
+                      margin: "15px",
                     }}
                   />
                 ))}

@@ -28,8 +28,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import {
     emailRegex,
     passwordRegex,
@@ -84,7 +84,7 @@ const EnterpriseSignup = () => {
             PhoneNumber: "",
             Email: "",
             Password: "",
-            signTermsAndCondition: "",
+            // signTermsAndCondition: "",
         },
     });
 
@@ -130,7 +130,7 @@ const EnterpriseSignup = () => {
                 contactPersonName: data.PointOfContact,
                 website: data.Website,
                 categoryId: selectedCategory,
-                isTermAndPrivacy: data.signTermsAndCondition
+                // isTermAndPrivacy: data.signTermsAndCondition
             };
 
             // Make the POST request
@@ -211,6 +211,9 @@ const EnterpriseSignup = () => {
                                 />
                             </Link>
                         </Box>
+                        <Typography component="h1"
+                            className="text-center marginBottom-34"
+                            sx={{ marginBottom: "15px", textAlign: "center", fontWeight: "600", color: "#72a9de", }}>Welcome! If you are a nonprofit or for profit organization, school, business or any kind of entity that offers products or services to the Orthodox Jewish community worldwide and you’d like to use Yanki as a platform to reach your target, please submit the following information to analyze your request, the acceptance process takes between 2-7 days. </Typography>
                         <Typography
                             component="h1"
                             variant="h5"
@@ -515,7 +518,15 @@ const EnterpriseSignup = () => {
                             </Alert>
                         )}
                         <Box sx={{ textAlign: "center", marginTop: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-                            <Controller
+                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color:"#13538b", fontWeight: "600",}}>
+                                Terms of Use
+                            </Link> and acknowledge the <Link
+                                to="/privacy-policy"
+                                style={{color:"#13538b", fontWeight: "600",}}
+                            >
+                                Privacy Policy
+                            </Link></Typography>
+                            {/* <Controller
                                 control={control}
                                 name="signTermsAndCondition"
                                 rules={{ required: "You must accept the terms and conditions." }}
@@ -537,7 +548,7 @@ const EnterpriseSignup = () => {
                                         )}
                                     </>
                                 )}
-                            />
+                            /> */}
                         </Box>
                         <Box sx={{ maxWidth: "350px", marginX: "auto", marginTop: "25px", }}>
                             <Button

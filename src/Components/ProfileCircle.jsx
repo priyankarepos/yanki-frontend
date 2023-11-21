@@ -13,7 +13,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
-import ThemeSwitcher from "./UI/ThemeSwitcher";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Context } from "../App";
@@ -153,12 +152,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
-          {/* {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
+          {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
             <ListItemIcon>
               <Diversity2Icon fontSize="small" />
             </ListItemIcon>
             Networking Interface
-          </MenuItem>} */}
+          </MenuItem>}
 
           <Divider />
 

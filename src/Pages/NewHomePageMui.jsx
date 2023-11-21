@@ -13,6 +13,11 @@ import {
     Box,
     CircularProgress,
     useMediaQuery,
+    Tooltip,
+    TableRow,
+    TableCell,
+    TableHead,
+    Table,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -36,6 +41,7 @@ const styles = {
         padding: "16px",
         color: "#fff",
         border: "none",
+        paddingLeft: "15px",
     },
     content: {
         marginLeft: "0",
@@ -45,6 +51,11 @@ const styles = {
     logoStyle: {
         width: "150px",
     },
+    profileCircle: {
+        position: 'absolute',
+        top: '10px', // Adjust the top position as needed
+        right: '10px', // Adjust the right position as needed
+      },
 };
 
 const NewHomePageMui = () => {
@@ -66,6 +77,8 @@ const NewHomePageMui = () => {
     // const [pageNumber, setPageNumber] = useState(0)
     // const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
+
+    const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
         try {
@@ -269,14 +282,14 @@ const NewHomePageMui = () => {
     const handleQuestionClick = (question) => {
         setSearchQuery(question);
     };
+
     const initialQuestions = [
         { id: 1, text: "What time is candle lighting?" },
-        { id: 2, text: "Where is the next Minyan near me ?" },
+        { id: 2, text: "Where is the next Minyan near me?" },
         { id: 3, text: "Display mincha in sphard nusach. " },
         { id: 4, text: "Play a class by Rabbi Paysach Krohn. " },
         { id: 5, text: "Play a shiur about Rosh Hashana." },
-        { id: 6, text: "What is the date for purim ?" },
-        { id: 7, text: "Tell me everything you can do." },
+        { id: 6, text: "Tell me everything you can do." },
     ];
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
@@ -297,25 +310,28 @@ const NewHomePageMui = () => {
     }, []);
 
 
-    const contentMargin = drawerOpen && !isSmallScreen ? "270px" : "0";
+    const contentMargin = drawerOpen && !isSmallScreen ? "260px" : "0";
     const fontSize = isSmallScreen ? "14px" : "16px";
-
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
             items: 4,
+            partialVisibilityGutter: 10,
         },
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
-            items: 3,
+            items: 4,
+            partialVisibilityGutter: 10,
         },
         tablet: {
             breakpoint: { max: 1024, min: 464 },
-            items: 2,
+            items: 3,
+            partialVisibilityGutter: 10,
         },
         mobile: {
             breakpoint: { max: 464, min: 0 },
             items: 1,
+            partialVisibilityGutter: 10,
         },
     };
 
@@ -323,24 +339,24 @@ const NewHomePageMui = () => {
 
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
-    
+
         const scrollToBottom = () => {
             chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
         };
-    
+
         scrollToBottom();
-    
+
         chatContainerNode.style.scrollBehavior = 'auto';
-    
+
         const observer = new MutationObserver(scrollToBottom);
         observer.observe(chatContainerNode, { childList: true, subtree: true });
-    
+
         // Clean up
         return () => {
             chatContainerNode.style.scrollBehavior = 'smooth';
             observer.disconnect();
         };
-    }, []); 
+    }, []);
 
 
     return (
@@ -354,7 +370,8 @@ const NewHomePageMui = () => {
                 }}
             >
                 <Toolbar>
-                    {!drawerOpen && <Box
+                    {!drawerOpen && 
+                    <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -382,7 +399,8 @@ const NewHomePageMui = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                    </Box>}
+                    </Box>
+                    }
                     <ProfileCircle />
                 </Toolbar>
             </AppBar>
@@ -463,8 +481,16 @@ const NewHomePageMui = () => {
                                 key={chatSession.id}
                                 color="primary"
                                 style={{
-                                    backgroundColor: activeTab === 0 ? "#13416a" : "#eaf5ff",
-                                    color: activeTab === 0 ? "#fff" : "#72a9de",
+                                    backgroundColor: chatSession.id === selectedChatId
+                                        ? "#eaf5ff" // Highlighted background color
+                                        : activeTab === 0
+                                            ? "#13416a" // Regular background color for activeTab 0
+                                            : "#eaf5ff", // Regular background color for activeTab 1
+                                    color: chatSession.id === selectedChatId
+                                        ? "#13416a" // Highlighted text color
+                                        : activeTab === 0
+                                            ? "#fff" // Regular text color for activeTab 0
+                                            : "#72a9de", // Regular text color for activeTab 1
                                     padding: "11px",
                                     borderRadius: "8px",
                                     cursor: "pointer",
@@ -509,6 +535,7 @@ const NewHomePageMui = () => {
                         // position: "relative",
                         bottom: "20px",
                         marginTop: "0px",
+                        // transform: "translateX(-5px)",
                     }}
                 >
                     <Box className="answerBox" ref={chatContainerRef}
@@ -550,12 +577,12 @@ const NewHomePageMui = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 color: activeTab === 0 ? "#fff" : "#063762",
-                            }}>Hi! Not sure where to start today ?</Typography>
+                            }}>Hi! Not sure where to start today?</Typography>
                         </Box>}
                     </Box>
 
                     <Box sx={{ paddingLeft: drawerOpen && !isSmallScreen ? "280px" : "0px" }} className="fixedSearchBox">
-                        {searchHistory.length <= 0 && !isSubmitting && (
+                        {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                             <Carousel
                                 responsive={responsive}
                                 itemClass="carousel-item"
@@ -566,33 +593,76 @@ const NewHomePageMui = () => {
                                 autoPlay={true}
                                 autoPlaySpeed={2000}
                                 infinite={true}
+                                customTransition="transform 500ms ease 0s"
                             >
-                                {initialQuestions.map((question) => (
-                                    <Button
+                                {initialQuestions.map((question, index) => (
+                                    <div
                                         key={question.id}
-                                        onClick={() => handleQuestionClick(question.text)}
-                                        style={{
-                                            backgroundColor:
-                                                activeTab === 0 ? "#fff" : "#fff",
-                                            color: activeTab === 0 ? "#13416a" : "#063762",
-                                            padding: "8px 16px",
-                                            borderRadius: "50px",
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                            display: "block",
-                                            width: "100%",
-                                            textOverflow: "ellipsis",
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            fontSize: "16px",
-                                            textTransform: "none",
-                                        }}
+                                        className="carousel-item"
                                     >
-                                        {question.text}
-                                    </Button>
+                                        <Button
+                                            onClick={() => handleQuestionClick(question.text)}
+                                            style={{
+                                                backgroundColor: activeTab === 0 ? "#fff" : "#fff",
+                                                color: activeTab === 0 ? "#13416a" : "#063762",
+                                                padding: "8px 12px",
+                                                borderRadius: "50px",
+                                                cursor: "pointer",
+                                                textAlign: "center",
+                                                display: "inline",
+                                                width: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                fontSize: "16px",
+                                                textTransform: "none",
+                                            }}
+                                        >
+                                            <Tooltip title={question.text}>{question.text}</Tooltip>
+                                        </Button>
+                                    </div>
                                 ))}
                             </Carousel>
                         )}
+                        {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
+                            <div style={{ overflowX: 'auto' }} className="home-table-scroll">
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            {initialQuestions.map((question) => (
+                                                <TableCell>
+                                                    <Button
+                                                        key={question.id}
+                                                        onClick={() => handleQuestionClick(question.text)}
+                                                        style={{
+                                                            backgroundColor: activeTab === 0 ? "#fff" : "#fff",
+                                                            color: activeTab === 0 ? "#13416a" : "#063762",
+                                                            padding: "8px 16px",
+                                                            borderRadius: "50px",
+                                                            cursor: "pointer",
+                                                            textAlign: "left",
+                                                            display: "inline",
+                                                            width: "100%",
+                                                            // minWidth: "200px",
+                                                            // maxWidth: "200px",
+                                                            whiteSpace: "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow: "ellipsis",
+                                                            fontSize: "16px",
+                                                            textTransform: "none",
+                                                        }}
+                                                    >
+                                                        <Tooltip title={question.text}>
+                                                            {question.text}
+                                                        </Tooltip>
+                                                    </Button>
+                                                </TableCell>))}
+                                        </TableRow>
+                                    </TableHead>
+                                </Table>
+                            </div>
+                        )}
+
                         <form>
                             <Box
                                 sx={{
