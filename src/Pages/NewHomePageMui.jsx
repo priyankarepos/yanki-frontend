@@ -14,6 +14,11 @@ import {
     CircularProgress,
     useMediaQuery,
     Tooltip,
+    TableRow,
+    TableCell,
+    TableHead,
+    Table,
+    TableBody,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -307,17 +312,17 @@ const NewHomePageMui = () => {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
             items: 4,
-            partialVisibilityGutter: 40,
+            partialVisibilityGutter: 10,
         },
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
             items: 3,
-            partialVisibilityGutter: 30,
+            partialVisibilityGutter: 10,
         },
         tablet: {
             breakpoint: { max: 1024, min: 464 },
             items: 2,
-            partialVisibilityGutter: 20,
+            partialVisibilityGutter: 10,
         },
         mobile: {
             breakpoint: { max: 464, min: 0 },
@@ -330,24 +335,24 @@ const NewHomePageMui = () => {
 
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
-    
+
         const scrollToBottom = () => {
             chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
         };
-    
+
         scrollToBottom();
-    
+
         chatContainerNode.style.scrollBehavior = 'auto';
-    
+
         const observer = new MutationObserver(scrollToBottom);
         observer.observe(chatContainerNode, { childList: true, subtree: true });
-    
+
         // Clean up
         return () => {
             chatContainerNode.style.scrollBehavior = 'smooth';
             observer.disconnect();
         };
-    }, []); 
+    }, []);
 
 
     return (
@@ -562,7 +567,7 @@ const NewHomePageMui = () => {
                     </Box>
 
                     <Box sx={{ paddingLeft: drawerOpen && !isSmallScreen ? "280px" : "0px" }} className="fixedSearchBox">
-                        {searchHistory.length <= 0 && !isSubmitting && (
+                        {/* {searchHistory.length <= 0 && !isSubmitting && (
                             <Carousel
                                 responsive={responsive}
                                 itemClass="carousel-item"
@@ -586,7 +591,9 @@ const NewHomePageMui = () => {
                                             cursor: "pointer",
                                             textAlign: "left",
                                             display: "inline",
-                                            width: isLargeScreen ? "100%" : "70%",
+                                            width: isLargeScreen ? "100%" : "100%",
+                                            minWidth: "200px",
+                                            maxWidth: "200px",
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",
@@ -600,7 +607,46 @@ const NewHomePageMui = () => {
                                     </Button>
                                 ))}
                             </Carousel>
-                        )}
+                        )} */}
+                        <div style={{ overflowX: 'auto' }} className="home-table-scroll">
+                            {searchHistory.length <= 0 && !isSubmitting && (
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            {initialQuestions.map((question) => (
+                                                <TableCell>
+                                                    <Button
+                                                        key={question.id}
+                                                        onClick={() => handleQuestionClick(question.text)}
+                                                        style={{
+                                                            backgroundColor: activeTab === 0 ? "#fff" : "#fff",
+                                                            color: activeTab === 0 ? "#13416a" : "#063762",
+                                                            padding: "8px 16px",
+                                                            borderRadius: "50px",
+                                                            cursor: "pointer",
+                                                            textAlign: "left",
+                                                            display: "inline",
+                                                            width: isLargeScreen ? "100%" : "100%",
+                                                            // minWidth: "200px",
+                                                            // maxWidth: "200px",
+                                                            whiteSpace: "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow: "ellipsis",
+                                                            fontSize: "16px",
+                                                            textTransform: "none",
+                                                        }}
+                                                    >
+                                                        <Tooltip title={question.text}>
+                                                            {question.text}
+                                                        </Tooltip>
+                                                    </Button>
+                                                </TableCell>))}
+                                        </TableRow>
+                                    </TableHead>
+                                </Table>
+                            )}
+                        </div>
+
                         <form>
                             <Box
                                 sx={{

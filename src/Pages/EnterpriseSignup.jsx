@@ -84,7 +84,7 @@ const EnterpriseSignup = () => {
             PhoneNumber: "",
             Email: "",
             Password: "",
-            signTermsAndCondition: "",
+            // signTermsAndCondition: "",
         },
     });
 
@@ -130,7 +130,7 @@ const EnterpriseSignup = () => {
                 contactPersonName: data.PointOfContact,
                 website: data.Website,
                 categoryId: selectedCategory,
-                isTermAndPrivacy: data.signTermsAndCondition
+                // isTermAndPrivacy: data.signTermsAndCondition
             };
 
             // Make the POST request
@@ -518,7 +518,15 @@ const EnterpriseSignup = () => {
                             </Alert>
                         )}
                         <Box sx={{ textAlign: "center", marginTop: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-                            <Controller
+                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color:"#13538b", fontWeight: "600",}}>
+                                Terms of Use
+                            </Link> and acknowledge the <Link
+                                to="/privacy-policy"
+                                style={{color:"#13538b", fontWeight: "600",}}
+                            >
+                                Privacy Policy
+                            </Link></Typography>
+                            {/* <Controller
                                 control={control}
                                 name="signTermsAndCondition"
                                 rules={{ required: "You must accept the terms and conditions." }}
@@ -540,7 +548,7 @@ const EnterpriseSignup = () => {
                                         )}
                                     </>
                                 )}
-                            />
+                            /> */}
                         </Box>
                         <Box sx={{ maxWidth: "350px", marginX: "auto", marginTop: "25px", }}>
                             <Button
