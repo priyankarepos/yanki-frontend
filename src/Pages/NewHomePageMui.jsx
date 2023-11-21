@@ -307,29 +307,28 @@ const NewHomePageMui = () => {
 
     const contentMargin = drawerOpen && !isSmallScreen ? "270px" : "0";
     const fontSize = isSmallScreen ? "14px" : "16px";
-
     const responsive = {
         superLargeDesktop: {
-            breakpoint: { max: 4000, min: 3000 },
-            items: 4,
-            partialVisibilityGutter: 10,
+          breakpoint: { max: 4000, min: 3000 },
+          items: 5,
+          partialVisibilityGutter: 10,
         },
         desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 3,
-            partialVisibilityGutter: 10,
+          breakpoint: { max: 3000, min: 1024 },
+          items: 5,
+          partialVisibilityGutter: 10,
         },
         tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 2,
-            partialVisibilityGutter: 10,
+          breakpoint: { max: 1024, min: 464 },
+          items: 3,
+          partialVisibilityGutter: 10,
         },
         mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-            partialVisibilityGutter: 10,
+          breakpoint: { max: 464, min: 0 },
+          items: 1,
+          partialVisibilityGutter: 10,
         },
-    };
+      };
 
     const chatContainerRef = useRef(null);
 
@@ -586,31 +585,34 @@ const NewHomePageMui = () => {
                                 autoPlay={true}
                                 autoPlaySpeed={2000}
                                 infinite={true}
+                                customTransition="transform 500ms ease 0s"
                             >
-                                {initialQuestions.map((question) => (
-                                    <Button
+                                {initialQuestions.map((question, index) => (
+                                    <div
                                         key={question.id}
-                                        onClick={() => handleQuestionClick(question.text)}
-                                        style={{
-                                            backgroundColor: activeTab === 0 ? "#fff" : "#fff",
-                                            color: activeTab === 0 ? "#13416a" : "#063762",
-                                            padding: "8px 16px",
-                                            borderRadius: "50px",
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                            display: "inline",
-                                            width: "100%",
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            fontSize: "16px",
-                                            textTransform: "none",
-                                        }}
+                                        className="carousel-item"
                                     >
-                                        <Tooltip title={question.text}>
-                                            {question.text}
-                                        </Tooltip>
-                                    </Button>
+                                        <Button
+                                            onClick={() => handleQuestionClick(question.text)}
+                                            style={{
+                                                backgroundColor: activeTab === 0 ? "#fff" : "#fff",
+                                                color: activeTab === 0 ? "#13416a" : "#063762",
+                                                padding: "8px 12px",
+                                                borderRadius: "50px",
+                                                cursor: "pointer",
+                                                textAlign: "center",
+                                                display: "inline",
+                                                width: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                fontSize: "16px",
+                                                textTransform: "none",
+                                            }}
+                                        >
+                                            <Tooltip title={question.text}>{question.text}</Tooltip>
+                                        </Button>
+                                    </div>
                                 ))}
                             </Carousel>
                         )}
