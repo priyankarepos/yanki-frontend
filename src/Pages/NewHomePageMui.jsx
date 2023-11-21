@@ -41,6 +41,7 @@ const styles = {
         padding: "16px",
         color: "#fff",
         border: "none",
+        paddingLeft: "15px",
     },
     content: {
         marginLeft: "0",
@@ -50,6 +51,11 @@ const styles = {
     logoStyle: {
         width: "150px",
     },
+    profileCircle: {
+        position: 'absolute',
+        top: '10px', // Adjust the top position as needed
+        right: '10px', // Adjust the right position as needed
+      },
 };
 
 const NewHomePageMui = () => {
@@ -304,30 +310,30 @@ const NewHomePageMui = () => {
     }, []);
 
 
-    const contentMargin = drawerOpen && !isSmallScreen ? "270px" : "0";
+    const contentMargin = drawerOpen && !isSmallScreen ? "260px" : "0";
     const fontSize = isSmallScreen ? "14px" : "16px";
     const responsive = {
         superLargeDesktop: {
-          breakpoint: { max: 4000, min: 3000 },
-          items: 4,
-          partialVisibilityGutter: 10,
+            breakpoint: { max: 4000, min: 3000 },
+            items: 4,
+            partialVisibilityGutter: 10,
         },
         desktop: {
-          breakpoint: { max: 3000, min: 1024 },
-          items: 4,
-          partialVisibilityGutter: 10,
+            breakpoint: { max: 3000, min: 1024 },
+            items: 4,
+            partialVisibilityGutter: 10,
         },
         tablet: {
-          breakpoint: { max: 1024, min: 464 },
-          items: 3,
-          partialVisibilityGutter: 10,
+            breakpoint: { max: 1024, min: 464 },
+            items: 3,
+            partialVisibilityGutter: 10,
         },
         mobile: {
-          breakpoint: { max: 464, min: 0 },
-          items: 1,
-          partialVisibilityGutter: 10,
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            partialVisibilityGutter: 10,
         },
-      };
+    };
 
     const chatContainerRef = useRef(null);
 
@@ -364,7 +370,8 @@ const NewHomePageMui = () => {
                 }}
             >
                 <Toolbar>
-                    {!drawerOpen && <Box
+                    {!drawerOpen && 
+                    <Box
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -392,7 +399,8 @@ const NewHomePageMui = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                    </Box>}
+                    </Box>
+                    }
                     <ProfileCircle />
                 </Toolbar>
             </AppBar>
@@ -527,6 +535,7 @@ const NewHomePageMui = () => {
                         // position: "relative",
                         bottom: "20px",
                         marginTop: "0px",
+                        // transform: "translateX(-5px)",
                     }}
                 >
                     <Box className="answerBox" ref={chatContainerRef}
@@ -568,7 +577,7 @@ const NewHomePageMui = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 color: activeTab === 0 ? "#fff" : "#063762",
-                            }}>Hi! Not sure where to start today ?</Typography>
+                            }}>Hi! Not sure where to start today?</Typography>
                         </Box>}
                     </Box>
 
