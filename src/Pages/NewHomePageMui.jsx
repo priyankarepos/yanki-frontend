@@ -18,7 +18,6 @@ import {
     TableCell,
     TableHead,
     Table,
-    TableBody,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -73,7 +72,7 @@ const NewHomePageMui = () => {
     // const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
 
-    const isLargeScreen = useMediaQuery("(min-width: 400px)");
+    const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
         try {
@@ -476,8 +475,16 @@ const NewHomePageMui = () => {
                                 key={chatSession.id}
                                 color="primary"
                                 style={{
-                                    backgroundColor: activeTab === 0 ? "#13416a" : "#eaf5ff",
-                                    color: activeTab === 0 ? "#fff" : "#72a9de",
+                                    backgroundColor: chatSession.id === selectedChatId
+                                        ? "#eaf5ff" // Highlighted background color
+                                        : activeTab === 0
+                                            ? "#13416a" // Regular background color for activeTab 0
+                                            : "#eaf5ff", // Regular background color for activeTab 1
+                                    color: chatSession.id === selectedChatId
+                                        ? "#13416a" // Highlighted text color
+                                        : activeTab === 0
+                                            ? "#fff" // Regular text color for activeTab 0
+                                            : "#72a9de", // Regular text color for activeTab 1
                                     padding: "11px",
                                     borderRadius: "8px",
                                     cursor: "pointer",
@@ -568,7 +575,7 @@ const NewHomePageMui = () => {
                     </Box>
 
                     <Box sx={{ paddingLeft: drawerOpen && !isSmallScreen ? "280px" : "0px" }} className="fixedSearchBox">
-                        {/* {searchHistory.length <= 0 && !isSubmitting && (
+                        {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                             <Carousel
                                 responsive={responsive}
                                 itemClass="carousel-item"
@@ -592,9 +599,7 @@ const NewHomePageMui = () => {
                                             cursor: "pointer",
                                             textAlign: "left",
                                             display: "inline",
-                                            width: isLargeScreen ? "100%" : "100%",
-                                            minWidth: "200px",
-                                            maxWidth: "200px",
+                                            width: "100%",
                                             whiteSpace: "nowrap",
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",
@@ -603,14 +608,14 @@ const NewHomePageMui = () => {
                                         }}
                                     >
                                         <Tooltip title={question.text}>
-                                        {question.text}
+                                            {question.text}
                                         </Tooltip>
                                     </Button>
                                 ))}
                             </Carousel>
-                        )} */}
-                        <div style={{ overflowX: 'auto' }} className="home-table-scroll">
-                            {searchHistory.length <= 0 && !isSubmitting && (
+                        )}
+                        {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
+                            <div style={{ overflowX: 'auto' }} className="home-table-scroll">
                                 <Table>
                                     <TableHead>
                                         <TableRow>
@@ -627,7 +632,7 @@ const NewHomePageMui = () => {
                                                             cursor: "pointer",
                                                             textAlign: "left",
                                                             display: "inline",
-                                                            width: isLargeScreen ? "100%" : "100%",
+                                                            width: "100%",
                                                             // minWidth: "200px",
                                                             // maxWidth: "200px",
                                                             whiteSpace: "nowrap",
@@ -645,8 +650,8 @@ const NewHomePageMui = () => {
                                         </TableRow>
                                     </TableHead>
                                 </Table>
-                            )}
-                        </div>
+                            </div>
+                        )}
 
                         <form>
                             <Box

@@ -28,8 +28,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import {
     emailRegex,
     passwordRegex,
