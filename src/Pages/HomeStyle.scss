@@ -17,7 +17,11 @@
     margin-bottom: 20px;
   }
 
-.home-table-scroll .css-1v17xvx-MuiTableCell-root, .home-table-scroll .css-pu41or{
+  .home-table-scroll{
+    overflow-x: auto;
+  }
+
+.home-table-scroll .css-1v17xvx-MuiTableCell-root, .home-table-scroll .css-pu41or,.home-table-scroll .css-pu41or .css-1bigob2, .home-table-scroll .css-1ygcj2i-MuiTableCell-root{
   border-bottom: none;
   padding: 15px 10px 15px 0px;
 }  
@@ -31,8 +35,12 @@
 
 /* width */
 ::-webkit-scrollbar {
-    width: 0px;
+    width: 10px;
   }
+
+  // .home-table-scroll:hover::-webkit-scrollbar {
+  //   height: 5px;
+  // }
   
   /* Track */
   ::-webkit-scrollbar-track {
