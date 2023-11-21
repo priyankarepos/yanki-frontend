@@ -283,8 +283,7 @@ const NewHomePageMui = () => {
         { id: 3, text: "Display mincha in sphard nusach. " },
         { id: 4, text: "Play a class by Rabbi Paysach Krohn. " },
         { id: 5, text: "Play a shiur about Rosh Hashana." },
-        { id: 6, text: "What is the date for purim ?" },
-        { id: 7, text: "Tell me everything you can do." },
+        { id: 6, text: "Tell me everything you can do." },
     ];
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
@@ -310,12 +309,12 @@ const NewHomePageMui = () => {
     const responsive = {
         superLargeDesktop: {
           breakpoint: { max: 4000, min: 3000 },
-          items: 5,
+          items: 4,
           partialVisibilityGutter: 10,
         },
         desktop: {
           breakpoint: { max: 3000, min: 1024 },
-          items: 5,
+          items: 4,
           partialVisibilityGutter: 10,
         },
         tablet: {
