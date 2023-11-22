@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar } from '@mui/material';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { useForm, Controller } from 'react-hook-form';
-import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
+import 'react-tagsinput/react-tagsinput.css';
 import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
@@ -53,13 +53,15 @@ const styles = {
 
 const EnterpriseProfile = () => {
   const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
   const [selectedCategory, setSelectedCategory] = useState("");
   const { drawerOpen } = useContext(Context);
   const [enterpriseDetails, setEnterpriseDetails] = useState({});
   const [enterpriseCategories, setEnterpriseCategories] = useState([]);
-  // const [enterpriseTags, setEnterpriseTags] = useState([]);
-  // console.log("enterpriseCategories", enterpriseCategories);
-  console.log("enterpriseDetails", enterpriseDetails);
+  const [tagCount, setTagCount] = useState(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isTagAvailable, setIsTagAvailable] = useState(true);
 
 
   useEffect(() => {
@@ -102,40 +104,15 @@ const EnterpriseProfile = () => {
     fetchEnterpriseDetails();
   }, []);
 
-  // useEffect(() => {
-  //   const checkOnboardingStatus = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-onboarding-status`
-  //       );
-
-  //       console.log('Onboarding Status Response:', response.data);
-
-  //       if (response.status === 200) {
-
-  //         console.log('Onboarding status is success');
-  //       } else {
-
-  //         console.error('Failed to check onboarding status');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking onboarding status:', error);
-  //     }
-  //   };
-
-  //   checkOnboardingStatus();
-  // }, []);
-
   const {
     control,
-    // handleSubmit,
     setValue,
-    getValues, // Add getValues to your destructuring assignment
+    getValues,
     formState: { errors },
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      EnterpriseName: enterpriseDetails.enterpriseName || "", // Use the values from enterpriseDetails
+      EnterpriseName: enterpriseDetails.enterpriseName || "",
       EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
       EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
       EmailAddress: enterpriseDetails.enterpriseEmail || "",
@@ -145,7 +122,7 @@ const EnterpriseProfile = () => {
       InstagramUsername: enterpriseDetails.instagramUsername || "",
       LinkedinUsername: enterpriseDetails.linkedInUsername || "",
       EnterpriseDescription: enterpriseDetails.enterpriseDescription || "",
-      EnterpriseCategories: enterpriseDetails.categoryId || "", // Update this line
+      EnterpriseCategories: enterpriseDetails.categoryId || "",
       BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
       BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
       FoundedYear: enterpriseDetails.foundedYear || "",
@@ -167,17 +144,16 @@ const EnterpriseProfile = () => {
     setValue("InstagramUsername", enterpriseDetails.instagramUsername || "");
     setValue("LinkedinUsername", enterpriseDetails.linkedInUsername || "");
     setValue("EnterpriseDescription", enterpriseDetails.enterpriseDescription || "");
-    setValue("EnterpriseCategories", enterpriseDetails.categoryId || ""); // Update this line
+    setValue("EnterpriseCategories", enterpriseDetails.categoryId || "");
     setValue("BusinessHoursOpeningTime", enterpriseDetails.officeOpenTime || "");
     setValue("BusinessHoursClosingTime", enterpriseDetails.officeCloseTime || "");
     setValue("FoundedYear", enterpriseDetails.foundedYear || "");
     setValue("ReligiousCertifications", enterpriseDetails.religiousCertification || "");
     setValue("FrequentlyAskedQuestions", enterpriseDetails.faQs || "");
-    
+
     if (enterpriseDetails.enterpriseKeywords) {
       const keywordsArray = enterpriseDetails.enterpriseKeywords.split(',');
       console.log("keywordsArray", keywordsArray);
-      // Set the state with the array of keywords
       setTags(keywordsArray);
       setValue("EnterpriseIdentificationKeywords", keywordsArray || []);
     }
@@ -189,72 +165,95 @@ const EnterpriseProfile = () => {
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/${tag}`
       );
 
-      // Handle the response here
       console.log('Keyword Check Response:', response.data);
+      setSnackbarOpen(true);
 
       if (response.status === 200) {
-        // Check if the keyword already exists
         const keywordExists = response.data.exists;
 
-        console.log("keywordExists", keywordExists);
+        if (keywordExists !== undefined) {
+          console.log("keywordExists", keywordExists);
 
-        if (keywordExists) {
-          // Handle the case where the keyword already exists
-          console.log('Keyword already exists:', tag);
-          // You can show a message or perform any other action if needed
+          if (keywordExists) {
+            console.log('Keyword already exists:', tag);
+            setSnackbarMessage(`Keyword "${tag}" already exists`);
+          } else {
+            console.log('Keyword does not exist:', tag);
+            setSnackbarMessage(`Keyword "${tag}" does not exist`);
+
+            setTags((prevTags) => [...prevTags, tag]);
+          }
         } else {
-          // Handle the case where the keyword doesn't exist
-          console.log('Keyword does not exist:', tag);
-
-          // Update the state only when the keyword doesn't exist
-          // setEnterpriseTags((prevTags) => [...prevTags, tag]);
-          setTags((prevTags) => [...prevTags, tag]);
+          console.log('Keyword existence is undefined for:', tag);
+          setSnackbarMessage(`Keyword existence is undefined for "${tag}"`);
         }
       } else {
-        // Handle the case where the API request is not successful
         console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
       }
+
+      setSnackbarOpen(true);
+      return response.data;
     } catch (error) {
-      // Handle errors
       console.error('Error checking enterprise keyword:', error);
+      setSnackbarMessage(`Error checking enterprise keyword: ${error.message}`);
+      setSnackbarOpen(true);
+      return { isSuccess: false };
     }
   };
 
   const handleAddTag = async (tag) => {
     try {
+      if (tagCount >= 10) {
+        setSnackbarMessage('You have reached the maximum limit of tags (10).');
+        setSnackbarOpen(true);
+        return;
+      }
+
       const response = await checkEnterpriseKeyword(tag);
 
       if (response && response.isSuccess) {
+        setTagCount(tagCount + 1);
+
+        setIsTagAvailable(response.isAvailable);
+
         if (response.isAvailable) {
-          // Check if the keyword already exists in the state
-          if (!tags.includes(tag)) {
-            // Update the state only when the keyword doesn't exist
-            // setEnterpriseTags((prevTags) => [...prevTags, tag]);
-            setTags((prevTags) => [...prevTags, tag]);
-          } else {
-            // Handle the case where the keyword is already in the state
-            console.log('Keyword already exists in state:', tag);
-            // You can show a message or perform any other action if needed
-          }
+          setTags((prevTags) => {
+            const uniqueTags = new Set([...prevTags, tag]);
+            return [...uniqueTags];
+          });
+
+          setSnackbarMessage(`Tag "${tag}" added successfully`);
         } else {
-          // Handle the case where the keyword already exists
-          console.log('Keyword already exists:', tag);
-          // You can show a message or perform any other action if needed
+          setSnackbarMessage(`Tag "${tag}" is not available in this enterprise.`);
         }
+
+        setSnackbarOpen(true);
       } else {
-        // Handle the case where the API request is not successful
         console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error handling tag:', error);
+      setSnackbarOpen(true);
     }
   };
 
+
   const handleRemoveTag = (tag) => {
-    // Function to remove a tag
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
+
+    setTagCount((prevCount) => Math.max(0, prevCount - 1));
+
+    setSnackbarMessage('Tag removed successfully');
+    setSnackbarOpen(true);
   };
+
+  useEffect(() => {
+    setTagCount(tags.length);
+  }, [tags]);
 
   const updateEnterpriseDetails = async () => {
     try {
@@ -288,8 +287,12 @@ const EnterpriseProfile = () => {
 
       if (response.status === 200) {
         console.log('Enterprise details updated successfully');
+        setSnackbarMessage('Enterprise details updated successfully');
+        setSnackbarOpen(true);
       } else {
         console.error('Failed to update enterprise details');
+        setSnackbarMessage('Failed to update enterprise details');
+        setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error updating enterprise details:', error);
@@ -620,61 +623,6 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          {/* <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords</InputLabel>
-            <Controller
-              control={control}
-              name="EnterpriseIdentificationKeywords"
-              render={({ field }) => (
-                // <TextareaAutosize
-                //   style={{
-                //     backgroundColor: '#eaf5ff',
-                //     border: '1px solid #6fa8dd',
-                //     borderRadius: '8px',
-                //     marginBottom: '16px',
-                //     color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                //   }}
-                //   {...field}
-                //   placeholder="Type enterprise identification keywords here"
-                //   onFocus={(e) => e.target.style.outline = 'none'}
-                //   onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
-                //   onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
-                // />
-                <div>
-                  <TagsInput
-                    value={tags}
-                    onChange={setTags}
-                    addKeys={[13, 9]} // Enter and Tab keys to add tags
-                    inputProps={{
-                      style: {
-                        backgroundColor: '#eaf5ff',
-                        border: '1px solid #6fa8dd',
-                        borderRadius: '8px',
-                        marginBottom: '16px',
-                        color: '#8bbae5',
-                        width: '100%',
-                        outline: 'none',
-                        height: "60px",
-                      },
-                    }}
-                  />
-                  <div style={styles.tagsContainer}>
-                    {tags.map((tag) => (
-                      <div key={tag} style={styles.tag}>
-                        <span style={styles.tagText}>{tag}</span>
-                        <span
-                          style={styles.removeTag}
-                          onClick={() => handleRemoveTag(tag)}
-                        >
-                          &times;
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            />
-          </Grid> */}
           <Grid item xs={12}>
             <InputLabel style={styles.label}>Enterprise identification keywords</InputLabel>
             <Controller
@@ -685,7 +633,7 @@ const EnterpriseProfile = () => {
                   <TagsInput
                     value={tags}
                     onChange={(newTags) => setTags(newTags)}
-                    addKeys={[13, 9]} // Enter and Tab keys to add tags
+                    addKeys={[13, 9]}
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -698,19 +646,25 @@ const EnterpriseProfile = () => {
                         height: "60px",
                       },
                       ...field,
+                      value: tagInput,
+                      onChange: (e) => setTagInput(e.target.value),
                       onKeyDown: (e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
                           e.persist();
                           handleAddTag(e.target.value);
-                          field.onChange(''); // Clear the input after adding the tag using react-hook-form
+                          field.onChange('');
+                          setTagInput('');
                         }
                       },
                     }}
                   />
                   <div style={styles.tagsContainer}>
                     {tags.map((tag, index) => (
-                      <div key={`${tag}-${index}`} style={styles.tag}>
+                      <div key={`${tag}-${index}`} style={{
+                        ...styles.tag,
+                        backgroundColor: tag === tagInput && !isTagAvailable ? '#ff7070' : '#6fa8dd',
+                      }}>
                         <span style={styles.tagText}>{tag}</span>
                         <span
                           style={styles.removeTag}
@@ -738,6 +692,12 @@ const EnterpriseProfile = () => {
           </Grid>
         </Grid>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };

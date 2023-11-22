@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard'
 import { useForm, Controller } from 'react-hook-form';
-import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
+import 'react-tagsinput/react-tagsinput.css';
 import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
 import EditIcon from '@mui/icons-material/Edit';
@@ -52,7 +52,7 @@ const styles = {
   },
   cell: {
     padding: '12px',
-    borderBottom: '1px solid #ccc', // Add a border to the cell
+    borderBottom: '1px solid #ccc', 
     fontSize: '16px',
     fontWeight: 'normal',
     color: '#fff',
@@ -62,21 +62,23 @@ const styles = {
 
 const Departments = () => {
   const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
+  const [isTagAvailable, setIsTagAvailable] = useState(true);
   const { drawerOpen } = useContext(Context);
-  // const [enterpriseTags, setEnterpriseTags] = useState([]);
   const [selectedDepartmentData, setSelectedDepartmentData] = useState({});
   const [departmentID, setDepartmentID] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  console.log("selectedDepartmentData", selectedDepartmentData);
   const enterpriseId = sessionStorage.getItem('enterpriseId');
-  console.log("tags", tags);
+  const [triggerEffect, setTriggerEffect] = useState(false);
+  const [tagCount, setTagCount] = useState(0);
 
   const {
     control,
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -94,86 +96,99 @@ const Departments = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${tag}`
       );
-
-      // Handle the response here
       console.log('Keyword Check Response:', response.data);
       setSnackbarOpen(true);
-      setSnackbarMessage('Keyword Check Response:', response.data);
-
+  
       if (response.status === 200) {
-        // Check if the keyword already exists
         const keywordExists = response.data.exists;
-
-        console.log("keywordExists", keywordExists);
-
-        if (keywordExists) {
-          // Handle the case where the keyword already exists
-          console.log('Keyword already exists:', tag);
-          setSnackbarMessage('Keyword already exists:', tag);
-          setSnackbarOpen(true);
+        if (keywordExists !== undefined) {
+          console.log("keywordExists", keywordExists);
+  
+          if (keywordExists) {
+            console.log('Keyword already exists:', tag);
+            setSnackbarMessage(`Keyword "${tag}" already exists`);
+          } else {
+            console.log('Keyword does not exist:', tag);
+            setSnackbarMessage(`Keyword "${tag}" does not exist`);
+  
+            setTags((prevTags) => [...prevTags, tag]);
+          }
         } else {
-          // Handle the case where the keyword doesn't exist
-          console.log('Keyword does not exist:', tag);
-          setSnackbarMessage('Keyword does not exist:', tag);
-          setSnackbarOpen(true);
-
-          // Update the state only when the keyword doesn't exist
-          // setEnterpriseTags((prevTags) => [...prevTags, tag]);
-          setTags((prevTags) => [...prevTags, tag]);
+          console.log('Keyword existence is undefined for:', tag);
+          setSnackbarMessage(`Keyword existence is undefined for "${tag}"`);
         }
       } else {
-        // Handle the case where the API request is not successful
         console.error('Failed to check enterprise keyword');
         setSnackbarMessage('Failed to check enterprise keyword');
-        setSnackbarOpen(true);
       }
-    } catch (error) {
-      // Handle errors
-      console.error('Error checking enterprise keyword:', error);
-      setSnackbarMessage('Error checking enterprise keyword:', error);
+  
       setSnackbarOpen(true);
+      return response.data;
+    } catch (error) {
+      console.error('Error checking enterprise keyword:', error);
+      setSnackbarMessage(`Error checking enterprise keyword: ${error.message}`);
+      setSnackbarOpen(true);
+      return { isSuccess: false };
     }
   };
 
   const handleAddTag = async (tag) => {
     try {
+      if (tagCount >= 10) {
+        setSnackbarMessage('You have reached the maximum limit of tags (10).');
+        setSnackbarOpen(true);
+        return;
+      }
+
       const response = await checkEnterpriseKeyword(tag);
-  
-      if (response && response.isSuccess && response.isAvailable) {
-        // Tag is available, add it to the state only if it doesn't exist
-        setTags((prevTags) => {
-          const uniqueTags = new Set([...prevTags, tag]);
-          return [...uniqueTags];
-        });
+
+      if (response && response.isSuccess) {
+        setTagCount(tagCount + 1);
+
+        setIsTagAvailable(response.isAvailable);
+
+        if (response.isAvailable) {
+          setTags((prevTags) => {
+            const uniqueTags = new Set([...prevTags, tag]);
+            return [...uniqueTags];
+          });
+
+          setSnackbarMessage(`Tag "${tag}" added successfully`);
+        } else {
+          setSnackbarMessage(`Tag "${tag}" is not available in this enterprise.`);
+        }
+
+        setSnackbarOpen(true);
       } else {
-        // Handle the case where the tag is not available
-        console.log('Tag not available:', tag);
-        // You can show a message or perform any other action if needed
+        console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarOpen(true);
       }
     } catch (error) {
-      // Handle errors
       console.error('Error handling tag:', error);
       setSnackbarOpen(true);
     }
   };
-  
-  
-  
 
   const handleRemoveTag = (tag) => {
-    // Function to remove a tag
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
+
+    setTagCount((prevCount) => Math.max(0, prevCount - 1));
+
     setSnackbarMessage('Tag removed successfully');
     setSnackbarOpen(true);
   };
+
+  useEffect(() => {
+    setTagCount(tags.length);
+  }, [tags]);
 
   const contentMargin = drawerOpen ? '0' : '0';
 
   const [departmentsData, setDepartmentsData] = useState([]);
 
   console.log("departmentsData", departmentsData);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -182,7 +197,6 @@ const Departments = () => {
         );
 
         if (response.status === 200) {
-          // Assuming the response data is an array of departments
           setDepartmentsData(response.data);
         } else {
           console.error('Failed to fetch departments:', response.statusText);
@@ -195,34 +209,32 @@ const Departments = () => {
     };
 
     fetchData();
-  }, []);
-
+  }, [triggerEffect]);
 
   const handleEditDepartment = async (index, departmentId) => {
     const department = departmentsData[index];
     console.log("department", department);
     setDepartmentID(departmentId);
-
-    // Use the department object directly
     setSelectedDepartmentData(department);
 
-    setValue("DepartmentName", department.departmentName || "");
-    setValue("NameOfRepresentative", department.departmentHeadName || "");
-    setValue("EmailAddress", department.departmentEmail || "");
-    setValue("DepartmentDescription", department.departmentDescription || "");
-    // Split the departmentKeywords string into an array
-    const keywordsArray = department.departmentKeywords.split(',');
-    console.log("keywordsArray", keywordsArray);
-    // Set the state with the array of keywords
-    setTags(keywordsArray);
-    setValue("DepartmentIdentificationKeywords", keywordsArray || []);
+    if (selectedDepartmentData) {
+      setValue("DepartmentName", department.departmentName || "");
+      setValue("NameOfRepresentative", department.departmentHeadName || "");
+      setValue("EmailAddress", department.departmentEmail || "");
+      setValue("DepartmentDescription", department.departmentDescription || "");
+      // Split the departmentKeywords string into an array
+      const keywordsArray = department.departmentKeywords.split(',');
+      console.log("keywordsArray", keywordsArray);
+      // Set the state with the array of keywords
+      setTags(keywordsArray);
+      setValue("DepartmentIdentificationKeywords", keywordsArray || []);
+    }
   };
 
 
 
   const handleDeleteDepartment = async (index, departmentId) => {
     try {
-      // Assuming departmentId is available in your departmentsData array
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
 
       const response = await axios.delete(apiUrl);
@@ -232,8 +244,6 @@ const Departments = () => {
         setSnackbarMessage('Department deleted successfully');
         setSnackbarOpen(true);
         setSelectedDepartmentData({})
-
-        // Update the state to remove the deleted department
         const updatedDepartments = [...departmentsData];
         updatedDepartments.splice(index, 1);
         setDepartmentsData(updatedDepartments);
@@ -252,8 +262,6 @@ const Departments = () => {
     console.log("dataaaaaaaaaaaa", formData);
     try {
       const tagsAsString = tags.join(',');
-      console.log("tagsAsString", tagsAsString);
-
       const payload = {
         departmentId: selectedDepartmentData?.departmentId,
         departmentName: formData.DepartmentName,
@@ -268,24 +276,24 @@ const Departments = () => {
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
         payload
       );
-
       console.log('Update Department Details Response:', response.data);
-
+      setTriggerEffect((prev) => !prev);
 
       if (response.status === 200) {
         console.log('Department details updated successfully');
-        setSnackbarMessage('Department details updated successfully');
         setSnackbarOpen(true);
+        setSnackbarMessage('Department details updated successfully');
+        // setTags(response.data.departmentKeywords.split(','));
       } else {
         console.error(`Failed to update Department details. Status: ${response.status}`);
         setSnackbarMessage(`Failed to update Department details. Status: ${response.status}`);
         setSnackbarOpen(true);
+
       }
     } catch (error) {
       console.error('Error updating Department details:', error.message);
-      setSnackbarMessage('Error updating Department details:', error.message);
-      setSnackbarOpen(true);
     }
+    setSelectedDepartmentData("");
   };
 
 
@@ -294,7 +302,7 @@ const Departments = () => {
   const onSubmit = async (data) => {
     console.log("=====================", data);
     try {
-      const tagsAsString = tags.join(','); // Corrected here
+      const tagsAsString = tags.join(','); 
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
 
       const requestBody = {
@@ -315,11 +323,18 @@ const Departments = () => {
         setTags([]);
         setSnackbarMessage('Department added successfully,');
         setSnackbarOpen(true);
+        reset();
+        setValue('DepartmentName', '');
+        setValue('NameOfRepresentative', '');
+        setValue('EmailAddress', '');
+        setValue('DepartmentDescription', '');
+        setValue('DepartmentIdentificationKeywords', []);
       } else {
         console.error('API error:', response.statusText);
         setSnackbarMessage('API error:', response.statusTex);
         setSnackbarOpen(true);
       }
+      setTriggerEffect((prev) => !prev);
     } catch (error) {
       console.error('Error occurred while fetching API:', error.message);
       setSnackbarMessage('Error occurred while fetching API:', error.message);
@@ -427,7 +442,7 @@ const Departments = () => {
                   <TagsInput
                     value={tags}
                     onChange={(newTags) => setTags(newTags)}
-                    addKeys={[13, 9]} // Enter and Tab keys to add tags
+                    addKeys={[13, 9]} 
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -440,19 +455,25 @@ const Departments = () => {
                         height: "60px",
                       },
                       ...field,
+                      value: tagInput, 
+                      onChange: (e) => setTagInput(e.target.value),
                       onKeyDown: (e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
                           e.persist();
                           handleAddTag(e.target.value);
-                          field.onChange(''); // Clear the input after adding the tag using react-hook-form
+                          field.onChange('');
+                          setTagInput('');
                         }
                       },
                     }}
                   />
                   <div style={styles.tagsContainer}>
-                    { tags.map((tag, index) => (
-                      <div key={`${tag}-${index}`} style={styles.tag}>
+                    {tags.map((tag, index) => (
+                      <div key={`${tag}-${index}`} style={{
+                        ...styles.tag,
+                        backgroundColor: tag === tagInput && !isTagAvailable ? '#ff7070' : '#6fa8dd',
+                      }}>
                         <span style={styles.tagText}>{tag}</span>
                         <span
                           style={styles.removeTag}
