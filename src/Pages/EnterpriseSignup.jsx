@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -15,7 +14,7 @@ import axios from "axios";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useForm, Controller } from "react-hook-form";
-import { useGoogleLogin } from '@react-oauth/google';
+// import { useGoogleLogin } from '@react-oauth/google';
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -35,7 +34,7 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-import GoogleIcon from '@mui/icons-material/Google';
+// import GoogleIcon from '@mui/icons-material/Google';
 
 const styles = {
     inputField: {
@@ -131,6 +130,7 @@ const EnterpriseSignup = () => {
                 website: data.Website,
                 categoryId: selectedCategory,
                 // isTermAndPrivacy: data.signTermsAndCondition
+                userType: "Enterprise",
             };
 
             // Make the POST request
@@ -154,36 +154,36 @@ const EnterpriseSignup = () => {
         }
     };
 
-    const onSuccess = async (codeResponse) => {
-        try {
-            setSigninLoading(true);
-            const { access_token } = codeResponse;
-            console.log("access_token", access_token);
-            console.log("codeResponse", codeResponse);
+    // const onSuccess = async (codeResponse) => {
+    //     try {
+    //         setSigninLoading(true);
+    //         const { access_token } = codeResponse;
+    //         console.log("access_token", access_token);
+    //         console.log("codeResponse", codeResponse);
 
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
-                { access_token }
-            );
+    //         const response = await axios.post(
+    //             `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+    //             { access_token }
+    //         );
 
-            if (response.status === 200) {
-                navigate("/login");
-            } else {
-                setSigninError(true);
-                setSigninErrorMsg("Authentication failed.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            setSigninError(true);
-            setSigninErrorMsg("Something went wrong.");
-        } finally {
-            setSigninLoading(false);
-        }
-    };
+    //         if (response.status === 200) {
+    //             navigate("/login");
+    //         } else {
+    //             setSigninError(true);
+    //             setSigninErrorMsg("Authentication failed.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //         setSigninError(true);
+    //         setSigninErrorMsg("Something went wrong.");
+    //     } finally {
+    //         setSigninLoading(false);
+    //     }
+    // };
 
-    const login = useGoogleLogin({
-        onSuccess,
-    });
+    // const login = useGoogleLogin({
+    //     onSuccess,
+    // });
 
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
@@ -488,7 +488,7 @@ const EnterpriseSignup = () => {
                                         sx={{ marginBottom: "10px" }}
                                         className='EnterpriseCategorySelect'
                                     >
-                                        <MenuItem value="">
+                                        <MenuItem value="" disabled>
                                             <ListItemIcon>
                                                 <CategoryIcon />
                                             </ListItemIcon>
@@ -559,8 +559,8 @@ const EnterpriseSignup = () => {
                             >
                                 {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
                             </Button>
-                            <Divider sx={{ marginY: "28px" }}>or</Divider>
-                            <Button
+                            {/* <Divider sx={{ marginY: "28px" }}>or</Divider> */}
+                            {/* <Button
                                 variant="outlined"
                                 sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
                                 fullWidth
@@ -568,7 +568,7 @@ const EnterpriseSignup = () => {
                                 onClick={() => login()}
                             >
                                 <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
-                            </Button>
+                            </Button> */}
                         </Box>
                         <Box className="text-center" sx={{ marginTop: "25px" }}>
                             <Typography sx={{ textAlign: "center", color: "#72a9de", }} variant="subtitle1" display="block" gutterBottom>

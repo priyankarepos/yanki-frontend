@@ -8,7 +8,11 @@
 
   .enterpriseFormBox .css-p1nw1t-MuiInputBase-input-MuiOutlinedInput-input{
     color: #6fa8dd !important;
-  }  
+  } 
+  
+  .enterprise-profile .css-1618muj-MuiInputBase-root-MuiOutlinedInput-root {
+    color: rgb(111 168 221) !important;
+  } 
 
   .enterpriseFormBox ::placeholder {
     color: #6fa8dd; /* Change this to the color you want */
@@ -29,6 +33,17 @@
 
 .enterpriseSidebar .css-2ug087-MuiPaper-root-MuiDrawer-paper{
     background-color: #13538b;
+}
+
+.EnterpriseInputFieldColor .MuiInputBase-root{
+  color: #72a9de;
+  border: 1px solid #72a9de;
+  border-radius: 8px;
+}
+
+.css-1618muj-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline{
+  border-color: transparent !important;
+  position: absolute;
 }
 
 

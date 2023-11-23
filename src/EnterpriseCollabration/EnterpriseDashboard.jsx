@@ -109,8 +109,8 @@ const EnterpriseDashboard = () => {
                             alt="Yanki logo"
                         />
                     </Link> */}
-                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0",  }}>
-                        { <Typography variant="h6">Networking Interface</Typography>}
+                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0", }}>
+                        {<Typography variant="h6">Networking Interface</Typography>}
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -187,7 +187,7 @@ const EnterpriseDashboard = () => {
                         >
                             <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
                                 <ListItemIcon>
-                                    <BusinessIcon style={{ color:'#fff',}}/>
+                                    <BusinessIcon style={{ color: '#fff', }} />
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Profile" />
                             </ListItem>
@@ -199,7 +199,7 @@ const EnterpriseDashboard = () => {
                         >
                             <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
                                 <ListItemIcon>
-                                    <AccountBalanceIcon style={{ color:'#fff',}} />
+                                    <AccountBalanceIcon style={{ color: '#fff', }} />
                                 </ListItemIcon>
                                 <ListItemText primary="Departments" />
                             </ListItem>

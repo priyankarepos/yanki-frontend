@@ -15,6 +15,22 @@ const EnterprisePendingStatusPage = () => {
     navigate("/", { replace: true });
   };
 
+  const yankiUser = window.localStorage.getItem(
+    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+  );
+
+  let parsedUserObject;
+
+  try {
+    if (yankiUser) {
+      parsedUserObject = JSON.parse(yankiUser);
+    }
+  } catch (e) {
+    parsedUserObject = undefined;
+  }
+
+  const userStatus = parsedUserObject?.userObject?.status || "";
+
   return (
     <>
       <Container maxWidth="xl">
@@ -34,17 +50,39 @@ const EnterprisePendingStatusPage = () => {
                 style={{ width: "40%" }}
               />
             </Box>
-            <Typography
-              variant="h5"
-              component="h1"
-              sx={{ marginBottom: "54px", textAlign: "center", fontSize: "22px" }}
-            >
-              Your request to be authorized as a Yanki enterprise is being reviewed, expect an email shortly. In the meantime, you can use Yanki to explore its features with the same access
-            </Typography>
-            <Box style={{width: "300px", margin: "auto",}}>
-            <Button variant="contained" onClick={onGoToHome} style={{width: "300px", margin: "auto"}} >
-              Go to home
-            </Button>
+            {userStatus === "Pending" && (
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  marginBottom: "54px",
+                  textAlign: "center",
+                  fontSize: "22px",
+                }}
+              >
+                Your request to be authorized as a Yanki enterprise is being reviewed, expect an email shortly. In the meantime, you can use Yanki to explore its features with the same access
+              </Typography>
+            )}
+
+            {userStatus === "Rejected" && (
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  marginBottom: "54px",
+                  marginTop: "-55px",
+                  textAlign: "center",
+                  fontSize: "22px",
+                }}
+              >
+                Request not approved <br />
+                Thank You
+              </Typography>
+            )}
+            <Box style={{ width: "300px", margin: "auto", }}>
+              <Button variant="contained" onClick={onGoToHome} style={{ width: "300px", margin: "auto" }} >
+                Go to home
+              </Button>
             </Box>
           </Box>
         </Box>
