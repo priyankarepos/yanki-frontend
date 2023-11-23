@@ -62,8 +62,8 @@ const DemoEnterpriseChat = ({ answer }) => {
             </Paper> */}
             <Paper elevation={3} style={{ backgroundColor: "#002d55", marginBottom: "10px", padding: "10px", paddingLeft: "20px", paddingRight: "20px",}}>
             <div style={{ padding: '0px' }}>
-                    <List style={{ display: 'flex', alignItems: 'center' }}>
-                        <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff" }} />
+                    <List style={{ display: 'flex' }}>
+                        <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff", marginTop: "5px", }} />
                         <Typography style={{ fontSize: "16px", color: "#fff" }}>
                             {answer.message}
                         </Typography>
