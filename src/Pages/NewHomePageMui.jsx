@@ -63,12 +63,10 @@ const NewHomePageMui = () => {
     const [drawerOpen, setDrawerOpen] = useState(true);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    console.log("isSubmitting", isSubmitting);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [queryAnswer, setQueryAnswer] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    console.log("searchQuery", searchQuery);
     const { userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
     const { themeMode } = useContext(ThemeModeContext);
     const [searchHistory, setSearchHistory] = useState([]);
@@ -228,6 +226,7 @@ const NewHomePageMui = () => {
                                     message: gptResponse.Message,
                                     torahAnytimeLectures: gptResponse.TorahAnytimeLectures,
                                     videoResult: gptResponse.VideoResult,
+                                    enterpriseSelections: gptResponse.EnterpriseSelections,
                                 }
                             }
                         };
