@@ -10,6 +10,7 @@ import { Context } from '../App';
 import {
   CircularProgress,
 } from '@mui/material';
+import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
 
 const styles = {
     tableContainer: {
@@ -84,6 +85,9 @@ const AdminEnterpriseCategory = () => {
   const [editCategoryId, setEditCategoryId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+const [confirmationText, setConfirmationText] = useState('');
 
   console.log("enterpriseCategories", enterpriseCategories);
 
@@ -114,15 +118,25 @@ const AdminEnterpriseCategory = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteCategory = async (id) => {
+  const handleDeleteCategory = (id) => {
+    // Open the confirmation dialog and store the selected category ID
+    setConfirmDialogOpen(true);
+    setSelectedCategoryId(id); // Use setSelectedCategoryId to store the selected category ID
+    setConfirmationText(`Are you sure you want to delete this category?`);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${id}`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
       );
 
       if (response.status === 200) {
-        const updatedCategories = enterpriseCategories.filter((category) => category.id !== id);
+        const updatedCategories = enterpriseCategories.filter((category) => category.id !== selectedCategoryId);
         setEnterpriseCategories(updatedCategories);
+        setConfirmDialogOpen(false);
+        setSnackbarMessage('Category deleted successfully');
+        setSnackbarOpen(true);
       } else {
         console.error('Failed to delete enterprise category');
         setSnackbarMessage('Failed to delete enterprise category');
@@ -286,6 +300,12 @@ const AdminEnterpriseCategory = () => {
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
+      />
+       <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={handleConfirmDelete}
+        confirmationText={confirmationText}
       />
     </Box>
   )

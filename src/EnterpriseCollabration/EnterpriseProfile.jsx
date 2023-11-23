@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText } from '@mui/material';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,6 +8,7 @@ import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
+import "./EnterpriseStyle.scss";
 
 const styles = {
   inputField: {
@@ -166,7 +167,6 @@ const EnterpriseProfile = () => {
       );
 
       console.log('Keyword Check Response:', response.data);
-      setSnackbarOpen(true);
 
       if (response.status === 200) {
         const keywordExists = response.data.exists;
@@ -176,28 +176,20 @@ const EnterpriseProfile = () => {
 
           if (keywordExists) {
             console.log('Keyword already exists:', tag);
-            setSnackbarMessage(`Keyword "${tag}" already exists`);
           } else {
             console.log('Keyword does not exist:', tag);
-            setSnackbarMessage(`Keyword "${tag}" does not exist`);
 
             setTags((prevTags) => [...prevTags, tag]);
           }
         } else {
           console.log('Keyword existence is undefined for:', tag);
-          setSnackbarMessage(`Keyword existence is undefined for "${tag}"`);
         }
       } else {
         console.error('Failed to check enterprise keyword');
-        setSnackbarMessage('Failed to check enterprise keyword');
       }
-
-      setSnackbarOpen(true);
       return response.data;
     } catch (error) {
       console.error('Error checking enterprise keyword:', error);
-      setSnackbarMessage(`Error checking enterprise keyword: ${error.message}`);
-      setSnackbarOpen(true);
       return { isSuccess: false };
     }
   };
@@ -222,13 +214,10 @@ const EnterpriseProfile = () => {
             const uniqueTags = new Set([...prevTags, tag]);
             return [...uniqueTags];
           });
-
-          setSnackbarMessage(`Tag "${tag}" added successfully`);
         } else {
           setSnackbarMessage(`Tag "${tag}" is not available in this enterprise.`);
+          setSnackbarOpen(true);
         }
-
-        setSnackbarOpen(true);
       } else {
         console.error('Failed to check enterprise keyword');
         setSnackbarMessage('Failed to check enterprise keyword');
@@ -244,11 +233,7 @@ const EnterpriseProfile = () => {
   const handleRemoveTag = (tag) => {
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
-
     setTagCount((prevCount) => Math.max(0, prevCount - 1));
-
-    setSnackbarMessage('Tag removed successfully');
-    setSnackbarOpen(true);
   };
 
   useEffect(() => {
@@ -264,7 +249,7 @@ const EnterpriseProfile = () => {
         {
           enterpriseId: enterpriseDetails.enterpriseId,
           enterpriseName: formData.EnterpriseName,
-          categoryId: formData.EnterpriseCategories,
+          categoryId: selectedCategory,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl,
           enterpriseAddress: formData.EnterpriseAddress,
@@ -310,117 +295,153 @@ const EnterpriseProfile = () => {
         <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
           My Enterprise Profile
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise Name</InputLabel>
+            <InputLabel style={styles.label}>Enterprise Name<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
+              rules={{ required: "Enterprise name is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type enterprise name here"
-                  fullWidth
-                  error={!!errors['EnterpriseName']}
-                  helperText={errors['EnterpriseName'] ? errors['EnterpriseName'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Type enterprise name here"
+                    fullWidth
+                  // error={!!errors['EnterpriseName']}
+                  // helperText={errors['EnterpriseName'] ? errors['EnterpriseName'].message : ''}
+                  />
+                  {errors['EnterpriseName'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseName'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise point of contact</InputLabel>
+            <InputLabel style={styles.label}>Enterprise point of contact<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterprisePointOfContact"
+              rules={{ required: "Enterprise Point Of Contact is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={styles.inputField}
-                  {...field}
-                  type="outlined"
-                  placeholder="Enterprise point of contact name"
-                  fullWidth
-                  error={!!errors['EnterprisePointOfContact']}
-                  helperText={errors['EnterprisePointOfContact'] ? errors['EnterprisePointOfContact'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={styles.inputField}
+                    {...field}
+                    type="outlined"
+                    placeholder="Enterprise point of contact name"
+                    fullWidth
+                  // error={!!errors['EnterprisePointOfContact']}
+                  // helperText={errors['EnterprisePointOfContact'] ? errors['EnterprisePointOfContact'].message : ''}
+                  />
+                  {errors['EnterprisePointOfContact'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['EnterprisePointOfContact'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise address</InputLabel>
+            <InputLabel style={styles.label}>Enterprise address<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseAddress"
+              rules={{ required: "Enterprise Address is required" }}
               render={({ field }) => (
-                <TextareaAutosize
-                  style={{
-                    backgroundColor: '#eaf5ff',
-                    border: '1px solid #6fa8dd',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
-                    color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                  }}
-                  {...field}
-                  placeholder="Type enterprise address here"
-                  onFocus={(e) => e.target.style.outline = 'none'}
-                  onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
-                />
+                <div>
+                  <TextareaAutosize
+                    style={{
+                      backgroundColor: '#eaf5ff',
+                      border: '1px solid #6fa8dd',
+                      borderRadius: '8px',
+                      marginBottom: '16px',
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
+                    }}
+                    {...field}
+                    placeholder="Type enterprise address here"
+                    onFocus={(e) => e.target.style.outline = 'none'}
+                    onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
+                  />
+                  {errors['EnterpriseAddress'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseAddress'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Email Address</InputLabel>
+            <InputLabel style={styles.label}>Email Address<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
+              rules={{ required: "Email address is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type email address here"
-                  fullWidth
-                  error={!!errors['EmailAddress']}
-                  helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Type email address here"
+                    fullWidth
+                  // error={!!errors['EmailAddress']}
+                  // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
+                  />
+                  {errors['EmailAddress'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Phone Number</InputLabel>
+            <InputLabel style={styles.label}>Phone Number<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="PhoneNumber"
+              rules={{ required: "Phone Number is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type phone number here"
-                  fullWidth
-                  error={!!errors['PhoneNumber']}
-                  helperText={errors['PhoneNumber'] ? errors['PhoneNumber'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Type phone number here"
+                    fullWidth
+                  // error={!!errors['PhoneNumber']}
+                  // helperText={errors['PhoneNumber'] ? errors['PhoneNumber'].message : ''}
+                  />
+                  {errors['PhoneNumber'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['PhoneNumber'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Website URL</InputLabel>
+            <InputLabel style={styles.label}>Website URL<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
+              rules={{ required: "Website URL is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type website URL here"
-                  fullWidth
-                  error={!!errors['WebsiteUrl']}
-                  helperText={errors['WebsiteUrl'] ? errors['WebsiteUrl'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Type website URL here"
+                    fullWidth
+                  // error={!!errors['WebsiteUrl']}
+                  // helperText={errors['WebsiteUrl'] ? errors['WebsiteUrl'].message : ''}
+                  />
+                  {errors['WebsiteUrl'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['WebsiteUrl'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
@@ -480,122 +501,165 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise Description</InputLabel>
+            <InputLabel style={styles.label}>Enterprise Description<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
-              name="EnterpriseDescription"  // Corrected name
+              name="EnterpriseDescription"
+              rules={{ required: "Enterprise Description is required" }}  // Corrected name
               render={({ field }) => (
-                <TextareaAutosize
-                  style={{
-                    backgroundColor: '#eaf5ff',
-                    border: '1px solid #6fa8dd',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
-                    color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                  }}
-                  {...field}
-                  placeholder="Type enterprise description here"
-                  onFocus={(e) => e.target.style.outline = 'none'}
-                  onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
-                />
+                <div>
+                  <TextareaAutosize
+                    style={{
+                      backgroundColor: '#eaf5ff',
+                      border: '1px solid #6fa8dd',
+                      borderRadius: '8px',
+                      marginBottom: '16px',
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
+                    }}
+                    {...field}
+                    placeholder="Type enterprise description here"
+                    onFocus={(e) => e.target.style.outline = 'none'}
+                    onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
+                  />
+                  {errors['EnterpriseDescription'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseDescription'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
 
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise Categories</InputLabel>
-            <FormControl fullWidth>
-              <Select
-                value={selectedCategory}
-                onChange={(event) => setSelectedCategory(event.target.value)}
-                displayEmpty
-                sx={{ ...styles.inputField }}
-                className='EnterpriseCategorySelect'
-              >
-                <MenuItem value="">
-                  {enterpriseDetails.categoryName}
-                </MenuItem>
-                {enterpriseCategories
-                  .filter(category => category.id !== enterpriseDetails.categoryId)
-                  .map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
+            <InputLabel style={styles.label}>Enterprise Categories<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
+              <Controller
+                control={control}
+                name="EnterpriseCategories"
+                rules={{ required: 'Please select an enterprise category' }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    value={selectedCategory}
+                    onChange={(event) => setSelectedCategory(event.target.value)}
+                    displayEmpty
+                    sx={{ ...styles.inputField }}
+                    className='EnterpriseCategorySelect'
+                  >
+                    <MenuItem value="" disabled>
+                      {enterpriseDetails.categoryName}
                     </MenuItem>
-                  ))}
-              </Select>
+                    {enterpriseCategories
+                      .filter((category) => category.id !== enterpriseDetails.categoryId)
+                      .map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              {errors['EnterpriseCategories'] && (
+                <FormHelperText style={{ color: 'red' }}>
+                  {errors['EnterpriseCategories'].message}
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Opening Time</InputLabel>
+            <InputLabel style={styles.label}>Business Hours Opening Time<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursOpeningTime"
+              rules={{ required: "Business Hours Opening Time is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  // type="outlined"
-                  type="time"
-                  placeholder="Type business hours opening time here"
-                  fullWidth
-                  error={!!errors['BusinessHoursOpeningTime']}
-                  helperText={errors['BusinessHoursOpeningTime'] ? errors['BusinessHoursOpeningTime'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    // type="outlined"
+                    type="time"
+                    placeholder="Office opening time"
+                    fullWidth
+                  // error={!!errors['BusinessHoursOpeningTime']}
+                  // helperText={errors['BusinessHoursOpeningTime'] ? errors['BusinessHoursOpeningTime'].message : ''}
+                  />
+                  {errors['BusinessHoursOpeningTime'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Closing Time</InputLabel>
+            <InputLabel style={styles.label}>Business Hours Closing Time<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursClosingTime"
+              rules={{ required: "Business Hours Closing Time is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="time"
-                  placeholder="Type business hours closing time here"
-                  fullWidth
-                  error={!!errors['BusinessHoursClosingTime']}
-                  helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="time"
+                    placeholder="Office closing time"
+                    fullWidth
+                  // error={!!errors['BusinessHoursClosingTime']}
+                  // helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
+                  />
+                  {errors['BusinessHoursClosingTime'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['BusinessHoursClosingTime'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Founded Year</InputLabel>
+            <InputLabel style={styles.label}>Founded Year<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="FoundedYear"
+              rules={{ required: "Founded Year is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type founded year here"
-                  fullWidth
-                  error={!!errors['FoundedYear']}
-                  helperText={errors['FoundedYear'] ? errors['FoundedYear'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Type founded year here"
+                    fullWidth
+                  // error={!!errors['FoundedYear']}
+                  // helperText={errors['FoundedYear'] ? errors['FoundedYear'].message : ''}
+                  />
+                  {errors['FoundedYear'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['FoundedYear'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Religious Certifications</InputLabel>
+            <InputLabel style={styles.label}>Religious Certifications<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="ReligiousCertifications"
+              rules={{ required: "Religious Certifications is required" }}
               render={({ field }) => (
-                <TextField
-                  sx={{ ...styles.inputField }}
-                  {...field}
-                  type="outlined"
-                  placeholder="Type religious certifications here"
-                  fullWidth
-                  error={!!errors['ReligiousCertifications']}
-                  helperText={errors['ReligiousCertifications'] ? errors['ReligiousCertifications'].message : ''}
-                />
+                <div>
+                  <TextField
+                    sx={{ ...styles.inputField }}
+                    {...field}
+                    type="outlined"
+                    placeholder="Kosher or any other"
+                    fullWidth
+                  // error={!!errors['ReligiousCertifications']}
+                  // helperText={errors['ReligiousCertifications'] ? errors['ReligiousCertifications'].message : ''}
+                  />
+                  {errors['ReligiousCertifications'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['ReligiousCertifications'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
           </Grid>
@@ -624,7 +688,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords</InputLabel>
+            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseIdentificationKeywords"
@@ -634,6 +698,7 @@ const EnterpriseProfile = () => {
                     value={tags}
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
+                    placeholder="Type Enterprise identification keywords here"
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -663,7 +728,7 @@ const EnterpriseProfile = () => {
                     {tags.map((tag, index) => (
                       <div key={`${tag}-${index}`} style={{
                         ...styles.tag,
-                        backgroundColor: tag === tagInput && !isTagAvailable ? '#ff7070' : '#6fa8dd',
+                        backgroundColor: tag === tagInput ? '#ff7070' : '#6fa8dd',
                       }}>
                         <span style={styles.tagText}>{tag}</span>
                         <span
@@ -675,6 +740,11 @@ const EnterpriseProfile = () => {
                       </div>
                     ))}
                   </div>
+                  {tags.length === 0 && (
+                    <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                      At least one keyword is required
+                    </FormHelperText>
+                  )}
                 </div>
               )}
             />
@@ -698,7 +768,7 @@ const EnterpriseProfile = () => {
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
-    </Box>
+    </Box >
   );
 };
 

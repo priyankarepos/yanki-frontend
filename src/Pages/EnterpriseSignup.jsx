@@ -130,7 +130,8 @@ const EnterpriseSignup = () => {
                 contactPersonName: data.PointOfContact,
                 website: data.Website,
                 categoryId: selectedCategory,
-                isTermAndPrivacy: data.signTermsAndCondition
+                isTermAndPrivacy: data.signTermsAndCondition,
+                userType: "Enterprise",
             };
 
             // Make the POST request
@@ -485,7 +486,7 @@ const EnterpriseSignup = () => {
                                         sx={{ marginBottom: "10px" }}
                                         className='EnterpriseCategorySelect'
                                     >
-                                        <MenuItem value="">
+                                        <MenuItem value="" disabled>
                                             <ListItemIcon>
                                                 <CategoryIcon />
                                             </ListItemIcon>
@@ -548,8 +549,8 @@ const EnterpriseSignup = () => {
                             >
                                 {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
                             </Button>
-                            <Divider sx={{ marginY: "28px" }}>or</Divider>
-                            <Button
+                            {/* <Divider sx={{ marginY: "28px" }}>or</Divider> */}
+                            {/* <Button
                                 variant="outlined"
                                 sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
                                 fullWidth
@@ -557,7 +558,7 @@ const EnterpriseSignup = () => {
                                 onClick={() => login()}
                             >
                                 <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
-                            </Button>
+                            </Button> */}
                         </Box>
                         <Box className="text-center" sx={{ marginTop: "25px" }}>
                             <Typography sx={{ textAlign: "center", color: "#72a9de", }} variant="subtitle1" display="block" gutterBottom>

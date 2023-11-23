@@ -82,7 +82,8 @@ const SigninPage = () => {
         password: data.signInPassword,
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
-        isTermAndPrivacy: data.signTermsAndCondition
+        isTermAndPrivacy: data.signTermsAndCondition,
+        userType: "User"
       };
 
       const response = await axios.post(

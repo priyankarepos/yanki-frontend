@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import { Context } from '../App';
@@ -10,7 +10,7 @@ import axios from "axios";
 import {
     Pagination,
     CircularProgress,
-  } from '@mui/material';
+} from '@mui/material';
 
 const styles = {
     tableContainer: {
@@ -41,6 +41,10 @@ const styles = {
         marginLeft: '0',
         transition: 'margin-left 0.3s',
     },
+    label: {
+        color: '#8bbae5',
+        marginBottom: '8px',
+    },
 };
 
 const AdminEnterpriseRequest = () => {
@@ -51,9 +55,11 @@ const AdminEnterpriseRequest = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    console.log("enterpriseCategories", enterpriseCategories);
-    console.log("enterpriseRequests", enterpriseRequests);
+    const [isApproving, setIsApproving] = useState(false);
+    const [isRejecting, setIsRejecting] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pageSize, setPageSize] = useState(10); 
+    const [totalPages, setTotalPages] = useState(1);
 
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
@@ -87,19 +93,21 @@ const AdminEnterpriseRequest = () => {
                     console.error("Please select an enterprise category");
                     return;
                 }
-    
+
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
                     {
                         params: {
                             categoryId: selectedCategory,
-                            pageNumber: 1,
+                            pageNumber: pageNumber,
+                            pageSize: pageSize,
                         },
                     }
                 );
-    
+
                 if (response.status === 200) {
                     setEnterpriseRequests(response.data);
+                    setTotalPages(Math.ceil(response.data.totalCount / pageSize));
                 } else {
                     console.error("Failed to fetch enterprise requests");
                 }
@@ -107,53 +115,73 @@ const AdminEnterpriseRequest = () => {
                 console.error("Error:", error);
             }
         };
-    
+
 
         fetchEnterpriseCategories();
         fetchEnterpriseRequests();
-    }, [selectedCategory]);
+    }, [selectedCategory, pageNumber, pageSize]);
+
+    const handlePageChange = (event, newPage) => {
+        setPageNumber(newPage);
+    };
+
+    const handlePageSizeChange = (event) => {
+        setPageSize(event.target.value);
+        setPageNumber(1); // Reset to the first page when changing page size
+    };
 
     const handleApprove = async (enterpriseId, userId, enterpriseName) => {
-        console.log("enterpriseId", enterpriseId);
         try {
-            setIsSubmitting(true);
+            setIsApproving(true);
             const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
             console.log('Request URL:', url);
 
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                setIsSubmitting(false);
+                // Update the status to 'Approved' in the local state
+                const updatedRequests = enterpriseRequests.data.map((row) =>
+                    row.enterpriseId === enterpriseId ? { ...row, status: 'Approved' } : row
+                );
+                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+
+                setIsApproving(false);
                 openSnackbar(`Enterprise ${enterpriseName} approved successfully`, 'success');
             } else {
                 openSnackbar('Failed to approve enterprise request', 'error');
             }
         } catch (error) {
-            setIsSubmitting(false);
+            setIsApproving(false);
             console.error("Error:", error);
         }
     };
 
     const handleReject = async (enterpriseId, userId, enterpriseName) => {
-        console.log("enterpriseId", enterpriseId);
         try {
-            setIsSubmitting(true);
+            setIsRejecting(true);
             const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
             console.log('Request URL:', url);
 
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                setIsSubmitting(false);
+                // Update the status to 'Rejected' in the local state
+                const updatedRequests = enterpriseRequests.data.map((row) =>
+                    row.enterpriseId === enterpriseId ? { ...row, status: 'Rejected' } : row
+                );
+                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+
+                setIsRejecting(false);
                 openSnackbar(`Enterprise ${enterpriseName} rejected successfully`, 'success');
             } else {
                 openSnackbar('Failed to reject enterprise request', 'error');
             }
         } catch (error) {
-            setIsSubmitting(false);
+            setIsRejecting(false);
             console.error("Error:", error);
         }
     };
+
 
 
     const contentMargin = drawerOpen ? '0' : '0';
@@ -169,7 +197,7 @@ const AdminEnterpriseRequest = () => {
                     message={snackbarMessage}
                     style={{
                         backgroundColor: snackbarSeverity === 'success' ? '#2862953' : '#286295',
-                      }}
+                    }}
                 />
             </Snackbar>
             <Box sx={{ width: drawerOpen ? '270px' : "0" }}><AdminDashboard /></Box>
@@ -177,8 +205,9 @@ const AdminEnterpriseRequest = () => {
                 <Box style={{ ...styles.content, marginLeft: contentMargin }}>
                     <Typography variant="h6" sx={{ pb: 2 }}>Enterprise Request</Typography>
                     <Box sx={{ marginBottom: "25px", }}>
+                        <InputLabel style={styles.label}>Select Category</InputLabel>
                         <FormControl fullWidth sx={{
-                            width: { xs: '100%', md: '30%' },
+                            width: { xs: '100%', md: '100%' },
                         }}>
                             <Select
                                 value={selectedCategory}
@@ -233,20 +262,20 @@ const AdminEnterpriseRequest = () => {
                                                     color="primary"
                                                     size="small"
                                                     style={styles.approveButton}
-                                                    disabled={isSubmitting}
+                                                    disabled={isApproving || row.status === 'Approved' || row.status === 'Rejected'}
                                                     onClick={() => handleApprove(row.enterpriseId, row.userId, row.enterpriseName)}
                                                 >
-                                                    {isSubmitting ? <CircularProgress size={24} /> : 'Approve'}
+                                                    {isApproving ? <CircularProgress size={24} /> : 'Approve'}
                                                 </Button>
                                                 <Button
                                                     variant="contained"
                                                     color="secondary"
                                                     size="small"
                                                     style={styles.approveButton}
-                                                    disabled={isSubmitting}
+                                                    disabled={isRejecting || row.status === 'Approved' || row.status === 'Rejected'}
                                                     onClick={() => handleReject(row.enterpriseId, row.userId, row.enterpriseName)}
                                                 >
-                                                    {isSubmitting ? <CircularProgress size={24} /> : 'Reject'}
+                                                    {isRejecting ? <CircularProgress size={24} /> : 'Reject'}
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
@@ -261,6 +290,15 @@ const AdminEnterpriseRequest = () => {
                             </TableBody>
 
                         </Table>
+                        {totalPages > 1 && (
+                            <Pagination
+                                count={totalPages}
+                                page={pageNumber}
+                                onChange={handlePageChange}
+                                color="primary"
+                                style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}
+                            />
+                        )}
                     </TableContainer>
                 </Box>
             </Box>
