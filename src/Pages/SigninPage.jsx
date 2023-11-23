@@ -66,7 +66,7 @@ const SigninPage = () => {
       signInEmail: "",
       signInPhone: "",
       signInPassword: "",
-      signTermsAndCondition: "",
+      // signTermsAndCondition: "",
     },
   });
 
@@ -82,7 +82,7 @@ const SigninPage = () => {
         password: data.signInPassword,
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
-        isTermAndPrivacy: data.signTermsAndCondition,
+        // isTermAndPrivacy: data.signTermsAndCondition
         userType: "User"
       };
 
@@ -317,7 +317,7 @@ const SigninPage = () => {
                     type: showPassword ? "text" : "password",
                   }}
                   fullWidth
-                  sx={{ marginBottom: "14px" }}
+                  sx={{ marginBottom: "25px" }}
                   error={!!errors["signInPassword"]}
                   helperText={
                     errors["signInPassword"]
@@ -333,8 +333,8 @@ const SigninPage = () => {
                 {signinErrorMsg}
               </Alert>
             )}
-            <Box sx={{ textAlign: "left", marginTop: "0px", marginBottom: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-              <Controller
+            <Box sx={{ textAlign: "left", marginTop: "0px", marginBottom: "25px", color: !themeMode ? "#fff" : "#72a9de", }}>
+              {/* <Controller
                 control={control}
                 name="signTermsAndCondition"
                 rules={{ required: "You must accept the terms and conditions." }}
@@ -356,7 +356,15 @@ const SigninPage = () => {
                     )}
                   </>
                 )}
-              />
+              /> */}
+              <Typography style={{ color: "#fff" }}>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#fff", fontWeight: "600", }}  component={LinkBehavior}>
+                Terms of Use
+              </Link> and acknowledge the <Link
+                to="/privacy-policy"
+                style={{ color: "#fff", fontWeight: "600", }}  component={LinkBehavior}
+              >
+                  Privacy Policy
+                </Link></Typography>
             </Box>
             <Button
               variant="contained"
