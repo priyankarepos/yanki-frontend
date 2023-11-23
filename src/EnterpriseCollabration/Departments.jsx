@@ -65,7 +65,7 @@ const styles = {
 const Departments = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
-  const [isTagAvailable, setIsTagAvailable] = useState(true);
+  // const [isTagAvailable, setIsTagAvailable] = useState(true);
   const { drawerOpen } = useContext(Context);
   const [selectedDepartmentData, setSelectedDepartmentData] = useState({});
   const [departmentID, setDepartmentID] = useState(null);
@@ -76,7 +76,7 @@ const Departments = () => {
   const [tagCount, setTagCount] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedDepartmentIndex, setSelectedDepartmentIndex] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
+  // const [submitted, setSubmitted] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
 
   const {
@@ -142,7 +142,7 @@ const Departments = () => {
       if (response && response.isSuccess) {
         setTagCount(tagCount + 1);
 
-        setIsTagAvailable(response.isAvailable);
+        // setIsTagAvailable(response.isAvailable);
 
         if (response.isAvailable) {
           setTags((prevTags) => {
@@ -353,7 +353,7 @@ const Departments = () => {
         setValue('EmailAddress', '');
         setValue('DepartmentDescription', '');
         setValue('DepartmentIdentificationKeywords', []);
-        setSubmitted(false);
+        // setSubmitted(false);
       } else {
         console.error('API error:', response.statusText);
         setSnackbarMessage('API error:', response.statusTex);

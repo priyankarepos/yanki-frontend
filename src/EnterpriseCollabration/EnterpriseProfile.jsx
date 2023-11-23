@@ -62,7 +62,7 @@ const EnterpriseProfile = () => {
   const [tagCount, setTagCount] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [isTagAvailable, setIsTagAvailable] = useState(true);
+  // const [isTagAvailable, setIsTagAvailable] = useState(true);
 
 
   useEffect(() => {
@@ -207,7 +207,7 @@ const EnterpriseProfile = () => {
       if (response && response.isSuccess) {
         setTagCount(tagCount + 1);
 
-        setIsTagAvailable(response.isAvailable);
+        // setIsTagAvailable(response.isAvailable);
 
         if (response.isAvailable) {
           setTags((prevTags) => {
@@ -249,7 +249,7 @@ const EnterpriseProfile = () => {
         {
           enterpriseId: enterpriseDetails.enterpriseId,
           enterpriseName: formData.EnterpriseName,
-          categoryId: selectedCategory,
+          categoryId: selectedCategory||formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl,
           enterpriseAddress: formData.EnterpriseAddress,

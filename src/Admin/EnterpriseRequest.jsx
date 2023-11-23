@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import { Context } from '../App';
 import AdminDashboard from './AdminDashboard';
-import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
+import { FormControl, Select, MenuItem } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import SnackbarContent from '@mui/material/SnackbarContent';
 import axios from "axios";
@@ -58,7 +58,7 @@ const AdminEnterpriseRequest = () => {
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
-    const [pageSize, setPageSize] = useState(10); 
+    // const [pageSize, setPageSize] = useState(10); 
     const [totalPages, setTotalPages] = useState(1);
 
     const openSnackbar = (message, severity) => {
@@ -100,14 +100,14 @@ const AdminEnterpriseRequest = () => {
                         params: {
                             categoryId: selectedCategory,
                             pageNumber: pageNumber,
-                            pageSize: pageSize,
+                            pageSize: 10,
                         },
                     }
                 );
 
                 if (response.status === 200) {
                     setEnterpriseRequests(response.data);
-                    setTotalPages(Math.ceil(response.data.totalCount / pageSize));
+                    setTotalPages(Math.ceil(response.data.totalCount / 10));
                 } else {
                     console.error("Failed to fetch enterprise requests");
                 }
@@ -119,15 +119,10 @@ const AdminEnterpriseRequest = () => {
 
         fetchEnterpriseCategories();
         fetchEnterpriseRequests();
-    }, [selectedCategory, pageNumber, pageSize]);
+    }, [selectedCategory, pageNumber]);
 
     const handlePageChange = (event, newPage) => {
         setPageNumber(newPage);
-    };
-
-    const handlePageSizeChange = (event) => {
-        setPageSize(event.target.value);
-        setPageNumber(1); // Reset to the first page when changing page size
     };
 
     const handleApprove = async (enterpriseId, userId, enterpriseName) => {
