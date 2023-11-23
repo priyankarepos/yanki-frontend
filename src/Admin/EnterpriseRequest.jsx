@@ -11,6 +11,7 @@ import {
     Pagination,
     CircularProgress,
 } from '@mui/material';
+import "./AdminStyle.css"
 
 const styles = {
     tableContainer: {
@@ -55,11 +56,12 @@ const AdminEnterpriseRequest = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [isApproving, setIsApproving] = useState(false);
-    const [isRejecting, setIsRejecting] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     // const [pageSize, setPageSize] = useState(10); 
     const [totalPages, setTotalPages] = useState(1);
+    const [loadingRows, setLoadingRows] = useState([]);
+    const [isApproving, setIsApproving] = useState(false);
+    const [isRejecting, setIsRejecting] = useState(false);
 
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
@@ -127,53 +129,53 @@ const AdminEnterpriseRequest = () => {
 
     const handleApprove = async (enterpriseId, userId, enterpriseName) => {
         try {
-            setIsApproving(true);
-            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
-            console.log('Request URL:', url);
+            const updatedLoadingRows = [...loadingRows, enterpriseId];
+            setLoadingRows(updatedLoadingRows);
 
+            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                // Update the status to 'Approved' in the local state
                 const updatedRequests = enterpriseRequests.data.map((row) =>
                     row.enterpriseId === enterpriseId ? { ...row, status: 'Approved' } : row
                 );
                 setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
 
-                setIsApproving(false);
                 openSnackbar(`Enterprise ${enterpriseName} approved successfully`, 'success');
             } else {
                 openSnackbar('Failed to approve enterprise request', 'error');
             }
         } catch (error) {
-            setIsApproving(false);
             console.error("Error:", error);
+        } finally {
+            const updatedLoadingRows = loadingRows.filter((rowId) => rowId !== enterpriseId);
+            setLoadingRows(updatedLoadingRows);
         }
     };
 
     const handleReject = async (enterpriseId, userId, enterpriseName) => {
         try {
-            setIsRejecting(true);
-            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
-            console.log('Request URL:', url);
+            const updatedLoadingRows = [...loadingRows, enterpriseId];
+            setLoadingRows(updatedLoadingRows);
 
+            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                // Update the status to 'Rejected' in the local state
                 const updatedRequests = enterpriseRequests.data.map((row) =>
                     row.enterpriseId === enterpriseId ? { ...row, status: 'Rejected' } : row
                 );
                 setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
 
-                setIsRejecting(false);
                 openSnackbar(`Enterprise ${enterpriseName} rejected successfully`, 'success');
             } else {
                 openSnackbar('Failed to reject enterprise request', 'error');
             }
         } catch (error) {
-            setIsRejecting(false);
             console.error("Error:", error);
+        } finally {
+            const updatedLoadingRows = loadingRows.filter((rowId) => rowId !== enterpriseId);
+            setLoadingRows(updatedLoadingRows);
         }
     };
 
@@ -257,20 +259,26 @@ const AdminEnterpriseRequest = () => {
                                                     color="primary"
                                                     size="small"
                                                     style={styles.approveButton}
-                                                    disabled={isApproving || row.status === 'Approved' || row.status === 'Rejected'}
-                                                    onClick={() => handleApprove(row.enterpriseId, row.userId, row.enterpriseName)}
-                                                >
-                                                    {isApproving ? <CircularProgress size={24} /> : 'Approve'}
+                                                    disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                    onClick={() => {
+                                                        setIsApproving(true);
+                                                        handleApprove(row.enterpriseId, row.userId, row.enterpriseName);
+                                                    }}                                                >
+                                                    {(isApproving && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Approve'}
                                                 </Button>
                                                 <Button
                                                     variant="contained"
                                                     color="secondary"
                                                     size="small"
                                                     style={styles.approveButton}
-                                                    disabled={isRejecting || row.status === 'Approved' || row.status === 'Rejected'}
-                                                    onClick={() => handleReject(row.enterpriseId, row.userId, row.enterpriseName)}
-                                                >
-                                                    {isRejecting ? <CircularProgress size={24} /> : 'Reject'}
+                                                    disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                    onClick={async () => {
+                                                        setIsRejecting(true);
+                                                        await handleReject(row.enterpriseId, row.userId, row.enterpriseName);
+                                                        setIsRejecting(false);
+                                                    }}                                               >
+                                                    {(isRejecting && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Reject'}
+
                                                 </Button>
                                             </TableCell>
                                         </TableRow>
