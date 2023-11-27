@@ -63,6 +63,9 @@ const AdminEnterpriseRequest = () => {
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
 
+    console.log("enterpriseRequests", enterpriseRequests);
+    console.log("selectedCategory", selectedCategory);
+
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
         setSnackbarSeverity(severity);
@@ -100,7 +103,7 @@ const AdminEnterpriseRequest = () => {
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
                     {
                         params: {
-                            categoryId: selectedCategory,
+                            categoryId: selectedCategory ? selectedCategory : "",
                             pageNumber: pageNumber,
                             pageSize: 10,
                         },
