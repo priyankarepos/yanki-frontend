@@ -65,6 +65,46 @@ const EnterpriseProfile = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   // const [isTagAvailable, setIsTagAvailable] = useState(true);
 
+  const {
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      EnterpriseName: enterpriseDetails.enterpriseName || "",
+      EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
+      EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
+      EmailAddress: enterpriseDetails.enterpriseEmail || "",
+      PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
+      WebsiteUrl: enterpriseDetails.website || "",
+      WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
+      InstagramUsername: enterpriseDetails.instagramUsername || "",
+      LinkedinUsername: enterpriseDetails.linkedInUsername || "",
+      EnterpriseDescription: enterpriseDetails.enterpriseDescription || "",
+      EnterpriseCategories: enterpriseDetails.categoryId || "",
+      BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
+      BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
+      FoundedYear: enterpriseDetails.foundedYear || "",
+      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
+      FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
+      EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
+    },
+    criteriaMode: 'all',
+    validate: (data) => {
+      return {
+        EnterpriseIdentificationKeywords:
+          data.EnterpriseIdentificationKeywords.length > 0 ||
+          'At least one keyword is required',
+      };
+      // Add more validation rules for other fields if needed
+    },
+  });
+
+  // const keywords = useWatch({ control, name: 'EnterpriseIdentificationKeywords', defaultValue: [] });
+
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
@@ -105,34 +145,6 @@ const EnterpriseProfile = () => {
 
     fetchEnterpriseDetails();
   }, []);
-
-  const {
-    control,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      EnterpriseName: enterpriseDetails.enterpriseName || "",
-      EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
-      EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
-      EmailAddress: enterpriseDetails.enterpriseEmail || "",
-      PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
-      WebsiteUrl: enterpriseDetails.website || "",
-      WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
-      InstagramUsername: enterpriseDetails.instagramUsername || "",
-      LinkedinUsername: enterpriseDetails.linkedInUsername || "",
-      EnterpriseDescription: enterpriseDetails.enterpriseDescription || "",
-      EnterpriseCategories: enterpriseDetails.categoryId || "",
-      BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
-      BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
-      FoundedYear: enterpriseDetails.foundedYear || "",
-      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
-      FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
-      EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
-    },
-  });
 
 
   useEffect(() => {
@@ -781,7 +793,7 @@ const EnterpriseProfile = () => {
                       </div>
                     ))}
                   </div>
-                  {tags.length === 0 && (
+                  {isSubmitted && !tags.length && (
                     <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
                       At least one keyword is required
                     </FormHelperText>
@@ -796,7 +808,7 @@ const EnterpriseProfile = () => {
               sx={{ marginY: { xs: "10px" } }}
               fullWidth
               style={{ backgroundColor: "#13538b", color: "lightblue" }}
-              onClick={updateEnterpriseDetails}
+              onClick={handleSubmit(updateEnterpriseDetails)}
             >
               Save
             </Button>
