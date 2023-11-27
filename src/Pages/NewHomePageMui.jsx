@@ -215,18 +215,19 @@ const NewHomePageMui = () => {
                 try {
                     const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
                         const gptResponse = JSON.parse(chatEntry.gptResponse);
+                        
                         return {
                             query: chatEntry.userQuery,
                             response: {
                                 chatId: chatEntry.chatId,
                                 response: {
-                                    contentResponse: gptResponse.ContentResponse,
-                                    godavenPrayerDetails: gptResponse.GodavenPrayerDetails,
-                                    isSucess: gptResponse.IsSucess,
-                                    message: gptResponse.Message,
-                                    torahAnytimeLectures: gptResponse.TorahAnytimeLectures,
-                                    videoResult: gptResponse.VideoResult,
-                                    enterpriseSelections: gptResponse.EnterpriseSelections,
+                                    contentResponse: gptResponse.contentResponse,
+                                    godavenPrayerDetails: gptResponse.godavenPrayerDetails,
+                                    isSucess: gptResponse.isSucess,
+                                    message: gptResponse.message,
+                                    torahAnytimeLectures: gptResponse.torahAnytimeLectures,
+                                    videoResult: gptResponse.videoResult,
+                                    enterpriseSelections: gptResponse.enterpriseSelections,
                                 }
                             }
                         };
