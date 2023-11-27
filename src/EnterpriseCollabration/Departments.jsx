@@ -329,6 +329,7 @@ const Departments = () => {
         setSelectedDepartmentData({});
         setDepartmentsData([]);
         setTags([])
+        setDepartmentID(null)
       } else {
         console.error(`Failed to update Department details. Status: ${response.status}`);
         setSnackbarMessage(`Failed to update Department details. Status: ${response.status}`);
