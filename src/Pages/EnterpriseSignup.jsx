@@ -24,7 +24,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
+import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery, FormHelperText } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
 // import Checkbox from "@mui/material/Checkbox";
@@ -450,7 +450,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} style={{paddingTop : !selectedCategory ? "0px" : "16px",}}>
                                 <Controller
                                     control={control}
                                     name="Website"
@@ -479,7 +479,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} className='EnterpriseError'>
+                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{paddingBottom: "0",}}>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
@@ -505,7 +505,11 @@ const EnterpriseSignup = () => {
                                     </Select>
                                 </FormControl>
 
-
+                                {!selectedCategory && (
+                                    <FormHelperText style={{ color: '#d32f2f', fontSize: '12px', marginY: 0, transform: 'translate(0px, -10px)', position: 'relative', }}>
+                                        Please select an enterprise category.
+                                    </FormHelperText>
+                                )}
 
                             </Grid>
 
@@ -518,14 +522,14 @@ const EnterpriseSignup = () => {
                             </Alert>
                         )}
                         <Box sx={{ textAlign: "center", marginTop: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color:"#13538b", fontWeight: "600",}}>
+                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#13538b", fontWeight: "600", }}>
                                 Terms of Use
                             </Link> and acknowledge the <Link
                                 to="/privacy-policy"
-                                style={{color:"#13538b", fontWeight: "600",}}
+                                style={{ color: "#13538b", fontWeight: "600", }}
                             >
-                                Privacy Policy
-                            </Link></Typography>
+                                    Privacy Policy
+                                </Link></Typography>
                             {/* <Controller
                                 control={control}
                                 name="signTermsAndCondition"

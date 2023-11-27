@@ -9,6 +9,7 @@ import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
+import { phoneRegex } from '../Utils/validations/validation';
 
 const styles = {
   inputField: {
@@ -64,6 +65,46 @@ const EnterpriseProfile = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   // const [isTagAvailable, setIsTagAvailable] = useState(true);
 
+  const {
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors, isSubmitted },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      EnterpriseName: enterpriseDetails.enterpriseName || "",
+      EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
+      EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
+      EmailAddress: enterpriseDetails.enterpriseEmail || "",
+      PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
+      WebsiteUrl: enterpriseDetails.website || "",
+      WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
+      InstagramUsername: enterpriseDetails.instagramUsername || "",
+      LinkedinUsername: enterpriseDetails.linkedInUsername || "",
+      EnterpriseDescription: enterpriseDetails.enterpriseDescription || "",
+      EnterpriseCategories: enterpriseDetails.categoryId || "",
+      BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
+      BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
+      FoundedYear: enterpriseDetails.foundedYear || "",
+      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
+      FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
+      EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
+    },
+    criteriaMode: 'all',
+    validate: (data) => {
+      return {
+        EnterpriseIdentificationKeywords:
+          data.EnterpriseIdentificationKeywords.length > 0 ||
+          'At least one keyword is required',
+      };
+      // Add more validation rules for other fields if needed
+    },
+  });
+
+  // const keywords = useWatch({ control, name: 'EnterpriseIdentificationKeywords', defaultValue: [] });
+
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
@@ -104,34 +145,6 @@ const EnterpriseProfile = () => {
 
     fetchEnterpriseDetails();
   }, []);
-
-  const {
-    control,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      EnterpriseName: enterpriseDetails.enterpriseName || "",
-      EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
-      EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
-      EmailAddress: enterpriseDetails.enterpriseEmail || "",
-      PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
-      WebsiteUrl: enterpriseDetails.website || "",
-      WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
-      InstagramUsername: enterpriseDetails.instagramUsername || "",
-      LinkedinUsername: enterpriseDetails.linkedInUsername || "",
-      EnterpriseDescription: enterpriseDetails.enterpriseDescription || "",
-      EnterpriseCategories: enterpriseDetails.categoryId || "",
-      BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
-      BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
-      FoundedYear: enterpriseDetails.foundedYear || "",
-      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
-      FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
-      EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
-    },
-  });
 
 
   useEffect(() => {
@@ -194,10 +207,12 @@ const EnterpriseProfile = () => {
     }
   };
 
+  console.log("=============================", errors);
+
   const handleAddTag = async (tag) => {
     try {
-      if (tagCount >= 10) {
-        setSnackbarMessage('You have reached the maximum limit of tags (10).');
+      if (tagCount >= 50) {
+        setSnackbarMessage('You have reached the maximum limit of tags (50).');
         setSnackbarOpen(true);
         return;
       }
@@ -240,6 +255,10 @@ const EnterpriseProfile = () => {
     setTagCount(tags.length);
   }, [tags]);
 
+  const departmentsData = JSON.parse(sessionStorage.getItem('departmentsData')) || [];
+
+  console.log("departmentsData", departmentsData);
+
   const updateEnterpriseDetails = async () => {
     try {
       const formData = getValues();
@@ -249,7 +268,7 @@ const EnterpriseProfile = () => {
         {
           enterpriseId: enterpriseDetails.enterpriseId,
           enterpriseName: formData.EnterpriseName,
-          categoryId: selectedCategory||formData.EnterpriseCategories,
+          categoryId: selectedCategory || formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl,
           enterpriseAddress: formData.EnterpriseAddress,
@@ -272,7 +291,11 @@ const EnterpriseProfile = () => {
 
       if (response.status === 200) {
         console.log('Enterprise details updated successfully');
-        setSnackbarMessage('Enterprise details updated successfully');
+        if (departmentsData.length === 0) {
+          setSnackbarMessage('Enterprise details updated successfully. You can now start adding departments');
+        } else {
+          setSnackbarMessage('Enterprise details updated successfully');
+        }
         setSnackbarOpen(true);
       } else {
         console.error('Failed to update enterprise details');
@@ -297,11 +320,21 @@ const EnterpriseProfile = () => {
         </Typography>
         <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise Name<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise Name<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
-              rules={{ required: "Enterprise name is required" }}
+              rules={{
+                required: "Enterprise name is required.",
+                minLength: {
+                  value: 3,
+                  message: "Enterprise name should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Enterprise name should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -321,11 +354,21 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise point of contact<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise point of contact<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterprisePointOfContact"
-              rules={{ required: "Enterprise Point Of Contact is required" }}
+              rules={{
+                required: "Enterprise Point Of Contact is required.",
+                minLength: {
+                  value: 3,
+                  message: "Enterprise Point Of Contact should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Enterprise Point Of Contact should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -345,7 +388,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise address<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseAddress"
@@ -374,7 +417,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Email Address<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
@@ -398,11 +441,20 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Phone Number<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Phone Number<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="PhoneNumber"
-              rules={{ required: "Phone Number is required" }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Phone number is required.",
+                },
+                pattern: {
+                  value: phoneRegex,
+                  message: "Invalid phone number format.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -422,7 +474,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Website URL<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Website URL<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
@@ -501,7 +553,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise Description<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseDescription"
@@ -531,7 +583,7 @@ const EnterpriseProfile = () => {
 
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise Categories<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise Categories<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
               <Controller
                 control={control}
@@ -567,7 +619,7 @@ const EnterpriseProfile = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Opening Time<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Business Hours Opening Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursOpeningTime"
@@ -592,7 +644,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Closing Time<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Business Hours Closing Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursClosingTime"
@@ -608,15 +660,15 @@ const EnterpriseProfile = () => {
                   // error={!!errors['BusinessHoursClosingTime']}
                   // helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
                   />
-                  {errors['BusinessHoursClosingTime'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['BusinessHoursClosingTime'].message}</FormHelperText>
+                  {errors.BusinessHoursClosingTime && (
+                    <FormHelperText style={{ color: 'red' }}>{errors.BusinessHoursClosingTime.message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Founded Year<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Founded Year<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="FoundedYear"
@@ -627,6 +679,7 @@ const EnterpriseProfile = () => {
                     sx={{ ...styles.inputField }}
                     {...field}
                     type="outlined"
+                    inputProps={{ maxLength: 4 }}
                     placeholder="Type founded year here"
                     fullWidth
                   // error={!!errors['FoundedYear']}
@@ -640,7 +693,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Religious Certifications<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Religious Certifications<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="ReligiousCertifications"
@@ -688,7 +741,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseIdentificationKeywords"
@@ -740,7 +793,7 @@ const EnterpriseProfile = () => {
                       </div>
                     ))}
                   </div>
-                  {tags.length === 0 && (
+                  {isSubmitted && !tags.length && (
                     <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
                       At least one keyword is required
                     </FormHelperText>
@@ -755,7 +808,7 @@ const EnterpriseProfile = () => {
               sx={{ marginY: { xs: "10px" } }}
               fullWidth
               style={{ backgroundColor: "#13538b", color: "lightblue" }}
-              onClick={updateEnterpriseDetails}
+              onClick={handleSubmit(updateEnterpriseDetails)}
             >
               Save
             </Button>

@@ -2,7 +2,7 @@ import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Table, S
 import React, { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard'
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import 'react-tagsinput/react-tagsinput.css';
 import TagsInput from 'react-tagsinput';
 import { Context } from '../App';
@@ -85,7 +85,7 @@ const Departments = () => {
     setValue,
     getValues,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -97,6 +97,9 @@ const Departments = () => {
     },
     criteriaMode: "all",
   });
+
+  const keywords = useWatch({ control, name: 'DepartmentIdentificationKeywords', defaultValue: [] });
+
 
   const checkEnterpriseKeyword = async (tag) => {
     try {
@@ -131,8 +134,8 @@ const Departments = () => {
 
   const handleAddTag = async (tag) => {
     try {
-      if (tagCount >= 10) {
-        setSnackbarMessage('You have reached the maximum limit of tags (10).');
+      if (tagCount >= 50) {
+        setSnackbarMessage('You have reached the maximum limit of tags (50).');
         setSnackbarOpen(true);
         return;
       }
@@ -163,10 +166,22 @@ const Departments = () => {
     }
   };
 
+  // const handleRemoveTag = (tag) => {
+  //   const updatedTags = tags.filter((t) => t !== tag);
+  //   setTags(updatedTags);
+  //   setTagCount((prevCount) => Math.max(0, prevCount - 1));
+  // };
+
   const handleRemoveTag = (tag) => {
+    if (tags.length === 1) {
+      setSnackbarMessage('At least one tag is required.');
+      setSnackbarOpen(true);
+      return;
+    }
+  
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
-    setTagCount((prevCount) => Math.max(0, prevCount - 1));
+    setTagCount(updatedTags.length);
   };
 
   useEffect(() => {
@@ -281,6 +296,11 @@ const Departments = () => {
 
   const handleSaveDepartment = async (data) => {
     const formData = getValues();
+    if (tags.length === 0) {
+      setSnackbarMessage('At least one tag is required.');
+      setSnackbarOpen(true);
+      return;
+    }
     try {
       const tagsAsString = tags.join(',');
       const payload = {
@@ -381,7 +401,7 @@ const Departments = () => {
         </Typography>
         <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Department<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="DepartmentName"
@@ -405,7 +425,7 @@ const Departments = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Name of representative<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Name of representative<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="NameOfRepresentative"
@@ -429,7 +449,7 @@ const Departments = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Email Address<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
@@ -482,7 +502,7 @@ const Departments = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{color:"red", fontSize:"18px", fontWeight:"600",}}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
               name="DepartmentIdentificationKeywords"
@@ -535,7 +555,7 @@ const Departments = () => {
                       </div>
                     ))}
                   </div>
-                  {tags.length === 0 && (
+                  {isSubmitted && keywords.length === 0 && tags.length === 0 && (
                     <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
                       At least one keyword is required
                     </FormHelperText>
@@ -549,7 +569,7 @@ const Departments = () => {
               variant="outlined"
               sx={{ marginY: { xs: "10px" }, width: "150px", }}
               color="primary"
-              onClick={departmentID !== null ? handleSaveDepartment : handleSubmit(onSubmit)}
+              onClick={departmentID !== null ? handleSubmit(handleSaveDepartment) : handleSubmit(onSubmit)}
               style={styles.modalButton}
             >
               {departmentID !== null ? "Save Changes" : "Save"}

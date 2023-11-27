@@ -529,7 +529,7 @@ const NewHomePageMui = () => {
                         marginX: "auto",
                         // margin: paperMargin,
                         padding: "20px",
-                        height: "100vh",
+                        height: "88vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
                         // position: "relative",

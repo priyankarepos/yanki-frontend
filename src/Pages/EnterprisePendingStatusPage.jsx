@@ -58,6 +58,7 @@ const EnterprisePendingStatusPage = () => {
                   marginBottom: "54px",
                   textAlign: "center",
                   fontSize: "22px",
+                  color: "#063762"
                 }}
               >
                 Your request to be authorized as a Yanki enterprise is being reviewed, expect an email shortly. In the meantime, you can use Yanki to explore its features with the same access
@@ -73,6 +74,7 @@ const EnterprisePendingStatusPage = () => {
                   marginTop: "-55px",
                   textAlign: "center",
                   fontSize: "22px",
+                  color: "#063762"
                 }}
               >
                 Request not approved <br />

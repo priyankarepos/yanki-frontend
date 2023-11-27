@@ -1,4 +1,4 @@
-import { Box, Typography, List, Button, Paper, Grid } from '@mui/material';
+import { Box, Typography, List, Button, Paper, Grid, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
@@ -8,7 +8,8 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
-    console.log("selectedEnterpriseMessage",selectedEnterpriseMessage);
+    const [isSendMail, setIsSendMail] = useState(false);
+    console.log("selectedEnterpriseMessage", selectedEnterpriseMessage);
 
     const handleSendEmail = async (enterprise) => {
         console.log("enterprise", enterprise);
@@ -31,7 +32,8 @@ const DemoEnterpriseChat = ({ answer }) => {
 
                 // Display the response message in the component
                 setSelectedEnterpriseMessage(response.data.message);
-                console.log("response.data.message",response.data.message);
+                setIsSendMail(true)
+                console.log("response.data.message", response.data.message);
             }
         } catch (error) {
             console.error('Error sending email:', error);
@@ -60,8 +62,8 @@ const DemoEnterpriseChat = ({ answer }) => {
                     </List>
                 </div>
             </Paper> */}
-            <Paper elevation={3} style={{ backgroundColor: "#002d55", marginBottom: "10px", padding: "10px", paddingLeft: "20px", paddingRight: "20px",}}>
-            <div style={{ padding: '0px' }}>
+            <Paper elevation={3} style={{ backgroundColor: "#002d55", marginBottom: "10px", padding: "10px", paddingLeft: "20px", paddingRight: "20px", }}>
+                <div style={{ padding: '0px' }}>
                     <List style={{ display: 'flex' }}>
                         <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff", marginTop: "5px", }} />
                         <Typography style={{ fontSize: "16px", color: "#fff" }}>
@@ -103,16 +105,17 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.enterprisePhoneNumber && <div>Enterprise Phone: {enterprise.enterprisePhoneNumber}</div>}
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
-                                        {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
+                                        {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}{!selectedEnterpriseMessage &&<br />}
+                                        {!selectedEnterpriseMessage && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
                                     </div>
                                 </Button>
                             </Grid>
                         ))}
                     </Grid>
                 </List>
-                {selectedEnterprise && (
+                {selectedEnterprise &&  (
                     <Typography style={{ fontSize: "16px", padding: "10px", color: "#fff" }}>
-                        {selectedEnterpriseMessage}
+                        {!isSendMail ? <CircularProgress size={24} style={{color:"#fff"}} /> : selectedEnterpriseMessage}
                     </Typography>
                 )}
             </Paper>
