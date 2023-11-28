@@ -64,14 +64,13 @@ const EnterpriseSignup = () => {
     const [signinErrorMsg, setSigninErrorMsg] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [enterpriseCategories, setEnterpriseCategories] = useState([]);
-    console.log("enterpriseCategories", enterpriseCategories);
     const recipientEmail = "hello@yanki.ai";
     const emailSubject = "Email subject";
     const emailBody = "Email body";
     const {
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors,isSubmitted },
     } = useForm({
         mode: "onChange",
         defaultValues: {
@@ -450,7 +449,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} style={{paddingTop : !selectedCategory ? "0px" : "16px",}}>
+                            <Grid item xs={12} sm={6} style={{paddingTop : isSubmitted ? "0px" : "16px"}}>
                                 <Controller
                                     control={control}
                                     name="Website"
@@ -479,7 +478,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{paddingBottom: "0",}}>
+                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{ marginBottom: isSubmitted && "16px",}}>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
@@ -505,7 +504,7 @@ const EnterpriseSignup = () => {
                                     </Select>
                                 </FormControl>
 
-                                {!selectedCategory && (
+                                {!selectedCategory && isSubmitted && (
                                     <FormHelperText style={{ color: '#d32f2f', fontSize: '12px', marginY: 0, transform: 'translate(0px, -10px)', position: 'relative', }}>
                                         Please select an enterprise category.
                                     </FormHelperText>
