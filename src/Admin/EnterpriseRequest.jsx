@@ -78,7 +78,7 @@ const AdminEnterpriseRequest = () => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
                 );
-
+    
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
                     // if (response.data.length > 0) {
@@ -91,25 +91,22 @@ const AdminEnterpriseRequest = () => {
                 console.error("Error:", error);
             }
         };
-
+    
         const fetchEnterpriseRequests = async () => {
             try {
-                if (!selectedCategory) {
-                    console.error("Please select an enterprise category");
-                    return;
-                }
-
+                const categoryIdParam = selectedCategory || null;
+    
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
                     {
                         params: {
-                            categoryId: selectedCategory ? selectedCategory : "",
+                            categoryId: categoryIdParam,
                             pageNumber: pageNumber,
                             pageSize: 10,
                         },
                     }
                 );
-
+    
                 if (response.status === 200) {
                     setEnterpriseRequests(response.data);
                     setTotalPages(Math.ceil(response.data.totalCount / 10));
@@ -120,11 +117,11 @@ const AdminEnterpriseRequest = () => {
                 console.error("Error:", error);
             }
         };
-
-
+    
         fetchEnterpriseCategories();
         fetchEnterpriseRequests();
     }, [selectedCategory, pageNumber]);
+    
 
     const handlePageChange = (event, newPage) => {
         setPageNumber(newPage);
