@@ -25,7 +25,8 @@ const PdfAnswers = () => {
     const pdfNames = apiResponse?.response?.pdfNames || [];
 
     const handlePdfClick = (pdfName) => {
-        const pdfUrl = `${s3BaseUrl}${pdfName}`;
+        const cleanPdfName = pdfName.replace(/%27/g, '');  // Remove %27 occurrences
+        const pdfUrl = `${s3BaseUrl}${cleanPdfName}`;
         setSelectedPdf(pdfUrl);
         setPdfLoadError(false);
     };
