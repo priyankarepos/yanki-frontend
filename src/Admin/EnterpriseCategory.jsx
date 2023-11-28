@@ -156,25 +156,28 @@ const AdminEnterpriseCategory = () => {
   const handleSaveCategory = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name === categoryName)) {
+  
+      // Check if a category with the same name already exists
+      if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
         setSnackbarMessage('This category name already exists!');
         setSnackbarOpen(true);
         return;
       }
+  
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
+  
       const response = await axios.post(apiUrl, { name: categoryName });
-
+  
       if (response.status === 200) {
         const newCategory = response.data;
-
+  
         // Update state with the new category
         setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
-
+  
         setIsModalOpen(false);
         setCategoryName('');
         setEditCategoryId(''); // Reset editCategoryId after successful save
-
+  
         setSnackbarMessage('Category saved successfully');
         setSnackbarOpen(true);
       } else {
@@ -186,10 +189,11 @@ const AdminEnterpriseCategory = () => {
       console.error('Error:', error);
       setSnackbarMessage('Error saving enterprise category');
       setSnackbarOpen(true);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
+  
 
 
 

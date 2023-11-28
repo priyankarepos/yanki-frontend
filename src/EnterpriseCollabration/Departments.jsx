@@ -140,6 +140,13 @@ const Departments = () => {
         return;
       }
 
+      // Check if the tag length exceeds 20 characters
+    if (tag.length > 20) {
+      setSnackbarMessage('Tag should not exceed 20 characters.');
+      setSnackbarOpen(true);
+      return;
+    }
+
       const response = await checkEnterpriseKeyword(tag);
 
       if (response && response.isSuccess) {
