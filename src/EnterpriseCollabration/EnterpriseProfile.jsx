@@ -217,6 +217,12 @@ const EnterpriseProfile = () => {
         return;
       }
 
+      if (tag.length > 20) {
+        setSnackbarMessage('Tag should not exceed 20 characters.');
+        setSnackbarOpen(true);
+        return;
+      }
+
       const response = await checkEnterpriseKeyword(tag);
 
       if (response && response.isSuccess) {
@@ -557,7 +563,7 @@ const EnterpriseProfile = () => {
             <Controller
               control={control}
               name="EnterpriseDescription"
-              rules={{ required: "Enterprise Description is required" }}  // Corrected name
+              rules={{ required: "Enterprise Description is required" }}
               render={({ field }) => (
                 <div>
                   <TextareaAutosize

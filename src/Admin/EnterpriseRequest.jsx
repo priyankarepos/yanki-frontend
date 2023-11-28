@@ -81,7 +81,7 @@ const AdminEnterpriseRequest = () => {
     
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
-                    // if (response.data.length > 0) {
+                    // if (response.data.length > 0 && !selectedCategory) {
                     //     setSelectedCategory(response.data[0].id);
                     // }
                 } else {
