@@ -95,7 +95,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         setSelectedEnterprise(enterprise.enterpriseName);
                                         handleSendEmail(enterprise);
                                     }}
-                                    disabled={selectedEnterpriseMessage !== ""}
+                                    disabled={selectedEnterpriseMessage !== "" && answer?.isMail === false}
                                 >
                                     <div>
                                         {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
@@ -106,7 +106,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
                                         {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}{!selectedEnterpriseMessage &&<br />}
-                                        {!selectedEnterpriseMessage && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
+                                        {!selectedEnterpriseMessage && answer?.isMail === false && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
                                     </div>
                                 </Button>
                             </Grid>
