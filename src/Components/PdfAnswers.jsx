@@ -1,64 +1,74 @@
 import React, { useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { pdfjs } from 'react-pdf';
+import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import '@react-pdf-viewer/core/lib/styles/index.css'; // Import styles for PDF viewer
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-const PdfAnswers = () => {
+const PdfAnswers = ({ answer }) => {
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
 
-    console.log("selectedPdf", selectedPdf);
-
-    const apiResponse = {
-        "response": {
-            "isSucess": true,
-            "message": null,
-            // ... other properties ...
-            "pdfNames": [
-                "4.birkat-hamazon-sefaradi.pdf",
-                "3.birkat-hamazon-ashkenaz.pdf"
-            ]
-        },
-        "chatId": "f9ed15f4-855f-4761-9268-628a596fb98d"
-    };
-
+    const { pdfNames } = answer?.response || {};
     const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
-    const pdfNames = apiResponse?.response?.pdfNames || [];
 
-    const handlePdfClick = (pdfName) => {
-        const cleanPdfName = pdfName.replace(/%27/g, '');  // Remove %27 occurrences
+    const openPdfModal = (pdfName) => {
+        const cleanPdfName = pdfName.replace(/%27/g, '');  
         const pdfUrl = `${s3BaseUrl}${cleanPdfName}`;
         setSelectedPdf(pdfUrl);
         setPdfLoadError(false);
     };
 
-    const renderPdfContent = () => {
-        if (!selectedPdf) {
-            return <div>Select a PDF to view its content.</div>;
-        }
+    const closePdfModal = () => {
+        setSelectedPdf(null);
+    };
 
+    const renderPdfModal = () => {
         return (
-            <div>
-                {pdfLoadError ? (
-                    <div>Error loading PDF. Please try again.</div>
-                ) : (
-                    <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                        <Viewer fileUrl={selectedPdf} />
-                    </Worker>
-                )}
-            </div>
+            <Modal
+                open={Boolean(selectedPdf)}
+                onClose={closePdfModal}
+                aria-labelledby="pdf-modal-title"
+                aria-describedby="pdf-modal-description"
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <div className="pdf-modal" style={{ width: '80%', height: '80%' }}>
+                    <IconButton
+                        style={{ position: 'absolute', top: '8px', right: '8px' }}
+                        onClick={closePdfModal}
+                        aria-label="close"
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    {pdfLoadError ? (
+                        <div>Error loading PDF. Please try again.</div>
+                    ) : (
+                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                            <Viewer fileUrl={selectedPdf} />
+                        </Worker>
+                    )}
+                </div>
+            </Modal>
         );
     };
 
     return (
         <div>
             <div>
-                {pdfNames.map((pdfName, index) => (
-                    <button key={index} onClick={() => handlePdfClick(pdfName)}>
+                {pdfNames && pdfNames.map((pdfName, index) => (
+                    <Button key={index} onClick={() => openPdfModal(pdfName)} startIcon={<PictureAsPdfIcon />}>
                         {pdfName}
-                    </button>
+                    </Button>
                 ))}
             </div>
-            {renderPdfContent()}
+            {renderPdfModal()}
         </div>
     );
 };

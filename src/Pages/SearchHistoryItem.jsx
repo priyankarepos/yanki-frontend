@@ -59,10 +59,10 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
           </Paper>
         )}
 
-      { (
+      {response?.isSucess && response?.pdfNames && response?.pdfNames.length > 0 && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
-            <PdfAnswers />
+            <PdfAnswers answer={response} />
           </div>
         </Paper>
       )}
