@@ -1,5 +1,5 @@
 import { Box, Typography, List, Button, Paper, Grid, CircularProgress } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 
@@ -9,10 +9,17 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
     const [isSendMail, setIsSendMail] = useState(false);
-    console.log("selectedEnterpriseMessage", selectedEnterpriseMessage);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+    console.log("isButtonClicked", isButtonClicked);
+
+    useEffect(() => {
+        const storedIsButtonClicked = localStorage.getItem('isButtonClicked');
+        if (storedIsButtonClicked) {
+            setIsButtonClicked(JSON.parse(storedIsButtonClicked));
+        }
+    }, [setIsSendMail]);
 
     const handleSendEmail = async (enterprise) => {
-        console.log("enterprise", enterprise);
         try {
             // Prepare the request data
             const requestData = {
@@ -22,7 +29,6 @@ const DemoEnterpriseChat = ({ answer }) => {
                 departmentEmail: enterprise?.departmentEmail,
             };
 
-            // Make a POST request to the API
             const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
                 requestData);
 
@@ -30,38 +36,20 @@ const DemoEnterpriseChat = ({ answer }) => {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
                 setChatMessages([...chatMessages, message]);
 
-                // Display the response message in the component
                 setSelectedEnterpriseMessage(response.data.message);
                 setIsSendMail(true)
+                setIsButtonClicked(true);
+                localStorage.setItem('isButtonClicked', JSON.stringify(true));
                 console.log("response.data.message", response.data.message);
             }
         } catch (error) {
             console.error('Error sending email:', error);
-            // Handle error as needed
         }
     };
 
 
     return (
         <Box>
-            {/* <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
-                <div style={{ padding: "10px" }}>
-                    <List style={{ display: 'flex', alignItems: 'center' }}>
-                        <ChatBubbleIcon fontSize="small" style={{ marginRight: '8px', color: "#fff" }} />
-                        <Typography style={{ fontSize: "18px", color: "#fff" }}>{answer.message}</Typography>
-                    </List>
-                </div>
-            </Paper> */}
-            {/* <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
-                <div style={{ padding: '12px' }}>
-                    <List style={{ display: 'flex', alignItems: 'center' }}>
-                        <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff" }} />
-                        <Typography style={{ fontSize: "18px", color: "#fff" }}>
-                            {answer.message}
-                        </Typography>
-                    </List>
-                </div>
-            </Paper> */}
             <Paper elevation={3} style={{ backgroundColor: "#002d55", marginBottom: "10px", padding: "10px", paddingLeft: "20px", paddingRight: "20px", }}>
                 <div style={{ padding: '0px' }}>
                     <List style={{ display: 'flex' }}>
@@ -95,7 +83,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         setSelectedEnterprise(enterprise.enterpriseName);
                                         handleSendEmail(enterprise);
                                     }}
-                                    disabled={selectedEnterpriseMessage !== "" && answer?.isMail === false}
+                                    disabled={isButtonClicked && selectedEnterpriseMessage !== ""}
                                 >
                                     <div>
                                         {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
@@ -106,7 +94,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
                                         {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}{!selectedEnterpriseMessage &&<br />}
-                                        {!selectedEnterpriseMessage && answer?.isMail === false && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
+                                        {selectedEnterpriseMessage === "" && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
                                     </div>
                                 </Button>
                             </Grid>
