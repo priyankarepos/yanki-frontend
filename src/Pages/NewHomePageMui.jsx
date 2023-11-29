@@ -543,9 +543,9 @@ const NewHomePageMui = () => {
                         style={{
                             width: "100%",
                             marginX: "auto",
-                            minHeight: "67vh",
+                            minHeight: "calc(100% - 90px)",
+                            maxHeight: "calc(100% - 90px)",
                             overflowY: "auto",
-                            maxHeight: "67vh",
                         }}>
                         <Box>
                             {searchHistory.map((entry, index) => (

@@ -63,13 +63,14 @@ const EnterpriseProfile = () => {
   const [tagCount, setTagCount] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  // const [isTagAvailable, setIsTagAvailable] = useState(true);
+  const [isButtonClick, setIsButtonClick] = useState(false);
 
   const {
     control,
     setValue,
     getValues,
     handleSubmit,
+    formState ,
     formState: { errors, isSubmitted },
   } = useForm({
     mode: "onChange",
@@ -102,6 +103,8 @@ const EnterpriseProfile = () => {
       // Add more validation rules for other fields if needed
     },
   });
+
+  const { isDirty } = formState;
 
   // const keywords = useWatch({ control, name: 'EnterpriseIdentificationKeywords', defaultValue: [] });
 
@@ -211,14 +214,14 @@ const EnterpriseProfile = () => {
 
   const handleAddTag = async (tag) => {
     try {
-      if (tagCount >= 50) {
-        setSnackbarMessage('You have reached the maximum limit of tags (50).');
+      if (tagCount >= 25) {
+        setSnackbarMessage('You have reached the maximum limit of tags (25).');
         setSnackbarOpen(true);
         return;
       }
 
-      if (tag.length > 20) {
-        setSnackbarMessage('Tag should not exceed 20 characters.');
+      if (tag.length > 40) {
+        setSnackbarMessage('Tag should not exceed 40 characters.');
         setSnackbarOpen(true);
         return;
       }
@@ -303,6 +306,7 @@ const EnterpriseProfile = () => {
           setSnackbarMessage('Enterprise details updated successfully');
         }
         setSnackbarOpen(true);
+        setIsButtonClick(true)
       } else {
         console.error('Failed to update enterprise details');
         setSnackbarMessage('Failed to update enterprise details');
@@ -815,6 +819,7 @@ const EnterpriseProfile = () => {
               fullWidth
               style={{ backgroundColor: "#13538b", color: "lightblue" }}
               onClick={handleSubmit(updateEnterpriseDetails)}
+              disabled={(!isDirty || isButtonClick)}
             >
               Save
             </Button>
