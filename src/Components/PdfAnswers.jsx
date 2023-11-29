@@ -7,12 +7,13 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import '@react-pdf-viewer/core/lib/styles/index.css'; // Import styles for PDF viewer
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { Paper } from '@mui/material';
 
 const PdfAnswers = ({ answer }) => {
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
 
-    const { pdfNames } = answer?.response || {};
+    const pdfNames = answer?.pdfNames || [];
     const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
 
     const openPdfModal = (pdfName) => {
@@ -29,47 +30,60 @@ const PdfAnswers = ({ answer }) => {
     const renderPdfModal = () => {
         return (
             <Modal
-                open={Boolean(selectedPdf)}
-                onClose={closePdfModal}
-                aria-labelledby="pdf-modal-title"
-                aria-describedby="pdf-modal-description"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                <div className="pdf-modal" style={{ width: '80%', height: '80%' }}>
-                    <IconButton
-                        style={{ position: 'absolute', top: '8px', right: '8px' }}
-                        onClick={closePdfModal}
-                        aria-label="close"
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                    {pdfLoadError ? (
-                        <div>Error loading PDF. Please try again.</div>
-                    ) : (
-                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                            <Viewer fileUrl={selectedPdf} />
-                        </Worker>
-                    )}
-                </div>
-            </Modal>
+            open={Boolean(selectedPdf)}
+            onClose={closePdfModal}
+            aria-labelledby="pdf-modal-title"
+            aria-describedby="pdf-modal-description"
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <div className="pdf-modal" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+                <IconButton
+                    style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 1,backgroundColor: "#6fa8dd", }}
+                    onClick={closePdfModal}
+                    aria-label="close"
+                >
+                    <CloseIcon style={{color:"#fff"}} />
+                </IconButton>
+                {pdfLoadError ? (
+                    <div>Error loading PDF. Please try again.</div>
+                ) : (
+                    <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                        <Viewer fileUrl={selectedPdf} />
+                    </Worker>
+                )}
+            </div>
+        </Modal>
         );
     };
 
     return (
-        <div>
+        <Paper sx={{
+            p: 2,
+          }}>
             <div>
                 {pdfNames && pdfNames.map((pdfName, index) => (
-                    <Button key={index} onClick={() => openPdfModal(pdfName)} startIcon={<PictureAsPdfIcon />}>
-                        {pdfName}
-                    </Button>
+                    <Button
+                    key={index}
+                    onClick={() => openPdfModal(pdfName)}
+                    startIcon={<PictureAsPdfIcon />}
+                    style={{
+                        backgroundColor: "#2f587d",
+                         marginRight: pdfNames.length > 1 && index < pdfNames.length - 1 ? '8px' : '0',
+                        // marginBottom: pdfNames.length > 1 && index < pdfNames.length - 1 ? '8px' : '0',
+                        margin:'8px',
+                        // marginLeft: '0',
+                    }}
+                >
+                    {pdfName}
+                </Button>
                 ))}
             </div>
             {renderPdfModal()}
-        </div>
+        </Paper>
     );
 };
 

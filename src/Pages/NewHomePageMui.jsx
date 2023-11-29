@@ -228,6 +228,7 @@ const NewHomePageMui = () => {
                                     torahAnytimeLectures: gptResponse.torahAnytimeLectures,
                                     videoResult: gptResponse.videoResult,
                                     enterpriseSelections: gptResponse.enterpriseSelections,
+                                    pdfNames: gptResponse.pdfNames,
                                 }
                             }
                         };
