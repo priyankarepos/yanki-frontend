@@ -8,6 +8,7 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
 import { Context } from "../App";
+import PdfAnswers from "../Components/PdfAnswers";
 
 const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
 
@@ -57,6 +58,14 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
             </div>
           </Paper>
         )}
+
+      {response?.isSucess && response?.pdfNames && response?.pdfNames.length > 0 && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <PdfAnswers answer={response} />
+          </div>
+        </Paper>
+      )}
 
       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
         {response.isSucess === false && (
