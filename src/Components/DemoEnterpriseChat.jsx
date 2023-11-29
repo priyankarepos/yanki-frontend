@@ -1,5 +1,5 @@
 import { Box, Typography, List, Button, Paper, Grid, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 
@@ -8,16 +8,6 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
-    const [isSendMail, setIsSendMail] = useState(false);
-    const [isButtonClicked, setIsButtonClicked] = useState(false);
-    console.log("isButtonClicked", isButtonClicked);
-
-    useEffect(() => {
-        const storedIsButtonClicked = localStorage.getItem('isButtonClicked');
-        if (storedIsButtonClicked) {
-            setIsButtonClicked(JSON.parse(storedIsButtonClicked));
-        }
-    }, [setIsSendMail]);
 
     const handleSendEmail = async (enterprise) => {
         try {
@@ -37,9 +27,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                 setChatMessages([...chatMessages, message]);
 
                 setSelectedEnterpriseMessage(response.data.message);
-                setIsSendMail(true)
-                setIsButtonClicked(true);
-                localStorage.setItem('isButtonClicked', JSON.stringify(true));
+                // setIsSendMail(true)
                 console.log("response.data.message", response.data.message);
             }
         } catch (error) {
@@ -83,7 +71,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         setSelectedEnterprise(enterprise.enterpriseName);
                                         handleSendEmail(enterprise);
                                     }}
-                                    disabled={isButtonClicked && selectedEnterpriseMessage !== ""}
+                                    disabled={(!answer?.isMail === true || selectedEnterpriseMessage !=="" )}
                                 >
                                     <div>
                                         {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
@@ -93,8 +81,8 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.enterprisePhoneNumber && <div>Enterprise Phone: {enterprise.enterprisePhoneNumber}</div>}
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
-                                        {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}{!selectedEnterpriseMessage &&<br />}
-                                        {selectedEnterpriseMessage === "" && <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",}}>Click here to send email to Enterprise</strong>}
+                                        {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
+                                        {(answer?.isMail === true || selectedEnterpriseMessage !=="")? <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",marginTop: "15px", display: "inline-block",}}>Click here to send email to Enterprise</strong> : <></>}
                                     </div>
                                 </Button>
                             </Grid>
@@ -103,7 +91,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                 </List>
                 {selectedEnterprise &&  (
                     <Typography style={{ fontSize: "16px", padding: "10px", color: "#fff" }}>
-                        {!isSendMail ? <CircularProgress size={24} style={{color:"#fff"}} /> : selectedEnterpriseMessage}
+                        {selectedEnterpriseMessage==="" ? <CircularProgress size={24} style={{color:"#fff"}} /> : selectedEnterpriseMessage}
                     </Typography>
                 )}
             </Paper>

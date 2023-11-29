@@ -134,15 +134,15 @@ const Departments = () => {
 
   const handleAddTag = async (tag) => {
     try {
-      if (tagCount >= 50) {
-        setSnackbarMessage('You have reached the maximum limit of tags (50).');
+      if (tagCount >= 25) {
+        setSnackbarMessage('You have reached the maximum limit of tags (25).');
         setSnackbarOpen(true);
         return;
       }
 
       // Check if the tag length exceeds 20 characters
-    if (tag.length > 20) {
-      setSnackbarMessage('Tag should not exceed 20 characters.');
+    if (tag.length > 40) {
+      setSnackbarMessage('Tag should not exceed 40 characters.');
       setSnackbarOpen(true);
       return;
     }
