@@ -42,7 +42,7 @@ const PdfAnswers = ({ answer }) => {
         >
             <div className="pdf-modal" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
                 <IconButton
-                    style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 1,backgroundColor: "#6fa8dd", }}
+                    style={{ position: 'absolute', top: '20px', right: '8px', zIndex: 1,backgroundColor: "#6fa8dd", }}
                     onClick={closePdfModal}
                     aria-label="close"
                 >
