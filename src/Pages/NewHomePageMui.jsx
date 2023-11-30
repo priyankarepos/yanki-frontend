@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Outlet, Link } from "react-router-dom";
 import {
@@ -153,6 +153,11 @@ const NewHomePageMui = () => {
         setSearchHistory([]);
         setSelectedChatId(null);
         sessionStorage.removeItem("selectedChatId");
+        if(!isLargeScreen){
+            setDrawerOpen(false);
+        }else{
+            setDrawerOpen(true);
+        }
     };
 
 
@@ -188,20 +193,7 @@ const NewHomePageMui = () => {
         }
     };
 
-
-    useEffect(() => {
-        if (initialChatOpen && chatSessions.length > 0) {
-            const storedChatId = sessionStorage.getItem("selectedChatId");
-            // const firstChatId = storedChatId || chatSessions[0].id;
-            const firstChatId = storedChatId;
-            handleChatSessionClick(firstChatId);
-            setInitialChatOpen(false);
-
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    }, [initialChatOpen, chatSessions]);
-
-    const handleChatSessionClick = async (chatId) => {
+    const handleChatSessionClick = useCallback(async (chatId) => {
         sessionStorage.setItem("selectedChatId", chatId);
         setSelectedChatId(chatId);
         try {
@@ -243,12 +235,30 @@ const NewHomePageMui = () => {
                     console.error("Error parsing chat history:", parseError);
 
                 }
+                if(!isLargeScreen){
+                    setDrawerOpen(false);
+                }else{
+                    setDrawerOpen(true);
+                }
             }
         } catch (error) {
             console.error("Error fetching chat history:", error);
 
         }
-    };
+    }, [isLargeScreen]);
+
+    useEffect(() => {
+        if (initialChatOpen && chatSessions.length > 0) {
+            const storedChatId = sessionStorage.getItem("selectedChatId");
+            // const firstChatId = storedChatId || chatSessions[0].id;
+            const firstChatId = storedChatId;
+            handleChatSessionClick(firstChatId);
+            setInitialChatOpen(false);
+
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+    
     const fetchChatHistory = async (chatId) => {
         try {
             const response = await axios.get(

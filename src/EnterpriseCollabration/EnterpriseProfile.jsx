@@ -9,7 +9,7 @@ import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
-import { phoneRegex } from '../Utils/validations/validation';
+import { emailRegex, phoneRegex } from '../Utils/validations/validation';
 
 const styles = {
   inputField: {
@@ -70,7 +70,7 @@ const EnterpriseProfile = () => {
     setValue,
     getValues,
     handleSubmit,
-    formState ,
+    formState,
     formState: { errors, isSubmitted },
   } = useForm({
     mode: "onChange",
@@ -222,6 +222,14 @@ const EnterpriseProfile = () => {
 
       if (tag.length > 40) {
         setSnackbarMessage('Tag should not exceed 40 characters.');
+        setSnackbarOpen(true);
+        return;
+      }
+
+      const lowerCaseTag = tag.toLowerCase();
+
+      if (tags.map((existingTag) => existingTag.toLowerCase()).includes(lowerCaseTag)) {
+        setSnackbarMessage(`Tag "${tag}" already exists.`);
         setSnackbarOpen(true);
         return;
       }
@@ -431,7 +439,16 @@ const EnterpriseProfile = () => {
             <Controller
               control={control}
               name="EmailAddress"
-              rules={{ required: "Email address is required" }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Email address is required.",
+                },
+                pattern: {
+                  value: emailRegex,
+                  message: "Enter valid email address.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
