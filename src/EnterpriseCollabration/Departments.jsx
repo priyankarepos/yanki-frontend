@@ -147,6 +147,14 @@ const Departments = () => {
       return;
     }
 
+    const lowerCaseTag = tag.toLowerCase();
+
+      if (tags.map((existingTag) => existingTag.toLowerCase()).includes(lowerCaseTag)) {
+        setSnackbarMessage(`Tag "${tag}" already exists.`);
+        setSnackbarOpen(true);
+        return;
+      }
+
       const response = await checkEnterpriseKeyword(tag);
 
       if (response && response.isSuccess) {

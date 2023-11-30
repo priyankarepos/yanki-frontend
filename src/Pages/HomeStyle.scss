@@ -43,9 +43,9 @@
     width: 0px;
   }
 
-  // .home-table-scroll:hover::-webkit-scrollbar {
-  //   height: 5px;
-  // }
+  .home-table-scroll::-webkit-scrollbar {
+    height: 0px;
+  }
   
   /* Track */
   ::-webkit-scrollbar-track {
