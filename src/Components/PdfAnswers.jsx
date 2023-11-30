@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import '@react-pdf-viewer/core/lib/styles/index.css'; // Import styles for PDF viewer
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { Paper } from '@mui/material';
+import { Paper, useMediaQuery } from '@mui/material';
 
 const PdfAnswers = ({ answer }) => {
     const [selectedPdf, setSelectedPdf] = useState(null);
@@ -27,6 +27,8 @@ const PdfAnswers = ({ answer }) => {
         setSelectedPdf(null);
     };
 
+    const isLargeScreen = useMediaQuery("(min-width: 600px)");
+
     const renderPdfModal = () => {
         return (
             <Modal
@@ -40,9 +42,9 @@ const PdfAnswers = ({ answer }) => {
                     justifyContent: 'center',
                 }}
             >
-                <div className="pdf-modal" style={{ width: '100vw', height: '100vh', position: 'relative', paddingTop: "20px", paddingBottom: "20px", }}>
+                <div className="pdf-modal" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
                     <IconButton
-                        style={{ position: 'absolute', top: '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
+                        style={{ position: 'absolute', top: isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
                         onClick={closePdfModal}
                         aria-label="close"
                     >
