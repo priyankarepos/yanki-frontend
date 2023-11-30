@@ -10,6 +10,7 @@ import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
+import { CircularProgress } from '@mui/material';
 
 const styles = {
   inputField: {
@@ -64,6 +65,7 @@ const EnterpriseProfile = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isButtonClick, setIsButtonClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -266,6 +268,7 @@ const EnterpriseProfile = () => {
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
     setTagCount((prevCount) => Math.max(0, prevCount - 1));
+    setIsButtonClick(false);
   };
 
   useEffect(() => {
@@ -278,6 +281,8 @@ const EnterpriseProfile = () => {
 
   const updateEnterpriseDetails = async () => {
     try {
+      setIsLoading(true);
+
       const formData = getValues();
       const tagsAsString = tags.join(',');
       const response = await axios.put(
@@ -315,6 +320,7 @@ const EnterpriseProfile = () => {
         }
         setSnackbarOpen(true);
         setIsButtonClick(true)
+        window.location.reload();
       } else {
         console.error('Failed to update enterprise details');
         setSnackbarMessage('Failed to update enterprise details');
@@ -832,13 +838,13 @@ const EnterpriseProfile = () => {
           <Grid item xs={3}>
             <Button
               variant="outlined"
-              sx={{ marginY: { xs: "10px" } }}
+              sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              style={{ backgroundColor: "#13538b", color: "lightblue" }}
+              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
               onClick={handleSubmit(updateEnterpriseDetails)}
-              disabled={(!isDirty || isButtonClick)}
+              disabled={!isDirty || isButtonClick || isLoading}
             >
-              Save
+              {isLoading ? <CircularProgress size={24} /> : 'Save'}
             </Button>
           </Grid>
         </Grid>
