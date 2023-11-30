@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar } from '@mui/material';
+import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar,CircularProgress } from '@mui/material';
 import AdminDashboard from './AdminDashboard';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,73 +7,71 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { Context } from '../App';
-import {
-  CircularProgress,
-} from '@mui/material';
+import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
 
 const styles = {
-    tableContainer: {
-        marginBottom: '0',
-    },
-    label: {
-        color: '#8bbae5',
-        marginBottom: '8px',
-      },
-    headerCell: {
-        fontWeight: 'bold',
-        background: '#13538b',
-        color: 'white',
-        minWidth: "200px",
-        fontSize: 16,
-    },
-    cell: {
-        fontSize: 16,
-    },
-    approveButton: {
-        backgroundColor: "#063762",
-        color: "#fff",
-        textTransform: "capitalize",
-        borderRadius: "50px",
-        padding: "0 15px",
-        height: "40px",
-        marginLeft: "7px",
-    },
-    content: {
-        flex: 1,
-        padding: '16px',
-        marginLeft: '0',
-        transition: 'margin-left 0.3s',
-    },
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    modalContent: {
-        backgroundColor: '#063762',
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-        padding: '35px 25px',
-        width: '500px',
-        borderRadius: '8px',
-    },
-    modalTitle: {
-        fontWeight: 'medium',
-        marginBottom: '16px',
-    },
-    modalForm: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-    },
-    modalButton: {
-        backgroundColor: '#fff',
-        color: '#063762',
-        textTransform: 'capitalize',
-        borderRadius: '10px',
-        padding: '30px 15px',
-        fontSize: '16px',
-        marginTop: "20px",
-    },
+  tableContainer: {
+    marginBottom: '0',
+  },
+  label: {
+    color: '#8bbae5',
+    marginBottom: '8px',
+  },
+  headerCell: {
+    fontWeight: 'bold',
+    background: '#13538b',
+    color: 'white',
+    minWidth: "200px",
+    fontSize: 16,
+  },
+  cell: {
+    fontSize: 16,
+  },
+  approveButton: {
+    backgroundColor: "#063762",
+    color: "#fff",
+    textTransform: "capitalize",
+    borderRadius: "50px",
+    padding: "0 15px",
+    height: "40px",
+    marginLeft: "7px",
+  },
+  content: {
+    flex: 1,
+    padding: '16px',
+    marginLeft: '0',
+    transition: 'margin-left 0.3s',
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#063762',
+    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+    padding: '35px 25px',
+    width: '500px',
+    borderRadius: '8px',
+  },
+  modalTitle: {
+    fontWeight: 'medium',
+    marginBottom: '16px',
+  },
+  modalForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+  modalButton: {
+    backgroundColor: '#fff',
+    color: '#063762',
+    textTransform: 'capitalize',
+    borderRadius: '10px',
+    padding: '30px 15px',
+    fontSize: '16px',
+    marginTop: "20px",
+  },
 };
 
 const AdminEnterpriseCategory = () => {
@@ -84,6 +82,10 @@ const AdminEnterpriseCategory = () => {
   const [editCategoryId, setEditCategoryId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [confirmationText, setConfirmationText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   console.log("enterpriseCategories", enterpriseCategories);
 
@@ -114,15 +116,25 @@ const AdminEnterpriseCategory = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteCategory = async (id) => {
+  const handleDeleteCategory = (id) => {
+    // Open the confirmation dialog and store the selected category ID
+    setConfirmDialogOpen(true);
+    setSelectedCategoryId(id); // Use setSelectedCategoryId to store the selected category ID
+    setConfirmationText(`Are you sure you want to delete this category?`);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${id}`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
       );
 
       if (response.status === 200) {
-        const updatedCategories = enterpriseCategories.filter((category) => category.id !== id);
+        const updatedCategories = enterpriseCategories.filter((category) => category.id !== selectedCategoryId);
         setEnterpriseCategories(updatedCategories);
+        setConfirmDialogOpen(false);
+        setSnackbarMessage('Category deleted successfully');
+        setSnackbarOpen(true);
       } else {
         console.error('Failed to delete enterprise category');
         setSnackbarMessage('Failed to delete enterprise category');
@@ -143,6 +155,15 @@ const AdminEnterpriseCategory = () => {
 
   const handleSaveCategory = async () => {
     try {
+      setLoading(true);
+  
+      // Check if a category with the same name already exists
+      if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
+        setSnackbarMessage('This category name already exists!');
+        setSnackbarOpen(true);
+        return;
+      }
+  
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
   
       const response = await axios.post(apiUrl, { name: categoryName });
@@ -168,31 +189,42 @@ const AdminEnterpriseCategory = () => {
       console.error('Error:', error);
       setSnackbarMessage('Error saving enterprise category');
       setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
   
-  
+
+
 
   const handleUpdate = async () => {
     try {
+
+      setLoading(true);
+
+      if (enterpriseCategories.some(category => category.name === categoryName && category.id !== editCategoryId)) {
+        setSnackbarMessage('This category name already exists!');
+        setSnackbarOpen(true);
+        return;
+      }
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-  
+
       const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
-  
+
       if (response.status === 200) {
         const updatedCategory = response.data;
-  
+
         // Update state with the new category
         setEnterpriseCategories((prevCategories) => {
           const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
-  
+
           setIsModalOpen(false);
           setCategoryName('');
           setEditCategoryId(null); // Reset editCategoryId after successful save
-  
+
           return updatedCategories;
         });
-  
+
         setSnackbarMessage('Category updated successfully');
         setSnackbarOpen(true);
       } else {
@@ -204,10 +236,12 @@ const AdminEnterpriseCategory = () => {
       console.error('Error:', error);
       setSnackbarMessage('Error updating enterprise category');
       setSnackbarOpen(true);
+    }finally {
+      setLoading(false);
     }
   };
-  
-  
+
+
 
   const contentMargin = drawerOpen ? '0' : '0';
 
@@ -233,7 +267,7 @@ const AdminEnterpriseCategory = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {enterpriseCategories.map((row) => (
+                {enterpriseCategories.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell style={styles.cell}>{row.name}</TableCell>
                     <TableCell style={{ ...styles.cell, textAlign: "right", }}>
@@ -262,7 +296,13 @@ const AdminEnterpriseCategory = () => {
           <Typography variant="h5" sx={styles.modalTitle}>
             {editCategoryId !== null ? "Edit Enterprise Category" : "Add Enterprise Category"}
           </Typography>
-          <form style={styles.modalForm}>
+          <form
+            style={styles.modalForm}
+            onSubmit={(e) => {
+              e.preventDefault();
+              editCategoryId !== null ? handleUpdate() : handleSaveCategory();
+            }}
+          >
             <InputLabel style={styles.label}>Category Name</InputLabel>
             <TextField
               variant="outlined"
@@ -273,10 +313,11 @@ const AdminEnterpriseCategory = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={editCategoryId !== null ? handleUpdate : handleSaveCategory}
+              type="submit"  // Specify the button type as "submit"
               style={styles.modalButton}
+              disabled={loading}
             >
-              {editCategoryId !== null ? "Save Changes" : "Save & Add"}
+              {loading ? <CircularProgress size={24} /> : (editCategoryId !== null ? "Save Changes" : "Save & Add")}
             </Button>
           </form>
         </Box>
@@ -286,6 +327,12 @@ const AdminEnterpriseCategory = () => {
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
+      />
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={handleConfirmDelete}
+        confirmationText={confirmationText}
       />
     </Box>
   )

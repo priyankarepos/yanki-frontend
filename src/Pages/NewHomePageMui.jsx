@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { Outlet, Link } from "react-router-dom";
 import {
@@ -63,12 +63,10 @@ const NewHomePageMui = () => {
     const [drawerOpen, setDrawerOpen] = useState(true);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    console.log("isSubmitting", isSubmitting);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [queryAnswer, setQueryAnswer] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    console.log("searchQuery", searchQuery);
     const { userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
     const { themeMode } = useContext(ThemeModeContext);
     const [searchHistory, setSearchHistory] = useState([]);
@@ -155,6 +153,11 @@ const NewHomePageMui = () => {
         setSearchHistory([]);
         setSelectedChatId(null);
         sessionStorage.removeItem("selectedChatId");
+        if(!isLargeScreen){
+            setDrawerOpen(false);
+        }else{
+            setDrawerOpen(true);
+        }
     };
 
 
@@ -190,20 +193,7 @@ const NewHomePageMui = () => {
         }
     };
 
-
-    useEffect(() => {
-        if (initialChatOpen && chatSessions.length > 0) {
-            const storedChatId = sessionStorage.getItem("selectedChatId");
-            // const firstChatId = storedChatId || chatSessions[0].id;
-            const firstChatId = storedChatId;
-            handleChatSessionClick(firstChatId);
-            setInitialChatOpen(false);
-
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    }, [initialChatOpen, chatSessions]);
-
-    const handleChatSessionClick = async (chatId) => {
+    const handleChatSessionClick = useCallback(async (chatId) => {
         sessionStorage.setItem("selectedChatId", chatId);
         setSelectedChatId(chatId);
         try {
@@ -217,17 +207,20 @@ const NewHomePageMui = () => {
                 try {
                     const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
                         const gptResponse = JSON.parse(chatEntry.gptResponse);
+                        
                         return {
                             query: chatEntry.userQuery,
                             response: {
                                 chatId: chatEntry.chatId,
                                 response: {
-                                    contentResponse: gptResponse.ContentResponse,
-                                    godavenPrayerDetails: gptResponse.GodavenPrayerDetails,
-                                    isSucess: gptResponse.IsSucess,
-                                    message: gptResponse.Message,
-                                    torahAnytimeLectures: gptResponse.TorahAnytimeLectures,
-                                    videoResult: gptResponse.VideoResult,
+                                    contentResponse: gptResponse.contentResponse,
+                                    godavenPrayerDetails: gptResponse.godavenPrayerDetails,
+                                    isSucess: gptResponse.isSucess,
+                                    message: gptResponse.message,
+                                    torahAnytimeLectures: gptResponse.torahAnytimeLectures,
+                                    videoResult: gptResponse.videoResult,
+                                    enterpriseSelections: gptResponse.enterpriseSelections,
+                                    pdfNames: gptResponse.pdfNames,
                                 }
                             }
                         };
@@ -243,12 +236,30 @@ const NewHomePageMui = () => {
                     console.error("Error parsing chat history:", parseError);
 
                 }
+                if(!isLargeScreen){
+                    setDrawerOpen(false);
+                }else{
+                    setDrawerOpen(true);
+                }
             }
         } catch (error) {
             console.error("Error fetching chat history:", error);
 
         }
-    };
+    }, [isLargeScreen]);
+
+    useEffect(() => {
+        if (initialChatOpen && chatSessions.length > 0) {
+            const storedChatId = sessionStorage.getItem("selectedChatId");
+            // const firstChatId = storedChatId || chatSessions[0].id;
+            const firstChatId = storedChatId;
+            handleChatSessionClick(firstChatId);
+            setInitialChatOpen(false);
+
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+    
     const fetchChatHistory = async (chatId) => {
         try {
             const response = await axios.get(
@@ -529,7 +540,7 @@ const NewHomePageMui = () => {
                         marginX: "auto",
                         // margin: paperMargin,
                         padding: "20px",
-                        height: "100vh",
+                        height: "88vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
                         // position: "relative",
@@ -542,9 +553,9 @@ const NewHomePageMui = () => {
                         style={{
                             width: "100%",
                             marginX: "auto",
-                            minHeight: "67vh",
+                            minHeight: "calc(100% - 90px)",
+                            maxHeight: "calc(100% - 90px)",
                             overflowY: "auto",
-                            maxHeight: "67vh",
                         }}>
                         <Box>
                             {searchHistory.map((entry, index) => (

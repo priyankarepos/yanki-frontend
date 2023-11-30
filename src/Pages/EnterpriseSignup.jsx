@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -15,7 +14,7 @@ import axios from "axios";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useForm, Controller } from "react-hook-form";
-import { useGoogleLogin } from '@react-oauth/google';
+// import { useGoogleLogin } from '@react-oauth/google';
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -25,7 +24,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery } from '@mui/material';
+import { Grid, FormControl, Select, MenuItem, ListItemIcon, useMediaQuery, FormHelperText } from '@mui/material';
 import CategoryIcon from '@mui/icons-material/Category';
 import "./Style.scss"
 // import Checkbox from "@mui/material/Checkbox";
@@ -35,7 +34,7 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-import GoogleIcon from '@mui/icons-material/Google';
+// import GoogleIcon from '@mui/icons-material/Google';
 
 const styles = {
     inputField: {
@@ -65,14 +64,13 @@ const EnterpriseSignup = () => {
     const [signinErrorMsg, setSigninErrorMsg] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [enterpriseCategories, setEnterpriseCategories] = useState([]);
-    console.log("enterpriseCategories", enterpriseCategories);
     const recipientEmail = "hello@yanki.ai";
     const emailSubject = "Email subject";
     const emailBody = "Email body";
     const {
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors,isSubmitted },
     } = useForm({
         mode: "onChange",
         defaultValues: {
@@ -131,6 +129,7 @@ const EnterpriseSignup = () => {
                 website: data.Website,
                 categoryId: selectedCategory,
                 // isTermAndPrivacy: data.signTermsAndCondition
+                userType: "Enterprise",
             };
 
             // Make the POST request
@@ -154,36 +153,36 @@ const EnterpriseSignup = () => {
         }
     };
 
-    const onSuccess = async (codeResponse) => {
-        try {
-            setSigninLoading(true);
-            const { access_token } = codeResponse;
-            console.log("access_token", access_token);
-            console.log("codeResponse", codeResponse);
+    // const onSuccess = async (codeResponse) => {
+    //     try {
+    //         setSigninLoading(true);
+    //         const { access_token } = codeResponse;
+    //         console.log("access_token", access_token);
+    //         console.log("codeResponse", codeResponse);
 
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
-                { access_token }
-            );
+    //         const response = await axios.post(
+    //             `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+    //             { access_token }
+    //         );
 
-            if (response.status === 200) {
-                navigate("/login");
-            } else {
-                setSigninError(true);
-                setSigninErrorMsg("Authentication failed.");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            setSigninError(true);
-            setSigninErrorMsg("Something went wrong.");
-        } finally {
-            setSigninLoading(false);
-        }
-    };
+    //         if (response.status === 200) {
+    //             navigate("/login");
+    //         } else {
+    //             setSigninError(true);
+    //             setSigninErrorMsg("Authentication failed.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //         setSigninError(true);
+    //         setSigninErrorMsg("Something went wrong.");
+    //     } finally {
+    //         setSigninLoading(false);
+    //     }
+    // };
 
-    const login = useGoogleLogin({
-        onSuccess,
-    });
+    // const login = useGoogleLogin({
+    //     onSuccess,
+    // });
 
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
@@ -450,7 +449,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} style={{paddingTop : isSubmitted ? "0px" : "16px"}}>
                                 <Controller
                                     control={control}
                                     name="Website"
@@ -479,7 +478,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} className='EnterpriseError'>
+                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{ marginBottom: isSubmitted && "16px",}}>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
@@ -488,7 +487,7 @@ const EnterpriseSignup = () => {
                                         sx={{ marginBottom: "10px" }}
                                         className='EnterpriseCategorySelect'
                                     >
-                                        <MenuItem value="">
+                                        <MenuItem value="" disabled>
                                             <ListItemIcon>
                                                 <CategoryIcon />
                                             </ListItemIcon>
@@ -505,7 +504,11 @@ const EnterpriseSignup = () => {
                                     </Select>
                                 </FormControl>
 
-
+                                {!selectedCategory && isSubmitted && (
+                                    <FormHelperText style={{ color: '#d32f2f', fontSize: '12px', marginY: 0, transform: 'translate(0px, -10px)', position: 'relative', }}>
+                                        Please select an enterprise category.
+                                    </FormHelperText>
+                                )}
 
                             </Grid>
 
@@ -518,14 +521,14 @@ const EnterpriseSignup = () => {
                             </Alert>
                         )}
                         <Box sx={{ textAlign: "center", marginTop: "15px", color: !themeMode ? "#fff" : "#72a9de", }}>
-                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color:"#13538b", fontWeight: "600",}}>
+                            <Typography>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#13538b", fontWeight: "600", }}>
                                 Terms of Use
                             </Link> and acknowledge the <Link
                                 to="/privacy-policy"
-                                style={{color:"#13538b", fontWeight: "600",}}
+                                style={{ color: "#13538b", fontWeight: "600", }}
                             >
-                                Privacy Policy
-                            </Link></Typography>
+                                    Privacy Policy
+                                </Link></Typography>
                             {/* <Controller
                                 control={control}
                                 name="signTermsAndCondition"
@@ -559,8 +562,8 @@ const EnterpriseSignup = () => {
                             >
                                 {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
                             </Button>
-                            <Divider sx={{ marginY: "28px" }}>or</Divider>
-                            <Button
+                            {/* <Divider sx={{ marginY: "28px" }}>or</Divider> */}
+                            {/* <Button
                                 variant="outlined"
                                 sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
                                 fullWidth
@@ -568,7 +571,7 @@ const EnterpriseSignup = () => {
                                 onClick={() => login()}
                             >
                                 <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
-                            </Button>
+                            </Button> */}
                         </Box>
                         <Box className="text-center" sx={{ marginTop: "25px" }}>
                             <Typography sx={{ textAlign: "center", color: "#72a9de", }} variant="subtitle1" display="block" gutterBottom>

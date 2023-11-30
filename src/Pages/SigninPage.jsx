@@ -30,8 +30,6 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleIcon from '@mui/icons-material/Google';
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 
 const linkStyle = {
   color: "#457bac",
@@ -83,6 +81,7 @@ const SigninPage = () => {
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
         // isTermAndPrivacy: data.signTermsAndCondition
+        userType: "User"
       };
 
       const response = await axios.post(
@@ -113,8 +112,6 @@ const SigninPage = () => {
     try {
       setSigninLoading(true);
       const { access_token } = codeResponse;
-      console.log("access_token", access_token);
-      console.log("codeResponse", codeResponse);
 
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,

@@ -8,6 +8,7 @@ import SentenceAnswer from "../Components/SentenceAnswer";
 import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
 import { Context } from "../App";
+import PdfAnswers from "../Components/PdfAnswers";
 
 const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
 
@@ -18,7 +19,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
+      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
         <div style={{ padding: "10px" }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
             <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
@@ -26,7 +27,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
           </Box>
         </div>
       </Paper>
-      { isTorahAnswer && (
+      {isTorahAnswer && (
         <Paper id="abcd" elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
@@ -49,10 +50,19 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.enterprises?.length > 0 && (
+      {response?.isSucess && !response?.contentResponse && response?.message
+        && (
+          <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+            <div className="chat-bubble assistant-bubble">
+              <DemoEnterpriseChat answer={response} />
+            </div>
+          </Paper>
+        )}
+
+      {response?.isSucess && response?.pdfNames && response?.pdfNames.length > 0 && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
-            <DemoEnterpriseChat answer={response} />
+            <PdfAnswers answer={response} />
           </div>
         </Paper>
       )}
@@ -63,7 +73,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
             <ErrorAnswer errorMsg={response.message} />
           </div>
         )}
-      </Paper> 
+      </Paper>
 
     </div>
   );

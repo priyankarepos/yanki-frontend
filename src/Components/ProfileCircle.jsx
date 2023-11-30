@@ -36,6 +36,8 @@ export default function ProfielCircle() {
   }
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
+  const userStatus = parsedUserObject?.userObject?.status || "";
+  console.log("userStatus", userStatus);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -69,7 +71,11 @@ export default function ProfielCircle() {
 
   const onClickNetworkingInterface = () => {
     handleClose();
-    navigate("/enterprise/profile")
+    if (userStatus === "Pending" || userStatus === "Rejected") {
+      navigate("/enterprise-status");
+    } else if (userStatus === "Approved") {
+      navigate("/enterprise/profile");
+    }
   }
 
 
