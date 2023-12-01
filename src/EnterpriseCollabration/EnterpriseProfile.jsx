@@ -10,6 +10,7 @@ import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
+import { CircularProgress } from '@mui/material';
 
 const styles = {
   inputField: {
@@ -64,6 +65,7 @@ const EnterpriseProfile = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isButtonClick, setIsButtonClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -266,7 +268,11 @@ const EnterpriseProfile = () => {
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
     setTagCount((prevCount) => Math.max(0, prevCount - 1));
+    setIsButtonClick(true);
+
   };
+
+  console.log(formState);
 
   useEffect(() => {
     setTagCount(tags.length);
@@ -278,6 +284,8 @@ const EnterpriseProfile = () => {
 
   const updateEnterpriseDetails = async () => {
     try {
+      setIsLoading(true);
+
       const formData = getValues();
       const tagsAsString = tags.join(',');
       const response = await axios.put(
@@ -314,7 +322,8 @@ const EnterpriseProfile = () => {
           setSnackbarMessage('Enterprise details updated successfully');
         }
         setSnackbarOpen(true);
-        setIsButtonClick(true)
+        // setIsButtonClick(true)
+        window.location.reload();
       } else {
         console.error('Failed to update enterprise details');
         setSnackbarMessage('Failed to update enterprise details');
@@ -609,7 +618,7 @@ const EnterpriseProfile = () => {
             />
 
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem} className='enterprise-profile-category'>
             <InputLabel style={styles.label}>Enterprise Categories<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
               <Controller
@@ -830,16 +839,25 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            <Button
+            {isButtonClick ? <Button
               variant="outlined"
-              sx={{ marginY: { xs: "10px" } }}
+              sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              style={{ backgroundColor: "#13538b", color: "lightblue" }}
+              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
               onClick={handleSubmit(updateEnterpriseDetails)}
-              disabled={(!isDirty || isButtonClick)}
+              disabled={isLoading}
             >
-              Save
-            </Button>
+              {isLoading ? <CircularProgress size={24} style={{color: "#fff",}} /> : 'Save'}
+            </Button> : <Button
+              variant="outlined"
+              sx={{ marginY: { xs: '10px' } }}
+              fullWidth
+              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
+              onClick={handleSubmit(updateEnterpriseDetails)}
+              disabled={!isDirty || isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} style={{color: "#fff",}} /> : 'Save'}
+            </Button>}
           </Grid>
         </Grid>
       </Box>
