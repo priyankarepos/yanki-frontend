@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar,CircularProgress } from '@mui/material';
+import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar,CircularProgress, useMediaQuery } from '@mui/material';
 import AdminDashboard from './AdminDashboard';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -238,13 +238,13 @@ const AdminEnterpriseCategory = () => {
     }
   };
 
-
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
     <Box style={{ display: "flex" }}>
-      <Box sx={{ width: drawerOpen ? '270px' : "0" }}><AdminDashboard /></Box>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
       <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
           <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
