@@ -415,7 +415,7 @@ const Departments = () => {
               rules={{
                 required: "Department name is required.",
                 minLength: {
-                  value: 3,
+                  value: 2,
                   message: "Department name should be at least 3 characters long.",
                 },
                 maxLength: {
