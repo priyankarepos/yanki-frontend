@@ -316,6 +316,17 @@ const Departments = () => {
       setSnackbarOpen(true);
       return;
     }
+    const isDuplicate = departmentsData.some(
+      (department) =>
+        department.departmentName.toLowerCase() === formData.DepartmentName.toLowerCase() &&
+        department.departmentId !== selectedDepartmentData?.departmentId
+    );
+  
+    if (isDuplicate) {
+      setSnackbarMessage('The department you are adding already exists.');
+      setSnackbarOpen(true);
+      return;
+    }
     try {
       const tagsAsString = tags.join(',');
       const payload = {
@@ -361,6 +372,15 @@ const Departments = () => {
 
 
   const onSubmit = async (data) => {
+    const isDuplicate = departmentsData.some(
+      (department) => department.departmentName.toLowerCase() === data.DepartmentName.toLowerCase()
+    );
+  
+    if (isDuplicate) {
+      setSnackbarMessage('The department you are adding already exists.');
+      setSnackbarOpen(true);
+      return;
+    }
     try {
       const tagsAsString = tags.join(',');
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
