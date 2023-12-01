@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText, useMediaQuery } from '@mui/material';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { useForm, Controller } from 'react-hook-form';
@@ -351,9 +351,11 @@ Service Offerings:
 • Are there any unique or specialized services that your enterprise offers?
 `;
 
+const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
-      <Box sx={{ width: drawerOpen ? '270px' : "0" }}>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
       <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
