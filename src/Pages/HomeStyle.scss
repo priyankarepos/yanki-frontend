@@ -4,12 +4,13 @@
 
 .fixedSearchBox {
     position: fixed;
-    bottom: 0px;
-    left: 0;
-    right: 0;
-    margin: 0px auto 10px;
-    width: 100%;
+    // bottom: 0px;
+    left: 20px;
+    right: 30px;
+    margin: 0px auto 0px;
+    // width: 100%;
     max-width: 92%;
+    // padding-top: 20px;
 }
 
 .carousel-item {
@@ -62,3 +63,9 @@
     position: absolute;
     border-color: transparent !important;
   }
+
+  @media (max-width: 600px) {
+    .fixedSearchBox {
+        right: 20px;
+    }
+}
