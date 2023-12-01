@@ -219,8 +219,6 @@ const EnterpriseProfile = () => {
     }
   };
 
-  console.log("=============================", errors);
-
   const handleAddTag = async (tag) => {
     try {
       if (tagCount >= 25) {
@@ -284,15 +282,11 @@ const EnterpriseProfile = () => {
 
   };
 
-  console.log(formState);
-
   useEffect(() => {
     setTagCount(tags.length);
   }, [tags]);
 
   const departmentsData = JSON.parse(sessionStorage.getItem('departmentsData')) || [];
-
-  console.log("departmentsData", departmentsData);
 
   const updateEnterpriseDetails = async () => {
     try {

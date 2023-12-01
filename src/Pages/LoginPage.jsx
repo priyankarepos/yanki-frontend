@@ -29,17 +29,6 @@ import "./Style.scss";
 import GoogleIcon from '@mui/icons-material/Google';
 import { useMediaQuery } from "@mui/material";
 
-// const styles = {
-//   inputField: {
-//     backgroundColor: '#eaf5ff',
-//     border: '1px solid #6fa8dd',
-//     borderRadius: '8px',
-//     marginBottom: '16px',
-//     color: "#8bbae5",
-//     width: "100%"
-//   },
-// };
-
 const linkStyle = {
   color: "#457bac",
   fontSize: "15px",

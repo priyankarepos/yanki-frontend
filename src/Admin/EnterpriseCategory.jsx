@@ -87,8 +87,6 @@ const AdminEnterpriseCategory = () => {
   const [confirmationText, setConfirmationText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  console.log("enterpriseCategories", enterpriseCategories);
-
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
@@ -110,7 +108,6 @@ const AdminEnterpriseCategory = () => {
 
   const handleEdit = (id) => {
     const category = enterpriseCategories.find((category) => category.id === id);
-    console.log("category", category);
     setCategoryName(category.name);
     setEditCategoryId(id);
     setIsModalOpen(true);

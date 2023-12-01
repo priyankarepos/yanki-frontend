@@ -53,8 +53,8 @@ const styles = {
     },
     profileCircle: {
         position: 'absolute',
-        top: '10px', // Adjust the top position as needed
-        right: '10px', // Adjust the right position as needed
+        top: '10px',
+        right: '10px',
     },
 };
 
@@ -493,15 +493,15 @@ const NewHomePageMui = () => {
                                 color="primary"
                                 style={{
                                     backgroundColor: chatSession.id === selectedChatId
-                                        ? "#eaf5ff" // Highlighted background color
+                                        ? "#eaf5ff"
                                         : activeTab === 0
-                                            ? "#13416a" // Regular background color for activeTab 0
-                                            : "#eaf5ff", // Regular background color for activeTab 1
+                                            ? "#13416a"
+                                            : "#eaf5ff",
                                     color: chatSession.id === selectedChatId
-                                        ? "#13416a" // Highlighted text color
+                                        ? "#13416a"
                                         : activeTab === 0
-                                            ? "#fff" // Regular text color for activeTab 0
-                                            : "#72a9de", // Regular text color for activeTab 1
+                                            ? "#fff"
+                                            : "#72a9de",
                                     padding: "11px",
                                     borderRadius: "8px",
                                     cursor: "pointer",
@@ -538,15 +538,12 @@ const NewHomePageMui = () => {
                     sx={{
                         width: { xs: "100%", sm: "96%" },
                         marginX: "auto",
-                        // margin: paperMargin,
                         padding: "20px",
                         height: "88vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
-                        // position: "relative",
                         bottom: "20px",
                         marginTop: "0px",
-                        // transform: "translateX(-5px)",
                     }}
                 >
                     <Box className="answerBox" ref={chatContainerRef}
@@ -720,7 +717,7 @@ const NewHomePageMui = () => {
                                     <IconButton
                                         variant="contained"
                                         type="submit"
-                                        disabled={!searchQuery}  // Disable button if searchQuery is empty
+                                        disabled={!searchQuery} 
                                         onClick={onSubmit}
                                         sx={{
                                             marginLeft: "16px",

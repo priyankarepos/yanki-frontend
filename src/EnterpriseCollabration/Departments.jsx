@@ -182,12 +182,6 @@ const Departments = () => {
     }
   };
 
-  // const handleRemoveTag = (tag) => {
-  //   const updatedTags = tags.filter((t) => t !== tag);
-  //   setTags(updatedTags);
-  //   setTagCount((prevCount) => Math.max(0, prevCount - 1));
-  // };
-
   const handleRemoveTag = (tag) => {
     if (tags.length === 1) {
       setSnackbarMessage('At least one tag is required.');
@@ -285,30 +279,6 @@ const Departments = () => {
       console.error('Error deleting department:', error.message);
     }
   };
-
-  // const handleDeleteDepartment = async (index, departmentId) => {
-  //   try {
-  //     const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
-
-  //     const response = await axios.delete(apiUrl);
-
-  //     if (response.status === 200) {
-  //       console.log('Department deleted successfully.');
-  //       setSnackbarMessage('Department deleted successfully');
-  //       setSnackbarOpen(true);
-  //       setSelectedDepartmentData({})
-  //       const updatedDepartments = [...departmentsData];
-  //       updatedDepartments.splice(index, 1);
-  //       setDepartmentsData(updatedDepartments);
-  //     } else {
-  //       console.error('Failed to delete department:', response.statusText);
-  //       setSnackbarMessage('Failed to delete department:');
-  //       setSnackbarOpen(true);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting department:', error.message);
-  //   }
-  // };
 
   const handleSaveDepartment = async (data) => {
     const formData = getValues();
