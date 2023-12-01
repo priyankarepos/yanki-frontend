@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 import "./EnterpriseStyle.scss"
 import ConfirmDialog from './ConfirmDialog';
+import { emailRegex } from '../Utils/validations/validation';
 
 const styles = {
   inputField: {
@@ -441,7 +442,17 @@ const Departments = () => {
             <Controller
               control={control}
               name="DepartmentName"
-              rules={{ required: "Department name is required" }}
+              rules={{
+                required: "Department name is required.",
+                minLength: {
+                  value: 3,
+                  message: "Department name should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Department name should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -465,7 +476,17 @@ const Departments = () => {
             <Controller
               control={control}
               name="NameOfRepresentative"
-              rules={{ required: "Name of representative is required" }}
+              rules={{
+                required: "Name of representative is required.",
+                minLength: {
+                  value: 3,
+                  message: "Name of representative should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Name of representative should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -489,7 +510,16 @@ const Departments = () => {
             <Controller
               control={control}
               name="EmailAddress"
-              rules={{ required: "Email address is required" }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Email address is required.",
+                },
+                pattern: {
+                  value: emailRegex,
+                  message: "Enter valid email address.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField

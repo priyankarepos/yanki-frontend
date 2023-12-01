@@ -224,7 +224,7 @@ const AdminEnterpriseRequest = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <TableContainer component={Paper} style={styles.tableContainer}>
+                    <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
                         <Table style={styles.table}>
                             <TableHead>
                                 <TableRow>

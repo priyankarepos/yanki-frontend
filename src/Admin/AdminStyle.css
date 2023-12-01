@@ -7,6 +7,9 @@
 /* width */
 ::-webkit-scrollbar {
     width: 0px;
+  }
+ 
+  .enterprise-request-table::-webkit-scrollbar {
     height: 8px;
   }
   
