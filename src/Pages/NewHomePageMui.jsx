@@ -55,7 +55,7 @@ const styles = {
         position: 'absolute',
         top: '10px', // Adjust the top position as needed
         right: '10px', // Adjust the right position as needed
-      },
+    },
 };
 
 const NewHomePageMui = () => {
@@ -153,9 +153,9 @@ const NewHomePageMui = () => {
         setSearchHistory([]);
         setSelectedChatId(null);
         sessionStorage.removeItem("selectedChatId");
-        if(!isLargeScreen){
+        if (!isLargeScreen) {
             setDrawerOpen(false);
-        }else{
+        } else {
             setDrawerOpen(true);
         }
     };
@@ -207,7 +207,7 @@ const NewHomePageMui = () => {
                 try {
                     const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
                         const gptResponse = JSON.parse(chatEntry.gptResponse);
-                        
+
                         return {
                             query: chatEntry.userQuery,
                             response: {
@@ -236,9 +236,9 @@ const NewHomePageMui = () => {
                     console.error("Error parsing chat history:", parseError);
 
                 }
-                if(!isLargeScreen){
+                if (!isLargeScreen) {
                     setDrawerOpen(false);
-                }else{
+                } else {
                     setDrawerOpen(true);
                 }
             }
@@ -259,7 +259,7 @@ const NewHomePageMui = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [initialChatOpen, chatSessions, handleChatSessionClick]);
-    
+
     const fetchChatHistory = async (chatId) => {
         try {
             const response = await axios.get(
@@ -381,36 +381,36 @@ const NewHomePageMui = () => {
                 }}
             >
                 <Toolbar>
-                    {!drawerOpen && 
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexDirection: "row",
-                            marginX: "auto",
-                            width: "280px",
-                        }}
-                    >
-                        <img
-                            src={
-                                activeTab === 0
-                                    ? "/auth-logo-dark.svg"
-                                    : "/auth-logo-light.svg"
-                            }
-                            style={{ width: queryAnswer ? "10em" : "10em" }}
-                            alt="logo"
-                        />
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={toggleDrawer}
-                            style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                    {!drawerOpen &&
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                marginX: "auto",
+                                width: "280px",
+                            }}
                         >
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
+                            <img
+                                src={
+                                    activeTab === 0
+                                        ? "/auth-logo-dark.svg"
+                                        : "/auth-logo-light.svg"
+                                }
+                                style={{ width: queryAnswer ? "10em" : "10em" }}
+                                alt="logo"
+                            />
+                            <IconButton
+                                edge="end"
+                                color="inherit"
+                                aria-label="menu"
+                                onClick={toggleDrawer}
+                                style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Box>
                     }
                     <ProfileCircle />
                 </Toolbar>
@@ -684,6 +684,7 @@ const NewHomePageMui = () => {
                                     display: "flex",
                                     alignItems: "center",
                                 }}
+                                className="search-wrapper"
                             >
                                 <TextField
                                     fullWidth
@@ -719,7 +720,7 @@ const NewHomePageMui = () => {
                                     <IconButton
                                         variant="contained"
                                         type="submit"
-                                        disabled={isSubmitting}
+                                        disabled={!searchQuery}  // Disable button if searchQuery is empty
                                         onClick={onSubmit}
                                         sx={{
                                             marginLeft: "16px",
