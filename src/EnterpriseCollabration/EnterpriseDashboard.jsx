@@ -74,11 +74,11 @@ const EnterpriseDashboard = () => {
     };
 
     const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    useEffect(() => {
-        if (isSmallScreen && !drawerOpen) {
-            setDrawerOpen(false);
-        }
-    }, [isSmallScreen, drawerOpen, setDrawerOpen]);
+    // useEffect(() => {
+    //     if (isSmallScreen && !drawerOpen) {
+    //         setDrawerOpen(false);
+    //     }
+    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
 
     useEffect(() => {
         window.addEventListener("resize", throttledToggleDrawer);
@@ -112,7 +112,7 @@ const EnterpriseDashboard = () => {
                 </Toolbar>
             </AppBar>
 
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
+            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img
