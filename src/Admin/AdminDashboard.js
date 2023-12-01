@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
     Drawer,
@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 
 const styles = {
     enterpriseDashboard: {
@@ -72,19 +72,19 @@ const AdminDashboard = () => {
         setDrawerOpen(!drawerOpen);
     };
 
-    const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    useEffect(() => {
-        if (isSmallScreen && !drawerOpen) {
-            setDrawerOpen(false);
-        }
-    }, [isSmallScreen, drawerOpen, setDrawerOpen]);
+    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
+    // useEffect(() => {
+    //     if (isSmallScreen && !drawerOpen) {
+    //         setDrawerOpen(false);
+    //     }
+    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
 
-    useEffect(() => {
-        window.addEventListener("resize", throttledToggleDrawer);
-        return () => {
-            window.removeEventListener("resize", throttledToggleDrawer);
-        };
-    }, [throttledToggleDrawer]);
+    // useEffect(() => {
+    //     window.addEventListener("resize", throttledToggleDrawer);
+    //     return () => {
+    //         window.removeEventListener("resize", throttledToggleDrawer);
+    //     };
+    // }, [throttledToggleDrawer]);
 
     return (
         <div style={styles.enterpriseDashboard}>
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
+            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img
