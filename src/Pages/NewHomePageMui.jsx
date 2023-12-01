@@ -594,7 +594,7 @@ const NewHomePageMui = () => {
                     </Box>
 
                     <Box sx={{
-                        marginLeft: drawerOpen && !isSmallScreen ? "280px" : "0px", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "80px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
+                        marginLeft: drawerOpen && !isSmallScreen ? "280px" : "0px", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
                         background:activeTab===1 ?  "#eaf5ff" : "transparent",'@media (min-width: 1300px)': {
                             background:activeTab===1 ?  "#eaf5ff" : "#13416a",
                             bottom: "20px",
