@@ -4,7 +4,7 @@ import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 
 const DemoEnterpriseChat = ({ answer }) => {
-    console.log("answer", answer);
+
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");

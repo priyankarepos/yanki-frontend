@@ -10,6 +10,7 @@ import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
+import { CircularProgress } from '@mui/material';
 
 const styles = {
   inputField: {
@@ -64,6 +65,7 @@ const EnterpriseProfile = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isButtonClick, setIsButtonClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
@@ -95,12 +97,19 @@ const EnterpriseProfile = () => {
     },
     criteriaMode: 'all',
     validate: (data) => {
-      return {
+      const validationErrors = {
         EnterpriseIdentificationKeywords:
           data.EnterpriseIdentificationKeywords.length > 0 ||
           'At least one keyword is required',
       };
-      // Add more validation rules for other fields if needed
+
+      // Validate that opening and closing times are not the same
+      if (data.BusinessHoursOpeningTime === data.BusinessHoursClosingTime) {
+        validationErrors.BusinessHoursClosingTime =
+          'Opening and closing times cannot be the same';
+      }
+
+      return validationErrors;
     },
   });
 
@@ -210,8 +219,6 @@ const EnterpriseProfile = () => {
     }
   };
 
-  console.log("=============================", errors);
-
   const handleAddTag = async (tag) => {
     try {
       if (tagCount >= 25) {
@@ -263,9 +270,16 @@ const EnterpriseProfile = () => {
 
 
   const handleRemoveTag = (tag) => {
+    if (tags.length === 1) {
+      setSnackbarMessage('At least one tag is required.');
+      setSnackbarOpen(true);
+      return;
+    }
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
     setTagCount((prevCount) => Math.max(0, prevCount - 1));
+    setIsButtonClick(true);
+
   };
 
   useEffect(() => {
@@ -274,10 +288,10 @@ const EnterpriseProfile = () => {
 
   const departmentsData = JSON.parse(sessionStorage.getItem('departmentsData')) || [];
 
-  console.log("departmentsData", departmentsData);
-
   const updateEnterpriseDetails = async () => {
     try {
+      setIsLoading(true);
+
       const formData = getValues();
       const tagsAsString = tags.join(',');
       const response = await axios.put(
@@ -314,7 +328,8 @@ const EnterpriseProfile = () => {
           setSnackbarMessage('Enterprise details updated successfully');
         }
         setSnackbarOpen(true);
-        setIsButtonClick(true)
+        // setIsButtonClick(true)
+        window.location.reload();
       } else {
         console.error('Failed to update enterprise details');
         setSnackbarMessage('Failed to update enterprise details');
@@ -326,6 +341,15 @@ const EnterpriseProfile = () => {
   };
 
   const contentMargin = drawerOpen ? '0' : '0';
+
+  const placeholderText = `Product Overview:
+• Could you please provide an overview of the products you offer?
+• What are the key features and benefits of your products?
+
+Service Offerings:
+• What services does your enterprise provide, and what’s the market you’re focusing?
+• Are there any unique or specialized services that your enterprise offers?
+`;
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
@@ -579,7 +603,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="Enterprise-Description">
             <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
@@ -593,10 +617,10 @@ const EnterpriseProfile = () => {
                       border: '1px solid #6fa8dd',
                       borderRadius: '8px',
                       marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",fontFamily: "unset",textTransform: "none",
                     }}
                     {...field}
-                    placeholder="Type enterprise description here"
+                    placeholder={placeholderText}
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
@@ -609,7 +633,7 @@ const EnterpriseProfile = () => {
             />
 
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
+          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem} className='enterprise-profile-category'>
             <InputLabel style={styles.label}>Enterprise Categories<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
               <Controller
@@ -830,16 +854,25 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            <Button
+            {(isButtonClick || selectedCategory) ? <Button
               variant="outlined"
-              sx={{ marginY: { xs: "10px" } }}
+              sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              style={{ backgroundColor: "#13538b", color: "lightblue" }}
+              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
               onClick={handleSubmit(updateEnterpriseDetails)}
-              disabled={(!isDirty || isButtonClick)}
+              disabled={isLoading}
             >
-              Save
-            </Button>
+              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
+            </Button> : <Button
+              variant="outlined"
+              sx={{ marginY: { xs: '10px' } }}
+              fullWidth
+              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
+              onClick={handleSubmit(updateEnterpriseDetails)}
+              disabled={!isDirty || isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
+            </Button>}
           </Grid>
         </Grid>
       </Box>

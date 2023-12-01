@@ -96,31 +96,19 @@ const EnterpriseDashboard = () => {
         <div style={styles.enterpriseDashboard}>
             <CssBaseline />
             <AppBar position="fixed" style={styles.appBar} className='appBarSmallScreen'>
-                <Toolbar>
-                    {/* <Link
-                        to="/"
-                        style={{ textDecoration: 'none', width: "270px", }}
-                        className="logoStyleSmallScreen"
-                    >
-                        <img
-                            src={DarkYankilogo}
-                            style={styles.logoStyle}
-                            className="logo"
-                            alt="Yanki logo"
-                        />
-                    </Link> */}
-                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0", }}>
+                <Toolbar style={{ justifyContent: 'space-between' }}>
+                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', width: "100%" }}>
                         {<Typography variant="h6">Networking Interface</Typography>}
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={() => toggleDrawer()}
-                            style={styles.menuButton}
-                        >
-                            <MenuIcon />
-                        </IconButton>
                     </Box>
+                    <IconButton
+                        edge="end"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={() => toggleDrawer()}
+                        style={styles.menuButton}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
