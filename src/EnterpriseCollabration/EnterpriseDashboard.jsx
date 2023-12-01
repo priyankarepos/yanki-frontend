@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
     Drawer,
@@ -22,7 +22,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 
 const styles = {
     enterpriseDashboard: {
@@ -73,23 +73,19 @@ const EnterpriseDashboard = () => {
         setDrawerOpen(!drawerOpen);
     };
 
-    const throttledToggleDrawer = throttle(toggleDrawer, 200);
+    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
     // useEffect(() => {
     //     if (isSmallScreen && !drawerOpen) {
     //         setDrawerOpen(false);
     //     }
     // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
 
-    useEffect(() => {
-        window.addEventListener("resize", throttledToggleDrawer);
-        return () => {
-            window.removeEventListener("resize", throttledToggleDrawer);
-        };
-    }, [throttledToggleDrawer]);
-
-    // const toggleDropdown = () => {
-    //     setDropdownOpen(!isDropdownOpen);
-    // };
+    // useEffect(() => {
+    //     window.addEventListener("resize", throttledToggleDrawer);
+    //     return () => {
+    //         window.removeEventListener("resize", throttledToggleDrawer);
+    //     };
+    // }, [throttledToggleDrawer]);
 
 
     return (
