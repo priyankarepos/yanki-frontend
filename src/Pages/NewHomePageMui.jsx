@@ -18,6 +18,7 @@ import {
     TableCell,
     TableHead,
     Table,
+    Snackbar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -33,6 +34,8 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SearchHistoryItem from "./SearchHistoryItem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 
 
 const styles = {
@@ -55,7 +58,7 @@ const styles = {
         position: 'absolute',
         top: '10px', // Adjust the top position as needed
         right: '10px', // Adjust the right position as needed
-      },
+    },
 };
 
 const NewHomePageMui = () => {
@@ -75,6 +78,20 @@ const NewHomePageMui = () => {
     // const [pageNumber, setPageNumber] = useState(0)
     // const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [confirmationText, setConfirmationText] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [hoverChatId, setHoverChatId] = useState(null);
+
+    const handleMouseEnter = (chatId) => {
+        setHoverChatId(chatId);
+      };
+      
+      const handleMouseLeave = () => {
+        setHoverChatId(null);
+      };
+
 
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
@@ -153,9 +170,9 @@ const NewHomePageMui = () => {
         setSearchHistory([]);
         setSelectedChatId(null);
         sessionStorage.removeItem("selectedChatId");
-        if(!isLargeScreen){
+        if (!isLargeScreen) {
             setDrawerOpen(false);
-        }else{
+        } else {
             setDrawerOpen(true);
         }
     };
@@ -207,7 +224,7 @@ const NewHomePageMui = () => {
                 try {
                     const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
                         const gptResponse = JSON.parse(chatEntry.gptResponse);
-                        
+
                         return {
                             query: chatEntry.userQuery,
                             response: {
@@ -236,9 +253,9 @@ const NewHomePageMui = () => {
                     console.error("Error parsing chat history:", parseError);
 
                 }
-                if(!isLargeScreen){
+                if (!isLargeScreen) {
                     setDrawerOpen(false);
-                }else{
+                } else {
                     setDrawerOpen(true);
                 }
             }
@@ -259,7 +276,7 @@ const NewHomePageMui = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [initialChatOpen, chatSessions, handleChatSessionClick]);
-    
+
     const fetchChatHistory = async (chatId) => {
         try {
             const response = await axios.get(
@@ -319,6 +336,36 @@ const NewHomePageMui = () => {
             window.removeEventListener("resize", handleSidebarState);
         };
     }, []);
+
+    const handleDeleteClick = (id) => {
+        setConfirmDialogOpen(true);
+        setSelectedChatId(id);
+        setConfirmationText(`Are you sure you want to delete this chat?`);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            const response = await axios.delete(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
+            );
+
+            if (response.status === 200) {
+                const updatedChatSessions = chatSessions.filter((session) => session.id !== selectedChatId);
+                setChatSessions(updatedChatSessions);
+
+                // Update other state or show snackbar message as needed
+                setSnackbarMessage('Chat session deleted successfully');
+                setSnackbarOpen(true);
+                console.log('Chat session deleted successfully');
+            } else {
+                console.error('Failed to delete chat session');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setConfirmDialogOpen(false);
+        }
+    };
 
 
     const contentMargin = drawerOpen && !isSmallScreen ? "260px" : "0";
@@ -381,36 +428,36 @@ const NewHomePageMui = () => {
                 }}
             >
                 <Toolbar>
-                    {!drawerOpen && 
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexDirection: "row",
-                            marginX: "auto",
-                            width: "280px",
-                        }}
-                    >
-                        <img
-                            src={
-                                activeTab === 0
-                                    ? "/auth-logo-dark.svg"
-                                    : "/auth-logo-light.svg"
-                            }
-                            style={{ width: queryAnswer ? "10em" : "10em" }}
-                            alt="logo"
-                        />
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={toggleDrawer}
-                            style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                    {!drawerOpen &&
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                marginX: "auto",
+                                width: "280px",
+                            }}
                         >
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
+                            <img
+                                src={
+                                    activeTab === 0
+                                        ? "/auth-logo-dark.svg"
+                                        : "/auth-logo-light.svg"
+                                }
+                                style={{ width: queryAnswer ? "10em" : "10em" }}
+                                alt="logo"
+                            />
+                            <IconButton
+                                edge="end"
+                                color="inherit"
+                                aria-label="menu"
+                                onClick={toggleDrawer}
+                                style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Box>
                     }
                     <ProfileCircle />
                 </Toolbar>
@@ -488,40 +535,65 @@ const NewHomePageMui = () => {
                             
                         </InfiniteScroll> */}
                         {chatSessions.map((chatSession) => (
-                            <IconButton
-                                key={chatSession.id}
-                                color="primary"
-                                style={{
-                                    backgroundColor: chatSession.id === selectedChatId
-                                        ? "#eaf5ff" // Highlighted background color
-                                        : activeTab === 0
-                                            ? "#13416a" // Regular background color for activeTab 0
-                                            : "#eaf5ff", // Regular background color for activeTab 1
-                                    color: chatSession.id === selectedChatId
-                                        ? "#13416a" // Highlighted text color
-                                        : activeTab === 0
-                                            ? "#fff" // Regular text color for activeTab 0
-                                            : "#72a9de", // Regular text color for activeTab 1
-                                    padding: "11px",
-                                    borderRadius: "8px",
-                                    cursor: "pointer",
-                                    display: "flex",
-                                    fontSize,
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                    marginTop: "10px",
-                                }}
-                                onClick={() => handleChatSessionClick(chatSession.id)}
-                            >
-                                <ChatBubbleIcon />
-                                <Typography style={{
-                                    width: "200px",
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden", textAlign: "left"
-                                }}>&nbsp; {chatSession.name}</Typography>
-                            </IconButton>
+                            <div key={chatSession.id} style={{ position: "relative" }}>
+                                <IconButton
+                                    color="primary"
+                                    style={{
+                                        backgroundColor: chatSession.id === selectedChatId
+                                            ? "#eaf5ff" // Highlighted background color
+                                            : activeTab === 0
+                                                ? "#13416a" // Regular background color for activeTab 0
+                                                : "#eaf5ff", // Regular background color for activeTab 1
+                                        color: chatSession.id === selectedChatId
+                                            ? "#13416a" // Highlighted text color
+                                            : activeTab === 0
+                                                ? "#fff" // Regular text color for activeTab 0
+                                                : "#72a9de", // Regular text color for activeTab 1
+                                        padding: "11px",
+                                        borderRadius: "8px",
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        fontSize,
+                                        justifyContent: "flex-start",
+                                        alignItems: "center",
+                                        marginTop: "10px",
+                                        position: "relative", // Added position relative to the parent container
+                                    }}
+                                    onClick={() => handleChatSessionClick(chatSession.id)}
+                                    onMouseEnter={() => handleMouseEnter(chatSession.id)}
+                                    onMouseLeave={() => handleMouseLeave()}
+                                >
+                                    <ChatBubbleIcon />
+                                    <Typography style={{
+                                        width: "200px",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textAlign: "left",
+                                        marginLeft: "8px", // Adjust the spacing between the icon and text
+                                    }}>
+                                        &nbsp; {chatSession.name}
+                                    </Typography>
+                                    {chatSession.id === hoverChatId && (
+                                        <IconButton
+                                            style={{
+                                                position: "absolute",
+                                                top: "2px",
+                                                right: 0,
+                                                backgroundColor: "#13416a", // Customize delete icon background color
+                                                color: "#fff", // Customize delete icon text color
+                                                borderRadius: "0 8px 0 0", // Optional: Adjust the border radius
+                                            }}
+                                            onClick={() => handleDeleteClick(chatSession.id)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    )}
+                                </IconButton>
+                            </div>
                         ))}
+
+
 
                     </Box>
                 </div>
@@ -740,6 +812,18 @@ const NewHomePageMui = () => {
                 </Box>
             </Box>
             <Outlet />
+            <ConfirmDialog
+                open={confirmDialogOpen}
+                handleClose={() => setConfirmDialogOpen(false)}
+                handleConfirm={handleConfirmDelete}
+                confirmationText={confirmationText}
+            />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </Box >
     );
 };
