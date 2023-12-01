@@ -97,12 +97,19 @@ const EnterpriseProfile = () => {
     },
     criteriaMode: 'all',
     validate: (data) => {
-      return {
+      const validationErrors = {
         EnterpriseIdentificationKeywords:
           data.EnterpriseIdentificationKeywords.length > 0 ||
           'At least one keyword is required',
       };
-      // Add more validation rules for other fields if needed
+
+      // Validate that opening and closing times are not the same
+      if (data.BusinessHoursOpeningTime === data.BusinessHoursClosingTime) {
+        validationErrors.BusinessHoursClosingTime =
+          'Opening and closing times cannot be the same';
+      }
+
+      return validationErrors;
     },
   });
 
@@ -265,6 +272,11 @@ const EnterpriseProfile = () => {
 
 
   const handleRemoveTag = (tag) => {
+    if (tags.length === 1) {
+      setSnackbarMessage('At least one tag is required.');
+      setSnackbarOpen(true);
+      return;
+    }
     const updatedTags = tags.filter((t) => t !== tag);
     setTags(updatedTags);
     setTagCount((prevCount) => Math.max(0, prevCount - 1));
@@ -839,7 +851,7 @@ const EnterpriseProfile = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            {isButtonClick ? <Button
+            {(isButtonClick || selectedCategory) ? <Button
               variant="outlined"
               sx={{ marginY: { xs: '10px' } }}
               fullWidth
@@ -847,7 +859,7 @@ const EnterpriseProfile = () => {
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={isLoading}
             >
-              {isLoading ? <CircularProgress size={24} style={{color: "#fff",}} /> : 'Save'}
+              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
             </Button> : <Button
               variant="outlined"
               sx={{ marginY: { xs: '10px' } }}
@@ -856,7 +868,7 @@ const EnterpriseProfile = () => {
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={!isDirty || isLoading}
             >
-              {isLoading ? <CircularProgress size={24} style={{color: "#fff",}} /> : 'Save'}
+              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
             </Button>}
           </Grid>
         </Grid>
