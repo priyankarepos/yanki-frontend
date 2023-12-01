@@ -42,7 +42,7 @@ const PdfAnswers = ({ answer }) => {
                     justifyContent: 'center',
                 }}
             >
-                <div className="pdf-modal" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+                <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
                     <IconButton
                         style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
                         onClick={closePdfModal}
