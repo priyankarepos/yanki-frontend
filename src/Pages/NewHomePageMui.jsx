@@ -86,11 +86,11 @@ const NewHomePageMui = () => {
 
     const handleMouseEnter = (chatId) => {
         setHoverChatId(chatId);
-      };
-      
-      const handleMouseLeave = () => {
+    };
+
+    const handleMouseLeave = () => {
         setHoverChatId(null);
-      };
+    };
 
 
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
@@ -357,6 +357,7 @@ const NewHomePageMui = () => {
                 setSnackbarMessage('Chat session deleted successfully');
                 setSnackbarOpen(true);
                 console.log('Chat session deleted successfully');
+                resetPage()
             } else {
                 console.error('Failed to delete chat session');
             }
@@ -580,8 +581,16 @@ const NewHomePageMui = () => {
                                                 position: "absolute",
                                                 top: "2px",
                                                 right: 0,
-                                                backgroundColor: "#13416a", // Customize delete icon background color
-                                                color: "#fff", // Customize delete icon text color
+                                                backgroundColor: chatSession.id === selectedChatId
+                                            ? "#eaf5ff" // Highlighted background color
+                                            : activeTab === 0
+                                                ? "#13416a" // Regular background color for activeTab 0
+                                                : "#eaf5ff", 
+                                                color: chatSession.id === selectedChatId
+                                            ? "#13416a" // Highlighted text color
+                                            : activeTab === 0
+                                                ? "#fff" // Regular text color for activeTab 0
+                                                : "#72a9de", // Regular text color for activeTab 1
                                                 borderRadius: "0 8px 0 0", // Optional: Adjust the border radius
                                             }}
                                             onClick={() => handleDeleteClick(chatSession.id)}
