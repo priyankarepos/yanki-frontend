@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 import "./EnterpriseStyle.scss"
 import ConfirmDialog from './ConfirmDialog';
+import { emailRegex } from '../Utils/validations/validation';
 
 const styles = {
   inputField: {
@@ -181,12 +182,6 @@ const Departments = () => {
     }
   };
 
-  // const handleRemoveTag = (tag) => {
-  //   const updatedTags = tags.filter((t) => t !== tag);
-  //   setTags(updatedTags);
-  //   setTagCount((prevCount) => Math.max(0, prevCount - 1));
-  // };
-
   const handleRemoveTag = (tag) => {
     if (tags.length === 1) {
       setSnackbarMessage('At least one tag is required.');
@@ -284,30 +279,6 @@ const Departments = () => {
       console.error('Error deleting department:', error.message);
     }
   };
-
-  // const handleDeleteDepartment = async (index, departmentId) => {
-  //   try {
-  //     const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
-
-  //     const response = await axios.delete(apiUrl);
-
-  //     if (response.status === 200) {
-  //       console.log('Department deleted successfully.');
-  //       setSnackbarMessage('Department deleted successfully');
-  //       setSnackbarOpen(true);
-  //       setSelectedDepartmentData({})
-  //       const updatedDepartments = [...departmentsData];
-  //       updatedDepartments.splice(index, 1);
-  //       setDepartmentsData(updatedDepartments);
-  //     } else {
-  //       console.error('Failed to delete department:', response.statusText);
-  //       setSnackbarMessage('Failed to delete department:');
-  //       setSnackbarOpen(true);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting department:', error.message);
-  //   }
-  // };
 
   const handleSaveDepartment = async (data) => {
     const formData = getValues();
@@ -441,7 +412,17 @@ const Departments = () => {
             <Controller
               control={control}
               name="DepartmentName"
-              rules={{ required: "Department name is required" }}
+              rules={{
+                required: "Department name is required.",
+                minLength: {
+                  value: 3,
+                  message: "Department name should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Department name should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -465,7 +446,17 @@ const Departments = () => {
             <Controller
               control={control}
               name="NameOfRepresentative"
-              rules={{ required: "Name of representative is required" }}
+              rules={{
+                required: "Name of representative is required.",
+                minLength: {
+                  value: 3,
+                  message: "Name of representative should be at least 3 characters long.",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Name of representative should not exceed 20 characters.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -489,7 +480,16 @@ const Departments = () => {
             <Controller
               control={control}
               name="EmailAddress"
-              rules={{ required: "Email address is required" }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Email address is required.",
+                },
+                pattern: {
+                  value: emailRegex,
+                  message: "Enter valid email address.",
+                },
+              }}
               render={({ field }) => (
                 <div>
                   <TextField

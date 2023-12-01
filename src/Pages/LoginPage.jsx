@@ -29,17 +29,6 @@ import "./Style.scss";
 import GoogleIcon from '@mui/icons-material/Google';
 import { useMediaQuery } from "@mui/material";
 
-// const styles = {
-//   inputField: {
-//     backgroundColor: '#eaf5ff',
-//     border: '1px solid #6fa8dd',
-//     borderRadius: '8px',
-//     marginBottom: '16px',
-//     color: "#8bbae5",
-//     width: "100%"
-//   },
-// };
-
 const linkStyle = {
   color: "#457bac",
   fontSize: "15px",
@@ -115,10 +104,22 @@ const LoginPage = () => {
     } catch (e) {
       setLoginLoading(false);
       setLoginError(true);
-      if (e?.response?.data?.message) {
+      if (e?.response?.data?.message && activeTab === 0) {
         setLoginErrorMsg(e?.response?.data?.message);
       } else {
-        setLoginErrorMsg("Something went wrong");
+        if (activeTab === 1) {
+          setLoginErrorMsg(
+            <span>
+              This email isn't registered. Please sign up to become a Yanki partner.
+              Contact us at{" "}
+              <Link href="mailto:hello@yanki.ai" color="inherit">
+                hello@yanki.ai
+              </Link>
+            </span>
+          );
+        } else {
+          setLoginErrorMsg("Something went wrong");
+        }
       }
     }
   };

@@ -63,9 +63,6 @@ const AdminEnterpriseRequest = () => {
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
 
-    console.log("enterpriseRequests", enterpriseRequests);
-    console.log("selectedCategory", selectedCategory);
-
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
         setSnackbarSeverity(severity);
@@ -224,7 +221,7 @@ const AdminEnterpriseRequest = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <TableContainer component={Paper} style={styles.tableContainer}>
+                    <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
                         <Table style={styles.table}>
                             <TableHead>
                                 <TableRow>

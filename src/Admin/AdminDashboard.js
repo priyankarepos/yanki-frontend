@@ -93,7 +93,7 @@ const AdminDashboard = () => {
                 <Toolbar>
                     <Link
                         to="/"
-                        style={{ textDecoration: 'none', width: "270px", }}
+                        style={{ textDecoration: 'none', width: "270px" }}
                     >
                         <img
                             src={DarkYankilogo}
@@ -103,12 +103,19 @@ const AdminDashboard = () => {
                         />
                     </Link>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "calc(100% - 270px)" }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            {/* Add your additional components here if needed */}
+                        </Box>
                         <IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
                             onClick={() => toggleDrawer()}
-                            style={styles.menuButton}
+                            style={{
+                                ...styles.menuButton,
+                                marginLeft: drawerOpen ? "-5px" : "-10px", // Adjust the left shift value as needed
+                                transition: 'margin-left 0.3s ease-in-out',
+                            }}
                         >
                             <MenuIcon />
                         </IconButton>
