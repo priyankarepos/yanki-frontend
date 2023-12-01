@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Table, Snackbar, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, FormHelperText } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Table, Snackbar, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, FormHelperText, useMediaQuery } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard'
@@ -395,11 +395,11 @@ const Departments = () => {
   };
 
 
-
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
     <Box style={{ display: "flex", backgroundColor: '#fff' }}>
-      <Box sx={{ width: drawerOpen ? '270px' : "0" }}>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
       <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>

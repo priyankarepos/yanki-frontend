@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, TextField, Button, Paper } from '@mui/material';
+import { Box, Typography, Grid, TextField, Button, Paper, useMediaQuery } from '@mui/material';
 import React, { useContext, useState, useEffect } from 'react';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import axios from 'axios';
@@ -149,10 +149,10 @@ const AdminSearchRepostPage = () => {
     setSelectedPageSize(event.target.value);
   };
 
-
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   return (
     <Box style={{display:"flex"}}>
-        <Box sx={{ width: drawerOpen ? '270px' : "0" }}><AdminDashboard /></Box>
+        <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
         <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
         <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
