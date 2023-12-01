@@ -342,6 +342,15 @@ const EnterpriseProfile = () => {
 
   const contentMargin = drawerOpen ? '0' : '0';
 
+  const placeholderText = `Product Overview:
+• Could you please provide an overview of the products you offer?
+• What are the key features and benefits of your products?
+
+Service Offerings:
+• What services does your enterprise provide, and what’s the market you’re focusing?
+• Are there any unique or specialized services that your enterprise offers?
+`;
+
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
       <Box sx={{ width: drawerOpen ? '270px' : "0" }}>
@@ -594,7 +603,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="Enterprise-Description">
             <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
@@ -608,10 +617,10 @@ const EnterpriseProfile = () => {
                       border: '1px solid #6fa8dd',
                       borderRadius: '8px',
                       marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",fontFamily: "unset",textTransform: "none",
                     }}
                     {...field}
-                    placeholder="Type enterprise description here"
+                    placeholder={placeholderText}
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}

@@ -104,10 +104,22 @@ const LoginPage = () => {
     } catch (e) {
       setLoginLoading(false);
       setLoginError(true);
-      if (e?.response?.data?.message) {
+      if (e?.response?.data?.message && activeTab === 0) {
         setLoginErrorMsg(e?.response?.data?.message);
       } else {
-        setLoginErrorMsg("Something went wrong");
+        if (activeTab === 1) {
+          setLoginErrorMsg(
+            <span>
+              This email isn't registered. Please sign up to become a Yanki partner.
+              Contact us at{" "}
+              <Link href="mailto:hello@yanki.ai" color="inherit">
+                hello@yanki.ai
+              </Link>
+            </span>
+          );
+        } else {
+          setLoginErrorMsg("Something went wrong");
+        }
       }
     }
   };
