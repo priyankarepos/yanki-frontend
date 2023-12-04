@@ -354,7 +354,7 @@ const NewHomePageMui = () => {
                 setChatSessions(updatedChatSessions);
 
                 // Update other state or show snackbar message as needed
-                setSnackbarMessage('Chat session deleted successfully');
+                setSnackbarMessage(response?.data?.message);
                 setSnackbarOpen(true);
                 console.log('Chat session deleted successfully');
                 resetPage()
