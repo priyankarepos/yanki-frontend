@@ -153,37 +153,6 @@ const EnterpriseSignup = () => {
         }
     };
 
-    // const onSuccess = async (codeResponse) => {
-    //     try {
-    //         setSigninLoading(true);
-    //         const { access_token } = codeResponse;
-    //         console.log("access_token", access_token);
-    //         console.log("codeResponse", codeResponse);
-
-    //         const response = await axios.post(
-    //             `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
-    //             { access_token }
-    //         );
-
-    //         if (response.status === 200) {
-    //             navigate("/login");
-    //         } else {
-    //             setSigninError(true);
-    //             setSigninErrorMsg("Authentication failed.");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //         setSigninError(true);
-    //         setSigninErrorMsg("Something went wrong.");
-    //     } finally {
-    //         setSigninLoading(false);
-    //     }
-    // };
-
-    // const login = useGoogleLogin({
-    //     onSuccess,
-    // });
-
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
 

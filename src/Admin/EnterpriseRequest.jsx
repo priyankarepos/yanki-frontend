@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel } from '@mui/material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, useMediaQuery } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
 import { Context } from '../App';
@@ -67,9 +67,6 @@ const AdminEnterpriseRequest = () => {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
     const [userIdToDelete, setUserIdToDelete] = useState(null);
-
-    console.log("enterpriseRequests", enterpriseRequests);
-    console.log("selectedCategory", selectedCategory);
 
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
@@ -211,6 +208,7 @@ const AdminEnterpriseRequest = () => {
         }
     };
 
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
     const contentMargin = drawerOpen ? '0' : '0';
 
@@ -228,7 +226,7 @@ const AdminEnterpriseRequest = () => {
                     }}
                 />
             </Snackbar>
-            <Box sx={{ width: drawerOpen ? '270px' : "0" }}><AdminDashboard /></Box>
+            <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
             <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
                 <Box style={{ ...styles.content, marginLeft: contentMargin }}>
                     <Typography variant="h6" sx={{ pb: 2 }}>Enterprise Request</Typography>
@@ -255,7 +253,7 @@ const AdminEnterpriseRequest = () => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <TableContainer component={Paper} style={styles.tableContainer}>
+                    <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
                         <Table style={styles.table}>
                             <TableHead>
                                 <TableRow>

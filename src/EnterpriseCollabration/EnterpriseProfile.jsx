@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText, useMediaQuery } from '@mui/material';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { useForm, Controller } from 'react-hook-form';
@@ -219,8 +219,6 @@ const EnterpriseProfile = () => {
     }
   };
 
-  console.log("=============================", errors);
-
   const handleAddTag = async (tag) => {
     try {
       if (tagCount >= 25) {
@@ -284,15 +282,11 @@ const EnterpriseProfile = () => {
 
   };
 
-  console.log(formState);
-
   useEffect(() => {
     setTagCount(tags.length);
   }, [tags]);
 
   const departmentsData = JSON.parse(sessionStorage.getItem('departmentsData')) || [];
-
-  console.log("departmentsData", departmentsData);
 
   const updateEnterpriseDetails = async () => {
     try {
@@ -348,9 +342,20 @@ const EnterpriseProfile = () => {
 
   const contentMargin = drawerOpen ? '0' : '0';
 
+  const placeholderText = `Product Overview:
+• Could you please provide an overview of the products you offer?
+• What are the key features and benefits of your products?
+
+Service Offerings:
+• What services does your enterprise provide, and what’s the market you’re focusing?
+• Are there any unique or specialized services that your enterprise offers?
+`;
+
+const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
-      <Box sx={{ width: drawerOpen ? '270px' : "0" }}>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
       <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
@@ -600,7 +605,7 @@ const EnterpriseProfile = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="Enterprise-Description">
             <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
             <Controller
               control={control}
@@ -614,10 +619,10 @@ const EnterpriseProfile = () => {
                       border: '1px solid #6fa8dd',
                       borderRadius: '8px',
                       marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",fontFamily: "unset",textTransform: "none",
                     }}
                     {...field}
-                    placeholder="Type enterprise description here"
+                    placeholder={placeholderText}
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}

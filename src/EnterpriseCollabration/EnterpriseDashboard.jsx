@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
     Drawer,
@@ -22,7 +22,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 
 const styles = {
     enterpriseDashboard: {
@@ -73,58 +73,42 @@ const EnterpriseDashboard = () => {
         setDrawerOpen(!drawerOpen);
     };
 
-    const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    useEffect(() => {
-        if (isSmallScreen && !drawerOpen) {
-            setDrawerOpen(false);
-        }
-    }, [isSmallScreen, drawerOpen, setDrawerOpen]);
+    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
+    // useEffect(() => {
+    //     if (isSmallScreen && !drawerOpen) {
+    //         setDrawerOpen(false);
+    //     }
+    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
 
-    useEffect(() => {
-        window.addEventListener("resize", throttledToggleDrawer);
-        return () => {
-            window.removeEventListener("resize", throttledToggleDrawer);
-        };
-    }, [throttledToggleDrawer]);
-
-    // const toggleDropdown = () => {
-    //     setDropdownOpen(!isDropdownOpen);
-    // };
+    // useEffect(() => {
+    //     window.addEventListener("resize", throttledToggleDrawer);
+    //     return () => {
+    //         window.removeEventListener("resize", throttledToggleDrawer);
+    //     };
+    // }, [throttledToggleDrawer]);
 
 
     return (
         <div style={styles.enterpriseDashboard}>
             <CssBaseline />
             <AppBar position="fixed" style={styles.appBar} className='appBarSmallScreen'>
-                <Toolbar>
-                    {/* <Link
-                        to="/"
-                        style={{ textDecoration: 'none', width: "270px", }}
-                        className="logoStyleSmallScreen"
-                    >
-                        <img
-                            src={DarkYankilogo}
-                            style={styles.logoStyle}
-                            className="logo"
-                            alt="Yanki logo"
-                        />
-                    </Link> */}
-                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%", marginLeft: drawerOpen ? "270px" : "0", }}>
+                <Toolbar style={{ justifyContent: 'space-between' }}>
+                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', width: "100%" }}>
                         {<Typography variant="h6">Networking Interface</Typography>}
-                        <IconButton
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={() => toggleDrawer()}
-                            style={styles.menuButton}
-                        >
-                            <MenuIcon />
-                        </IconButton>
                     </Box>
+                    <IconButton
+                        edge="end"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={() => toggleDrawer()}
+                        style={styles.menuButton}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
+            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img

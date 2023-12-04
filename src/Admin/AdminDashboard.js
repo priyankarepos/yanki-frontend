@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
     Drawer,
@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 
 const styles = {
     enterpriseDashboard: {
@@ -72,19 +72,19 @@ const AdminDashboard = () => {
         setDrawerOpen(!drawerOpen);
     };
 
-    const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    useEffect(() => {
-        if (isSmallScreen && !drawerOpen) {
-            setDrawerOpen(false);
-        }
-    }, [isSmallScreen, drawerOpen, setDrawerOpen]);
+    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
+    // useEffect(() => {
+    //     if (isSmallScreen && !drawerOpen) {
+    //         setDrawerOpen(false);
+    //     }
+    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
 
-    useEffect(() => {
-        window.addEventListener("resize", throttledToggleDrawer);
-        return () => {
-            window.removeEventListener("resize", throttledToggleDrawer);
-        };
-    }, [throttledToggleDrawer]);
+    // useEffect(() => {
+    //     window.addEventListener("resize", throttledToggleDrawer);
+    //     return () => {
+    //         window.removeEventListener("resize", throttledToggleDrawer);
+    //     };
+    // }, [throttledToggleDrawer]);
 
     return (
         <div style={styles.enterpriseDashboard}>
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
                 <Toolbar>
                     <Link
                         to="/"
-                        style={{ textDecoration: 'none', width: "270px", }}
+                        style={{ textDecoration: 'none', width: "270px" }}
                     >
                         <img
                             src={DarkYankilogo}
@@ -103,19 +103,26 @@ const AdminDashboard = () => {
                         />
                     </Link>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "calc(100% - 270px)" }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            {/* Add your additional components here if needed */}
+                        </Box>
                         <IconButton
                             edge="end"
                             color="inherit"
                             aria-label="menu"
                             onClick={() => toggleDrawer()}
-                            style={styles.menuButton}
+                            style={{
+                                ...styles.menuButton,
+                                marginLeft: drawerOpen ? "-5px" : "-10px", // Adjust the left shift value as needed
+                                transition: 'margin-left 0.3s ease-in-out',
+                            }}
                         >
                             <MenuIcon />
                         </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
+            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent">
                 <div style={styles.sidebar}>
                     <Link to="/" style={{ textDecoration: 'none' }}>
                         <img

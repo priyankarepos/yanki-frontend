@@ -56,8 +56,8 @@ const styles = {
     },
     profileCircle: {
         position: 'absolute',
-        top: '10px', // Adjust the top position as needed
-        right: '10px', // Adjust the right position as needed
+        top: '10px',
+        right: '10px',
     },
 };
 
@@ -619,15 +619,15 @@ const NewHomePageMui = () => {
                     sx={{
                         width: { xs: "100%", sm: "96%" },
                         marginX: "auto",
-                        // margin: paperMargin,
                         padding: "20px",
-                        height: "88vh",
+                        height: "90vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
-                        // position: "relative",
                         bottom: "20px",
                         marginTop: "0px",
-                        // transform: "translateX(-5px)",
+                        '@media (min-width: 1300px)': {
+                            height: "100vh",
+                        },
                     }}
                 >
                     <Box className="answerBox" ref={chatContainerRef}
@@ -637,6 +637,7 @@ const NewHomePageMui = () => {
                             minHeight: "calc(100% - 90px)",
                             maxHeight: "calc(100% - 90px)",
                             overflowY: "auto",
+                            overflowX: "hidden",
                         }}>
                         <Box>
                             {searchHistory.map((entry, index) => (
@@ -673,7 +674,14 @@ const NewHomePageMui = () => {
                         </Box>}
                     </Box>
 
-                    <Box sx={{ paddingLeft: drawerOpen && !isSmallScreen ? "280px" : "0px" }} className="fixedSearchBox">
+                    <Box sx={{
+                        marginLeft: drawerOpen && !isSmallScreen ? "280px" : "0px", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
+                        background:activeTab===1 ?  "#eaf5ff" : "transparent",'@media (min-width: 1300px)': {
+                            background:activeTab===1 ?  "#eaf5ff" : "#13416a",
+                            bottom: "20px",
+                            paddingTop: searchHistory.length <= 0 && !isSubmitting ? "0px" : "20px",
+                        }, 
+                    }} className="fixedSearchBox">
                         {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                             <Carousel
                                 responsive={responsive}
@@ -765,6 +773,7 @@ const NewHomePageMui = () => {
                                     display: "flex",
                                     alignItems: "center",
                                 }}
+                                className="search-wrapper"
                             >
                                 <TextField
                                     fullWidth
@@ -800,7 +809,7 @@ const NewHomePageMui = () => {
                                     <IconButton
                                         variant="contained"
                                         type="submit"
-                                        disabled={isSubmitting}
+                                        disabled={!searchQuery}
                                         onClick={onSubmit}
                                         sx={{
                                             marginLeft: "16px",

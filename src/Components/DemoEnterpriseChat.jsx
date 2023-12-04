@@ -4,7 +4,7 @@ import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 
 const DemoEnterpriseChat = ({ answer }) => {
-    console.log("answer", answer);
+
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
@@ -14,9 +14,9 @@ const DemoEnterpriseChat = ({ answer }) => {
             // Prepare the request data
             const requestData = {
                 enterpriseName: enterprise?.enterpriseName,
-                enterpriseEmail: enterprise?.enterpriseEmail,
+                enterpriseEmail: enterprise?.enterpriseEmail.toLowerCase(),
                 departmentName: enterprise?.departmentName,
-                departmentEmail: enterprise?.departmentEmail,
+                departmentEmail: enterprise?.departmentEmail.toLowerCase(),
             };
 
             const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,

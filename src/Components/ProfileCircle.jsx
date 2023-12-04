@@ -37,7 +37,6 @@ export default function ProfielCircle() {
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
   const userStatus = parsedUserObject?.userObject?.status || "";
-  console.log("userStatus", userStatus);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
