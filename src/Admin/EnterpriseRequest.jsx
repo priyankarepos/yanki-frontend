@@ -12,6 +12,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import "./AdminStyle.css"
+import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
 
 const styles = {
     tableContainer: {
@@ -62,6 +63,10 @@ const AdminEnterpriseRequest = () => {
     const [loadingRows, setLoadingRows] = useState([]);
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
+    const [confirmationText, setConfirmationText] = useState('');
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
+    const [userIdToDelete, setUserIdToDelete] = useState(null);
 
     const openSnackbar = (message, severity) => {
         setSnackbarMessage(message);
@@ -75,7 +80,7 @@ const AdminEnterpriseRequest = () => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
                 );
-    
+
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
                     // if (response.data.length > 0) {
@@ -88,11 +93,11 @@ const AdminEnterpriseRequest = () => {
                 console.error("Error:", error);
             }
         };
-    
+
         const fetchEnterpriseRequests = async () => {
             try {
                 const categoryIdParam = selectedCategory || null;
-    
+
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
                     {
@@ -103,7 +108,7 @@ const AdminEnterpriseRequest = () => {
                         },
                     }
                 );
-    
+
                 if (response.status === 200) {
                     setEnterpriseRequests(response.data);
                     setTotalPages(Math.ceil(response.data.totalCount / 10));
@@ -114,11 +119,11 @@ const AdminEnterpriseRequest = () => {
                 console.error("Error:", error);
             }
         };
-    
+
         fetchEnterpriseCategories();
         fetchEnterpriseRequests();
     }, [selectedCategory, pageNumber]);
-    
+
 
     const handlePageChange = (event, newPage) => {
         setPageNumber(newPage);
@@ -173,6 +178,33 @@ const AdminEnterpriseRequest = () => {
         } finally {
             const updatedLoadingRows = loadingRows.filter((rowId) => rowId !== enterpriseId);
             setLoadingRows(updatedLoadingRows);
+        }
+    };
+
+    const handleDeleteClick = (enterpriseId, userId, enterpriseName) => {
+        setConfirmationText(`Are you sure you want to delete the request for ${enterpriseName}?`);
+        setConfirmDialogOpen(true);
+        setEnterpriseIdToDelete(enterpriseId);
+        setUserIdToDelete(userId);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
+            const response = await axios.delete(url);
+
+            if (response.status === 200) {
+                const updatedRequests = enterpriseRequests.data.filter((row) => row.enterpriseId !== enterpriseIdToDelete);
+                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+
+                openSnackbar(`Request deleted successfully`, 'success');
+            } else {
+                openSnackbar('Failed to delete the request', 'error');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            setConfirmDialogOpen(false);
         }
     };
 
@@ -251,32 +283,46 @@ const AdminEnterpriseRequest = () => {
                                             <TableCell style={styles.cell}>  {new Date(row.requestDate).toLocaleDateString('en-GB')}</TableCell>
                                             <TableCell style={styles.cell}>{row.status}</TableCell>
                                             <TableCell>
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    size="small"
-                                                    style={styles.approveButton}
-                                                    disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
-                                                    onClick={() => {
-                                                        setIsApproving(true);
-                                                        handleApprove(row.enterpriseId, row.userId, row.enterpriseName);
-                                                    }}                                                >
-                                                    {(isApproving && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Approve'}
-                                                </Button>
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    size="small"
-                                                    style={styles.approveButton}
-                                                    disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
-                                                    onClick={async () => {
-                                                        setIsRejecting(true);
-                                                        await handleReject(row.enterpriseId, row.userId, row.enterpriseName);
-                                                        setIsRejecting(false);
-                                                    }}                                               >
-                                                    {(isRejecting && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Reject'}
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        style={styles.approveButton}
+                                                        disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                        onClick={() => {
+                                                            setIsApproving(true);
+                                                            handleApprove(row.enterpriseId, row.userId, row.enterpriseName);
+                                                        }}                                                >
+                                                        {(isApproving && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Approve'}
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        size="small"
+                                                        style={styles.approveButton}
+                                                        disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                        onClick={async () => {
+                                                            setIsRejecting(true);
+                                                            await handleReject(row.enterpriseId, row.userId, row.enterpriseName);
+                                                            setIsRejecting(false);
+                                                        }}                                               >
+                                                        {(isRejecting && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Reject'}
 
-                                                </Button>
+                                                    </Button>
+                                                    {row.status === 'Rejected' && (
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            size="small"
+                                                            style={styles.approveButton}
+                                                            disabled={loadingRows.includes(row.enterpriseId)}
+                                                            onClick={() => handleDeleteClick(row.enterpriseId, row.userId, row.enterpriseName)}
+                                                        >
+                                                            Delete
+                                                        </Button>
+                                                    )}
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))
@@ -302,6 +348,12 @@ const AdminEnterpriseRequest = () => {
                     </TableContainer>
                 </Box>
             </Box>
+            <ConfirmDialog
+                open={confirmDialogOpen}
+                handleClose={() => setConfirmDialogOpen(false)}
+                handleConfirm={handleConfirmDelete}
+                confirmationText={confirmationText}
+            />
         </Box >
     )
 }
