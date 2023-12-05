@@ -77,6 +77,7 @@ const LoginPage = () => {
       const dataToSend = {
         email: data.logInEmail,
         password: data.logInPassword,
+        userType: activeTab === 0 ? "User" : "Enterprise",
       };
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/auth/login`,
@@ -107,7 +108,7 @@ const LoginPage = () => {
       if (e?.response?.data?.message && activeTab === 0) {
         setLoginErrorMsg(e?.response?.data?.message);
       } else {
-        if (activeTab === 1) {
+        if (e?.response?.data?.message === "This email isn't registered. Please sign up." && activeTab === 1) {
           setLoginErrorMsg(
             <span>
               This email isn't registered. Please sign up to become a Yanki partner.
@@ -119,6 +120,7 @@ const LoginPage = () => {
           );
         } else {
           setLoginErrorMsg("Something went wrong");
+          setLoginErrorMsg(e?.response?.data?.message);
         }
       }
     }

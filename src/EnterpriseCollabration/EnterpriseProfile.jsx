@@ -851,6 +851,7 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                       At least one keyword is required
                     </FormHelperText>
                   )}
+                  {!tags.length && <Typography style={{color:"gray"}}>Enterprise identification keywords (press enter after each keywords to register)</Typography>}
                 </div>
               )}
             />

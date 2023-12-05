@@ -16,12 +16,13 @@ import { emailRegex } from "./../Utils/validations/validation";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ThemeModeContext } from "../App";
+import { Context, ThemeModeContext } from "../App";
 
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const { activeTab } = useContext(Context);
 
   const { themeMode } = useContext(ThemeModeContext);
 
@@ -45,9 +46,8 @@ const ForgotPasswordPage = () => {
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
-
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${data.emailAddress}`
+        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${data.emailAddress}&userType=${activeTab === 0 ? "User" : "Enterprise"}`
       );
 
       if (response.status === 200) {
