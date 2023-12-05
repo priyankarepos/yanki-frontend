@@ -57,13 +57,14 @@ const ResetPasswordPage = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log("data",data);
     try {
       setIsSubmitting(false);
       const queryParamsObj = Object.fromEntries([...searchParams]);
       const dataToSend = {
         password: data.newPassword,
         confirmPassword: data.confirmPassword,
-        email: queryParamsObj.email,
+        userId : queryParamsObj.userId,
         token: queryParamsObj.token.split(":")[0],
       };
       const response = await axios.post(
