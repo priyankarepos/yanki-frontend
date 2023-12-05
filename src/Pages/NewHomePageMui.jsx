@@ -253,17 +253,17 @@ const NewHomePageMui = () => {
                     console.error("Error parsing chat history:", parseError);
 
                 }
-                if (!isLargeScreen) {
-                    setDrawerOpen(false);
-                } else {
-                    setDrawerOpen(true);
-                }
+                // if (!isLargeScreen) {
+                //     setDrawerOpen(false);
+                // } else {
+                //     setDrawerOpen(true);
+                // }
             }
         } catch (error) {
             console.error("Error fetching chat history:", error);
 
         }
-    }, [isLargeScreen]);
+    }, []);
 
     useEffect(() => {
         if (initialChatOpen && chatSessions.length > 0) {
@@ -541,15 +541,15 @@ const NewHomePageMui = () => {
                                     color="primary"
                                     style={{
                                         backgroundColor: chatSession.id === selectedChatId
-                                            ? "#eaf5ff" // Highlighted background color
+                                            ? "#eaf5ff"
                                             : activeTab === 0
-                                                ? "#13416a" // Regular background color for activeTab 0
-                                                : "#eaf5ff", // Regular background color for activeTab 1
+                                                ? "#13416a"
+                                                : "#eaf5ff", 
                                         color: chatSession.id === selectedChatId
-                                            ? "#13416a" // Highlighted text color
+                                            ? "#13416a" 
                                             : activeTab === 0
-                                                ? "#fff" // Regular text color for activeTab 0
-                                                : "#72a9de", // Regular text color for activeTab 1
+                                                ? "#fff" 
+                                                : "#72a9de", 
                                         padding: "11px",
                                         borderRadius: "8px",
                                         cursor: "pointer",
@@ -558,7 +558,7 @@ const NewHomePageMui = () => {
                                         justifyContent: "flex-start",
                                         alignItems: "center",
                                         marginTop: "10px",
-                                        position: "relative", // Added position relative to the parent container
+                                        position: "relative", 
                                     }}
                                     onClick={() => handleChatSessionClick(chatSession.id)}
                                     onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -571,7 +571,7 @@ const NewHomePageMui = () => {
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textAlign: "left",
-                                        marginLeft: "8px", // Adjust the spacing between the icon and text
+                                        marginLeft: "8px",
                                     }}>
                                         &nbsp; {chatSession.name}
                                     </Typography>
@@ -582,16 +582,16 @@ const NewHomePageMui = () => {
                                                 top: "2px",
                                                 right: 0,
                                                 backgroundColor: chatSession.id === selectedChatId
-                                            ? "#eaf5ff" // Highlighted background color
+                                            ? "#eaf5ff"
                                             : activeTab === 0
-                                                ? "#13416a" // Regular background color for activeTab 0
+                                                ? "#13416a"
                                                 : "#eaf5ff", 
                                                 color: chatSession.id === selectedChatId
-                                            ? "#13416a" // Highlighted text color
+                                            ? "#13416a"
                                             : activeTab === 0
-                                                ? "#fff" // Regular text color for activeTab 0
-                                                : "#72a9de", // Regular text color for activeTab 1
-                                                borderRadius: "0 8px 0 0", // Optional: Adjust the border radius
+                                                ? "#fff"
+                                                : "#72a9de", 
+                                                borderRadius: "0 8px 0 0", 
                                             }}
                                             onClick={() => handleDeleteClick(chatSession.id)}
                                         >
