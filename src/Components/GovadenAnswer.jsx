@@ -9,7 +9,6 @@ import {
     Paper,
     Typography,
     Collapse,
-    IconButton,
     Box,
     Tooltip
 } from '@mui/material';
@@ -40,11 +39,11 @@ const GovadenAnswer = ({ answer }) => {
 
         return (
             <>
-                <TableRow sx={{ '& > *': { borderBottom: '1px solid #3f7baf', cursor: 'pointer' } }} onClick={() => setOpen(!open)}>
+                <TableRow sx={{ '& > *': { borderBottom: '1px solid #3f7baf', cursor: 'pointer' } }} onClick={() => setOpen(!open)} className='godaven-style'>
                     <TableCell>
-                        <IconButton aria-label="expand row" size="small">
+                        <p>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                        </IconButton>
+                        </p>
                     </TableCell>
                     <TableCell component="th" scope="row">
                         <Tooltip title={row.name}>
