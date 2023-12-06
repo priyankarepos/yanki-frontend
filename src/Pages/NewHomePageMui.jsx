@@ -523,7 +523,8 @@ const NewHomePageMui = () => {
                         <AddIcon />
                         &nbsp; New Chat
                     </IconButton>
-                    <Box sx={{ marginTop: "25px" }}>
+                    <Box sx={{ marginTop: "25px" }} style={{maxHeight:"100vh", minHeight:"100vh", overflowX:"hidden",overflowY:"auto", width: "100%",
+                            marginX: "auto",}}>
                         <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
@@ -544,12 +545,12 @@ const NewHomePageMui = () => {
                                             ? "#eaf5ff"
                                             : activeTab === 0
                                                 ? "#13416a"
-                                                : "#eaf5ff", 
+                                                : "#eaf5ff",
                                         color: chatSession.id === selectedChatId
-                                            ? "#13416a" 
+                                            ? "#13416a"
                                             : activeTab === 0
-                                                ? "#fff" 
-                                                : "#72a9de", 
+                                                ? "#fff"
+                                                : "#72a9de",
                                         padding: "11px",
                                         borderRadius: "8px",
                                         cursor: "pointer",
@@ -558,7 +559,7 @@ const NewHomePageMui = () => {
                                         justifyContent: "flex-start",
                                         alignItems: "center",
                                         marginTop: "10px",
-                                        position: "relative", 
+                                        position: "relative",
                                     }}
                                     onClick={() => handleChatSessionClick(chatSession.id)}
                                     onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -566,12 +567,12 @@ const NewHomePageMui = () => {
                                 >
                                     <ChatBubbleIcon />
                                     <Typography style={{
-                                        width: "200px",
+                                        width: "190px",
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textAlign: "left",
-                                        marginLeft: "8px",
+                                        marginLeft: "0px",
                                     }}>
                                         &nbsp; {chatSession.name}
                                     </Typography>
@@ -582,16 +583,16 @@ const NewHomePageMui = () => {
                                                 top: "2px",
                                                 right: 0,
                                                 backgroundColor: chatSession.id === selectedChatId
-                                            ? "#eaf5ff"
-                                            : activeTab === 0
-                                                ? "#13416a"
-                                                : "#eaf5ff", 
+                                                    ? "#eaf5ff"
+                                                    : activeTab === 0
+                                                        ? "#13416a"
+                                                        : "#eaf5ff",
                                                 color: chatSession.id === selectedChatId
-                                            ? "#13416a"
-                                            : activeTab === 0
-                                                ? "#fff"
-                                                : "#72a9de", 
-                                                borderRadius: "0 8px 0 0", 
+                                                    ? "#13416a"
+                                                    : activeTab === 0
+                                                        ? "#fff"
+                                                        : "#72a9de",
+                                                borderRadius: "0 8px 0 0",
                                             }}
                                             onClick={() => handleDeleteClick(chatSession.id)}
                                         >
@@ -676,11 +677,11 @@ const NewHomePageMui = () => {
 
                     <Box sx={{
                         marginLeft: drawerOpen && !isSmallScreen ? "280px" : "0px", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
-                        background:activeTab===1 ?  "#eaf5ff" : "transparent",'@media (min-width: 1300px)': {
-                            background:activeTab===1 ?  "#eaf5ff" : "#13416a",
+                        background: activeTab === 1 ? "#eaf5ff" : "transparent", '@media (min-width: 1300px)': {
+                            background: activeTab === 1 ? "#eaf5ff" : "#13416a",
                             bottom: "20px",
                             paddingTop: searchHistory.length <= 0 && !isSubmitting ? "0px" : "20px",
-                        }, 
+                        },
                     }} className="fixedSearchBox">
                         {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                             <Carousel
