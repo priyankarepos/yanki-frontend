@@ -172,8 +172,12 @@ const TorahanytimeAnswer = ({ answer }) => {
                                             ref={ref => audioRefs.current[item._id] = ref}
                                             src={item._source.audio_url && item._source.audio_url?.length && item._source.audio_url}
                                             controls
-                                            width="100%"
-                                            height="30px"
+                                            style={{
+                                                width: '100%',
+                                                '@media (max-width: 600px)': {
+                                                    width: '220px !important',
+                                                },
+                                            }}
                                             onPlay={() => handlePlayMedia(item._source.audio_url, 'audio', item._id)}
                                         />
                                     ) : (

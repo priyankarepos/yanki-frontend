@@ -14,9 +14,9 @@ const DemoEnterpriseChat = ({ answer }) => {
             // Prepare the request data
             const requestData = {
                 enterpriseName: enterprise?.enterpriseName,
-                enterpriseEmail: enterprise?.enterpriseEmail.toLowerCase(),
+                enterpriseEmail: enterprise?.enterpriseEmail,
                 departmentName: enterprise?.departmentName,
-                departmentEmail: enterprise?.departmentEmail.toLowerCase(),
+                departmentEmail: enterprise?.departmentEmail,
             };
 
             const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
