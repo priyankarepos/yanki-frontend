@@ -102,7 +102,7 @@ const SentenceAnswer = ({ answer }) => {
                 margin="normal"
                 value={additionalMessage}
                 onChange={handleTextFieldChange}
-                disabled={loading || Boolean(apiResponseMessage)}
+                disabled={loading || !answer?.isMail === true  || apiResponseMessage !==""}
               />
               {answer.userType.map((type, index) => (
                 <Button
@@ -111,7 +111,7 @@ const SentenceAnswer = ({ answer }) => {
                   color="primary"
                   onClick={() => handleUserTypeButtonClick(type, index)}
                   style={{ marginRight: "8px" }}
-                  disabled={loading || loadingButtonIndex === index || Boolean(apiResponseMessage)}
+                  disabled={loading || loadingButtonIndex === index || !answer?.isMail === true || apiResponseMessage !==""}
                 >
                   {loading && loadingButtonIndex === index ? (
                     <CircularProgress size={24} style={{ color: "#fff" }} />
