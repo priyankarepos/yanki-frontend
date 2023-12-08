@@ -8,10 +8,8 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
-
     const handleSendEmail = async (enterprise) => {
         try {
-            // Prepare the request data
             const requestData = {
                 enterpriseName: enterprise?.enterpriseName,
                 enterpriseEmail: enterprise?.enterpriseEmail,
@@ -21,14 +19,12 @@ const DemoEnterpriseChat = ({ answer }) => {
 
             const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
                 requestData);
-
             if (response.status === 200) {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
                 setChatMessages([...chatMessages, message]);
-
                 setSelectedEnterpriseMessage(response.data.message);
-                // setIsSendMail(true)
-                console.log("response.data.message", response.data.message);
+            } else if (response.data && response.data.isSuccess === false) {
+                setSelectedEnterpriseMessage("Invalid email. Please provide a valid email address.");
             }
         } catch (error) {
             console.error('Error sending email:', error);
@@ -71,7 +67,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         setSelectedEnterprise(enterprise.enterpriseName);
                                         handleSendEmail(enterprise);
                                     }}
-                                    disabled={(!answer?.isMail === true || selectedEnterpriseMessage !=="" )}
+                                    disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}
                                 >
                                     <div>
                                         {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
@@ -82,16 +78,16 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
                                         {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
-                                        {(answer?.isMail === true || selectedEnterpriseMessage !=="")? <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",marginTop: "15px", display: "inline-block",}}>Click here to send message to Enterprise</strong> : <></>}
+                                        {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <strong style={{ backgroundColor: "#063762", padding: "3px", fontSize: "12px", marginTop: "15px", display: "inline-block", }}>Click here to send message to Enterprise</strong> : <></>}
                                     </div>
                                 </Button>
                             </Grid>
                         ))}
                     </Grid>
                 </List>
-                {selectedEnterprise &&  (
+                {selectedEnterprise && (
                     <Typography style={{ fontSize: "16px", padding: "10px", color: "#fff" }}>
-                        {selectedEnterpriseMessage==="" ? <CircularProgress size={24} style={{color:"#fff"}} /> : selectedEnterpriseMessage}
+                        {selectedEnterpriseMessage === "" ? <CircularProgress size={24} style={{ color: "#fff" }} /> : selectedEnterpriseMessage}
                     </Typography>
                 )}
             </Paper>
