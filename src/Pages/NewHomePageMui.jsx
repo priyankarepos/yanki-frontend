@@ -238,6 +238,7 @@ const NewHomePageMui = () => {
                                     videoResult: gptResponse.videoResult,
                                     enterpriseSelections: gptResponse.enterpriseSelections,
                                     pdfNames: gptResponse.pdfNames,
+                                    userType: gptResponse.userType,
                                 }
                             }
                         };

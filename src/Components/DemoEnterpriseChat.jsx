@@ -82,7 +82,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
                                         {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
                                         {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
-                                        {(answer?.isMail === true || selectedEnterpriseMessage !=="")? <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",marginTop: "15px", display: "inline-block",}}>Click here to send email to Enterprise</strong> : <></>}
+                                        {(answer?.isMail === true || selectedEnterpriseMessage !=="")? <strong style={{backgroundColor: "#063762", padding: "3px",fontSize: "12px",marginTop: "15px", display: "inline-block",}}>Click here to send message to Enterprise</strong> : <></>}
                                     </div>
                                 </Button>
                             </Grid>
