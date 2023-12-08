@@ -83,6 +83,8 @@ const NewHomePageMui = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [hoverChatId, setHoverChatId] = useState(null);
+    console.log("selectedChatId", selectedChatId);
+    console.log("searchHistory",searchHistory);
 
     const handleMouseEnter = (chatId) => {
         setHoverChatId(chatId);
