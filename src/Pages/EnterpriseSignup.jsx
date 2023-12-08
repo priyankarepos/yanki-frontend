@@ -262,9 +262,9 @@ const EnterpriseSignup = () => {
                                                             edge="end"
                                                         >
                                                             {showPassword ? (
-                                                                <VisibilityOffOutlinedIcon />
+                                                                <VisibilityOffOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                             ) : (
-                                                                <VisibilityOutlinedIcon />
+                                                                <VisibilityOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} /> 
                                                             )}
                                                         </IconButton>
                                                     </InputAdornment>

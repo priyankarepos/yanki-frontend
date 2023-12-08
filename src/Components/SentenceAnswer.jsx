@@ -110,7 +110,7 @@ const SentenceAnswer = ({ answer }) => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleUserTypeButtonClick(type, index)}
-                  style={{ marginRight: "8px" }}
+                  style={{ marginRight: "8px", marginTop:"8px", }}
                   disabled={loading || loadingButtonIndex === index || !answer?.isMail === true || apiResponseMessage !==""}
                 >
                   {loading && loadingButtonIndex === index ? (

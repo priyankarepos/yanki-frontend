@@ -255,6 +255,7 @@ const AdminEnterpriseCategory = () => {
               <AddIcon /> Add
             </IconButton>
           </Box>
+          {enterpriseCategories.length > 0 ? (
           <TableContainer component={Paper} style={styles.tableContainer}>
             <Table style={styles.table}>
               <TableHead>
@@ -279,7 +280,11 @@ const AdminEnterpriseCategory = () => {
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> ) : (
+            <Typography variant="body1" sx={{ textAlign: 'center', color: '#6fa8dd', marginTop: '16px' }}>
+            No categories available. Please add a category.
+          </Typography>
+          )}
         </Box>
       </Box>
       <Modal

@@ -143,7 +143,11 @@ export default function ProfielCircle() {
             <ListItemIcon>
               <EmailOutlinedIcon fontSize="small" />
             </ListItemIcon>
-            {parsedUserObject?.userObject?.userEmail || ""}
+            <span style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap', // This ensures that the text doesn't wrap to the next line
+            }}>{parsedUserObject?.userObject?.userEmail || ""}</span>
           </MenuItem>
           <MenuItem onClick={onClickChangePassword}>
             <ListItemIcon>
@@ -151,13 +155,13 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
-          {userRoles==="Admin" && activeTab === 0 && <MenuItem onClick={onClickAdmin}>
+          {userRoles === "Admin" && activeTab === 0 && <MenuItem onClick={onClickAdmin}>
             <ListItemIcon>
               <AdminPanelSettingsIcon fontSize="small" />
             </ListItemIcon>
             Go To Admin Panel
           </MenuItem>}
-          {userRoles==="Enterprise" && activeTab === 1 &&<MenuItem onClick={onClickNetworkingInterface}>
+          {userRoles === "Enterprise" && activeTab === 1 && <MenuItem onClick={onClickNetworkingInterface}>
             <ListItemIcon>
               <Diversity2Icon fontSize="small" />
             </ListItemIcon>
