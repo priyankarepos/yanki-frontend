@@ -196,14 +196,14 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="UserName"
                                     rules={{
-                                        required: "User Name is required.",
+                                        required: "Enterprise owner's name is required.",
                                         minLength: {
                                             value: 3,
-                                            message: "User Name should be at least 3 characters long.",
+                                            message: "Enterprise owner's name should be at least 3 characters long.",
                                         },
                                         maxLength: {
                                             value: 50,
-                                            message: "User Name should not exceed 50 characters.",
+                                            message: "Enterprise owner's name should not exceed 50 characters.",
                                         },
                                     }}
                                     render={({ field }) => (
@@ -212,7 +212,7 @@ const EnterpriseSignup = () => {
                                             {...field}
                                             sx={activeTab === 1 && { ...styles.inputField }}
                                             type="outlined"
-                                            placeholder="User Name"
+                                            placeholder="Enterprise owner's name"
                                             InputProps={{
                                                 startAdornment: (
                                                     <InputAdornment position="start">
