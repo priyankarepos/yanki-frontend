@@ -143,11 +143,11 @@ function App() {
 
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  const options = {
+  const options = useMemo(() => ({
     enableHighAccuracy: true,
     timeout: 5000,
-    maximumAge: 0,
-  };
+    maximumAge: 0
+  }), []); 
   // Success callback function
   const success = async (pos) => {
     const crd = pos.coords;
@@ -163,21 +163,22 @@ function App() {
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        if (result.state === "granted") {
-          //If granted then directly call function here
-          navigator.geolocation.getCurrentPosition(success, errors, options);
-        } else if (result.state === "prompt") {
-          //If prompt then the user will be asked to give permission
-          navigator.geolocation.getCurrentPosition(success, errors, options);
-        } else if (result.state === "denied") {
-        }
-      });
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-    }
-  });
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+          if (result.state === 'granted' || result.state === 'prompt') {
+            navigator.geolocation.getCurrentPosition(success, errors, options);
+          } else if (result.state === 'denied') {
+            setIsLocationAllowed('Location denied');
+          }
+        });
+      } else {
+        console.log('Geolocation is not supported by this browser.');
+      }
+    };
+
+    getLocation();
+  }, [options]);
 
   const toggleThemeMode = useMemo(
     () => () => {
