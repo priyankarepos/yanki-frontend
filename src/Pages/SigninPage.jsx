@@ -209,6 +209,10 @@ const SigninPage = () => {
               control={control}
               name="signInPhone"
               rules={{
+                required: {
+                  value: true,
+                  message: "Phone number is required.",
+              },
                 pattern: {
                   value: phoneRegex,
                   message: "Invalid phone number format.",
