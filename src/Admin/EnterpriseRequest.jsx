@@ -22,11 +22,11 @@ const styles = {
         fontWeight: 'bold',
         background: '#13538b',
         color: 'white',
-        minWidth: "200px",
-        fontSize: 16,
+        // minWidth: "170px",
+        fontSize: 15,
     },
     cell: {
-        fontSize: 16,
+        fontSize: 15,
     },
     approveButton: {
         backgroundColor: "#063762",

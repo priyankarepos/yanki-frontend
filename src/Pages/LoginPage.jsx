@@ -321,9 +321,9 @@ const LoginPage = () => {
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
             <Divider sx={{ marginY: "28px" }}>or</Divider>
-            <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }} fullWidth>
+            {activeTab === 0 && <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }} fullWidth>
               <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
-            </Button>
+            </Button>}
             <Box className="text-center" sx={{ marginTop: "28px" }}>
               <Typography variant="subtitle1" display="block" gutterBottom style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
                 Don't have an account?{" "}
