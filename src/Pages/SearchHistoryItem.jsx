@@ -9,6 +9,7 @@ import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
 import { Context } from "../App";
 import PdfAnswers from "../Components/PdfAnswers";
+import IsItKosher from "../Components/IsItKosher";
 
 const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
 
@@ -74,6 +75,16 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
           </div>
         )}
       </Paper>
+
+      {!response?.isSucess
+        && (
+          <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+            <div className="chat-bubble assistant-bubble">
+              <IsItKosher answer={response} />
+            </div>
+          </Paper>
+        )}
+      
 
     </div>
   );
