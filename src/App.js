@@ -41,6 +41,7 @@ import AdminEnterpriseRequest from "./Admin/EnterpriseRequest";
 import AdminEnterpriseCategory from "./Admin/EnterpriseCategory";
 import TermsOfUse from "./Pages/TermsOfUsePage";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import AdminFileUpload from "./Admin/AdminFileUpload";
 
 // Exporting context
 export const Context = createContext("");
@@ -494,6 +495,14 @@ function App() {
                           <PrivacyPolicy />
                         </AuthPageLayout>
                       </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/upload-files"
+                    element={
+                      <UserPagesProtection>
+                        <AdminFileUpload />
+                      </UserPagesProtection>
                     }
                   />
                 </Routes>

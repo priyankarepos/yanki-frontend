@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
-// import throttle from 'lodash/throttle';
+import UploadIcon from '@mui/icons-material/Upload';
 
 const styles = {
     enterpriseDashboard: {
@@ -71,20 +71,6 @@ const AdminDashboard = () => {
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
-
-    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    // useEffect(() => {
-    //     if (isSmallScreen && !drawerOpen) {
-    //         setDrawerOpen(false);
-    //     }
-    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
-
-    // useEffect(() => {
-    //     window.addEventListener("resize", throttledToggleDrawer);
-    //     return () => {
-    //         window.removeEventListener("resize", throttledToggleDrawer);
-    //     };
-    // }, [throttledToggleDrawer]);
 
     return (
         <div style={styles.enterpriseDashboard}>
@@ -184,6 +170,18 @@ const AdminDashboard = () => {
                                     <CategoryIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Categories" />
+                            </ListItem>
+                        </NavLink>
+                        <NavLink
+                            to="/admin/upload-files"
+                            style={{ textDecoration: 'none', color: '#fff' }}
+                            activeClassName="active"
+                        >
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/upload-files")}>
+                                <ListItemIcon>
+                                    <UploadIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Upload Files" />
                             </ListItem>
                         </NavLink>
                     </List>

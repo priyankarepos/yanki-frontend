@@ -27,3 +27,9 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .react-tagsinput {
+    background-color: transparent !important;
+    border: none !important;
+    padding-left: 0px !important;
+}
