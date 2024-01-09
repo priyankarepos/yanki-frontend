@@ -10,7 +10,6 @@ import TextField from "@mui/material/TextField";
 import axios from 'axios';
 
 const SentenceAnswer = ({ answer }) => {
-  console.log("answer", answer);
   // const [showCandle, setShowCandle] = useState(true);
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
   const [additionalMessage, setAdditionalMessage] = useState("");

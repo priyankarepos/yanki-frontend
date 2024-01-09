@@ -9,8 +9,12 @@ import ErrorAnswer from "../Components/ErrorAnswer";
 import DemoEnterpriseChat from "../Components/DemoEnterpriseChat";
 import { Context } from "../App";
 import PdfAnswers from "../Components/PdfAnswers";
+import YoutubeContent from "../Components/YoutubeContent";
+// import YoutubeContent from "../Components/YoutubeContent";
 
-const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
+const SearchHistoryItem = ({ query, response, errorMsg, searchQuery, handleChatClick }) => {
+
+  console.log("response", response);
 
   const { activeTab } = React.useContext(Context);
 
@@ -27,7 +31,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
           </Box>
         </div>
       </Paper>
-      {isTorahAnswer && (
+      {isTorahAnswer && !response?.isExclusiveContent &&   (
         <Paper id="abcd" elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
@@ -63,6 +67,14 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery }) => {
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <PdfAnswers answer={response} />
+          </div>
+        </Paper>
+      )}
+
+      {response?.isSucess && response?.videoResult && response?.videoResult.length > 0 && response?.isExclusiveContent && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <YoutubeContent answer={response} />
           </div>
         </Paper>
       )}
