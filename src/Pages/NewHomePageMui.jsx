@@ -111,6 +111,7 @@ const NewHomePageMui = () => {
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        // "Content-Type": "multipart/byteranges",
                         "Location-Allowed": isLocationAllowed,
                         TimeZone: timezone,
                         "User-Lat": userLatitude,
@@ -239,6 +240,7 @@ const NewHomePageMui = () => {
                                     enterpriseSelections: gptResponse.enterpriseSelections,
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,
+                                    isExclusiveContent: gptResponse.isExclusiveContent,
                                 }
                             }
                         };
@@ -417,6 +419,36 @@ const NewHomePageMui = () => {
             observer.disconnect();
         };
     }, []);
+    
+    // const scrollToBottom = useRef(true);
+
+    // useEffect(() => {
+    //   const chatContainerNode = chatContainerRef.current;
+  
+    //   const handleScroll = () => {
+    //     if (scrollToBottom.current) {
+    //       chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+    //       scrollToBottom.current = false;
+    //     }
+    //   };
+  
+    //   handleScroll();
+  
+    //   chatContainerNode.style.scrollBehavior = 'auto';
+  
+    //   const observer = new MutationObserver(handleScroll);
+    //   observer.observe(chatContainerNode, { childList: true, subtree: true });
+  
+    //   return () => {
+    //     chatContainerNode.style.scrollBehavior = 'smooth';
+    //     observer.disconnect();
+    //   };
+    // }, [selectedChatId]);
+
+    // const handleChatClick = () => {
+    //     scrollToBottom.current = true; 
+    //   };
+  
 
 
     return (
