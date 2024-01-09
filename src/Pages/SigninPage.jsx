@@ -30,6 +30,10 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleIcon from '@mui/icons-material/Google';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import "./Style.scss";
+import { FormHelperText } from "@mui/material";
 
 const linkStyle = {
   color: "#457bac",
@@ -209,37 +213,73 @@ const SigninPage = () => {
               control={control}
               name="signInPhone"
               rules={{
-                required: {
-                  value: true,
-                  message: "Phone number is required.",
-              },
-                pattern: {
-                  value: phoneRegex,
-                  message: "Invalid phone number format.",
+                required: "Phone number is required.",
+                validate: (value) => {
+                  if (!value) return "Phone number is required.";
+                  if (!phoneRegex.test(value))
+                    return "Invalid phone number format.";
+                  return true; // Return true if validation passes
                 },
               }}
               render={({ field }) => (
-                <TextField
+                <div>
+                  <PhoneInput
                   {...field}
-                  type="tel"
                   placeholder="Phone number"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PhoneIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  fullWidth
-                  sx={{ marginBottom: "10px" }}
-                  error={!!errors["signInPhone"]}
-                  helperText={
-                    errors["signInPhone"] ? errors["signInPhone"].message : ""
-                  }
                   disabled={signinLoading}
+                  error={!!errors["signInPhone"]}
+                  onKeyDown={(e) => {
+                    if (e.key === 'e' || e.key === '-' || e.key === '+' || e.key === '.') {
+                      e.preventDefault();
+                    }
+                  }}
+                  icon={<PhoneIcon />}
+                  style={{
+                    border: errors["signInPhone"] ? '1px solid red' : '1px solid #d1d1d1',
+                    borderRadius: '4px',
+                    marginBottom: '10px',
+                    padding: '10px',
+                    fontSize: '16px',
+                  }}
+                  inputStyle={{
+                    width: '100%',
+                    fontSize: 'inherit',
+                    outline: 'none',
+                    border: 'none',
+                  }}
+                  countrySelectStyle={{
+                    fontSize: 'inherit',
+                    outline: 'none',
+                    border: 'none',
+                  }}
                 />
+                {errors['signInPhone'] && (
+                    <FormHelperText style={{ color: 'red' }}>{errors['signInPhone'].message}</FormHelperText>
+                  )}
+                </div>
               )}
             />
+            {/* <Controller
+              control={control}
+              name="signInPhone"
+              rules={{
+                required: "Phone number is required.",
+                validate: (value) => {
+                  if (!value) return "Phone number is required.";
+                  if (!phoneRegex.test(value))
+                    return "Invalid phone number format.";
+                  return true;
+                },
+              }}
+              render={({ field }) => (
+                <PhoneInput
+                  {...field}
+                  placeholder="Phone number"
+                  disabled={signinLoading}
+                  error={!!errors["signInPhone"]}
+                />
+              )}
+            /> */}
             <Controller
               control={control}
               name="signInEmail"
@@ -357,11 +397,11 @@ const SigninPage = () => {
                   </>
                 )}
               /> */}
-              <Typography style={{ color: "#fff" }}>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#fff", fontWeight: "600", }}  component={LinkBehavior}>
+              <Typography style={{ color: "#fff" }}>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#fff", fontWeight: "600", }} component={LinkBehavior}>
                 Terms of Use
               </Link> and acknowledge the <Link
                 to="/privacy-policy"
-                style={{ color: "#fff", fontWeight: "600", }}  component={LinkBehavior}
+                style={{ color: "#fff", fontWeight: "600", }} component={LinkBehavior}
               >
                   Privacy Policy
                 </Link></Typography>

@@ -66,3 +66,36 @@
 .privacy-policy .css-qklaqr-MuiListItemIcon-root {
     min-width: 32px;
 }  
+
+.PhoneInput {
+    padding: 0 10px !important;
+    border: 1px solid #456d90 !important;
+    border-radius: 10px !important;
+}    
+
+.PhoneInput .PhoneInputInput {
+    flex: 1 1;
+    min-width: 0;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    color: #7a96b0 !important;
+    font-size: 16px;
+}
+
+.PhoneInput .PhoneInputInput:focus-visible{
+    outline: none;
+}
+
+.PhoneInputInternationalIconGlobe {
+    display: none;
+}
+
+::placeholder{
+    color: #7a96b0;
+}
+
+.PhoneInputCountryIcon {
+    position: relative;
+    left: 5px;
+}
