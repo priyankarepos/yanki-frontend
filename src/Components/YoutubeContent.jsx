@@ -29,8 +29,6 @@ const YoutubeContent = ({ answer }) => {
     const fixedId = 23200;
     const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
     const playerRefs = useRef([]);
-    console.log("answer", answer);
-
     const isVideo = answer?.torahAnytimeLectures?.isVideo || false;
 
     const videoRefs = useRef({});
@@ -123,7 +121,7 @@ const YoutubeContent = ({ answer }) => {
             <Paper sx={{ p: 2, }} >
                 {isVideo && answer?.videoResult && answer?.torahAnytimeLectures && answer?.videoResult && answer?.videoResult.length > 0 && (
                     <Box className="youtube-container">
-                        <Typography sx={{ marginBottom: "10px" }}>We have found videos on multiple sources. Please select one to continue.</Typography>
+                        <Typography sx={{ marginBottom: "10px" }}>We have found data on multiple sources. Please select a source to give you the most accurate result</Typography>
                         <Typography
                             onClick={handleExclusiveContentClick}
                             className={`switch-button ${showYouTubeVideos ? 'selected' : ''}`}
