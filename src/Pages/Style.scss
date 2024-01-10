@@ -92,10 +92,15 @@
 }
 
 ::placeholder{
-    color: #7a96b0;
+    color: #c9ddf0;
 }
 
 .PhoneInputCountryIcon {
     position: relative;
     left: 5px;
+    color: #fff;
+}
+
+.phonenumber .PhoneInputCountryIcon {
+    color: #6fa8dd;
 }

@@ -34,7 +34,8 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-// import GoogleIcon from '@mui/icons-material/Google';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 const styles = {
     inputField: {
@@ -70,7 +71,7 @@ const EnterpriseSignup = () => {
     const {
         control,
         handleSubmit,
-        formState: { errors,isSubmitted },
+        formState: { errors, isSubmitted },
     } = useForm({
         mode: "onChange",
         defaultValues: {
@@ -264,7 +265,7 @@ const EnterpriseSignup = () => {
                                                             {showPassword ? (
                                                                 <VisibilityOffOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                             ) : (
-                                                                <VisibilityOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} /> 
+                                                                <VisibilityOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
                                                             )}
                                                         </IconButton>
                                                     </InputAdornment>
@@ -316,39 +317,55 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} className='phonenumber'>
                                 <Controller
                                     control={control}
-                                    name="PhoneNumber"
+                                    name="signInPhone"
                                     rules={{
-                                        required: {
-                                            value: true,
-                                            message: "Phone number is required.",
-                                        },
-                                        pattern: {
-                                            value: phoneRegex,
-                                            message: "Invalid phone number format.",
+                                        required: "Phone number is required.",
+                                        validate: (value) => {
+                                            if (!value) return "Phone number is required.";
+                                            if (!phoneRegex.test(value))
+                                                return "Invalid phone number format.";
+                                            return true; // Return true if validation passes
                                         },
                                     }}
                                     render={({ field }) => (
-                                        <TextField
-                                            className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
-                                            {...field}
-                                            type="outlined"
-                                            placeholder="Phone Number"
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <PhoneIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                            fullWidth
-                                            sx={activeTab === 1 && { ...styles.inputField }}
-                                            error={!!errors["PhoneNumber"]}
-                                            helperText={errors["PhoneNumber"] ? errors["PhoneNumber"].message : ""}
-                                            disabled={signinLoading}
-                                        />
+                                        <div>
+                                            <PhoneInput
+                                                {...field}
+                                                placeholder="Phone number"
+                                                disabled={signinLoading}
+                                                error={!!errors["signInPhone"]}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'e' || e.key === '-' || e.key === '+' || e.key === '.') {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
+                                                icon={<PhoneIcon />}
+                                                style={{
+                                                    border: errors["signInPhone"] ? '1px solid red' : '1px solid #d1d1d1',
+                                                    borderRadius: '4px',
+                                                    marginBottom: '10px',
+                                                    padding: '10px',
+                                                    fontSize: '16px',
+                                                }}
+                                                inputStyle={{
+                                                    width: '100%',
+                                                    fontSize: 'inherit',
+                                                    outline: 'none',
+                                                    border: 'none',
+                                                }}
+                                                countrySelectStyle={{
+                                                    fontSize: 'inherit',
+                                                    outline: 'none',
+                                                    border: 'none',
+                                                }}
+                                            />
+                                            {errors['signInPhone'] && (
+                                                <FormHelperText style={{ color: 'red' }}>{errors['signInPhone'].message}</FormHelperText>
+                                            )}
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -418,7 +435,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} style={{paddingTop : isSubmitted ? "0px" : "16px"}}>
+                            <Grid item xs={12} sm={6} style={{ paddingTop: isSubmitted ? "0px" : "16px" }}>
                                 <Controller
                                     control={control}
                                     name="Website"
@@ -447,7 +464,7 @@ const EnterpriseSignup = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{ marginBottom: isSubmitted && "16px",}}>
+                            <Grid item xs={12} sm={6} className={!selectedCategory ? "EnterpriseErrorBorder" : 'EnterpriseError'} style={{ marginBottom: isSubmitted && "16px", }}>
                                 <FormControl fullWidth>
                                     <Select
                                         value={selectedCategory}
