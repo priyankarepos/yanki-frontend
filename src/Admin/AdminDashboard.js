@@ -24,7 +24,7 @@ import { Context } from '../App';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
 import AddIcon from '@mui/icons-material/Add';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const styles = {
     enterpriseDashboard: {
@@ -206,7 +206,7 @@ const AdminDashboard = () => {
                         >
                             <ListItem button className='highlightStyle' onClick={() => navigate("/admin/enterprise-department")}>
                                 <ListItemIcon>
-                                    <AddCircleOutlineIcon />
+                                    <AccountBalanceIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Create Department" />
                             </ListItem>
