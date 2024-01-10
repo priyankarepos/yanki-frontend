@@ -23,7 +23,8 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import RuleIcon from '@mui/icons-material/Rule';
 import CategoryIcon from '@mui/icons-material/Category';
-// import throttle from 'lodash/throttle';
+import AddIcon from '@mui/icons-material/Add';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const styles = {
     enterpriseDashboard: {
@@ -184,6 +185,30 @@ const AdminDashboard = () => {
                                     <CategoryIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Categories" />
+                            </ListItem>
+                        </NavLink>
+                        <NavLink
+                            to="/admin/create-enterprise"
+                            style={{ textDecoration: 'none', color: '#fff' }}
+                            activeClassName="active"
+                        >
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/enterprise-categories")}>
+                                <ListItemIcon>
+                                    <AddIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Create Enterprise" />
+                            </ListItem>
+                        </NavLink>
+                        <NavLink
+                            to="/admin/create-department"
+                            style={{ textDecoration: 'none', color: '#fff' }}
+                            activeClassName="active"
+                        >
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/admin/enterprise-department")}>
+                                <ListItemIcon>
+                                    <AccountBalanceIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Create Department" />
                             </ListItem>
                         </NavLink>
                     </List>
