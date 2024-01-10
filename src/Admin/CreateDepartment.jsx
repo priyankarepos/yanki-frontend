@@ -433,7 +433,7 @@ const AdminCreateDepartment = () => {
                     Add Departments
                 </Typography>
                 <div style={{ marginBottom: '20px' }}>
-                    <InputLabel style={styles.label}>Select Enterprise:</InputLabel>
+                    <InputLabel style={styles.label}>Select Enterprise<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
                     <select
                         id="enterpriseDropdown"
                         onChange={handleSelectChange}
@@ -449,14 +449,14 @@ const AdminCreateDepartment = () => {
                             height:"50px",
                         }}
                     >
-                        <option value="">Select an enterprise</option>
+                        <option value="">Please select enterprise to continue</option>
                         {Array.isArray(enterpriseList) && enterpriseList.map((enterprise) => (
                             <option key={enterprise.enterpriseId} value={enterprise.enterpriseId}>
                                 {enterprise.enterpriseName}
                             </option>
                         ))}
                     </select>
-                    {!selectedEnterpriseId && <Typography style={{ color: "#fff", fontSize: "18px", marginBottom: "10px", }}>Please select enterprise to continue</Typography>}
+                    {/* {!selectedEnterpriseId && <Typography style={{ color: "#fff", fontSize: "18px", marginBottom: "10px", }}>Please select enterprise to continue</Typography>} */}
                 </div>
                 <Grid container spacing={2} className='enterprise-profile'>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
@@ -661,8 +661,8 @@ const AdminCreateDepartment = () => {
                     </Grid>
                     <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
                     <Box className="enterpriseTableBox" sx={{ padding: '16px' }}>
-                        <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#13538b' }}>
-                            Add Departments
+                        <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
+                        Departments
                         </Typography>
                     </Box>
                     <Grid item xs={12}>
