@@ -375,8 +375,8 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                   message: "Enterprise name should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Enterprise name should not exceed 20 characters.",
+                  value: 30,
+                  message: "Enterprise name should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (
@@ -409,8 +409,8 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                   message: "Enterprise Point Of Contact should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Enterprise Point Of Contact should not exceed 20 characters.",
+                  value: 30,
+                  message: "Enterprise Point Of Contact should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (

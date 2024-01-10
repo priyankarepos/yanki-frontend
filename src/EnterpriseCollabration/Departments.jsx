@@ -72,7 +72,7 @@ const Departments = () => {
   const [departmentID, setDepartmentID] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const enterpriseId = sessionStorage.getItem('enterpriseId');
+  // const enterpriseId = sessionStorage.getItem('enterpriseId');
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [tagCount, setTagCount] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -80,7 +80,6 @@ const Departments = () => {
   // const [submitted, setSubmitted] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
   const [enterpriseDetails, setEnterpriseDetails] = useState({});
-  console.log("enterpriseDetails", enterpriseDetails);
 
   useEffect(() => {
     const getEnterpriseDetails = async () => {
@@ -130,7 +129,7 @@ const Departments = () => {
   const checkEnterpriseKeyword = async (tag) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${tag}`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${enterpriseDetails[0]?.enterpriseId}/${tag}`
       );
       console.log('Keyword Check Response:', response.data);
       if (response.status === 200) {
@@ -232,7 +231,7 @@ const Departments = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments`
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${enterpriseDetails[0]?.enterpriseId}`
         );
 
         if (response.status === 200) {
@@ -246,7 +245,7 @@ const Departments = () => {
     };
 
     fetchData();
-  }, [triggerEffect]);
+  }, [triggerEffect,enterpriseDetails]);
 
   const handleEditDepartment = async (index, departmentId) => {
     const department = departmentsData[index];
@@ -333,7 +332,7 @@ const Departments = () => {
         departmentEmail: formData.EmailAddress,
         departmentDescription: formData.DepartmentDescription,
         departmentKeywords: tagsAsString,
-        enterpriseId: enterpriseId,
+        enterpriseId: enterpriseDetails[0]?.enterpriseId,
       };
 
       const response = await axios.put(
@@ -389,7 +388,7 @@ const Departments = () => {
         departmentEmail: data.EmailAddress,
         departmentDescription: data.DepartmentDescription,
         departmentKeywords: tagsAsString,
-        enterpriseId: enterpriseId,
+        enterpriseId: enterpriseDetails[0]?.enterpriseId,
       };
 
       const response = await axios.post(apiUrl, requestBody);
@@ -446,8 +445,8 @@ const Departments = () => {
                   message: "Department name should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Department name should not exceed 20 characters.",
+                  value: 30,
+                  message: "Department name should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (
@@ -481,8 +480,8 @@ const Departments = () => {
                   message: "Name of representative should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Name of representative should not exceed 20 characters.",
+                  value: 30,
+                  message: "Name of representative should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (

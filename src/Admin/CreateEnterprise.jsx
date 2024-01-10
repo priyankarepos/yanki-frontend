@@ -302,7 +302,7 @@ const AdminCreateEnterprise = () => {
             if (response.status === 200) {
                 console.log('Enterprise details created successfully');
                 if (departmentsData.length === 0) {
-                    setSnackbarMessage('Enterprise details created successfully. You can now start adding departments');
+                    setSnackbarMessage('Enterprise details created successfully.');
                 } else {
                     setSnackbarMessage('Enterprise details created successfully');
                 }
@@ -483,8 +483,8 @@ const AdminCreateEnterprise = () => {
                                     message: "Enterprise name should be at least 3 characters long.",
                                 },
                                 maxLength: {
-                                    value: 20,
-                                    message: "Enterprise name should not exceed 20 characters.",
+                                    value: 30,
+                                    message: "Enterprise name should not exceed 30 characters.",
                                 },
                             }}
                             render={({ field }) => (
@@ -517,8 +517,8 @@ const AdminCreateEnterprise = () => {
                                     message: "Enterprise Point Of Contact should be at least 3 characters long.",
                                 },
                                 maxLength: {
-                                    value: 20,
-                                    message: "Enterprise Point Of Contact should not exceed 20 characters.",
+                                    value: 30,
+                                    message: "Enterprise Point Of Contact should not exceed 30 characters.",
                                 },
                             }}
                             render={({ field }) => (

@@ -455,11 +455,10 @@ const AdminCreateDepartment = () => {
                             </option>
                         ))}
                     </select>
+                    {!selectedEnterpriseId && <Typography style={{ color: "#fff", fontSize: "18px", marginBottom: "10px", }}>Please select enterprise to continue</Typography>}
                 </div>
                 <Grid container spacing={2} className='enterprise-profile'>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        {!selectedEnterpriseId && <Typography style={{ color: "#fff", fontSize: "18px", marginBottom: "10px", }}>Please select enterprise to continue</Typography>}
-
                         <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
                         <Controller
                             control={control}
@@ -471,8 +470,8 @@ const AdminCreateDepartment = () => {
                                     message: "Department name should be at least 3 characters long.",
                                 },
                                 maxLength: {
-                                    value: 20,
-                                    message: "Department name should not exceed 20 characters.",
+                                    value: 30,
+                                    message: "Department name should not exceed 30 characters.",
                                 },
                             }}
                             render={({ field }) => (
@@ -506,8 +505,8 @@ const AdminCreateDepartment = () => {
                                     message: "Name of representative should be at least 3 characters long.",
                                 },
                                 maxLength: {
-                                    value: 20,
-                                    message: "Name of representative should not exceed 20 characters.",
+                                    value: 30,
+                                    message: "Name of representative should not exceed 30 characters.",
                                 },
                             }}
                             render={({ field }) => (
