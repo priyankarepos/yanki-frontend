@@ -12,6 +12,7 @@ import "../EnterpriseCollabration/EnterpriseStyle.scss";
 import { emailRegex } from '../Utils/validations/validation';
 import AdminDashboard from './AdminDashboard';
 import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
+import "../EnterpriseCollabration/EnterpriseStyle.scss";
 
 const styles = {
     inputField: {
