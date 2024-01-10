@@ -12,6 +12,7 @@ import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
 import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
+import "../EnterpriseCollabration/EnterpriseStyle.scss";
 
 const styles = {
     inputField: {
