@@ -42,6 +42,7 @@ import AdminEnterpriseCategory from "./Admin/EnterpriseCategory";
 import TermsOfUse from "./Pages/TermsOfUsePage";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import AdminCreateEnterprise from "./Admin/CreateEnterprise";
+import AdminCreateDepartment from "./Admin/CreateDepartment";
 
 // Exporting context
 export const Context = createContext("");
@@ -502,6 +503,14 @@ function App() {
                     element={
                       <UserPagesProtection>
                         <AdminCreateEnterprise />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/create-department"
+                    element={
+                      <UserPagesProtection>
+                        <AdminCreateDepartment />
                       </UserPagesProtection>
                     }
                   />

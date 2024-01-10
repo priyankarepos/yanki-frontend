@@ -160,25 +160,25 @@ const EnterpriseProfile = () => {
 
 
   useEffect(() => {
-    setValue("EnterpriseName", enterpriseDetails.enterpriseName || "");
-    setValue("EnterprisePointOfContact", enterpriseDetails.contactPersonName || "");
-    setValue("EnterpriseAddress", enterpriseDetails.enterpriseAddress || "");
-    setValue("EmailAddress", enterpriseDetails.enterpriseEmail || "");
-    setValue("PhoneNumber", enterpriseDetails.enterprisePhoneNumber || "");
-    setValue("WebsiteUrl", enterpriseDetails.website || "");
-    setValue("WhatsappPhoneNumber", enterpriseDetails.whatsAppPhoneNumber || "");
-    setValue("InstagramUsername", enterpriseDetails.instagramUsername || "");
-    setValue("LinkedinUsername", enterpriseDetails.linkedInUsername || "");
-    setValue("EnterpriseDescription", enterpriseDetails.enterpriseDescription || "");
-    setValue("EnterpriseCategories", enterpriseDetails.categoryId || "");
-    setValue("BusinessHoursOpeningTime", enterpriseDetails.officeOpenTime || "");
-    setValue("BusinessHoursClosingTime", enterpriseDetails.officeCloseTime || "");
-    setValue("FoundedYear", enterpriseDetails.foundedYear || "");
-    setValue("ReligiousCertifications", enterpriseDetails.religiousCertification || "");
-    setValue("FrequentlyAskedQuestions", enterpriseDetails.faQs || "");
+    setValue("EnterpriseName", enterpriseDetails[0]?.enterpriseName || "");
+    setValue("EnterprisePointOfContact", enterpriseDetails[0]?.contactPersonName || "");
+    setValue("EnterpriseAddress", enterpriseDetails[0]?.enterpriseAddress || "");
+    setValue("EmailAddress", enterpriseDetails[0]?.enterpriseEmail || "");
+    setValue("PhoneNumber", enterpriseDetails[0]?.enterprisePhoneNumber || "");
+    setValue("WebsiteUrl", enterpriseDetails[0]?.website || "");
+    setValue("WhatsappPhoneNumber", enterpriseDetails[0]?.whatsAppPhoneNumber || "");
+    setValue("InstagramUsername", enterpriseDetails[0]?.instagramUsername || "");
+    setValue("LinkedinUsername", enterpriseDetails[0]?.linkedInUsername || "");
+    setValue("EnterpriseDescription", enterpriseDetails[0]?.enterpriseDescription || "");
+    setValue("EnterpriseCategories", enterpriseDetails[0]?.categoryId || "");
+    setValue("BusinessHoursOpeningTime", enterpriseDetails[0]?.officeOpenTime || "");
+    setValue("BusinessHoursClosingTime", enterpriseDetails[0]?.officeCloseTime || "");
+    setValue("FoundedYear", enterpriseDetails[0]?.foundedYear || "");
+    setValue("ReligiousCertifications", enterpriseDetails[0]?.religiousCertification || "");
+    setValue("FrequentlyAskedQuestions", enterpriseDetails[0]?.faQs || "");
 
-    if (enterpriseDetails.enterpriseKeywords) {
-      const keywordsArray = enterpriseDetails.enterpriseKeywords.split(',');
+    if (enterpriseDetails[0]?.enterpriseKeywords) {
+      const keywordsArray = enterpriseDetails[0]?.enterpriseKeywords.split(',');
       console.log("keywordsArray", keywordsArray);
       setTags(keywordsArray);
       setValue("EnterpriseIdentificationKeywords", keywordsArray || []);
@@ -297,7 +297,7 @@ const EnterpriseProfile = () => {
       const response = await axios.put(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
         {
-          enterpriseId: enterpriseDetails.enterpriseId,
+          enterpriseId: enterpriseDetails[0]?.enterpriseId,
           enterpriseName: formData.EnterpriseName,
           categoryId: selectedCategory || formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,

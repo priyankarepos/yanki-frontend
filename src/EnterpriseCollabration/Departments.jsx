@@ -79,6 +79,31 @@ const Departments = () => {
   const [selectedDepartmentIndex, setSelectedDepartmentIndex] = useState(null);
   // const [submitted, setSubmitted] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
+  const [enterpriseDetails, setEnterpriseDetails] = useState({});
+  console.log("enterpriseDetails", enterpriseDetails);
+
+  useEffect(() => {
+    const getEnterpriseDetails = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
+            );
+
+            if (response.status === 200) {
+                const responseData = response.data;
+                setEnterpriseDetails(responseData)
+                console.log('Enterprise Details:', responseData);
+
+            } else {
+                console.error('Failed to fetch enterprise details');
+            }
+        } catch (error) {
+            console.error('Error fetching enterprise details:', error);
+        }
+    };
+
+    getEnterpriseDetails();
+}, []);
 
   const {
     control,
@@ -201,6 +226,7 @@ const Departments = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   const [departmentsData, setDepartmentsData] = useState([]);
+  console.log("departmentsData", departmentsData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -406,6 +432,7 @@ const Departments = () => {
         <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
           Add Departments
         </Typography>
+        {enterpriseDetails[0]?.isProfileCompleted === false && <Typography style={{marginBottom:"10px", color:"gray"}}>Please complete enterprise profile first to add departments</Typography>}
         <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
@@ -431,6 +458,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="Customer Service"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['DepartmentName']}
                   // helperText={errors['DepartmentName'] ? errors['DepartmentName'].message : ''}
                   />
@@ -465,6 +493,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="John Deo"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['NameOfRepresentative']}
                   // helperText={errors['NameOfRepresentative'] ? errors['NameOfRepresentative'].message : ''}
                   />
@@ -498,6 +527,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="Type email address here"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['EmailAddress']}
                   // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                   />
@@ -529,6 +559,7 @@ const Departments = () => {
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
                   {/* {errors['DepartmentDescription'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['DepartmentDescription'].message}</FormHelperText>
@@ -550,6 +581,7 @@ const Departments = () => {
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
                     placeholder="Type Enterprise identification keywords here"
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -607,6 +639,7 @@ const Departments = () => {
               color="primary"
               onClick={departmentID !== null ? handleSubmit(handleSaveDepartment) : handleSubmit(onSubmit)}
               style={styles.modalButton}
+              disabled={enterpriseDetails[0]?.isProfileCompleted === false}
             >
               {departmentID !== null ? "Save Changes" : "Save"}
             </Button>
