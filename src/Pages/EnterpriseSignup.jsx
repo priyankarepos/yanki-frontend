@@ -20,7 +20,7 @@ import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PhoneIcon from "@mui/icons-material/Phone";
+// import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -34,8 +34,10 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
+// import PhoneInput from 'react-phone-number-input';
+// import 'react-phone-number-input/style.css';
+import IntlTelInput from 'react-intl-tel-input';
+import 'react-intl-tel-input/dist/main.css'; // Import the styles
 
 const styles = {
     inputField: {
@@ -332,34 +334,16 @@ const EnterpriseSignup = () => {
                                     }}
                                     render={({ field }) => (
                                         <div>
-                                            <PhoneInput
+                                            <IntlTelInput
+                                                inputClassName={errors["signInPhone"] ? 'input-error-class' : ''}
                                                 {...field}
-                                                placeholder="Phone number"
+                                                containerClassName="intl-tel-input"
+                                                defaultCountry="auto"
+                                                autoPlaceholder
                                                 disabled={signinLoading}
-                                                error={!!errors["signInPhone"]}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'e' || e.key === '-' || e.key === '+' || e.key === '.') {
-                                                        e.preventDefault();
-                                                    }
-                                                }}
-                                                icon={<PhoneIcon />}
-                                                style={{
-                                                    border: errors["signInPhone"] ? '1px solid red' : '1px solid #d1d1d1',
-                                                    borderRadius: '4px',
-                                                    marginBottom: '10px',
-                                                    padding: '10px',
-                                                    fontSize: '16px',
-                                                }}
-                                                inputStyle={{
-                                                    width: '100%',
-                                                    fontSize: 'inherit',
-                                                    outline: 'none',
-                                                    border: 'none',
-                                                }}
-                                                countrySelectStyle={{
-                                                    fontSize: 'inherit',
-                                                    outline: 'none',
-                                                    border: 'none',
+                                                placeholder="Phone number"
+                                                onPhoneNumberChange={(isValid, value, countryData) => {
+                                                    // Handle phone number change
                                                 }}
                                             />
                                             {errors['signInPhone'] && (
