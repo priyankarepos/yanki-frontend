@@ -241,6 +241,7 @@ const NewHomePageMui = () => {
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,
                                     isExclusiveContent: gptResponse.isExclusiveContent,
+                                    isItKosher: gptResponse.isItKosher,
                                 }
                             }
                         };
@@ -424,28 +425,28 @@ const NewHomePageMui = () => {
 
     // useEffect(() => {
     //     const chatContainerNode = chatContainerRef.current;
-    
+
     //     const scrollToBottom = () => {
     //       if (shouldScrollRef.current) {
     //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
     //         shouldScrollRef.current = false;
     //       }
     //     };
-    
+
     //     scrollToBottom();
-    
+
     //     chatContainerNode.style.scrollBehavior = 'auto';
-    
+
     //     const observer = new MutationObserver(scrollToBottom);
     //     observer.observe(chatContainerNode, { childList: true, subtree: true });
-    
+
     //     // Clean up
     //     return () => {
     //       chatContainerNode.style.scrollBehavior = 'smooth';
     //       observer.disconnect();
     //     };
     //   }, []);
-    
+
 
 
     return (
@@ -598,16 +599,24 @@ const NewHomePageMui = () => {
                                     onMouseLeave={() => handleMouseLeave()}
                                 >
                                     <ChatBubbleIcon />
-                                    <Typography style={{
-                                        width: "190px",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textAlign: "left",
-                                        marginLeft: "0px",
-                                    }}>
-                                        &nbsp; {chatSession.name}
-                                    </Typography>
+                                    <div
+                                        onClick={(e) => {
+                                            // handle Typography click here
+                                            e.stopPropagation(); // to prevent the propagation of the click to IconButton
+                                        }}
+                                        style={{
+                                            width: "190px",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textAlign: "left",
+                                            marginLeft: "0px",
+                                        }}
+                                    >
+                                        <Typography>
+                                            &nbsp; {chatSession.name}
+                                        </Typography>
+                                    </div>
                                     {chatSession.id === hoverChatId && (
                                         <IconButton
                                             style={{
@@ -633,6 +642,7 @@ const NewHomePageMui = () => {
                                     )}
                                 </IconButton>
                             </div>
+
                         ))}
                     </Box>
                 </div>
@@ -730,26 +740,29 @@ const NewHomePageMui = () => {
                                         key={question.id}
                                         className="carousel-item"
                                     >
-                                        <Button
-                                            onClick={() => handleQuestionClick(question.text)}
-                                            style={{
-                                                backgroundColor: activeTab === 0 ? "#fff" : "#fff",
-                                                color: activeTab === 0 ? "#13416a" : "#063762",
-                                                padding: "8px 12px",
-                                                borderRadius: "50px",
-                                                cursor: "pointer",
-                                                textAlign: "center",
-                                                display: "inline",
-                                                width: "100%",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                fontSize: "16px",
-                                                textTransform: "none",
-                                            }}
-                                        >
-                                            <Tooltip title={question.text}>{question.text}</Tooltip>
-                                        </Button>
+                                        <Tooltip title={<React.Fragment>{question.text}</React.Fragment>}>
+                                            <Button
+                                                onClick={() => handleQuestionClick(question.text)}
+                                                style={{
+                                                    backgroundColor: activeTab === 0 ? "#fff" : "#fff",
+                                                    color: activeTab === 0 ? "#13416a" : "#063762",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "50px",
+                                                    cursor: "pointer",
+                                                    textAlign: "center",
+                                                    display: "inline",
+                                                    width: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    fontSize: "16px",
+                                                    textTransform: "none",
+                                                }}
+                                            >
+                                                {question.text}
+                                            </Button>
+                                        </Tooltip>
+
                                     </div>
                                 ))}
                             </Carousel>
