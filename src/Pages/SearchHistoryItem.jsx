@@ -13,17 +13,13 @@ import YoutubeContent from "../Components/YoutubeContent";
 // import YoutubeContent from "../Components/YoutubeContent";
 import IsItKosher from "../Components/IsItKosher";
 
-const SearchHistoryItem = ({ query, response, errorMsg, searchQuery, handleChatClick }) => {
-
-  console.log("response", response);
-  
+const SearchHistoryItem = ({ query, response }) => {
   
   const { activeTab } = React.useContext(Context);
   
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data?.length;
-  console.log("IsItKosher data:", response?.isItKosher?.isSuccess);
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
