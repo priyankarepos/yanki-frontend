@@ -241,6 +241,7 @@ const NewHomePageMui = () => {
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,
                                     isExclusiveContent: gptResponse.isExclusiveContent,
+                                    isItKosher: gptResponse.isItKosher,
                                 }
                             }
                         };
