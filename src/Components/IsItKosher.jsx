@@ -1,6 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { ExpandMore, ExpandLess, CheckCircle, Cancel } from '@mui/icons-material';
+import { ExpandMore, ExpandLess } from '@mui/icons-material';
+import "./AnswerStyle.scss";
+import { Box } from '@mui/system';
 
 const IsItKosher = ({ answer }) => {
   const kosherProducts = answer?.isItKosher?.products?.data || [];
@@ -25,10 +27,14 @@ const IsItKosher = ({ answer }) => {
             expandIcon={expandedItems[index] ? <ExpandLess /> : <ExpandMore />}
             IconButtonProps={{ edge: 'start' }}
           >
-            <Typography><strong>{product.name}</strong></Typography>
+            <Box>
+              <Typography className="kosher-heading">{product.brand}</Typography>
+              <Typography><strong>{product.name}</strong></Typography>
+              <Typography className="kosher-heading">{product.source.name}</Typography>
+            </Box>
           </AccordionSummary>
           <AccordionDetails style={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography>
+            <Typography className="kosher-text">
               <strong>Brand:</strong> {product.brand}<br />
               <strong>Condition Type:</strong> {product.condition_Type}<br />
               <strong>Symbol:</strong> {product.symbol}<br />
