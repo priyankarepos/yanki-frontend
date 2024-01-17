@@ -2,6 +2,7 @@ import { Box, Typography, List, Button, Paper, Grid, CircularProgress } from '@m
 import React, { useState } from 'react';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
+import "./AnswerStyle.scss";
 
 const DemoEnterpriseChat = ({ answer }) => {
 
@@ -31,10 +32,26 @@ const DemoEnterpriseChat = ({ answer }) => {
         }
     };
 
+    const emailSubject = "Email subject";
+    const emailBody = "Email body";
 
+    const handleOpenEmailClient = () => {
+        const emailToUse = answer?.enterpriseSelections?.departmentEmail || answer?.enterpriseSelections?.enterpriseEmail;
+        const mailtoLink = `mailto:${emailToUse}?subject=${emailSubject}&body=${emailBody}`;
+        window.location.href = mailtoLink;
+    };
+
+    const handleCall = (phoneNumber) => {
+        console.log("phoneNumber", phoneNumber);
+        if (phoneNumber && phoneNumber.trim() !== "") {
+            window.location.href = `tel:${phoneNumber}`;
+        } else {
+            console.error("Phone number is not valid or empty.", phoneNumber);
+        }
+    };
     return (
-        <Box>
-            <Paper elevation={3} style={{ backgroundColor: "#002d55", marginBottom: "10px", padding: "10px", paddingLeft: "20px", paddingRight: "20px", }}>
+        <Box className="demo-enterprise-wrapper">
+            <Paper elevation={3}>
                 <div style={{ padding: '0px' }}>
                     <List style={{ display: 'flex' }}>
                         <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff", marginTop: "5px", }} />
@@ -47,47 +64,48 @@ const DemoEnterpriseChat = ({ answer }) => {
                     <Grid container spacing={2}>
                         {answer.enterpriseSelections && answer?.enterpriseSelections.map((enterprise) => (
                             <Grid item xs={12} sm={6} md={6} key={enterprise.id}>
-                                <Button
-                                    style={{
-                                        backgroundColor: "#2f587d",
-                                        color: "#fff",
-                                        padding: "12px",
-                                        borderRadius: "8px",
-                                        cursor: "pointer",
-                                        display: "flex",
-                                        width: "100%",
-                                        justifyContent: "flex-start",
-                                        alignItems: "center",
-                                        height: "auto",
-                                        textAlign: "left",
-                                        textTransform: "none",
-                                        marginLeft: "0px",
-                                    }}
-                                    onClick={() => {
-                                        setSelectedEnterprise(enterprise.enterpriseName);
-                                        handleSendEmail(enterprise);
-                                    }}
-                                    disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}
-                                >
+                                <Box className="enterprise-info-box">
                                     <div>
                                         {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
-                                        {enterprise.enterpriseEmail && <div>Enterprise Email: <span style={{ color: "#b9deff" }}>{enterprise.enterpriseEmail}</span></div>}
+                                        {enterprise.enterpriseEmail && <div>
+                                            Enterprise Email:{" "}
+                                            <span className='email-click'
+                                                onClick={handleOpenEmailClient}
+                                            >
+                                                {enterprise.enterpriseEmail}
+                                            </span>
+                                        </div>}
                                         {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
                                         {enterprise.website && <div>Website: {enterprise.website}</div>}
-                                        {enterprise.enterprisePhoneNumber && <div>Enterprise Phone: {enterprise.enterprisePhoneNumber}</div>}
+                                        {enterprise.enterprisePhoneNumber && <div>
+                                            Enterprise Phone:{" "}
+                                            <span className='email-click'
+                                                onClick={() => handleCall(enterprise.enterprisePhoneNumber)}
+                                            >
+                                                {enterprise.enterprisePhoneNumber}
+                                            </span>
+                                        </div>}
                                         {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
-                                        {enterprise.departmentEmail && <div>Department Email: <span style={{ color: "#b9deff" }}>{enterprise.departmentEmail}</span></div>}
+                                        {enterprise.departmentEmail && <div>
+                                            Department Email:{" "}
+                                            <span className='email-click'
+                                                onClick={handleOpenEmailClient}>{enterprise.departmentEmail}</span>
+                                        </div>}
                                         {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
-                                        {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <strong style={{ backgroundColor: "#063762", padding: "3px", fontSize: "12px", marginTop: "15px", display: "inline-block", }}>Click here to send message to Enterprise</strong> : <></>}
+                                        {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <Button className="enterprise-info-button" onClick={() => {
+                                            setSelectedEnterprise(enterprise.enterpriseName);
+                                            handleSendEmail(enterprise);
+                                        }}
+                                            disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : <></>}
                                     </div>
-                                </Button>
+                                </Box>
                             </Grid>
                         ))}
                     </Grid>
                 </List>
                 {selectedEnterprise && (
-                    <Typography style={{ fontSize: "16px", padding: "10px", color: "#fff" }}>
-                        {selectedEnterpriseMessage === "" ? <CircularProgress size={24} style={{ color: "#fff" }} /> : selectedEnterpriseMessage}
+                    <Typography className="send-email-message">
+                        {selectedEnterpriseMessage === "" ? <CircularProgress size={24} /> : selectedEnterpriseMessage}
                     </Typography>
                 )}
             </Paper>
