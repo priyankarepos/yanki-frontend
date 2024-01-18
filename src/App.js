@@ -41,6 +41,8 @@ import AdminEnterpriseRequest from "./Admin/EnterpriseRequest";
 import AdminEnterpriseCategory from "./Admin/EnterpriseCategory";
 import TermsOfUse from "./Pages/TermsOfUsePage";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import AdminCreateEnterprise from "./Admin/CreateEnterprise";
+import AdminCreateDepartment from "./Admin/CreateDepartment";
 import AdminFileUpload from "./Admin/AdminFileUpload";
 
 // Exporting context
@@ -148,7 +150,7 @@ function App() {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0
-  }), []); 
+  }), []);
   // Success callback function
   const success = async (pos) => {
     const crd = pos.coords;
@@ -495,6 +497,22 @@ function App() {
                           <PrivacyPolicy />
                         </AuthPageLayout>
                       </AuthPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/create-enterprise"
+                    element={
+                      <UserPagesProtection>
+                        <AdminCreateEnterprise />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/create-department"
+                    element={
+                      <UserPagesProtection>
+                        <AdminCreateDepartment />
+                      </UserPagesProtection>
                     }
                   />
                   <Route

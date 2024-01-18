@@ -72,13 +72,37 @@ const Departments = () => {
   const [departmentID, setDepartmentID] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const enterpriseId = sessionStorage.getItem('enterpriseId');
+  // const enterpriseId = sessionStorage.getItem('enterpriseId');
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [tagCount, setTagCount] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedDepartmentIndex, setSelectedDepartmentIndex] = useState(null);
   // const [submitted, setSubmitted] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
+  const [enterpriseDetails, setEnterpriseDetails] = useState({});
+
+  useEffect(() => {
+    const getEnterpriseDetails = async () => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
+            );
+
+            if (response.status === 200) {
+                const responseData = response.data;
+                setEnterpriseDetails(responseData)
+                console.log('Enterprise Details:', responseData);
+
+            } else {
+                console.error('Failed to fetch enterprise details');
+            }
+        } catch (error) {
+            console.error('Error fetching enterprise details:', error);
+        }
+    };
+
+    getEnterpriseDetails();
+}, []);
 
   const {
     control,
@@ -105,7 +129,7 @@ const Departments = () => {
   const checkEnterpriseKeyword = async (tag) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${tag}`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${enterpriseDetails[0]?.enterpriseId}/${tag}`
       );
       console.log('Keyword Check Response:', response.data);
       if (response.status === 200) {
@@ -201,12 +225,13 @@ const Departments = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   const [departmentsData, setDepartmentsData] = useState([]);
+  console.log("departmentsData", departmentsData);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments`
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${enterpriseDetails[0]?.enterpriseId}`
         );
 
         if (response.status === 200) {
@@ -220,7 +245,7 @@ const Departments = () => {
     };
 
     fetchData();
-  }, [triggerEffect]);
+  }, [triggerEffect,enterpriseDetails]);
 
   const handleEditDepartment = async (index, departmentId) => {
     const department = departmentsData[index];
@@ -307,7 +332,7 @@ const Departments = () => {
         departmentEmail: formData.EmailAddress,
         departmentDescription: formData.DepartmentDescription,
         departmentKeywords: tagsAsString,
-        enterpriseId: enterpriseId,
+        enterpriseId: enterpriseDetails[0]?.enterpriseId,
       };
 
       const response = await axios.put(
@@ -363,7 +388,7 @@ const Departments = () => {
         departmentEmail: data.EmailAddress,
         departmentDescription: data.DepartmentDescription,
         departmentKeywords: tagsAsString,
-        enterpriseId: enterpriseId,
+        enterpriseId: enterpriseDetails[0]?.enterpriseId,
       };
 
       const response = await axios.post(apiUrl, requestBody);
@@ -406,6 +431,7 @@ const Departments = () => {
         <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
           Add Departments
         </Typography>
+        {enterpriseDetails[0]?.isProfileCompleted === false && <Typography style={{marginBottom:"10px", color:"gray"}}>Please complete enterprise profile first to add departments</Typography>}
         <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
@@ -419,8 +445,8 @@ const Departments = () => {
                   message: "Department name should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Department name should not exceed 20 characters.",
+                  value: 30,
+                  message: "Department name should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (
@@ -431,6 +457,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="Customer Service"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['DepartmentName']}
                   // helperText={errors['DepartmentName'] ? errors['DepartmentName'].message : ''}
                   />
@@ -453,8 +480,8 @@ const Departments = () => {
                   message: "Name of representative should be at least 3 characters long.",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Name of representative should not exceed 20 characters.",
+                  value: 30,
+                  message: "Name of representative should not exceed 30 characters.",
                 },
               }}
               render={({ field }) => (
@@ -465,6 +492,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="John Deo"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['NameOfRepresentative']}
                   // helperText={errors['NameOfRepresentative'] ? errors['NameOfRepresentative'].message : ''}
                   />
@@ -498,6 +526,7 @@ const Departments = () => {
                     type="outlined"
                     placeholder="Type email address here"
                     fullWidth
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   // error={!!errors['EmailAddress']}
                   // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                   />
@@ -529,6 +558,7 @@ const Departments = () => {
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
                   {/* {errors['DepartmentDescription'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['DepartmentDescription'].message}</FormHelperText>
@@ -550,6 +580,7 @@ const Departments = () => {
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
                     placeholder="Type Enterprise identification keywords here"
+                    disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                     inputProps={{
                       style: {
                         backgroundColor: '#eaf5ff',
@@ -607,6 +638,7 @@ const Departments = () => {
               color="primary"
               onClick={departmentID !== null ? handleSubmit(handleSaveDepartment) : handleSubmit(onSubmit)}
               style={styles.modalButton}
+              disabled={enterpriseDetails[0]?.isProfileCompleted === false}
             >
               {departmentID !== null ? "Save Changes" : "Save"}
             </Button>

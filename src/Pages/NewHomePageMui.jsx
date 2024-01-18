@@ -111,6 +111,7 @@ const NewHomePageMui = () => {
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        // "Content-Type": "multipart/byteranges",
                         "Location-Allowed": isLocationAllowed,
                         TimeZone: timezone,
                         "User-Lat": userLatitude,
@@ -239,6 +240,8 @@ const NewHomePageMui = () => {
                                     enterpriseSelections: gptResponse.enterpriseSelections,
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,
+                                    isExclusiveContent: gptResponse.isExclusiveContent,
+                                    isItKosher: gptResponse.isItKosher,
                                 }
                             }
                         };
@@ -418,6 +421,33 @@ const NewHomePageMui = () => {
         };
     }, []);
 
+    // const shouldScrollRef = useRef(true);
+
+    // useEffect(() => {
+    //     const chatContainerNode = chatContainerRef.current;
+    
+    //     const scrollToBottom = () => {
+    //       if (shouldScrollRef.current) {
+    //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+    //         shouldScrollRef.current = false;
+    //       }
+    //     };
+    
+    //     scrollToBottom();
+    
+    //     chatContainerNode.style.scrollBehavior = 'auto';
+    
+    //     const observer = new MutationObserver(scrollToBottom);
+    //     observer.observe(chatContainerNode, { childList: true, subtree: true });
+    
+    //     // Clean up
+    //     return () => {
+    //       chatContainerNode.style.scrollBehavior = 'smooth';
+    //       observer.disconnect();
+    //     };
+    //   }, []);
+    
+
 
     return (
         <Box style={styles.adminDashboard}>
@@ -524,8 +554,10 @@ const NewHomePageMui = () => {
                         <AddIcon />
                         &nbsp; New Chat
                     </IconButton>
-                    <Box sx={{ marginTop: "25px" }} style={{maxHeight:"100vh", minHeight:"100vh", overflowX:"hidden",overflowY:"auto", width: "100%",
-                            marginX: "auto",}}>
+                    <Box sx={{ marginTop: "25px" }} style={{
+                        maxHeight: "100vh", minHeight: "100vh", overflowX: "hidden", overflowY: "auto", width: "100%",
+                        marginX: "auto",
+                    }}>
                         <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
@@ -603,9 +635,6 @@ const NewHomePageMui = () => {
                                 </IconButton>
                             </div>
                         ))}
-
-
-
                     </Box>
                 </div>
             </Drawer>
