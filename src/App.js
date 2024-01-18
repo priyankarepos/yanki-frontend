@@ -43,6 +43,7 @@ import TermsOfUse from "./Pages/TermsOfUsePage";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import AdminCreateEnterprise from "./Admin/CreateEnterprise";
 import AdminCreateDepartment from "./Admin/CreateDepartment";
+import AdminFileUpload from "./Admin/AdminFileUpload";
 
 // Exporting context
 export const Context = createContext("");
@@ -149,7 +150,7 @@ function App() {
     enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0
-  }), []); 
+  }), []);
   // Success callback function
   const success = async (pos) => {
     const crd = pos.coords;
@@ -511,6 +512,14 @@ function App() {
                     element={
                       <UserPagesProtection>
                         <AdminCreateDepartment />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/upload-files"
+                    element={
+                      <UserPagesProtection>
+                        <AdminFileUpload />
                       </UserPagesProtection>
                     }
                   />
