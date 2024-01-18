@@ -106,7 +106,7 @@ const AdminFileUpload = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://localhost:7004/api/JewishPrayerTextIndex/document-mapping');
+                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`);
                 setTableData(response.data.jewishPrayerTexts);
             } catch (error) {
                 console.error('Error fetching data:', error);
