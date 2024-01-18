@@ -33,3 +33,10 @@
     border: none !important;
     padding-left: 0px !important;
 }
+
+.react-tagsinput-tag {
+  background-color: #6fa8dd !important;
+  border-radius: 5px!important;
+  border: 1px solid #a9cae9!important;
+  color: #fdfdfd!important;
+}
