@@ -132,7 +132,7 @@ const YoutubeContent = ({ answer }) => {
                             onClick={handleTorahanytimeClick}
                             className={`switch-button ${showYouTubeVideos === false ? 'selected' : ''}`}
                         >
-                            Torahanytime
+                            TorahAnytime
                         </Typography>
                     </Box>
                 )}

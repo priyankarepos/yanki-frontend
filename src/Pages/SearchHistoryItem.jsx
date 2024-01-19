@@ -11,15 +11,15 @@ import { Context } from "../App";
 import PdfAnswers from "../Components/PdfAnswers";
 import YoutubeContent from "../Components/YoutubeContent";
 // import YoutubeContent from "../Components/YoutubeContent";
+import IsItKosher from "../Components/IsItKosher";
 
-const SearchHistoryItem = ({ query, response, errorMsg, searchQuery, handleChatClick }) => {
-
-  console.log("response", response);
-
+const SearchHistoryItem = ({ query, response }) => {
+  
   const { activeTab } = React.useContext(Context);
-
+  
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
+  const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data?.length;
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
@@ -31,7 +31,7 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery, handleChatC
           </Box>
         </div>
       </Paper>
-      {isTorahAnswer && !response?.isExclusiveContent &&   (
+      {isTorahAnswer && !response?.isExclusiveContent && (
         <Paper id="abcd" elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
@@ -86,6 +86,16 @@ const SearchHistoryItem = ({ query, response, errorMsg, searchQuery, handleChatC
           </div>
         )}
       </Paper>
+
+      {isDataAvailable && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <IsItKosher answer={response} />
+          </div>
+        </Paper>
+      )}
+
+
 
     </div>
   );

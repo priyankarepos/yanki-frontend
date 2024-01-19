@@ -66,6 +66,58 @@ const SentenceAnswer = ({ answer }) => {
   };
 
 
+  const renderContentResponse = () => {
+    return processedContentResponse.map((ans, index) => (
+      <Typography variant="h6" component="div" key={index} style={{ fontSize: "16px" }}>
+        {renderClickableContent(ans)}
+      </Typography>
+    ));
+  };
+
+  const renderClickableContent = (text) => {
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+    const phoneRegex = /\b\d{10,}\b/g;
+  
+    let content = [];
+  
+    text.split(" ").forEach((word, index, array) => {
+      if (word.match(emailRegex)) {
+        content.push(
+          <span
+            key={index}
+            style={{ color: "#007bff", cursor: "pointer" }}
+            onClick={() => window.location.href = `mailto:${word}`}
+          >
+            {word}
+          </span>
+        );
+      } else if (word.match(phoneRegex)) {
+        content.push(
+          <span
+            key={index}
+            style={{ color: "#007bff", cursor: "pointer" }}
+            onClick={() => window.location.href = `tel:${word}`}
+          >
+            {word}
+          </span>
+        );
+      } else {
+        content.push(
+          <span key={index}>
+            {word}{" "}
+          </span>
+        );
+      }
+        if (index !== array.length - 1) {
+        content.push(" ");
+      }
+    });
+  
+    return content;
+  };
+  
+  
+  
 
   return (
     <>
@@ -86,12 +138,7 @@ const SentenceAnswer = ({ answer }) => {
           <Typography variant="h6" component="div" style={{ fontSize: "16px" }}>
             {answer?.message}
           </Typography>
-
-          {processedContentResponse.map((ans, index) => (
-            <Typography variant="h6" component="div" key={index} style={{ fontSize: "16px", }}>
-              {ans}
-            </Typography>
-          ))}
+          {renderContentResponse()}
           {(answer?.userType || apiResponseMessage) && (
             <Box>
               <TextField
