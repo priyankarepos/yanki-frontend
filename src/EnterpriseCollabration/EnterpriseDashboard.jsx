@@ -22,7 +22,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
-// import throttle from 'lodash/throttle';
+import UploadIcon from '@mui/icons-material/Upload';
 
 const styles = {
     enterpriseDashboard: {
@@ -186,6 +186,18 @@ const EnterpriseDashboard = () => {
                                     <AccountBalanceIcon style={{ color: '#fff', }} />
                                 </ListItemIcon>
                                 <ListItemText primary="Departments" />
+                            </ListItem>
+                        </NavLink>
+                        <NavLink
+                            to="/enterprise/upload-files"
+                            style={{ textDecoration: 'none', color: '#fff' }}
+                            activeClassName="active"
+                        >
+                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/upload-files")}>
+                                <ListItemIcon>
+                                    <UploadIcon style={{ color: '#fff', }} />
+                                </ListItemIcon>
+                                <ListItemText primary="Add Files" />
                             </ListItem>
                         </NavLink>
                     </List>
