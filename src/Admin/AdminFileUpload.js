@@ -290,6 +290,7 @@ const AdminFileUpload = () => {
                                 <TableRow>
                                     <TableCell>Sr No.</TableCell>
                                     <TableCell>PDF Name</TableCell>
+                                    <TableCell>Keywords</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -298,6 +299,9 @@ const AdminFileUpload = () => {
                                     <TableRow key={index + 1}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{row.pdfName}</TableCell>
+                                        {row.keywords.map((keyword, index) => (
+                                            <TableCell key={index}>{JSON.parse(keyword).join(", ")}</TableCell>
+                                        ))}
                                         <TableCell>
                                             <IconButton onClick={() => openPdfModal(row.pdfName)}>
                                                 <VisibilityIcon />
