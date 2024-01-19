@@ -85,7 +85,7 @@ const AdminFileUpload = () => {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmationText, setConfirmationText] = useState('');
     const [loading, setLoading] = useState(false);
-    const { control, handleSubmit, reset, formState: { isSubmitted, errors } } = useForm({
+    const { control, handleSubmit, setValue, trigger, reset, formState: { isSubmitted, errors } } = useForm({
         mode: "onChange",
         defaultValues: {
             file: null,
@@ -130,6 +130,20 @@ const AdminFileUpload = () => {
     const handleAddTag = (newTag) => {
         setTags([...tags, newTag]);
     };
+
+    const validateFile = (value) => {
+        if (!value || value.length === 0) {
+            return 'File is required';
+        }
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(value[0].type)) {
+            return 'Please select a valid file (PDF, JPG, or PNG)';
+        }
+
+        return true;
+    };
+
+
 
     const onSubmit = async (data) => {
         try {
@@ -276,6 +290,7 @@ const AdminFileUpload = () => {
                                 <TableRow>
                                     <TableCell>Sr No.</TableCell>
                                     <TableCell>PDF Name</TableCell>
+                                    <TableCell>Keywords</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -284,6 +299,9 @@ const AdminFileUpload = () => {
                                     <TableRow key={index + 1}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{row.pdfName}</TableCell>
+                                        {row.keywords.map((keyword, index) => (
+                                            <TableCell key={index}>{JSON.parse(keyword).join(", ")}</TableCell>
+                                        ))}
                                         <TableCell>
                                             <IconButton onClick={() => openPdfModal(row.pdfName)}>
                                                 <VisibilityIcon />
@@ -319,8 +337,9 @@ const AdminFileUpload = () => {
                                     <input
                                         type="file"
                                         onChange={(e) => {
-                                            console.log('Selected File:', e.target.files[0]);
-                                            field.onChange(e.target.files);
+                                            const selectedFile = e.target.files[0];
+                                            setValue('file', [selectedFile]);
+                                            trigger('file');
                                         }}
                                         style={{
                                             backgroundColor: '#eaf5ff',
@@ -331,13 +350,13 @@ const AdminFileUpload = () => {
                                         }}
                                     />
                                     {errors.file && (
-                                        <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <span style={{ color: 'red', fontSize: '12px', margin: 0 }}>
                                             {errors.file.message}
-                                        </FormHelperText>
+                                        </span>
                                     )}
                                 </div>
                             )}
-                            rules={{ required: 'File is required' }}
+                            rules={{ validate: validateFile }}
                         />
 
                         {/* Keywords */}
