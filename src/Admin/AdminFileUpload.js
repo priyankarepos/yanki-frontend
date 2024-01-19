@@ -108,6 +108,7 @@ const AdminFileUpload = () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`);
                 setTableData(response.data.jewishPrayerTexts);
+                setTableData(response.data.jewishPrayerTexts);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -299,9 +300,30 @@ const AdminFileUpload = () => {
                                     <TableRow key={index + 1}>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{row.pdfName}</TableCell>
-                                        {row.keywords.map((keyword, index) => (
-                                            <TableCell key={index}>{JSON.parse(keyword).join(", ").toLowerCase()}</TableCell>
-                                        ))}
+                                        <TableCell>
+                                            {row.keywords.map((keyword, index) => {
+                                                try {
+                                                    const parsedKeyword = JSON.parse(keyword);
+                                                    if (Array.isArray(parsedKeyword)) {
+                                                        return (
+                                                            <span key={index}>
+                                                                {index > 0 && ', '}
+                                                                {parsedKeyword.join(', ').toLowerCase()}
+                                                            </span>
+                                                        );
+                                                    }
+                                                } catch (error) {
+                                                    // If parsing fails, treat it as a plain string
+                                                }
+
+                                                return (
+                                                    <span key={index}>
+                                                        {index > 0 && ', '}
+                                                        {String(keyword).toLowerCase()}
+                                                    </span>
+                                                );
+                                            })}
+                                        </TableCell>
                                         <TableCell>
                                             <IconButton onClick={() => openPdfModal(row.pdfName)}>
                                                 <VisibilityIcon />
