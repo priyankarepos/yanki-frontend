@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText, useMediaQuery } from '@mui/material';
+import { Box, Typography, Grid, TextField, InputLabel, Divider, Button, Snackbar, FormHelperText, useMediaQuery, Modal } from '@mui/material';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { useForm, Controller } from 'react-hook-form';
@@ -11,6 +11,15 @@ import axios from "axios";
 import "./EnterpriseStyle.scss";
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
 import { CircularProgress } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import CloseIcon from '@mui/icons-material/Close';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import { pdfjs } from 'react-pdf';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ConfirmDialog from './ConfirmDialog';
 
 const styles = {
   inputField: {
@@ -52,6 +61,32 @@ const styles = {
     marginLeft: '0',
     transition: 'margin-left 0.3s',
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#063762',
+    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+    padding: '35px 25px',
+    width: '500px',
+    borderRadius: '8px',
+  },
+  modalTitle: {
+    fontWeight: 'medium',
+    marginBottom: '16px',
+    color: "#fff",
+  },
+  modalButton: {
+    backgroundColor: '#fff',
+    color: '#063762',
+    textTransform: 'capitalize',
+    borderRadius: '10px',
+    padding: '20px 15px',
+    fontSize: '16px',
+    marginTop: "20px",
+  },
 };
 
 const EnterpriseProfile = () => {
@@ -66,6 +101,133 @@ const EnterpriseProfile = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isButtonClick, setIsButtonClick] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
+  const [pdfName, setPdfName] = useState("");
+  const [fileError, setFileError] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`);
+
+        setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const openPdfModal = (index) => {
+    const selectedPdfData = tableData[index];
+    setSelectedPdf(selectedPdfData);
+    setPdfLoadError(false);
+  };
+
+  const closePdfModal = () => {
+    setSelectedPdf(null);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setValue('file', [file]);
+    const error = validateFile(file);
+    setFileError(error);
+  };
+
+  const validateFile = (file) => {
+    // Check if the file type is allowed
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!file || !allowedTypes.includes(file.type)) {
+      return 'Invalid file type. Please upload a JPEG, PNG, or PDF file.';
+    }
+  
+    // Additional validation logic can be added based on your requirements
+  
+    return '';
+  };
+
+  const onSubmit = (data) => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append('file', data.file[0]);
+
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=true`;
+
+      const response = axios.post(apiUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        setSnackbarMessage(`Document with Name ${data.file[0].name} added successfully`);
+        setSnackbarOpen(true);
+        setIsModalOpen(false);
+        setTableData((prevTableData) => [
+          ...prevTableData,
+          {
+            id: prevTableData.length + 1,
+            pdfUrl: data.file[0].name,
+          },
+        ]);
+        window.location.reload();
+      } else {
+        setSnackbarMessage('Failed to upload the file');
+        setSnackbarOpen(true);
+        window.location.reload();
+      }
+    } catch (error) {
+      setSnackbarMessage('An error occurred while uploading the file.');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = (pdfName) => {
+    setPdfName(pdfName);
+    setConfirmDialogOpen(true);
+    setConfirmationText(`Are you sure you want to delete this file?`);
+  };
+
+  const handleConfirmation = async () => {
+    const rowIndex = tableData.findIndex((row) => row.pdfUrl.split('/').pop() === pdfName);
+
+    if (rowIndex !== -1) {
+      try {
+        setLoading(true);
+        const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
+
+        if (response.status === 200) {
+          const updatedTableData = [...tableData];
+          updatedTableData.splice(rowIndex, 1);
+          setTableData(updatedTableData);
+          setConfirmDialogOpen(false);
+          setSnackbarMessage(`Document with Name ${pdfName} deleted successfully`);
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarMessage(`Failed to delete document: ${response.status}, ${response.data.message}`);
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage(`Error deleting document: ${error.message}`);
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   const {
     control,
@@ -91,7 +253,7 @@ const EnterpriseProfile = () => {
       BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
       BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
       FoundedYear: enterpriseDetails.foundedYear || "",
-      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
+      // ReligiousCertifications: enterpriseDetails.religiousCertification || "",
       FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
       EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
     },
@@ -125,8 +287,6 @@ const EnterpriseProfile = () => {
           `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
 
-        console.log('API Response:', response.data);
-
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
@@ -158,7 +318,6 @@ const EnterpriseProfile = () => {
     fetchEnterpriseDetails();
   }, []);
 
-
   useEffect(() => {
     setValue("EnterpriseName", enterpriseDetails[0]?.enterpriseName || "");
     setValue("EnterprisePointOfContact", enterpriseDetails[0]?.contactPersonName || "");
@@ -174,12 +333,11 @@ const EnterpriseProfile = () => {
     setValue("BusinessHoursOpeningTime", enterpriseDetails[0]?.officeOpenTime || "");
     setValue("BusinessHoursClosingTime", enterpriseDetails[0]?.officeCloseTime || "");
     setValue("FoundedYear", enterpriseDetails[0]?.foundedYear || "");
-    setValue("ReligiousCertifications", enterpriseDetails[0]?.religiousCertification || "");
+    // setValue("ReligiousCertifications", enterpriseDetails[0]?.religiousCertification || "");
     setValue("FrequentlyAskedQuestions", enterpriseDetails[0]?.faQs || "");
 
     if (enterpriseDetails[0]?.enterpriseKeywords) {
       const keywordsArray = enterpriseDetails[0]?.enterpriseKeywords.split(',');
-      console.log("keywordsArray", keywordsArray);
       setTags(keywordsArray);
       setValue("EnterpriseIdentificationKeywords", keywordsArray || []);
     }
@@ -190,8 +348,6 @@ const EnterpriseProfile = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/${tag}`
       );
-
-      console.log('Keyword Check Response:', response.data);
 
       if (response.status === 200) {
         const keywordExists = response.data.exists;
@@ -312,7 +468,7 @@ const EnterpriseProfile = () => {
           officeOpenTime: formData.BusinessHoursOpeningTime,
           officeCloseTime: formData.BusinessHoursClosingTime,
           foundedYear: formData.FoundedYear,
-          religiousCertification: formData.ReligiousCertifications,
+          // religiousCertification: formData.ReligiousCertifications,
           faQs: formData.FrequentlyAskedQuestions,
           enterpriseKeywords: tagsAsString,
         }
@@ -351,7 +507,50 @@ Service Offerings:
 • Are there any unique or specialized services that your enterprise offers?
 `;
 
-const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isLargeScreen = useMediaQuery("(min-width: 600px)");
+
+  const renderPdfModal = () => {
+    return (
+      <Modal
+        open={Boolean(selectedPdf)}
+        onClose={closePdfModal}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
+          <IconButton
+            style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd" }}
+            onClick={closePdfModal}
+            aria-label="close"
+          >
+            <CloseIcon style={{ color: "#fff" }} />
+          </IconButton>
+          {!pdfLoadError ? (
+            selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
+              <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                <Viewer fileUrl={selectedPdf?.pdfUrl} />
+              </Worker>
+            ) : (
+              <img
+                src={selectedPdf?.pdfUrl}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                onError={() => setPdfLoadError(true)}
+              />
+            )
+          ) : (
+            <div>Error loading content. Please try again.</div>
+          )}
+        </div>
+      </Modal>
+    );
+  };
+
+
 
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
@@ -387,8 +586,6 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                     type="outlined"
                     placeholder="Type enterprise name here"
                     fullWidth
-                  // error={!!errors['EnterpriseName']}
-                  // helperText={errors['EnterpriseName'] ? errors['EnterpriseName'].message : ''}
                   />
                   {errors['EnterpriseName'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseName'].message}</FormHelperText>
@@ -619,7 +816,7 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                       border: '1px solid #6fa8dd',
                       borderRadius: '8px',
                       marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",fontFamily: "unset",textTransform: "none",
+                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px", fontFamily: "unset", textTransform: "none",
                     }}
                     {...field}
                     placeholder={placeholderText}
@@ -747,7 +944,7 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
             <InputLabel style={styles.label}>Religious Certifications<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
-            <Controller
+            {/* <Controller
               control={control}
               name="ReligiousCertifications"
               rules={{ required: "Religious Certifications is required" }}
@@ -767,7 +964,35 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                   )}
                 </div>
               )}
-            />
+            /> */}
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              fullWidth
+              style={{ height: "60px" }}
+              onClick={() => setIsModalOpen(true)}
+            ></Button>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {tableData.map((row, index) => (
+                <li key={index + 1} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ flex: '1' }}>
+                    <a href={row.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#6fa8dd', wordWrap: 'break-word', display:"inline-block", width:"200px" }}>
+                      {row.id} - {row.pdfUrl ? row.pdfUrl.split('/').pop() : ''}
+                    </a>
+                  </div>
+                  <div>
+                    <IconButton onClick={() => openPdfModal(index)} style={{ marginLeft: '8px' }}>
+                      <VisibilityIcon style={{color: '#6fa8dd'}} />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(row.pdfUrl.split('/').pop())} style={{ marginLeft: '8px' }}>
+                      <DeleteIcon style={{color: '#6fa8dd'}} />
+                    </IconButton>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
           </Grid>
           <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
           <Grid item xs={12}>
@@ -851,7 +1076,7 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
                       At least one keyword is required
                     </FormHelperText>
                   )}
-                  {!tags.length && <Typography style={{color:"gray"}}>Enterprise identification keywords (press enter after each keywords to register)</Typography>}
+                  {!tags.length && <Typography style={{ color: "gray" }}>Enterprise identification keywords (press enter after each keywords to register)</Typography>}
                 </div>
               )}
             />
@@ -879,11 +1104,62 @@ const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
           </Grid>
         </Grid>
       </Box>
+      {renderPdfModal()}
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={styles.modal}
+      >
+        <Box style={styles.modalContent}>
+          <Typography variant="h5" sx={styles.modalTitle}>"Upload File"</Typography>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* File Upload */}
+            <div>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                style={{
+                  backgroundColor: '#eaf5ff',
+                  border: '1px solid #6fa8dd',
+                  borderRadius: '8px',
+                  marginBottom: '6px',
+                  color: '#8bbae5',
+                  width: '100%',
+                  minHeight: '15%',
+                  padding: '15px',
+                  fontSize: '16px',
+                }}
+              />
+              {fileError && (
+                <span style={{ color: 'red', fontSize: '12px', margin: 0 }}>{fileError}</span>
+              )}
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              style={styles.modalButton}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : 'Upload'}
+            </Button>
+          </form>
+        </Box>
+      </Modal>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
+      />
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={() => handleConfirmation()}
+        confirmationText={confirmationText}
+        loading={loading}
       />
     </Box >
   );

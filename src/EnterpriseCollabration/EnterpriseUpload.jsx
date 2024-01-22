@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, FormHelperText, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Snackbar, CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, Typography, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Snackbar, CircularProgress, useMediaQuery } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { Context } from '../App';
 import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
-import TagsInput from 'react-tagsinput';
 import { useForm, Controller } from 'react-hook-form';
 import "../Admin/AdminStyle.css"
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -65,6 +64,7 @@ const styles = {
     modalTitle: {
         fontWeight: 'medium',
         marginBottom: '16px',
+        color: "#fff",
     },
     modalButton: {
         backgroundColor: '#fff',
@@ -85,29 +85,24 @@ const EnterpriseFileUpload = () => {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmationText, setConfirmationText] = useState('');
     const [loading, setLoading] = useState(false);
-    const { control, handleSubmit, setValue, trigger, reset, formState: { isSubmitted, errors } } = useForm({
+    const { control, handleSubmit, setValue, trigger, reset, formState: { errors } } = useForm({
         mode: "onChange",
         defaultValues: {
             file: null,
             keywords: "",
         },
     });
-    const [tags, setTags] = useState([]);
-    const [tagInput, setTagInput] = useState('');
     const [tableData, setTableData] = useState([]);
-    console.log("tableData", tableData);
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
     const [pdfName, setPdfName] = useState("");
-    const [pdfId, setpdfId] = useState("");
-
-    const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
-
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`);
-                setTableData(response.data.jewishPrayerTexts);
+                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-document`);
+
+                setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -116,19 +111,14 @@ const EnterpriseFileUpload = () => {
         fetchData();
     }, []);
 
-    const openPdfModal = (pdfName) => {
-        const cleanPdfName = pdfName.replace(/%27/g, '');
-        const pdfUrl = `${s3BaseUrl}${cleanPdfName}`;
-        setSelectedPdf(pdfUrl);
+    const openPdfModal = (index) => {
+        const selectedPdfData = tableData[index];
+        setSelectedPdf(selectedPdfData);
         setPdfLoadError(false);
     };
 
     const closePdfModal = () => {
         setSelectedPdf(null);
-    };
-
-    const handleAddTag = (newTag) => {
-        setTags([...tags, newTag]);
     };
 
     const validateFile = (value) => {
@@ -148,9 +138,11 @@ const EnterpriseFileUpload = () => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
+
             const formData = new FormData();
             formData.append('file', data.file[0]);
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
+
+            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=false`;
 
             const response = await axios.post(apiUrl, formData, {
                 headers: {
@@ -159,22 +151,22 @@ const EnterpriseFileUpload = () => {
             });
 
             if (response.status === 200) {
-                console.log('API response:', response.data);
-                setSnackbarMessage(`Document with Name ${pdfName} addedd successfully`);
+                setSnackbarMessage(`Document with Name ${data.file[0].name} added successfully`);
                 setSnackbarOpen(true);
                 setIsModalOpen(false);
                 reset();
-                setTags([])
                 setTableData((prevTableData) => [
                     ...prevTableData,
                     {
                         id: prevTableData.length + 1,
-                        pdfName: data.file[0].name,
-                        keywords: tags.join(', '),
+                        pdfUrl: data.file[0].name,
                     },
                 ]);
+                window.location.reload();
+            } else {
+                setSnackbarMessage('Failed to upload the file');
+                setSnackbarOpen(true);
             }
-
         } catch (error) {
             setSnackbarMessage('An error occurred while uploading the file.');
             setSnackbarOpen(true);
@@ -183,35 +175,23 @@ const EnterpriseFileUpload = () => {
         }
     };
 
-
-
     const isLargeScreen = useMediaQuery("(min-width: 600px)");
 
-    const handleDelete = (pdfName, pdfId) => {
+    const handleDelete = (pdfName) => {
         setPdfName(pdfName);
-        setpdfId(pdfId)
         setConfirmDialogOpen(true);
-        setConfirmationText(`Are you sure you want to delete this file ?`);
-
+        setConfirmationText(`Are you sure you want to delete this file?`);
     };
 
     const handleConfirmation = async () => {
-        console.log("pdfName", pdfName);
-        console.log("pdfId", pdfId);
-        const rowIndex = tableData.findIndex((row) => row.pdfName === pdfName);
+        const rowIndex = tableData.findIndex((row) => row.pdfUrl.split('/').pop() === pdfName);
 
         if (rowIndex !== -1) {
             try {
-                // Make a DELETE request to the API with the documentId or fileName
-                const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`, {
-                    params: {
-                        documentId: pdfId, // Use pdfId if it's available, otherwise use pdfName
-                        fileName: pdfName,
-                    },
-                });
+                setLoading(true);
+                const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
 
                 if (response.status === 200) {
-                    // If the API call is successful, update the state to reflect the deletion
                     const updatedTableData = [...tableData];
                     updatedTableData.splice(rowIndex, 1);
                     setTableData(updatedTableData);
@@ -219,15 +199,18 @@ const EnterpriseFileUpload = () => {
                     setSnackbarMessage(`Document with Name ${pdfName} deleted successfully`);
                     setSnackbarOpen(true);
                 } else {
-                    setSnackbarMessage(response.status, response.data.message);
+                    setSnackbarMessage(`Failed to delete document: ${response.status}, ${response.data.message}`);
                     setSnackbarOpen(true);
                 }
             } catch (error) {
-                setSnackbarMessage(error.message);
+                setSnackbarMessage(`Error deleting document: ${error.message}`);
                 setSnackbarOpen(true);
+            } finally {
+                setLoading(false);
             }
         }
     };
+
     const renderPdfModal = () => {
         return (
             <Modal
@@ -241,18 +224,27 @@ const EnterpriseFileUpload = () => {
             >
                 <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
                     <IconButton
-                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
+                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd" }}
                         onClick={closePdfModal}
                         aria-label="close"
                     >
                         <CloseIcon style={{ color: "#fff" }} />
                     </IconButton>
                     {!pdfLoadError ? (
-                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                            <Viewer fileUrl={selectedPdf} />
-                        </Worker>
+                        selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
+                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                                <Viewer fileUrl={selectedPdf?.pdfUrl} />
+                            </Worker>
+                        ) : (
+                            <img
+                                src={selectedPdf?.pdfUrl}
+                                alt="PDF Document"
+                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                onError={() => setPdfLoadError(true)}
+                            />
+                        )
                     ) : (
-                        <div>Error loading PDF. Please try again.</div>
+                        <div>Error loading content. Please try again.</div>
                     )}
                 </div>
             </Modal>
@@ -268,7 +260,7 @@ const EnterpriseFileUpload = () => {
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><EnterpriseDashboard /></Box>
             <Box style={{ ...styles.content, marginLeft: contentMargin, }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '50px', padding: '16px' }}>
                 <Box style={{ ...styles.content, marginLeft: contentMargin, display: "flex", alignItems: "center", }}>
-                    <Typography variant="h5" sx={{ ...styles.modalTitle, fontWeight: "bold", marginBottom: "0px", }} >Upload Files</Typography >
+                    <Typography variant="h6" sx={{ ...styles.modalTitle, marginBottom: "0px", color: "#6fa8dd" }} >Upload Files</Typography >
                     <Button
                         variant="outlined"
                         sx={{ marginY: { xs: "10px" }, width: "150px" }}
@@ -290,7 +282,6 @@ const EnterpriseFileUpload = () => {
                                 <TableRow>
                                     <TableCell>Sr No.</TableCell>
                                     <TableCell>PDF Name</TableCell>
-                                    <TableCell>Keywords</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -298,15 +289,12 @@ const EnterpriseFileUpload = () => {
                                 {tableData.map((row, index) => (
                                     <TableRow key={index + 1}>
                                         <TableCell>{index + 1}</TableCell>
-                                        <TableCell>{row.pdfName}</TableCell>
-                                        {row.keywords.map((keyword, index) => (
-                                            <TableCell key={index}>{JSON.parse(keyword).join(", ")}</TableCell>
-                                        ))}
+                                        <TableCell>{row.pdfUrl ? row.pdfUrl.split('/').pop() : ''}</TableCell>
                                         <TableCell>
-                                            <IconButton onClick={() => openPdfModal(row.pdfName)}>
+                                            <IconButton onClick={() => openPdfModal(index)}>
                                                 <VisibilityIcon />
                                             </IconButton>
-                                            <IconButton onClick={() => handleDelete(row.pdfName, row.documentId)}>
+                                            <IconButton onClick={() => handleDelete(row.pdfUrl.split('/').pop())}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>
@@ -358,57 +346,6 @@ const EnterpriseFileUpload = () => {
                             )}
                             rules={{ validate: validateFile }}
                         />
-
-                        {/* Keywords */}
-                        <Controller
-                            control={control}
-                            name="keywords"
-                            render={({ field }) => (
-                                <div>
-                                    <TagsInput
-                                        value={tags}
-                                        onChange={(newTags) => setTags(newTags)}
-                                        addKeys={[13, 9]}
-                                        placeholder="Type keywords here"
-                                        inputProps={{
-                                            style: {
-                                                backgroundColor: '#eaf5ff',
-                                                border: '1px solid #6fa8dd',
-                                                borderRadius: '8px',
-                                                marginBottom: '16px',
-                                                color: '#8bbae5',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: "60px",
-                                            },
-                                            ...field,
-                                            value: tagInput,
-                                            onChange: (e) => setTagInput(e.target.value),
-                                            onKeyDown: (e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    e.persist();
-                                                    handleAddTag(e.target.value);
-                                                    field.onChange('');
-                                                    setTagInput('');
-                                                }
-                                            },
-                                        }}
-                                    />
-                                    {isSubmitted && Array.isArray(tags) && tags.length === 0 && (
-                                        <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
-                                            At least one keyword is required
-                                        </FormHelperText>
-                                    )}
-                                </div>
-                            )}
-                            rules={{
-                                validate: (value) => {
-                                    const keywordsArray = Array.isArray(value) ? value : [value];
-                                    return keywordsArray.length > 0 || 'Keywords are required';
-                                },
-                            }}
-                        />
                         <Button
                             variant="contained"
                             color="primary"
@@ -433,6 +370,7 @@ const EnterpriseFileUpload = () => {
                 handleClose={() => setConfirmDialogOpen(false)}
                 handleConfirm={() => handleConfirmation()}
                 confirmationText={confirmationText}
+                loading={loading}
             />
         </Box>
     )
