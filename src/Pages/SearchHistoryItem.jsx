@@ -47,7 +47,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.contentResponse && !response.enterprisePdfNames && (
+{response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <SentenceAnswer answer={response} />

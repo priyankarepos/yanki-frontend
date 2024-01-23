@@ -82,9 +82,10 @@ const EnterprisePdfAnswer = ({ answer }) => {
     const renderClickableContent = (text) => {
         const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
         const phoneRegex = /\b\d{10,}\b/g;
-    
+        const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
+      
         let content = [];
-    
+      
         text.split(" ").forEach((word, index, array) => {
           if (word.match(emailRegex)) {
             content.push(
@@ -106,6 +107,16 @@ const EnterprisePdfAnswer = ({ answer }) => {
                 {word}
               </span>
             );
+          } else if (word.match(urlRegex)) {
+            content.push(
+              <span
+                key={index}
+                style={{ color: "#007bff", cursor: "pointer" }}
+                onClick={() => window.open(word, '_blank')}
+              >
+                {word}
+              </span>
+            );
           } else {
             content.push(
               <span key={index}>
@@ -117,7 +128,7 @@ const EnterprisePdfAnswer = ({ answer }) => {
             content.push(" ");
           }
         });
-    
+      
         return content;
       };
 
