@@ -849,7 +849,7 @@ Service Offerings:
                     className='EnterpriseCategorySelect'
                   >
                     <MenuItem value="" disabled>
-                      {enterpriseDetails.categoryName}
+                      {enterpriseDetails[0]?.categoryName}
                     </MenuItem>
                     {enterpriseCategories
                       .filter((category) => category.id !== enterpriseDetails.categoryId)
