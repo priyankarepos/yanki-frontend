@@ -57,8 +57,6 @@ const IsItKosher = ({ answer }) => {
                   />
                   <br />
                   <strong>Is Gluten-Free:</strong> {product.isGlutenFree ? 'True' : 'False'}<br />
-                  <strong>Is Halal:</strong> {product.isHalal ? 'True' : 'False'}<br />
-                  <strong>Is Hipster:</strong> {product.isHipster ? 'True' : 'False'}<br />
                   <strong>Is Kosher:</strong> {product.isKosher ? 'True' : 'False'}<br />
                   <strong>Is Kosher for Passover:</strong> {product.isKosherPassover ? 'True' : 'False'}<br />
                 </Typography>
