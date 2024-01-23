@@ -242,6 +242,7 @@ const NewHomePageMui = () => {
                                     userType: gptResponse.userType,
                                     isExclusiveContent: gptResponse.isExclusiveContent,
                                     isItKosher: gptResponse.isItKosher,
+                                    enterprisePdfNames: gptResponse.enterprisePdfNames,
                                 }
                             }
                         };
