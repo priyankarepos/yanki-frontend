@@ -124,7 +124,7 @@ const EnterpriseSignup = () => {
                 email: data.Email,
                 password: data.Password,
                 fullName: data.UserName,
-                phoneNumber: data.PhoneNumber,
+                phoneNumber: data.signInPhone,
                 enterpriseName: data.EnterpriseName,
                 contactPersonName: data.PointOfContact,
                 website: data.Website,
