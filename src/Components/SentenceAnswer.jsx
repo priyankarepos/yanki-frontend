@@ -77,6 +77,7 @@ const SentenceAnswer = ({ answer }) => {
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     const phoneRegex = /\b\d{10,}\b/g;
+    const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
   
     let content = [];
   
@@ -101,6 +102,16 @@ const SentenceAnswer = ({ answer }) => {
             {word}
           </span>
         );
+      } else if (word.match(urlRegex)) {
+        content.push(
+          <span
+            key={index}
+            style={{ color: "#007bff", cursor: "pointer" }}
+            onClick={() => window.open(word, '_blank')}
+          >
+            {word}
+          </span>
+        );
       } else {
         content.push(
           <span key={index}>
@@ -108,16 +119,13 @@ const SentenceAnswer = ({ answer }) => {
           </span>
         );
       }
-        if (index !== array.length - 1) {
+      if (index !== array.length - 1) {
         content.push(" ");
       }
     });
   
     return content;
   };
-  
-  
-  
 
   return (
     <>
