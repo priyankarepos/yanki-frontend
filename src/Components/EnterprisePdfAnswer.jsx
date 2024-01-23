@@ -79,13 +79,55 @@ const EnterprisePdfAnswer = ({ answer }) => {
         setSelectedPdf(null);
     };
 
+    const renderClickableContent = (text) => {
+        const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+        const phoneRegex = /\b\d{10,}\b/g;
+    
+        let content = [];
+    
+        text.split(" ").forEach((word, index, array) => {
+          if (word.match(emailRegex)) {
+            content.push(
+              <span
+                key={index}
+                style={{ color: "#007bff", cursor: "pointer" }}
+                onClick={() => window.location.href = `mailto:${word}`}
+              >
+                {word}
+              </span>
+            );
+          } else if (word.match(phoneRegex)) {
+            content.push(
+              <span
+                key={index}
+                style={{ color: "#007bff", cursor: "pointer" }}
+                onClick={() => window.location.href = `tel:${word}`}
+              >
+                {word}
+              </span>
+            );
+          } else {
+            content.push(
+              <span key={index}>
+                {word}{" "}
+              </span>
+            );
+          }
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
+        });
+    
+        return content;
+      };
+
     return (
         <Paper sx={{
             p: 2,
         }}>
             <Box>
                 <Typography variant="h6" component="div" style={{ fontSize: "16px", marginBottom: "12px", }}>
-                    {answer?.contentResponse}
+                {renderClickableContent(answer?.contentResponse)}
                 </Typography>
             </Box>
             <Typography variant="h6" component="div" className="enterprise-pdf-icon" onClick={handleSeePdfClick}>
