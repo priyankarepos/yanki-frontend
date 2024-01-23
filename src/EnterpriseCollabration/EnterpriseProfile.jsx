@@ -111,18 +111,18 @@ const EnterpriseProfile = () => {
   const [pdfName, setPdfName] = useState("");
   const [fileError, setFileError] = useState('');
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`);
+  
+      setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
+  
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`);
-
-        setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -144,18 +144,14 @@ const EnterpriseProfile = () => {
   };
 
   const validateFile = (file) => {
-    // Check if the file type is allowed
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!file || !allowedTypes.includes(file.type)) {
       return 'Invalid file type. Please upload a JPEG, PNG, or PDF file.';
-    }
-  
-    // Additional validation logic can be added based on your requirements
-  
+    }  
     return '';
-  };
+  }; 
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
 
@@ -164,7 +160,7 @@ const EnterpriseProfile = () => {
 
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=true`;
 
-      const response = axios.post(apiUrl, formData, {
+      const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -181,11 +177,11 @@ const EnterpriseProfile = () => {
             pdfUrl: data.file[0].name,
           },
         ]);
-        window.location.reload();
+        fetchData();
+        //window.location.reload();
       } else {
-        setSnackbarMessage('Failed to upload the file');
-        setSnackbarOpen(true);
-        window.location.reload();
+        console.log("Failed to upload file");
+        setIsModalOpen(false);
       }
     } catch (error) {
       setSnackbarMessage('An error occurred while uploading the file.');
@@ -971,8 +967,9 @@ Service Offerings:
               startIcon={<CloudUploadIcon />}
               fullWidth
               style={{ height: "60px" }}
+              disabled={enterpriseDetails[0]?.isProfileCompleted === false}
               onClick={() => setIsModalOpen(true)}
-            ></Button>
+            >{enterpriseDetails[0]?.isProfileCompleted === false && "Please complete your profile first."}</Button>
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {tableData.map((row, index) => (
                 <li key={index + 1} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
