@@ -289,11 +289,16 @@ const AdminEnterpriseRequest = () => {
                                                         color="primary"
                                                         size="small"
                                                         style={styles.approveButton}
-                                                        disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                        disabled={
+                                                            loadingRows.includes(row.enterpriseId) ||
+                                                             row.status === 'Approved' 
+                                                            //row.status === 'Rejected'
+                                                        }
                                                         onClick={() => {
                                                             setIsApproving(true);
                                                             handleApprove(row.enterpriseId, row.userId, row.enterpriseName);
-                                                        }}                                                >
+                                                        }}
+                                                    >
                                                         {(isApproving && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Approve'}
                                                     </Button>
                                                     <Button
@@ -301,14 +306,18 @@ const AdminEnterpriseRequest = () => {
                                                         color="secondary"
                                                         size="small"
                                                         style={styles.approveButton}
-                                                        disabled={loadingRows.includes(row.enterpriseId) || row.status === 'Approved' || row.status === 'Rejected'}
+                                                        disabled={
+                                                            loadingRows.includes(row.enterpriseId) ||
+                                                            // row.status === 'Approved' ||
+                                                            row.status === 'Rejected'
+                                                        }
                                                         onClick={async () => {
                                                             setIsRejecting(true);
                                                             await handleReject(row.enterpriseId, row.userId, row.enterpriseName);
                                                             setIsRejecting(false);
-                                                        }}                                               >
+                                                        }}
+                                                    >
                                                         {(isRejecting && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Reject'}
-
                                                     </Button>
                                                     {row.status === 'Rejected' && (
                                                         <Button
