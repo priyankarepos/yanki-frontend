@@ -12,11 +12,12 @@ import PdfAnswers from "../Components/PdfAnswers";
 import YoutubeContent from "../Components/YoutubeContent";
 // import YoutubeContent from "../Components/YoutubeContent";
 import IsItKosher from "../Components/IsItKosher";
+import EnterprisePdfAnswer from "../Components/EnterprisePdfAnswer";
 
 const SearchHistoryItem = ({ query, response }) => {
-  
+
   const { activeTab } = React.useContext(Context);
-  
+
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data?.length;
@@ -46,7 +47,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.contentResponse && (
+      {response?.isSucess && response?.contentResponse && !response.enterprisePdfNames && response.enterprisePdfNames === null && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <SentenceAnswer answer={response} />
@@ -75,6 +76,14 @@ const SearchHistoryItem = ({ query, response }) => {
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <YoutubeContent answer={response} />
+          </div>
+        </Paper>
+      )}
+
+      {response?.isSucess && response?.contentResponse && response?.enterprisePdfNames && response?.enterprisePdfNames.length > 0 && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <EnterprisePdfAnswer answer={response} />
           </div>
         </Paper>
       )}
