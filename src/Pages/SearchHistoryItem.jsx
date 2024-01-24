@@ -20,7 +20,7 @@ const SearchHistoryItem = ({ query, response }) => {
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
-  const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data?.length;
+  const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
 
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
