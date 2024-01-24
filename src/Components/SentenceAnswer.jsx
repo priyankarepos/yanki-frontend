@@ -75,13 +75,16 @@ const SentenceAnswer = ({ answer }) => {
   };
 
   const renderClickableContent = (text) => {
-    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}(?=[^\w.])\b/g;
     const phoneRegex = /\b\d{10,}\b/g;
     const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
   
     let content = [];
   
-    text.split(" ").forEach((word, index, array) => {
+    // Remove dashes at the beginning of lines without affecting clickable links
+    const cleanedText = text.replace(/^-/gm, match => match.replace('-', ''));
+  
+    cleanedText.split(" ").forEach((word, index, array) => {
       if (word.match(emailRegex)) {
         content.push(
           <span
@@ -113,19 +116,25 @@ const SentenceAnswer = ({ answer }) => {
           </span>
         );
       } else {
+        const lastChar = word.slice(-1);
+        const punctuation = ['.', ',', '-']; // Add more punctuation characters if needed
+        const isLastCharPunctuation = punctuation.includes(lastChar);
+  
         content.push(
           <span key={index}>
-            {word}{" "}
+            {isLastCharPunctuation ? word.slice(0, -1) : word}{" "}
           </span>
         );
-      }
-      if (index !== array.length - 1) {
-        content.push(" ");
       }
     });
   
     return content;
   };
+  
+  
+  
+  
+  
 
   return (
     <>
