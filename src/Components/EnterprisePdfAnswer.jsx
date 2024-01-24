@@ -80,16 +80,16 @@ const EnterprisePdfAnswer = ({ answer }) => {
     };
 
     const renderClickableContent = (text) => {
-      const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}(?=[^\w.])\b/g;
+      const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
       const phoneRegex = /\b\d{10,}\b/g;
       const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
     
       let content = [];
     
       // Remove dashes at the beginning of lines without affecting clickable links
-      const cleanedText = text.replace(/^-/gm, match => match.replace('-', ''));
+      const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
     
-      cleanedText.split(" ").forEach((word, index, array) => {
+      cleanedText.split(/\s+/).forEach((word, index, array) => {
         if (word.match(emailRegex)) {
           content.push(
             <span
@@ -100,6 +100,10 @@ const EnterprisePdfAnswer = ({ answer }) => {
               {word}
             </span>
           );
+          // Add a space after the email link, except for the last word
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
         } else if (word.match(phoneRegex)) {
           content.push(
             <span
@@ -110,6 +114,10 @@ const EnterprisePdfAnswer = ({ answer }) => {
               {word}
             </span>
           );
+          // Add a space after the phone number, except for the last word
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
         } else if (word.match(urlRegex)) {
           content.push(
             <span
@@ -120,6 +128,10 @@ const EnterprisePdfAnswer = ({ answer }) => {
               {word}
             </span>
           );
+          // Add a space after the URL, except for the last word
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
         } else {
           const lastChar = word.slice(-1);
           const punctuation = ['.', ',', '-']; // Add more punctuation characters if needed
@@ -135,9 +147,6 @@ const EnterprisePdfAnswer = ({ answer }) => {
     
       return content;
     };
-    
-    
-    
     
     
 
