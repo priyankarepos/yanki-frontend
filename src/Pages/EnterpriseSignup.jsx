@@ -14,13 +14,11 @@ import axios from "axios";
 
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { useForm, Controller } from "react-hook-form";
-// import { useGoogleLogin } from '@react-oauth/google';
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PhoneIcon from "@mui/icons-material/Phone";
 import BusinessIcon from "@mui/icons-material/Business";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -34,8 +32,8 @@ import {
     passwordRegex,
     phoneRegex,
 } from "../Utils/validations/validation";
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const styles = {
     inputField: {
@@ -71,6 +69,7 @@ const EnterpriseSignup = () => {
     const {
         control,
         handleSubmit,
+        setValue,
         formState: { errors, isSubmitted },
     } = useForm({
         mode: "onChange",
@@ -88,6 +87,10 @@ const EnterpriseSignup = () => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setValue('signInPhone', '+44', { shouldValidate: true });
+    }, [setValue]);
 
     useEffect(() => {
         const fetchEnterpriseCategories = async () => {
@@ -322,52 +325,56 @@ const EnterpriseSignup = () => {
                                     control={control}
                                     name="signInPhone"
                                     rules={{
-                                        required: "Phone number is required.",
-                                        validate: (value) => {
-                                            if (!value) return "Phone number is required.";
-                                            if (!phoneRegex.test(value))
-                                                return "Invalid phone number format.";
-                                            return true; // Return true if validation passes
+                                        required: {
+                                            value: true,
+                                            message: "Phone number is required.",
+                                        },
+                                        pattern: {
+                                            value: phoneRegex,
+                                            message: "Enter valid phone number",
                                         },
                                     }}
                                     render={({ field }) => (
-                                        <div>
-                                            <PhoneInput
-                                                {...field}
+                                        <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                            <ReactPhoneInput
+                                                inputExtraProps={{
+                                                    name: field.name,
+                                                    onBlur: field.onBlur,
+                                                }}
+                                                value={field.value}
+                                                preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
                                                 placeholder="Phone number"
-                                                disabled={signinLoading}
+                                                onChange={(value, country, event) => {
+                                                    field.onChange(value);
+                                                }}
+                                                onBlur={() => field.onBlur()}
                                                 error={!!errors["signInPhone"]}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'e' || e.key === '-' || e.key === '+' || e.key === '.') {
-                                                        e.preventDefault();
-                                                    }
-                                                }}
-                                                icon={<PhoneIcon />}
                                                 style={{
-                                                    border: errors["signInPhone"] ? '1px solid red' : '1px solid #d1d1d1',
-                                                    borderRadius: '4px',
-                                                    marginBottom: '10px',
+                                                    border: errors["signInPhone"] ? '1px solid red' : '1px solid rgb(114, 169, 222)',
+                                                    borderRadius: '8px',
+                                                    marginBottom: '0px',
                                                     padding: '10px',
-                                                    fontSize: '16px',
-                                                }}
-                                                inputStyle={{
                                                     width: '100%',
-                                                    fontSize: 'inherit',
                                                     outline: 'none',
-                                                    border: 'none',
-                                                }}
-                                                countrySelectStyle={{
-                                                    fontSize: 'inherit',
-                                                    outline: 'none',
-                                                    border: 'none',
+                                                    height: '55px',
                                                 }}
                                             />
                                             {errors['signInPhone'] && (
-                                                <FormHelperText style={{ color: 'red' }}>{errors['signInPhone'].message}</FormHelperText>
+                                                <FormHelperText
+                                                    style={{
+                                                        color: 'red',
+                                                        position: 'absolute',
+                                                        bottom: '-20px',
+                                                    }}
+                                                >
+                                                    {errors['signInPhone'].message}
+                                                </FormHelperText>
                                             )}
                                         </div>
                                     )}
                                 />
+
+
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Controller
