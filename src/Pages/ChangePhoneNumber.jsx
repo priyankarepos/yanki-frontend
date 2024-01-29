@@ -24,8 +24,6 @@ const ChangePhoneNumber = () => {
     const [errorMsg, setErrorMsg] = useState("");
     const [currentPhoneNumber, setCurrentPhoneNumber] = useState(null);
 
-    console.log("currentPhoneNumber", currentPhoneNumber);
-
     useEffect(() => {
         const fetchCurrentPhoneNumber = async () => {
             try {
@@ -65,8 +63,8 @@ const ChangePhoneNumber = () => {
     };
 
     useEffect(() => {
-        setValue('signInPhone', '44', { shouldValidate: false });
-        setValue('currentSignInPhone', '44', { shouldValidate: false });
+        setValue('signInPhone', '1', { shouldValidate: false });
+        // setValue('currentSignInPhone', '1', { shouldValidate: false });
     }, [setValue]);
 
     const onSubmit = async (data) => {
@@ -115,16 +113,6 @@ const ChangePhoneNumber = () => {
                             <Controller
                                 control={control}
                                 name="currentSignInPhone"
-                                rules={currentPhoneNumber ? {
-                                    required: {
-                                        value: true,
-                                        message: "Phone number is required.",
-                                    },
-                                    pattern: {
-                                        value: phoneRegex,
-                                        message: "Enter valid phone number",
-                                    },
-                                } : {}}
                                 render={({ field }) => (
                                     <div style={{ marginBottom: '16px', position: 'relative' }}>
                                         <ReactPhoneInput
@@ -134,7 +122,7 @@ const ChangePhoneNumber = () => {
                                             }}
                                             value={currentPhoneNumber ? currentPhoneNumber : field.value}
                                             preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
-                                            placeholder="Phone number"
+                                            placeholder="No current number; enter a new one."
                                             onChange={(value, country, event) => {
                                                 field.onChange(value);
                                             }}
@@ -150,17 +138,8 @@ const ChangePhoneNumber = () => {
                                                 height: '55px',
                                                 color: "#fff",
                                             }}
+                                            disabled={true}
                                         />
-                                        {errors['currentSignInPhone'] && (
-                                            <FormHelperText
-                                                style={{
-                                                    color: '#ffc9c9',
-                                                }}
-                                            >
-                                                {errors['currentSignInPhone'].message}
-                                            </FormHelperText>
-                                        )}
-                                        {!currentPhoneNumber && <sub style={{color:"#8d8d8d"}}>Current number not found; please provide a new number.</sub>}
                                     </div>
                                 )}
                             />
