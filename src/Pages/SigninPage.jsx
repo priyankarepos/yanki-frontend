@@ -14,7 +14,7 @@ import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PhoneIcon from "@mui/icons-material/Phone";
+import "./Style.scss"
 
 import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
@@ -24,15 +24,14 @@ import {
   phoneRegex,
 } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleIcon from '@mui/icons-material/Google';
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import "./Style.scss";
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import { FormHelperText } from "@mui/material";
 
 const linkStyle = {
@@ -60,6 +59,7 @@ const SigninPage = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -71,6 +71,10 @@ const SigninPage = () => {
       // signTermsAndCondition: "",
     },
   });
+
+  useEffect(() => {
+    setValue('signInPhone', '+44', { shouldValidate: false });
+  }, [setValue]);
 
   const onError = (data) => {
     console.log("error data: ", data);
@@ -145,7 +149,7 @@ const SigninPage = () => {
     <>
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
-          <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
+          <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }} className="user-signup">
             <Box className="w-full object-contain flex items-center justify-center marginY-28">
               <RouterLink
                 to="/auth"
@@ -213,48 +217,49 @@ const SigninPage = () => {
               control={control}
               name="signInPhone"
               rules={{
-                required: "Phone number is required.",
-                validate: (value) => {
-                  if (!value) return "Phone number is required.";
-                  if (!phoneRegex.test(value))
-                    return "Invalid phone number format.";
-                  return true; // Return true if validation passes
+                required: {
+                  value: true,
+                  message: "Phone number is required.",
+                },
+                pattern: {
+                  value: phoneRegex,
+                  message: "Enter valid phone number",
                 },
               }}
               render={({ field }) => (
-                <div>
-                  <PhoneInput
-                  {...field}
-                  placeholder="Phone number"
-                  disabled={signinLoading}
-                  error={!!errors["signInPhone"]}
-                  onKeyDown={(e) => {
-                    if (e.key === 'e' || e.key === '-' || e.key === '+' || e.key === '.') {
-                      e.preventDefault();
-                    }
-                  }}
-                  icon={<PhoneIcon />}
-                  style={{
-                    border: errors["signInPhone"] ? '1px solid red' : '1px solid #d1d1d1',
-                    borderRadius: '4px',
-                    marginBottom: '10px',
-                    padding: '10px',
-                    fontSize: '16px',
-                  }}
-                  inputStyle={{
-                    width: '100%',
-                    fontSize: 'inherit',
-                    outline: 'none',
-                    border: 'none',
-                  }}
-                  countrySelectStyle={{
-                    fontSize: 'inherit',
-                    outline: 'none',
-                    border: 'none',
-                  }}
-                />
-                {errors['signInPhone'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['signInPhone'].message}</FormHelperText>
+                <div style={{ marginBottom: '16px', position: 'relative' }}>
+                  <ReactPhoneInput
+                    inputExtraProps={{
+                      name: field.name,
+                      onBlur: field.onBlur,
+                    }}
+                    value={field.value}
+                    preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                    placeholder="Phone number"
+                    onChange={(value, country, event) => {
+                      field.onChange(value);
+                    }}
+                    onBlur={() => field.onBlur()}
+                    error={!!errors["signInPhone"]}
+                    style={{
+                      border: errors["signInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
+                      borderRadius: '8px',
+                      marginBottom: '0px',
+                      padding: '10px',
+                      width: '100%',
+                      outline: 'none',
+                      height: '55px',
+                      color: "#fff",
+                    }}
+                  />
+                  {errors['signInPhone'] && (
+                    <FormHelperText
+                      style={{
+                        color: '#ffc9c9',
+                      }}
+                    >
+                      {errors['signInPhone'].message}
+                    </FormHelperText>
                   )}
                 </div>
               )}
