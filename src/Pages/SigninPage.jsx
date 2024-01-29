@@ -73,7 +73,7 @@ const SigninPage = () => {
   });
 
   useEffect(() => {
-    setValue('signInPhone', '+44', { shouldValidate: true });
+    setValue('signInPhone', '+44', { shouldValidate: false });
   }, [setValue]);
 
   const onError = (data) => {

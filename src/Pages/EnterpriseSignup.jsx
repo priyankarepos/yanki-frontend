@@ -89,7 +89,7 @@ const EnterpriseSignup = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setValue('signInPhone', '+44', { shouldValidate: true });
+        setValue('signInPhone', '+44', { shouldValidate: false });
     }, [setValue]);
 
     useEffect(() => {

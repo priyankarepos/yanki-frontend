@@ -1,40 +1,62 @@
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
-
-import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-
 import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { InputLabel } from "@mui/material";
+import { InputLabel, Snackbar } from "@mui/material";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
+import { phoneRegex } from "../Utils/validations/validation";
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import { FormHelperText } from "@mui/material";
+import "./Style.scss"
+import axios from "axios";
 
 const ChangePhoneNumber = () => {
-    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitError, setIsSubmitError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [currentPhoneNumber, setCurrentPhoneNumber] = useState(null);
+
+    console.log("currentPhoneNumber", currentPhoneNumber);
+
+    useEffect(() => {
+        const fetchCurrentPhoneNumber = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_HOST}/api/auth/current-phoneNumber`
+                );
+
+                if (response.status === 200) {
+                    setCurrentPhoneNumber(response.data.phoneNumber);
+                }
+            } catch (error) {
+                console.error("Error fetching current phone number:", error);
+            }
+        };
+
+        // Call the fetch function when the component mounts
+        fetchCurrentPhoneNumber();
+    }, []);
 
     const navigate = useNavigate();
 
     const {
         control,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({
         mode: "onChange",
         defaultValues: {
-            phoneNumber: "", // Add a new field for the phone number
+            signInPhone: "",
+            currentSignInPhone: currentPhoneNumber || "",
         },
     });
 
@@ -42,27 +64,30 @@ const ChangePhoneNumber = () => {
         console.log(data);
     };
 
+    useEffect(() => {
+        setValue('signInPhone', '44', { shouldValidate: false });
+        setValue('currentSignInPhone', '44', { shouldValidate: false });
+    }, [setValue]);
+
     const onSubmit = async (data) => {
         console.log(data);
         try {
-            setIsSubmitting(true);
-            // Replace the following API call with your actual API endpoint for updating the phone number
-            // const response = await axios.post(
-            //     `${process.env.REACT_APP_API_HOST}/api/auth/change-phone-number`,
-            //     {
-            //         phoneNumber: data.phoneNumber,
-            //     }
-            // );
-
-            // Simulating a successful response
-            // if (response.status === 200) {
-            setIsSubmitting(false);
-            setIsSubmitError(false);
-            setErrorMsg("");
-            navigate("/change-phone-number-success");
-            // }
+            const response = await axios.put(
+                `${process.env.REACT_APP_API_HOST}/api/auth/change-phoneNumber`,
+                {
+                    newPhoneNumber: data.signInPhone,
+                }
+            );
+            if (response.status === 200) {
+                setIsSubmitError(false);
+                setErrorMsg("");
+                setSnackbarMessage(response?.data?.message)
+                setSnackbarOpen(true);
+                setTimeout(() => {
+                    navigate("/");
+                }, 2000);
+            }
         } catch (e) {
-            setIsSubmitting(false);
             setIsSubmitError(true);
             if (e?.response?.data?.message) {
                 setErrorMsg(e?.response?.data?.message);
@@ -86,47 +111,109 @@ const ChangePhoneNumber = () => {
                             Change Phone Number
                         </Typography>
                         <form onSubmit={handleSubmit(onSubmit, onError)}>
+                            <InputLabel>Current Phone:</InputLabel>
+                            <Controller
+                                control={control}
+                                name="currentSignInPhone"
+                                rules={currentPhoneNumber ? {
+                                    required: {
+                                        value: true,
+                                        message: "Phone number is required.",
+                                    },
+                                    pattern: {
+                                        value: phoneRegex,
+                                        message: "Enter valid phone number",
+                                    },
+                                } : {}}
+                                render={({ field }) => (
+                                    <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                        <ReactPhoneInput
+                                            inputExtraProps={{
+                                                name: field.name,
+                                                onBlur: field.onBlur,
+                                            }}
+                                            value={currentPhoneNumber ? currentPhoneNumber : field.value}
+                                            preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                                            placeholder="Phone number"
+                                            onChange={(value, country, event) => {
+                                                field.onChange(value);
+                                            }}
+                                            onBlur={() => field.onBlur()}
+                                            error={!!errors["currentSignInPhone"]}
+                                            style={{
+                                                border: errors["currentSignInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
+                                                borderRadius: '8px',
+                                                marginBottom: '0px',
+                                                padding: '10px',
+                                                width: '100%',
+                                                outline: 'none',
+                                                height: '55px',
+                                                color: "#fff",
+                                            }}
+                                        />
+                                        {errors['currentSignInPhone'] && (
+                                            <FormHelperText
+                                                style={{
+                                                    color: '#ffc9c9',
+                                                }}
+                                            >
+                                                {errors['currentSignInPhone'].message}
+                                            </FormHelperText>
+                                        )}
+                                        {!currentPhoneNumber && <sub style={{color:"#8d8d8d"}}>Current number not found; please provide a new number.</sub>}
+                                    </div>
+                                )}
+                            />
                             <InputLabel>New Phone:</InputLabel>
                             <Controller
                                 control={control}
-                                name="phoneNumber" // Change the name to "phoneNumber"
+                                name="signInPhone"
                                 rules={{
                                     required: {
                                         value: true,
                                         message: "Phone number is required.",
                                     },
-                                    // You can add additional validation rules for the phone number
+                                    pattern: {
+                                        value: phoneRegex,
+                                        message: "Enter valid phone number",
+                                    },
                                 }}
                                 render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        type="outlined"
-                                        placeholder="New phone number"
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <HttpsOutlinedIcon />
-                                                </InputAdornment>
-                                            ),
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        onClick={() => setShowNewPassword(!showNewPassword)}
-                                                        edge="end"
-                                                    >
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                            type: showNewPassword ? "text" : "password",
-                                        }}
-                                        fullWidth
-                                        sx={{ marginBottom: "10px" }}
-                                        error={!!errors["phoneNumber"]}
-                                        helperText={
-                                            errors["phoneNumber"] ? errors["phoneNumber"].message : ""
-                                        }
-                                        disabled={isSubmitting}
-                                    />
+                                    <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                        <ReactPhoneInput
+                                            inputExtraProps={{
+                                                name: field.name,
+                                                onBlur: field.onBlur,
+                                            }}
+                                            value={field.value}
+                                            preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                                            placeholder="Phone number"
+                                            onChange={(value, country, event) => {
+                                                field.onChange(value);
+                                            }}
+                                            onBlur={() => field.onBlur()}
+                                            error={!!errors["signInPhone"]}
+                                            style={{
+                                                border: errors["signInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
+                                                borderRadius: '8px',
+                                                marginBottom: '0px',
+                                                padding: '10px',
+                                                width: '100%',
+                                                outline: 'none',
+                                                height: '55px',
+                                                color: "#fff",
+                                            }}
+                                        />
+                                        {errors['signInPhone'] && (
+                                            <FormHelperText
+                                                style={{
+                                                    color: '#ffc9c9',
+                                                }}
+                                            >
+                                                {errors['signInPhone'].message}
+                                            </FormHelperText>
+                                        )}
+                                    </div>
                                 )}
                             />
 
@@ -155,6 +242,12 @@ const ChangePhoneNumber = () => {
                         </Link>
                     </Box>
                 </Box>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={() => setSnackbarOpen(false)}
+                    message={snackbarMessage}
+                />
             </Container>
         </>
     );
