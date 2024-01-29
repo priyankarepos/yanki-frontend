@@ -83,12 +83,12 @@ p.kosher-text strong {
 
 .enterprise-info-button {
   text-transform: capitalize !important;
-  padding: 3px 6px!important;
-  font-size: 14px!important;
-  margin-top: 15px!important;
-  display: inline-block!important;
-  cursor: pointer!important;
-  color: #fff!important;
+  padding: 3px 6px !important;
+  font-size: 14px !important;
+  margin-top: 15px !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  color: #fff !important;
 }
 
 .send-email-message {
@@ -96,7 +96,7 @@ p.kosher-text strong {
   color: #fff !important;
 }
 
-.demo-enterprise-wrapper .MuiPaper-elevation{
+.demo-enterprise-wrapper .MuiPaper-elevation {
   background-color: #002d55 !important;
   margin-bottom: 10px;
   padding: 10px;
@@ -127,4 +127,38 @@ p.kosher-text strong {
 
 .enterprise-pdf-icon span svg {
   color: #fff;
+}
+
+.pdf-box {
+  background-color: rgb(47, 88, 125);
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 150px;
+    border-radius: 4px;
+    object-fit: cover;
+    object-position: top;
+  }
+}
+
+.button-style {
+  text-align: center;
+
+  button {
+    background: #13538b;
+    border: navajowhite;
+    width: 130px;
+    height: 50px;
+    border-radius: 8px;
+    color: lightblue;
+    font-size: 15px;
+    margin-top: 15px;
+  }
 }
