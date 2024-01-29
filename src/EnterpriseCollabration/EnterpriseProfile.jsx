@@ -20,6 +20,8 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import { pdfjs } from 'react-pdf';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ConfirmDialog from './ConfirmDialog';
+import ReactPhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const styles = {
   inputField: {
@@ -114,9 +116,9 @@ const EnterpriseProfile = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`);
-  
+
       setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
-  
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -147,9 +149,9 @@ const EnterpriseProfile = () => {
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!file || !allowedTypes.includes(file.type)) {
       return 'Invalid file type. Please upload a JPEG, PNG, or PDF file.';
-    }  
+    }
     return '';
-  }; 
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -272,6 +274,9 @@ const EnterpriseProfile = () => {
   });
 
   const { isDirty } = formState;
+  useEffect(() => {
+    setValue('PhoneNumber', '44',);
+  }, [setValue]);
 
   // const keywords = useWatch({ control, name: 'EnterpriseIdentificationKeywords', defaultValue: [] });
 
@@ -698,22 +703,43 @@ Service Offerings:
                 },
                 pattern: {
                   value: phoneRegex,
-                  message: "Invalid phone number format.",
+                  message: "Enter valid phone number",
                 },
               }}
               render={({ field }) => (
-                <div>
-                  <TextField
-                    sx={{ ...styles.inputField }}
-                    {...field}
-                    type="outlined"
-                    placeholder="Type phone number here"
-                    fullWidth
-                  // error={!!errors['PhoneNumber']}
-                  // helperText={errors['PhoneNumber'] ? errors['PhoneNumber'].message : ''}
+                <div style={{ marginBottom: '16px', position: 'relative' }}>
+                  <ReactPhoneInput
+                    style={{
+                      border: errors["PhoneNumber"] ? '1px solid #ffc9c9' : '1px solid #6fa8dd',
+                      backgroundColor: '#eaf5ff',
+                      borderRadius: '8px',
+                      marginBottom: '16px',
+                      color: "#8bbae5",
+                      with: "100%",
+                      height: '55px',
+                      lineHeight: "52px",
+                    }}
+                    inputExtraProps={{
+                      name: field.name,
+                      onBlur: field.onBlur,
+                    }}
+                    value={field.value}
+                    preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                    placeholder="Phone number"
+                    onChange={(value, country, event) => {
+                      field.onChange(value);
+                    }}
+                    onBlur={() => field.onBlur()}
+                    error={!!errors["PhoneNumber"]}
                   />
                   {errors['PhoneNumber'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['PhoneNumber'].message}</FormHelperText>
+                    <FormHelperText
+                      style={{
+                        color: '#ffc9c9',
+                      }}
+                    >
+                      {errors['PhoneNumber'].message}
+                    </FormHelperText>
                   )}
                 </div>
               )}
@@ -974,16 +1000,16 @@ Service Offerings:
               {tableData.map((row, index) => (
                 <li key={index + 1} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ flex: '1' }}>
-                    <a href={row.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#6fa8dd', wordWrap: 'break-word', display:"inline-block", width:"200px" }}>
+                    <a href={row.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#6fa8dd', wordWrap: 'break-word', display: "inline-block", width: "200px" }}>
                       {row.id} - {row.pdfUrl ? row.pdfUrl.split('/').pop() : ''}
                     </a>
                   </div>
                   <div>
                     <IconButton onClick={() => openPdfModal(index)} style={{ marginLeft: '8px' }}>
-                      <VisibilityIcon style={{color: '#6fa8dd'}} />
+                      <VisibilityIcon style={{ color: '#6fa8dd' }} />
                     </IconButton>
                     <IconButton onClick={() => handleDelete(row.pdfUrl.split('/').pop())} style={{ marginLeft: '8px' }}>
-                      <DeleteIcon style={{color: '#6fa8dd'}} />
+                      <DeleteIcon style={{ color: '#6fa8dd' }} />
                     </IconButton>
                   </div>
                 </li>
