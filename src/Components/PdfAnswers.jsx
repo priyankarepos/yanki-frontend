@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { pdfjs } from 'react-pdf';
 import Modal from '@mui/material/Modal';
@@ -6,12 +6,17 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import '@react-pdf-viewer/core/lib/styles/index.css'; // Import styles for PDF viewer
 import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Button } from '@mui/base';
+import "./AnswerStyle.scss"
+import { Box } from '@mui/system';
 
 const PdfAnswers = ({ answer }) => {
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
+    const [visiblePdfCount, setVisiblePdfCount] = useState(2);
 
     const pdfNames = answer?.pdfNames || [];
+    console.log("pdfNames", pdfNames);
     const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
 
     const openPdfModal = (pdfName) => {
@@ -60,48 +65,50 @@ const PdfAnswers = ({ answer }) => {
         );
     };
 
+    const handleLoadMore = () => {
+        setVisiblePdfCount((prevCount) => prevCount + 2);
+    };
+
+    useEffect(() => {
+        setVisiblePdfCount(2);
+    }, [answer]);
+
     return (
         <Paper sx={{
             p: 2,
         }}>
             <Grid
                 container
-                spacing={2} // Adjust the spacing between items
-
+                spacing={2}
             >
-                {pdfNames && pdfNames.map((pdfName, index) => (
+                {pdfNames.slice(0, visiblePdfCount).map((pdfName, index) => (
 
                     <Grid item lg={4} md={6} sm={6} xs={12}>
                         <div
-                            style={{
-                                backgroundColor: "rgb(47, 88, 125)",
-                                cursor: 'pointer',
-                                padding: '10px',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
+                        className='pdf-box'
                             key={index}
                             onClick={() => openPdfModal(pdfName)}
                         >
                             <img
                                 src={`https://jewishprayer-text-pdf.s3.amazonaws.com/${pdfName.replace('.pdf', '.jpg')}`}
                                 alt={`${pdfName.replace('.pdf', '')} thumbnail`}
-                                style={{
-                                    width: '100%',
-                                    height: '150px',
-                                    borderRadius: '4px',
-                                    objectFit: 'cover',
-                                    objectPosition: 'top',
-                                }}
                             />
                             <Typography style={{ fontSize: "16px", textAlign: "center", color: "#fff", marginTop: "10px", }}> {pdfName}</Typography>
                         </div>
                     </Grid>
                 ))}
             </Grid>
+            <Box className='button-style'>
+                {pdfNames.length > visiblePdfCount && (
+                    <Button
+                        variant="outlined"
+                        fullWidth
+                        onClick={handleLoadMore}
+                    >
+                        Load More
+                    </Button>
+                )}
+            </Box>
             {renderPdfModal()}
         </Paper>
     );
