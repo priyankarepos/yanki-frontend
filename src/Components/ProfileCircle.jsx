@@ -55,6 +55,11 @@ export default function ProfielCircle() {
     navigate("/change-password");
   };
 
+  const onClickChangeNumber = () => {
+    handleClose();
+    navigate("/change-phone-number");
+  };
+
   const onClickAdmin = () => {
     handleClose();
     navigate("/admin/search-query-report");
@@ -167,6 +172,12 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Networking Interface
           </MenuItem>}
+          <MenuItem onClick={onClickChangeNumber}>
+            <ListItemIcon>
+              <LockOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            Change Phone Number
+          </MenuItem>
 
           <Divider />
 

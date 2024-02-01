@@ -45,6 +45,7 @@ import AdminCreateEnterprise from "./Admin/CreateEnterprise";
 import AdminCreateDepartment from "./Admin/CreateDepartment";
 import AdminFileUpload from "./Admin/AdminFileUpload";
 import EnterpriseFileUpload from "./EnterpriseCollabration/EnterpriseUpload";
+import ChangePhoneNumber from "./Pages/ChangePhoneNumber";
 
 // Exporting context
 export const Context = createContext("");
@@ -373,6 +374,16 @@ function App() {
                       <UserPagesProtection>
                         <UserPageLayout>
                           <ChangePasswordPage />
+                        </UserPageLayout>
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/change-phone-number"
+                    element={
+                      <UserPagesProtection>
+                        <UserPageLayout>
+                          <ChangePhoneNumber />
                         </UserPageLayout>
                       </UserPagesProtection>
                     }

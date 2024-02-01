@@ -67,40 +67,33 @@
     min-width: 32px;
 }  
 
-.PhoneInput {
-    padding: 0 10px !important;
-    border: 1px solid #456d90 !important;
-    border-radius: 10px !important;
-}    
-
-.PhoneInput .PhoneInputInput {
-    flex: 1 1;
-    min-width: 0;
-    height: 50px;
-    background-color: transparent;
-    border: none;
-    color: #7a96b0 !important;
-    font-size: 16px;
-}
-
-.PhoneInput .PhoneInputInput:focus-visible{
-    outline: none;
-}
-
-.PhoneInputInternationalIconGlobe {
-    display: none;
-}
-
 ::placeholder{
     color: #c9ddf0;
 }
 
-.PhoneInputCountryIcon {
-    position: relative;
-    left: 5px;
-    color: #fff;
+.react-tel-input .country-list .country {
+    color: #000 !important;
 }
 
-.phonenumber .PhoneInputCountryIcon {
-    color: #6fa8dd;
+.react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus{
+    background-color: transparent !important;
+}
+
+.react-tel-input .form-control {
+    border: none !important;
+    background-color: transparent !important;
+    color: #72a9de;
+}
+
+.user-signup .react-tel-input .user-signup .form-control {
+    color: #fff !important;
+}
+
+.react-tel-input .flag-dropdown{
+    border:none !important;
+    background-color: transparent !important;
+}
+
+.react-tel-input .selected-flag .arrow {
+    border-top: 4px solid #fff !important;
 }
