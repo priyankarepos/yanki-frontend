@@ -108,7 +108,7 @@ const AdminFileUpload = () => {
     useEffect(() => {
         let fetchData = async () => {
             try {
-                const response = await axios.get(`https://api.dev.yanki.ai/api/JewishPrayerTextIndex/document-mapping`);
+                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`);
                 setTableData(response.data.jewishPrayerTexts);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -151,7 +151,7 @@ const AdminFileUpload = () => {
             setLoading(true);
             const formData = new FormData();
             formData.append('file', data.file[0]);
-            const apiUrl = `https://api.dev.yanki.ai/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
+            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
 
             const response = await axios.post(apiUrl, formData, {
                 headers: {
@@ -200,7 +200,7 @@ const AdminFileUpload = () => {
         const rowIndex = tableData.findIndex((row) => row.pdfName === pdfName);
         if (rowIndex !== -1) {
             try {
-                const response = await axios.delete(`https://api.dev.yanki.ai/api/JewishPrayerTextIndex/delete-document`, {
+                const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`, {
                     params: {
                         documentId: pdfId,
                         fileName: pdfName,
@@ -251,7 +251,7 @@ const AdminFileUpload = () => {
         try {
             setLoading(true);
             const response = await axios.put(
-                `https://api.dev.yanki.ai/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`
+                `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`
             );
             if (response.status === 200) {
                 const updatedTableData = tableData.map((row) => {
