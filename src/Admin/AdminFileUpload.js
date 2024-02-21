@@ -14,7 +14,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import { pdfjs } from 'react-pdf';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import CloseIcon from '@mui/icons-material/Close';
-
+import EditIcon from '@mui/icons-material/Edit';
 
 const styles = {
     tableContainer: {
@@ -95,27 +95,27 @@ const AdminFileUpload = () => {
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState('');
     const [tableData, setTableData] = useState([]);
-    console.log("tableData", tableData);
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
     const [pdfName, setPdfName] = useState("");
     const [pdfId, setpdfId] = useState("");
+    const [isEditModalOpen, setEditIsModalOpen] = useState(false);
+    const [fileName, setFileName] = useState('');
+    const [fetchDataState, setFetchDataState] = useState(false);
 
     const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
 
     useEffect(() => {
-        const fetchData = async () => {
+        let fetchData = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`);
-                setTableData(response.data.jewishPrayerTexts);
+                const response = await axios.get(`https://api.dev.yanki.ai/api/JewishPrayerTextIndex/document-mapping`);
                 setTableData(response.data.jewishPrayerTexts);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
-    }, []);
+    }, [fetchDataState]);
 
     const openPdfModal = (pdfName) => {
         const cleanPdfName = pdfName.replace(/%27/g, '');
@@ -151,7 +151,7 @@ const AdminFileUpload = () => {
             setLoading(true);
             const formData = new FormData();
             formData.append('file', data.file[0]);
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
+            const apiUrl = `https://api.dev.yanki.ai/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
 
             const response = await axios.post(apiUrl, formData, {
                 headers: {
@@ -160,20 +160,24 @@ const AdminFileUpload = () => {
             });
 
             if (response.status === 200) {
-                console.log('API response:', response.data);
                 setSnackbarMessage(`Document with Name ${pdfName} addedd successfully`);
                 setSnackbarOpen(true);
                 setIsModalOpen(false);
                 reset();
                 setTags([])
-                setTableData((prevTableData) => [
-                    ...prevTableData,
-                    {
-                        id: prevTableData.length + 1,
-                        pdfName: data.file[0].name,
-                        keywords: tags.join(', '),
-                    },
-                ]);
+                setLoading(false)
+                setFetchDataState(true);
+                setTimeout(() => {
+                    setFetchDataState(false);
+                }, 2000);
+                // setTableData((prevTableData) => [
+                //     prevTableData,
+                //     {
+                //         id: prevTableData.length + 1,
+                //         pdfName: data.file[0].name,
+                //         keywords: tags.join(', '),
+                //     },
+                // ]);
             }
 
         } catch (error) {
@@ -184,10 +188,6 @@ const AdminFileUpload = () => {
         }
     };
 
-
-
-    const isLargeScreen = useMediaQuery("(min-width: 600px)");
-
     const handleDelete = (pdfName, pdfId) => {
         setPdfName(pdfName);
         setpdfId(pdfId)
@@ -197,22 +197,17 @@ const AdminFileUpload = () => {
     };
 
     const handleConfirmation = async () => {
-        console.log("pdfName", pdfName);
-        console.log("pdfId", pdfId);
         const rowIndex = tableData.findIndex((row) => row.pdfName === pdfName);
-
         if (rowIndex !== -1) {
             try {
-                // Make a DELETE request to the API with the documentId or fileName
-                const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`, {
+                const response = await axios.delete(`https://api.dev.yanki.ai/api/JewishPrayerTextIndex/delete-document`, {
                     params: {
-                        documentId: pdfId, // Use pdfId if it's available, otherwise use pdfName
+                        documentId: pdfId,
                         fileName: pdfName,
                     },
                 });
 
                 if (response.status === 200) {
-                    // If the API call is successful, update the state to reflect the deletion
                     const updatedTableData = [...tableData];
                     updatedTableData.splice(rowIndex, 1);
                     setTableData(updatedTableData);
@@ -229,6 +224,65 @@ const AdminFileUpload = () => {
             }
         }
     };
+
+    const handleUpdate = (pdfData, pdfId) => {
+        console.log("pdfId", pdfId, pdfData);
+        try {
+            let tagsArray = [];
+
+            if (typeof pdfData.keywords === 'string') {
+                tagsArray = pdfData.keywords.split(',').map(keyword => keyword.trim());
+            } else if (Array.isArray(pdfData.keywords)) {
+                tagsArray = JSON.parse(pdfData.keywords.flat());
+            } else {
+                console.error("Invalid keywords format:", pdfData.keywords);
+            }
+            setTags(tagsArray);
+        } catch (error) {
+            console.error("Error handling keywords:", error);
+            setTags([]);
+        }
+        setEditIsModalOpen(true);
+        setpdfId(pdfId)
+        setFileName(pdfData.pdfName)
+    };
+
+    const updateKeywords = async (data) => {
+        try {
+            setLoading(true);
+            const response = await axios.put(
+                `https://api.dev.yanki.ai/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`
+            );
+            if (response.status === 200) {
+                const updatedTableData = tableData.map((row) => {
+                    if (row.documentId === pdfId) {
+                        return {
+                            ...row,
+                            keywords: tags.join(', '),
+                        };
+                    }
+                    return row;
+                });
+
+                setTableData(updatedTableData);
+                setConfirmDialogOpen(false);
+                setSnackbarMessage('Keywords updated successfully');
+                setSnackbarOpen(true);
+                reset();
+                setTags([])
+            } else {
+                setSnackbarMessage(response.status, response.data.message);
+                setSnackbarOpen(true);
+            }
+
+        } catch (error) {
+            console.error('Error updating keywords:', error);
+        } finally {
+            setLoading(false);
+            setEditIsModalOpen(false);
+        }
+    };
+
     const renderPdfModal = () => {
         return (
             <Modal
@@ -240,13 +294,12 @@ const AdminFileUpload = () => {
                     justifyContent: 'center',
                 }}
             >
-                <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
+                <div className="pdf-modal">
                     <IconButton
-                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
                         onClick={closePdfModal}
                         aria-label="close"
                     >
-                        <CloseIcon style={{ color: "#fff" }} />
+                        <CloseIcon />
                     </IconButton>
                     {!pdfLoadError ? (
                         <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
@@ -285,58 +338,73 @@ const AdminFileUpload = () => {
                         No data available.
                     </Typography>
                 ) : (
-                    <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Sr No.</TableCell>
-                                    <TableCell>PDF Name</TableCell>
-                                    <TableCell>Keywords</TableCell>
-                                    <TableCell>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {tableData.map((row, index) => (
-                                    <TableRow key={index + 1}>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>{row.pdfName}</TableCell>
-                                        <TableCell>
-                                            {row.keywords.map((keyword, index) => {
-                                                try {
-                                                    const parsedKeyword = JSON.parse(keyword);
-                                                    if (Array.isArray(parsedKeyword)) {
-                                                        return (
-                                                            <span key={index}>
-                                                                {index > 0 && ', '}
-                                                                {parsedKeyword.join(', ').toLowerCase()}
-                                                            </span>
-                                                        );
-                                                    }
-                                                } catch (error) {
-                                                    // If parsing fails, treat it as a plain string
-                                                }
+                    <>
+                        {loading ? (
+                            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                                <CircularProgress />
+                            </div>
+                        ) : (
+                            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Sr No.</TableCell>
+                                            <TableCell>PDF Name</TableCell>
+                                            <TableCell>Keywords</TableCell>
+                                            <TableCell>Actions</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {tableData.map((row, index) => (
+                                            <TableRow key={index + 1}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{row.pdfName}</TableCell>
+                                                <TableCell>
+                                                    {Array.isArray(row.keywords) ? (
+                                                        row.keywords.map((keyword, index) => {
+                                                            try {
+                                                                const parsedKeyword = JSON.parse(keyword);
+                                                                if (Array.isArray(parsedKeyword)) {
+                                                                    return (
+                                                                        <span key={index}>
+                                                                            {index > 0 && ', '}
+                                                                            {parsedKeyword.join(', ').toLowerCase()}
+                                                                        </span>
+                                                                    );
+                                                                }
+                                                            } catch (error) {
+                                                                // If parsing fails, treat it as a plain string
+                                                            }
 
-                                                return (
-                                                    <span key={index}>
-                                                        {index > 0 && ', '}
-                                                        {String(keyword).toLowerCase()}
-                                                    </span>
-                                                );
-                                            })}
-                                        </TableCell>
-                                        <TableCell>
-                                            <IconButton onClick={() => openPdfModal(row.pdfName)}>
-                                                <VisibilityIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleDelete(row.pdfName, row.documentId)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                                            return (
+                                                                <span key={index}>
+                                                                    {index > 0 && ', '}
+                                                                    {String(keyword).toLowerCase()}
+                                                                </span>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <span>{String(row.keywords).toLowerCase()}</span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <IconButton onClick={() => openPdfModal(row.pdfName)}>
+                                                        <VisibilityIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => handleDelete(row.pdfName, row.documentId)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => handleUpdate(row, row.documentId)}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        )}
+                    </>
                 )}
             </Box>
             {renderPdfModal()}
@@ -348,14 +416,14 @@ const AdminFileUpload = () => {
                 style={styles.modal}
             >
                 <Box style={styles.modalContent}>
-                    <Typography variant="h5" sx={styles.modalTitle}>"Upload File"</Typography>
+                    <Typography variant="h5" sx={styles.modalTitle}>Upload File</Typography>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* File Upload */}
                         <Controller
                             control={control}
                             name="file"
                             render={({ field }) => (
-                                <div>
+                                <div className='form-input'>
                                     <input
                                         type="file"
                                         onChange={(e) => {
@@ -363,16 +431,9 @@ const AdminFileUpload = () => {
                                             setValue('file', [selectedFile]);
                                             trigger('file');
                                         }}
-                                        style={{
-                                            backgroundColor: '#eaf5ff',
-                                            border: '1px solid #6fa8dd',
-                                            borderRadius: '8px',
-                                            marginBottom: '6px',
-                                            color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                                        }}
                                     />
                                     {errors.file && (
-                                        <span style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <span className='error-message'>
                                             {errors.file.message}
                                         </span>
                                     )}
@@ -386,23 +447,13 @@ const AdminFileUpload = () => {
                             control={control}
                             name="keywords"
                             render={({ field }) => (
-                                <div>
+                                <div className='form-input'>
                                     <TagsInput
                                         value={tags}
                                         onChange={(newTags) => setTags(newTags)}
                                         addKeys={[13, 9]}
                                         placeholder="Type keywords here"
                                         inputProps={{
-                                            style: {
-                                                backgroundColor: '#eaf5ff',
-                                                border: '1px solid #6fa8dd',
-                                                borderRadius: '8px',
-                                                marginBottom: '16px',
-                                                color: '#8bbae5',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: "60px",
-                                            },
                                             ...field,
                                             value: tagInput,
                                             onChange: (e) => setTagInput(e.target.value),
@@ -418,7 +469,7 @@ const AdminFileUpload = () => {
                                         }}
                                     />
                                     {isSubmitted && Array.isArray(tags) && tags.length === 0 && (
-                                        <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <FormHelperText className='error-message'>
                                             At least one keyword is required
                                         </FormHelperText>
                                     )}
@@ -437,9 +488,80 @@ const AdminFileUpload = () => {
                             style={styles.modalButton}
                             type="submit"
                             disabled={loading}
-                        // onClick={(e) => handleSubmit(e)}
                         >
                             {loading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : 'Upload'}
+                        </Button>
+                    </form>
+                </Box>
+            </Modal>
+            <Modal
+                open={isEditModalOpen}
+                onClose={() => setEditIsModalOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                style={styles.modal}
+            >
+                <Box style={styles.modalContent}>
+                    <Typography variant="h5" sx={styles.modalTitle}>Update Keyword</Typography>
+                    <form className='keyword-update-box'>
+
+                        {/* Keywords */}
+                        <Typography>Filename: {fileName}</Typography>
+                        <Controller
+                            control={control}
+                            name="keywords"
+                            render={({ field }) => (
+                                <div className='form-input'>
+                                    <TagsInput
+                                        value={tags || []}
+                                        onChange={(newTags) => setTags(newTags)}
+                                        addKeys={[13, 9]}
+                                        placeholder="Type keywords here"
+                                        inputProps={{
+                                            ...field,
+                                            value: tagInput,
+                                            onChange: (e) => setTagInput(e.target.value),
+                                            onKeyDown: (e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    e.persist();
+                                                    const existingTagIndex = tags.findIndex((tag) => tag === tagInput);
+                                                    if (existingTagIndex !== -1) {
+                                                        const updatedTags = [...tags];
+                                                        updatedTags[existingTagIndex] = tagInput; // Update the existing tag
+                                                        setTags(updatedTags);
+                                                        field.onChange(updatedTags);
+                                                    } else {
+                                                        handleAddTag(tagInput);
+                                                        setTagInput('');
+                                                    }
+                                                }
+                                            },
+                                        }}
+                                    />
+                                    {Array.isArray(tags) && tags.length === 0 && (
+                                        <FormHelperText className='error-message'>
+                                            At least one keyword is required
+                                        </FormHelperText>
+                                    )}
+                                </div>
+                            )}
+                            rules={{
+                                validate: (value) => {
+                                    const keywordsArray = Array.isArray(value) ? value : [value];
+                                    return keywordsArray.length === 0 || 'Keywords are required';
+                                },
+                            }}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={styles.modalButton}
+                            type="submit"
+                            disabled={tags.length === 0 || loading}
+                            onClick={(e) => updateKeywords(e)}
+                        >
+                            {loading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : 'Update'}
                         </Button>
                     </form>
                 </Box>
