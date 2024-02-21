@@ -34,9 +34,45 @@
     padding-left: 0px !important;
 }
 
-.react-tagsinput-tag {
+span.react-tagsinput-tags,  .react-tagsinput-tag {
   background-color: #6fa8dd !important;
   border-radius: 5px!important;
   border: 1px solid #a9cae9!important;
   color: #fdfdfd!important;
+}
+.keyword-update-box p{
+  margin-bottom: 8px;
+}
+.pdf-modal {
+  width: 90vw;
+  height: 88vh;
+  position: relative;
+}
+.pdf-modal .MuiIconButton-root {
+  position: absolute;
+  top: 20px; /* You can adjust this value as needed */
+  right: 8px;
+  z-index: 1;
+  background-color: #6fa8dd;
+}
+
+.pdf-modal .MuiIconButton-root:hover {
+  background-color: #5c8dbb; /* You can adjust this value for the hover effect */
+}
+
+.form-input input {
+  background-color: #eaf5ff;
+  border: 1px solid #6fa8dd;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  color: #8bbae5;
+  width: 100%;
+  min-height: 15%;
+  padding: 15px;
+  font-size: 16px;
+}
+.error-message {
+  color: red !important;
+  font-size: 12px !important;
+  margin: 0 !important;
 }
