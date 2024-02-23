@@ -104,6 +104,25 @@ p.kosher-text strong {
   padding-right: 20px;
 }
 
+.demo-enterprise-wrapper div {
+  padding: 0;
+}
+
+.demo-enterprise-InsertCommentIcon {
+  margin-right: 8px;
+  color: #fff;
+  margin-top: 5px;
+}
+
+.demo-enterprise-Typography {
+  font-size: 16px;
+  color: #fff;
+}
+
+.demo-enterprise-List {
+  display: flex;
+}
+
 .enterprise-pdf-icon {
   margin-bottom: 10px !important;
   display: flex;
@@ -162,3 +181,55 @@ p.kosher-text strong {
     margin-top: 15px;
   }
 }
+
+.pdf-modal {
+  width: 90vw;
+  height: 88vh;
+  position: relative;
+}
+
+.pdf-modal .MuiIconButton-root {
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  z-index: 1;
+  background-color: #6fa8dd;
+}
+
+.pdf-modal .MuiIconButton-root:hover {
+  background-color: #5c8dbb;
+}
+
+.enterprise-pdf-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.enterprise-pdf-thumbnail {
+  background-color: rgb(47, 88, 125);
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.enterprise-pdf-name{
+  font-size: 16px;
+  text-align: center;
+  color: #fff;
+}
+
+.enterprise-pdf-text{
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.enterprise-pdf-link{
+  color: #007bff;
+  cursor: pointer;
+}
+

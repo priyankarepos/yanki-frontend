@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/system';
+import "./AnswerStyle.scss";
 
 const IsItKosher = ({ answer }) => {
   const kosherProducts = answer?.isItKosher?.products?.data || [];
@@ -22,10 +23,10 @@ const IsItKosher = ({ answer }) => {
   };
 
   return (
-    <Paper elevation={3} style={{ backgroundColor: '#0e3557', padding: '10px' }}>
+    <Paper className='isItKosher-wrapper' elevation={3}>
       {kosherProducts.length > 0 ? (
         <>
-          <Typography style={{marginBottom:"15px",}}>
+          <Typography sx={{pb:2}}>
             Below is the list of products I have found. Please note that kosher certification may vary, so it's advisable to check specific product packaging for the most accurate and up-to-date information.
           </Typography>
           {kosherProducts.map((product, index) => (
@@ -37,13 +38,13 @@ const IsItKosher = ({ answer }) => {
               <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
                 <Box>
                   <Typography className="kosher-heading">{product.brand}</Typography>
-                  <Typography style={{fontSize:"15px",}}>
+                  <Typography sx={{fontSize:15}}>
                     <strong>{product.name}</strong>
                   </Typography>
                   <Typography className="kosher-heading">{product.source.name}</Typography>
                 </Box>
               </AccordionSummary>
-              <AccordionDetails style={{ display: 'flex', flexDirection: 'column' }}>
+              <AccordionDetails>
                 <Typography className="kosher-text">
                   <strong>Brand:</strong> {product.brand}<br />
                   <strong>Condition Type:</strong> {product.condition_Type}<br />

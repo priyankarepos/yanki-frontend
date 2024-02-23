@@ -63,7 +63,7 @@ const YoutubeContent = ({ answer }) => {
                 if (videoRef && typeof videoRef.pause === 'function') {
                     videoRef.pause();
                 }
-            } else if (currentlyPlayingMedia.type === 'vimeo') { // Changed from (currentlyPlayingMedia.type === 'vimeo') to (currentlyPlayingMedia.type === 'vimeo') {
+            } else if (currentlyPlayingMedia.type === 'vimeo') {
                 vimeoRefs.current[currentlyPlayingMedia.itemId].player.pause();
             }
             setCurrentlyPlayingMedia(null);
@@ -107,14 +107,14 @@ const YoutubeContent = ({ answer }) => {
     };
 
     const handleExclusiveContentClick = (e) => {
-        e.stopPropagation(); // Stop the event from propagating
+        e.stopPropagation(); 
         setShowYouTubeVideos(true);
-      };
-    
-      const handleTorahanytimeClick = (e) => {
-        e.stopPropagation(); // Stop the event from propagating
+    };
+
+    const handleTorahanytimeClick = (e) => {
+        e.stopPropagation(); 
         setShowYouTubeVideos(false);
-      };
+    };
 
     return (
         <Box onClick={(e) => e.stopPropagation()}>
@@ -173,7 +173,7 @@ const YoutubeContent = ({ answer }) => {
                                 </div>
                             </Paper>
                         ))
-                    ) : ( showYouTubeVideos === false &&
+                    ) : (showYouTubeVideos === false &&
                         data.length && data?.map((item) => (
                             (isVideo && (!item._source.vimeo_video_links || !item._source.vimeo_video_links.length)) ? null : <StyledCarouselItem key={item._id} sx={{ marginRight: '5px' }}>
                                 {showYouTubeVideos === false && isVideo && item._source.vimeo_video_links && item._source.vimeo_video_links?.length && (
