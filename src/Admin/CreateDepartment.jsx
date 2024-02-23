@@ -188,9 +188,6 @@ const AdminCreateDepartment = () => {
 
             if (response && response.isSuccess) {
                 setTagCount(tagCount + 1);
-
-                // setIsTagAvailable(response.isAvailable);
-
                 if (response.isAvailable) {
                     setTags((prevTags) => {
                         const uniqueTags = new Set([...prevTags, tag]);
@@ -259,9 +256,7 @@ const AdminCreateDepartment = () => {
             setValue("NameOfRepresentative", department.departmentHeadName || "");
             setValue("EmailAddress", department.departmentEmail || "");
             setValue("DepartmentDescription", department.departmentDescription || "");
-            // Split the departmentKeywords string into an array
             const keywordsArray = department.departmentKeywords.split(',');
-            // Set the state with the array of keywords
             setTags(keywordsArray);
             setValue("DepartmentIdentificationKeywords", keywordsArray || []);
         }
@@ -269,21 +264,14 @@ const AdminCreateDepartment = () => {
 
 
     const handleDeleteDepartment = (index, departmentId) => {
-        // Open the confirmation dialog and store the selected department index
         setConfirmDialogOpen(true);
         setSelectedDepartmentIndex(index);
-
         setConfirmationText(`Are you sure you want to delete the department "${departmentsData[index].departmentName}"?`);
     };
 
     const handleConfirmDelete = async () => {
-        // Close the confirmation dialog
         setConfirmDialogOpen(false);
-
-        // Get the department details using the selected index
         const { departmentId } = departmentsData[selectedDepartmentIndex];
-
-        // Delete the department
         try {
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
             const response = await axios.delete(apiUrl);
@@ -292,8 +280,6 @@ const AdminCreateDepartment = () => {
                 console.log('Department deleted successfully.');
                 setSnackbarMessage('Department deleted successfully');
                 setSnackbarOpen(true);
-
-                // Remove the deleted department from the state
                 const updatedDepartments = [...departmentsData];
                 updatedDepartments.splice(selectedDepartmentIndex, 1);
                 setDepartmentsData(updatedDepartments);
@@ -319,7 +305,6 @@ const AdminCreateDepartment = () => {
                 department.departmentName.toLowerCase() === formData.DepartmentName.toLowerCase() &&
                 department.departmentId !== selectedDepartmentData?.departmentId
         );
-
         if (isDuplicate) {
             setSnackbarMessage('The department you are adding already exists.');
             setSnackbarOpen(true);
@@ -348,7 +333,6 @@ const AdminCreateDepartment = () => {
                 console.log('Department details updated successfully');
                 setSnackbarOpen(true);
                 setSnackbarMessage('Department details updated successfully');
-                // setTags(response.data.departmentKeywords.split(','));
                 reset();
                 setSelectedDepartmentData({});
                 setDepartmentsData([]);
@@ -407,10 +391,9 @@ const AdminCreateDepartment = () => {
                 setValue('EmailAddress', '');
                 setValue('DepartmentDescription', '');
                 setValue('DepartmentIdentificationKeywords', []);
-                // setSubmitted(false);
             } else {
                 console.error('API error:', response.statusText);
-                setSnackbarMessage('API error: ' + response.statusText);  // Fix the typo here
+                setSnackbarMessage('API error: ' + response.statusText);
                 setSnackbarOpen(true);
             }
             setTriggerEffect((prev) => !prev);
@@ -422,32 +405,21 @@ const AdminCreateDepartment = () => {
     };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
     const contentMargin = drawerOpen ? '0' : '0';
 
     return (
         <Box style={{ display: "flex" }}>
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
             <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-                <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
+                <Typography variant="h6" className='table-heading'>
                     Add Departments
                 </Typography>
                 <div style={{ marginBottom: '20px' }}>
-                    <InputLabel style={styles.label}>Select Enterprise<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                    <InputLabel style={styles.label}>Select Enterprise<sup className="required-icon">*</sup></InputLabel>
                     <select
                         id="enterpriseDropdown"
                         onChange={handleSelectChange}
                         value={selectedEnterpriseId}
-                        style={{
-                            padding: '8px',
-                            borderRadius: '5px',
-                            border: '1px solid #ccc',
-                            minWidth: '100%',
-                            cursor: 'pointer',
-                            fontSize: '16px',
-                            color:"#5fa3dd",
-                            height:"50px",
-                        }}
                     >
                         <option value="">Please select enterprise to continue</option>
                         {Array.isArray(enterpriseList) && enterpriseList.map((enterprise) => (
@@ -456,11 +428,10 @@ const AdminCreateDepartment = () => {
                             </option>
                         ))}
                     </select>
-                    {/* {!selectedEnterpriseId && <Typography style={{ color: "#fff", fontSize: "18px", marginBottom: "10px", }}>Please select enterprise to continue</Typography>} */}
                 </div>
                 <Grid container spacing={2} className='enterprise-profile'>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Department<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="DepartmentName"
@@ -484,18 +455,16 @@ const AdminCreateDepartment = () => {
                                         placeholder="Customer Service"
                                         fullWidth
                                         disabled={!selectedEnterpriseId}
-                                    // error={!!errors['DepartmentName']}
-                                    // helperText={errors['DepartmentName'] ? errors['DepartmentName'].message : ''}
                                     />
                                     {errors['DepartmentName'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['DepartmentName'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['DepartmentName'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Name of representative<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Name of representative<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="NameOfRepresentative"
@@ -521,14 +490,14 @@ const AdminCreateDepartment = () => {
                                         disabled={!selectedEnterpriseId}
                                     />
                                     {errors['NameOfRepresentative'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['NameOfRepresentative'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['NameOfRepresentative'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Email Address<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EmailAddress"
@@ -553,7 +522,7 @@ const AdminCreateDepartment = () => {
                                         disabled={!selectedEnterpriseId}
                                     />
                                     {errors['EmailAddress'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EmailAddress'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
@@ -567,13 +536,7 @@ const AdminCreateDepartment = () => {
                             render={({ field }) => (
                                 <div>
                                     <TextareaAutosize
-                                        style={{
-                                            backgroundColor: '#eaf5ff',
-                                            border: '1px solid #6fa8dd',
-                                            borderRadius: '8px',
-                                            marginBottom: '6px',
-                                            color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                                        }}
+                                        className='TextareaAutosize'
                                         {...field}
                                         placeholder="Type description here"
                                         onFocus={(e) => e.target.style.outline = 'none'}
@@ -586,29 +549,20 @@ const AdminCreateDepartment = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise identification keywords<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="DepartmentIdentificationKeywords"
                             render={({ field }) => (
                                 <div>
                                     <TagsInput
+                                        className='TagsInput'
                                         value={tags}
                                         onChange={(newTags) => setTags(newTags)}
                                         addKeys={[13, 9]}
                                         placeholder="Type Enterprise identification keywords here"
                                         disabled={!selectedEnterpriseId}
                                         inputProps={{
-                                            style: {
-                                                backgroundColor: '#eaf5ff',
-                                                border: '1px solid #6fa8dd',
-                                                borderRadius: '8px',
-                                                marginBottom: '16px',
-                                                color: '#8bbae5',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: "60px",
-                                            },
                                             ...field,
                                             value: tagInput,
                                             onChange: (e) => setTagInput(e.target.value),
@@ -640,7 +594,7 @@ const AdminCreateDepartment = () => {
                                         ))}
                                     </div>
                                     {isSubmitted && keywords.length === 0 && tags.length === 0 && (
-                                        <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <FormHelperText className='error-message'>
                                             At least one keyword is required
                                         </FormHelperText>
                                     )}
@@ -651,7 +605,7 @@ const AdminCreateDepartment = () => {
                     <Grid item xs={3}>
                         <Button
                             variant="outlined"
-                            sx={{ marginY: { xs: "10px" }, width: "150px", }}
+                            sx={{ marginY: { xs: "10px" }, }}
                             color="primary"
                             onClick={departmentID !== null ? handleSubmit(handleSaveDepartment) : handleSubmit(onSubmit)}
                             style={styles.modalButton}
@@ -659,10 +613,10 @@ const AdminCreateDepartment = () => {
                             {departmentID !== null ? "Save Changes" : "Save"}
                         </Button>
                     </Grid>
-                    <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
+                    <Grid item xs={12}><Divider className='table-devider'></Divider></Grid>
                     <Box className="enterpriseTableBox" sx={{ padding: '16px' }}>
-                        <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
-                        Departments
+                        <Typography variant="h6" className='table-heading'>
+                            Departments
                         </Typography>
                     </Box>
                     <Grid item xs={12}>
@@ -681,7 +635,7 @@ const AdminCreateDepartment = () => {
                                 <TableBody>
                                     {departmentsData.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} style={{ textAlign: 'center', fontStyle: 'italic' }}>
+                                            <TableCell colSpan={6} className='text-center'>
                                                 No data available
                                             </TableCell>
                                         </TableRow>
@@ -697,10 +651,10 @@ const AdminCreateDepartment = () => {
                                                 </TableCell>
                                                 <TableCell style={styles.cell}>
                                                     <IconButton onClick={() => handleEditDepartment(index, department.departmentId, department)}>
-                                                        <EditIcon style={{ color: '#fff', }} />
+                                                        <EditIcon className='color-white' />
                                                     </IconButton>
                                                     <IconButton onClick={() => handleDeleteDepartment(index, department.departmentId)}>
-                                                        <DeleteIcon style={{ color: '#fff', }} />
+                                                        <DeleteIcon className='color-white' />
                                                     </IconButton>
                                                 </TableCell>
                                             </TableRow>

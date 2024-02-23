@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, useMediaQuery } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
+import 'react-tagsinput/react-tagsinput.css';
 import { Context } from '../App';
 import AdminDashboard from './AdminDashboard';
 import { FormControl, Select, MenuItem } from '@mui/material';
@@ -22,7 +22,6 @@ const styles = {
         fontWeight: 'bold',
         background: '#13538b',
         color: 'white',
-        // minWidth: "170px",
         fontSize: 15,
     },
     cell: {
@@ -58,7 +57,6 @@ const AdminEnterpriseRequest = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [pageNumber, setPageNumber] = useState(1);
-    // const [pageSize, setPageSize] = useState(10); 
     const [totalPages, setTotalPages] = useState(1);
     const [loadingRows, setLoadingRows] = useState([]);
     const [isApproving, setIsApproving] = useState(false);
@@ -83,9 +81,6 @@ const AdminEnterpriseRequest = () => {
 
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
-                    // if (response.data.length > 0) {
-                    //     setSelectedCategory(response.data[0].id);
-                    // }
                 } else {
                     console.error("Failed to fetch enterprise categories");
                 }
@@ -123,7 +118,6 @@ const AdminEnterpriseRequest = () => {
         fetchEnterpriseCategories();
         fetchEnterpriseRequests();
     }, [selectedCategory, pageNumber]);
-
 
     const handlePageChange = (event, newPage) => {
         setPageNumber(newPage);
@@ -209,7 +203,6 @@ const AdminEnterpriseRequest = () => {
     };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
     const contentMargin = drawerOpen ? '0' : '0';
 
     return (
@@ -291,8 +284,7 @@ const AdminEnterpriseRequest = () => {
                                                         style={styles.approveButton}
                                                         disabled={
                                                             loadingRows.includes(row.enterpriseId) ||
-                                                             row.status === 'Approved' 
-                                                            //row.status === 'Rejected'
+                                                            row.status === 'Approved'
                                                         }
                                                         onClick={() => {
                                                             setIsApproving(true);
@@ -308,7 +300,6 @@ const AdminEnterpriseRequest = () => {
                                                         style={styles.approveButton}
                                                         disabled={
                                                             loadingRows.includes(row.enterpriseId) ||
-                                                            // row.status === 'Approved' ||
                                                             row.status === 'Rejected'
                                                         }
                                                         onClick={async () => {

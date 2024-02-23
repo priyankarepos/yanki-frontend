@@ -62,8 +62,6 @@ const styles = {
 
 const EnterpriseDashboard = () => {
     const { setDrawerOpen, drawerOpen } = useContext(Context);
-    // const [drawerOpen, setDrawerOpen] = useState(true);
-    // const [isDropdownOpen, setDropdownOpen] = useState(true);
 
     const navigate = useNavigate();
 
@@ -72,21 +70,6 @@ const EnterpriseDashboard = () => {
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
-
-    // const throttledToggleDrawer = throttle(toggleDrawer, 200);
-    // useEffect(() => {
-    //     if (isSmallScreen && !drawerOpen) {
-    //         setDrawerOpen(false);
-    //     }
-    // }, [isSmallScreen, drawerOpen, setDrawerOpen]);
-
-    // useEffect(() => {
-    //     window.addEventListener("resize", throttledToggleDrawer);
-    //     return () => {
-    //         window.removeEventListener("resize", throttledToggleDrawer);
-    //     };
-    // }, [throttledToggleDrawer]);
-
 
     return (
         <div style={styles.enterpriseDashboard}>
@@ -123,46 +106,6 @@ const EnterpriseDashboard = () => {
                             alt="Yanki logo"
                         />
                     </Link>
-                    {/* <List>
-                        <ListItem
-                            button
-                            className="highlightStyle"
-                            onClick={toggleDropdown}
-                        >
-                            <ListItemIcon>
-                                <NetworkWifiIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Networking Interface" />
-                        </ListItem>
-                        <Collapse in={isDropdownOpen} sx={{marginLeft:"20px",}}>
-                            <List>
-                                <NavLink
-                                    to="/enterprise/profile"
-                                    style={{ textDecoration: 'none', color: '#fff' }}
-                                    activeClassName="active"
-                                >
-                                    <ListItem button onClick={()=>navigate("/enterprise/profile")}>
-                                        <ListItemIcon>
-                                            <BusinessIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Enterprise Profile" />
-                                    </ListItem>
-                                </NavLink>
-                                <NavLink
-                                    to="/enterprise/departments"
-                                    style={{ textDecoration: 'none', color: '#fff' }}
-                                    activeClassName="active"
-                                >
-                                    <ListItem button>
-                                        <ListItemIcon>
-                                            <AccountBalanceIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Departments" />
-                                    </ListItem>
-                                </NavLink>
-                            </List>
-                        </Collapse>
-                    </List> */}
                     <List>
                         <NavLink
                             to="/enterprise/profile"
@@ -204,11 +147,6 @@ const EnterpriseDashboard = () => {
 
                 </div>
             </Drawer>
-            {/* <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-                <Toolbar />
-                <EnterpriseProfile />
-                <Outlet />
-            </Box> */}
         </div>
     );
 };

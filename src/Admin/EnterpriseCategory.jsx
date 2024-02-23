@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar,CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress, useMediaQuery } from '@mui/material';
 import AdminDashboard from './AdminDashboard';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -114,9 +114,8 @@ const AdminEnterpriseCategory = () => {
   };
 
   const handleDeleteCategory = (id) => {
-    // Open the confirmation dialog and store the selected category ID
     setConfirmDialogOpen(true);
-    setSelectedCategoryId(id); // Use setSelectedCategoryId to store the selected category ID
+    setSelectedCategoryId(id);
     setConfirmationText(`Are you sure you want to delete this category?`);
   };
 
@@ -153,28 +152,22 @@ const AdminEnterpriseCategory = () => {
   const handleSaveCategory = async () => {
     try {
       setLoading(true);
-  
-      // Check if a category with the same name already exists
       if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
         setSnackbarMessage('This category name already exists!');
         setSnackbarOpen(true);
         return;
       }
-  
+
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-  
+
       const response = await axios.post(apiUrl, { name: categoryName });
-  
+
       if (response.status === 200) {
         const newCategory = response.data;
-  
-        // Update state with the new category
         setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
-  
         setIsModalOpen(false);
         setCategoryName('');
-        setEditCategoryId(''); // Reset editCategoryId after successful save
-  
+        setEditCategoryId('');
         setSnackbarMessage('Category saved successfully');
         setSnackbarOpen(true);
       } else {
@@ -190,38 +183,26 @@ const AdminEnterpriseCategory = () => {
       setLoading(false);
     }
   };
-  
-
-
 
   const handleUpdate = async () => {
     try {
-
       setLoading(true);
-
       if (enterpriseCategories.some(category => category.name === categoryName && category.id !== editCategoryId)) {
         setSnackbarMessage('This category name already exists!');
         setSnackbarOpen(true);
         return;
       }
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-
       const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
-
       if (response.status === 200) {
         const updatedCategory = response.data;
-
-        // Update state with the new category
         setEnterpriseCategories((prevCategories) => {
           const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
-
           setIsModalOpen(false);
           setCategoryName('');
-          setEditCategoryId(null); // Reset editCategoryId after successful save
-
+          setEditCategoryId(null);
           return updatedCategories;
         });
-
         setSnackbarMessage('Category updated successfully');
         setSnackbarOpen(true);
       } else {
@@ -233,13 +214,12 @@ const AdminEnterpriseCategory = () => {
       console.error('Error:', error);
       setSnackbarMessage('Error updating enterprise category');
       setSnackbarOpen(true);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
@@ -256,34 +236,34 @@ const AdminEnterpriseCategory = () => {
             </IconButton>
           </Box>
           {enterpriseCategories.length > 0 ? (
-          <TableContainer component={Paper} style={styles.tableContainer}>
-            <Table style={styles.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={styles.headerCell}>Category Name</TableCell>
-                  <TableCell style={{ ...styles.headerCell, textAlign: "right", }}>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {enterpriseCategories.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell style={styles.cell}>{row.name}</TableCell>
-                    <TableCell style={{ ...styles.cell, textAlign: "right", }}>
-                      <IconButton onClick={() => handleEdit(row.id)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={() => handleDeleteCategory(row.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+            <TableContainer component={Paper} style={styles.tableContainer}>
+              <Table style={styles.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={styles.headerCell}>Category Name</TableCell>
+                    <TableCell style={{ ...styles.headerCell, textAlign: "right", }}>Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer> ) : (
-            <Typography variant="body1" sx={{ textAlign: 'center', color: '#6fa8dd', marginTop: '16px' }}>
-            No categories available. Please add a category.
-          </Typography>
+                </TableHead>
+                <TableBody>
+                  {enterpriseCategories.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell style={styles.cell}>{row.name}</TableCell>
+                      <TableCell style={{ ...styles.cell, textAlign: "right", }}>
+                        <IconButton onClick={() => handleEdit(row.id)}>
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteCategory(row.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>) : (
+            <Typography variant="body1" className='no-data-found'>
+              No categories available. Please add a category.
+            </Typography>
           )}
         </Box>
       </Box>
@@ -315,7 +295,7 @@ const AdminEnterpriseCategory = () => {
             <Button
               variant="contained"
               color="primary"
-              type="submit"  // Specify the button type as "submit"
+              type="submit"
               style={styles.modalButton}
               disabled={loading}
             >

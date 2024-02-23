@@ -4,10 +4,9 @@ import Paper from "@mui/material/Paper";
 
 import { useEffect, useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
-// import Lottie from "lottie-react";
-// import candles from "../Assets/images/candles.json";
 import TextField from "@mui/material/TextField";
 import axios from 'axios';
+import "./AnswerStyle.scss";
 
 const SentenceAnswer = ({ answer }) => {
   // const [showCandle, setShowCandle] = useState(true);
@@ -81,7 +80,6 @@ const SentenceAnswer = ({ answer }) => {
   
     let content = [];
   
-    // Remove dashes at the beginning of lines without affecting clickable links
     const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
   
     cleanedText.split(/\s+/).forEach((word, index, array) => {
@@ -89,13 +87,12 @@ const SentenceAnswer = ({ answer }) => {
         content.push(
           <span
             key={index}
-            style={{ color: "#007bff", cursor: "pointer" }}
+            className='enterprise-pdf-link'
             onClick={() => window.location.href = `mailto:${word}`}
           >
             {word}
           </span>
         );
-        // Add a space after the email link, except for the last word
         if (index !== array.length - 1) {
           content.push(" ");
         }
@@ -103,7 +100,7 @@ const SentenceAnswer = ({ answer }) => {
         content.push(
           <span
             key={index}
-            style={{ color: "#007bff", cursor: "pointer" }}
+            className='enterprise-pdf-link'
             onClick={() => window.location.href = `tel:${word}`}
           >
             {word}
@@ -117,7 +114,7 @@ const SentenceAnswer = ({ answer }) => {
         content.push(
           <span
             key={index}
-            style={{ color: "#007bff", cursor: "pointer" }}
+            className='enterprise-pdf-link'
             onClick={() => window.open(word, '_blank')}
           >
             {word}

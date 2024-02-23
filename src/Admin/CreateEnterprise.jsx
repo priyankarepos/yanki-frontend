@@ -157,7 +157,6 @@ const AdminCreateEnterprise = () => {
                     'At least one keyword is required',
             };
 
-            // Validate that opening and closing times are not the same
             if (data.BusinessHoursOpeningTime === data.BusinessHoursClosingTime) {
                 validationErrors.BusinessHoursClosingTime =
                     'Opening and closing times cannot be the same';
@@ -227,9 +226,6 @@ const AdminCreateEnterprise = () => {
 
             if (response && response.isSuccess) {
                 setTagCount(tagCount + 1);
-
-                // setIsTagAvailable(response.isAvailable);
-
                 if (response.isAvailable) {
                     setTags((prevTags) => {
                         const uniqueTags = new Set([...prevTags, tag]);
@@ -276,7 +272,6 @@ const AdminCreateEnterprise = () => {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
                 {
-                    //   enterpriseId: enterpriseDetails.enterpriseId,
                     enterpriseName: formData.EnterpriseName,
                     categoryId: selectedCategory || formData.EnterpriseCategories,
                     contactPersonName: formData.EnterprisePointOfContact,
@@ -328,8 +323,6 @@ const AdminCreateEnterprise = () => {
         console.log("edit department", key, enterpriseId, enterprise);
         setEnterpriseId(enterpriseId)
 
-        // Assuming you have access to your form library's function to set values
-        // For example, in React Hook Form, you use setValue
         setValue("EnterpriseName", enterprise.enterpriseName || "");
         setValue("EnterprisePointOfContact", enterprise.contactPersonName || "");
         setValue("EnterpriseAddress", enterprise.enterpriseAddress || "");
@@ -353,54 +346,38 @@ const AdminCreateEnterprise = () => {
             setTags(keywordsArray);
             setValue("EnterpriseIdentificationKeywords", keywordsArray || []);
         }
-
-        // Now you can trigger any modal or UI state to indicate editing mode
-        // and proceed with your edit logic as needed
-        // ...
     };
 
     const handleDeleteEnterprise = (key, enterpriseId) => {
-        console.log("key", key,enterpriseId);
+        console.log("key", key, enterpriseId);
         setEnterpriseId(enterpriseId)
-        // Open the confirmation dialog and store the selected department index
         setConfirmDialogOpen(true);
         setConfirmationText(`Are you sure you want to delete the enterprise "${enterpriseList[key].enterpriseName}"?`);
     };
-    
+
     const handleConfirmDelete = async () => {
         setConfirmDialogOpen(false);
         try {
-    
-            // Make the DELETE API call
             const response = await axios.delete(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-delete-enterprise/${enterpriseId}`
             );
-    
             console.log('Delete Enterprise Response:', response.data);
-    
             if (response.status === 200) {
                 console.log('Enterprise deleted successfully');
-                // Perform any additional actions after successful deletion
                 getEnterpriseDetails()
             } else {
                 console.error('Failed to delete enterprise');
-                // Handle the failure case, show a message, etc.
             }
         } catch (error) {
             console.error('Error deleting enterprise:', error);
-            // Handle the error, show a message, etc.
         }
     };
-
 
     const updateEnterpriseDetails = async () => {
         try {
             setIsLoading(true);
-
             const formData = getValues();
             const tagsAsString = tags.join(',');
-
-            // Specify the request body based on the provided example value
             const requestBody = {
                 enterpriseId: enterpriseId,
                 enterpriseName: formData.EnterpriseName,
@@ -421,15 +398,11 @@ const AdminCreateEnterprise = () => {
                 faQs: formData.FrequentlyAskedQuestions,
                 enterpriseKeywords: tagsAsString,
             };
-
-            // Make the API call
             const response = await axios.put(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
                 requestBody
             );
-
             console.log('Update Enterprise Details Response:', response.data);
-
             if (response.status === 200) {
                 console.log('Enterprise details updated successfully');
                 if (departmentsData.length === 0) {
@@ -452,7 +425,6 @@ const AdminCreateEnterprise = () => {
     };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
     const contentMargin = drawerOpen ? '0' : '0';
 
     const placeholderText = `Product Overview:
@@ -468,12 +440,12 @@ const AdminCreateEnterprise = () => {
         <Box style={{ display: "flex" }}>
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
             <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-                <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
+                <Typography variant="h6" className='table-heading'>
                     My Enterprise Profile
                 </Typography>
                 <Grid container spacing={2} className='enterprise-profile'>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Enterprise Name<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise Name<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EnterpriseName"
@@ -496,18 +468,16 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Type enterprise name here"
                                         fullWidth
-                                    // error={!!errors['EnterpriseName']}
-                                    // helperText={errors['EnterpriseName'] ? errors['EnterpriseName'].message : ''}
                                     />
                                     {errors['EnterpriseName'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseName'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EnterpriseName'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Enterprise point of contact<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise point of contact<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EnterprisePointOfContact"
@@ -530,18 +500,16 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Enterprise point of contact name"
                                         fullWidth
-                                    // error={!!errors['EnterprisePointOfContact']}
-                                    // helperText={errors['EnterprisePointOfContact'] ? errors['EnterprisePointOfContact'].message : ''}
                                     />
                                     {errors['EnterprisePointOfContact'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EnterprisePointOfContact'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EnterprisePointOfContact'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <InputLabel style={styles.label}>Enterprise address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise address<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EnterpriseAddress"
@@ -549,13 +517,7 @@ const AdminCreateEnterprise = () => {
                             render={({ field }) => (
                                 <div>
                                     <TextareaAutosize
-                                        style={{
-                                            backgroundColor: '#eaf5ff',
-                                            border: '1px solid #6fa8dd',
-                                            borderRadius: '8px',
-                                            marginBottom: '16px',
-                                            color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                                        }}
+                                    className='TextareaAutosize'
                                         {...field}
                                         placeholder="Type enterprise address here"
                                         onFocus={(e) => e.target.style.outline = 'none'}
@@ -563,14 +525,14 @@ const AdminCreateEnterprise = () => {
                                         onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
                                     />
                                     {errors['EnterpriseAddress'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseAddress'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EnterpriseAddress'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Email Address<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EmailAddress"
@@ -592,18 +554,16 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Type email address here"
                                         fullWidth
-                                    // error={!!errors['EmailAddress']}
-                                    // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                                     />
                                     {errors['EmailAddress'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EmailAddress'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Phone Number<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Phone Number<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="PhoneNumber"
@@ -625,18 +585,16 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Type phone number here"
                                         fullWidth
-                                    // error={!!errors['PhoneNumber']}
-                                    // helperText={errors['PhoneNumber'] ? errors['PhoneNumber'].message : ''}
                                     />
                                     {errors['PhoneNumber'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['PhoneNumber'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['PhoneNumber'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Website URL<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Website URL<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="WebsiteUrl"
@@ -649,17 +607,15 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Type website URL here"
                                         fullWidth
-                                    // error={!!errors['WebsiteUrl']}
-                                    // helperText={errors['WebsiteUrl'] ? errors['WebsiteUrl'].message : ''}
                                     />
                                     {errors['WebsiteUrl'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['WebsiteUrl'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['WebsiteUrl'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
-                    <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
+                    <Grid item xs={12}><Divider className='table-devider'></Divider></Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
                         <InputLabel style={styles.label}>WhatsApp Phone Number</InputLabel>
                         <Controller
@@ -715,7 +671,7 @@ const AdminCreateEnterprise = () => {
                         />
                     </Grid>
                     <Grid item xs={12} className="Enterprise-Description">
-                        <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise Description<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EnterpriseDescription"
@@ -723,13 +679,7 @@ const AdminCreateEnterprise = () => {
                             render={({ field }) => (
                                 <div>
                                     <TextareaAutosize
-                                        style={{
-                                            backgroundColor: '#eaf5ff',
-                                            border: '1px solid #6fa8dd',
-                                            borderRadius: '8px',
-                                            marginBottom: '16px',
-                                            color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px", fontFamily: "unset", textTransform: "none",
-                                        }}
+                                    className='TextareaAutosize'
                                         {...field}
                                         placeholder={placeholderText}
                                         onFocus={(e) => e.target.style.outline = 'none'}
@@ -737,7 +687,7 @@ const AdminCreateEnterprise = () => {
                                         onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
                                     />
                                     {errors['EnterpriseDescription'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseDescription'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['EnterpriseDescription'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
@@ -745,7 +695,7 @@ const AdminCreateEnterprise = () => {
 
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem} className='enterprise-profile-category'>
-                        <InputLabel style={styles.label}>Enterprise Categories<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise Categories<sup className="required-icon">*</sup></InputLabel>
                         <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
                             <Select
                                 value={selectedCategory}
@@ -766,7 +716,7 @@ const AdminCreateEnterprise = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Business Hours Opening Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Business Hours Opening Time<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="BusinessHoursOpeningTime"
@@ -776,22 +726,19 @@ const AdminCreateEnterprise = () => {
                                     <TextField
                                         sx={{ ...styles.inputField }}
                                         {...field}
-                                        // type="outlined"
                                         type="time"
                                         placeholder="Office opening time"
                                         fullWidth
-                                    // error={!!errors['BusinessHoursOpeningTime']}
-                                    // helperText={errors['BusinessHoursOpeningTime'] ? errors['BusinessHoursOpeningTime'].message : ''}
                                     />
                                     {errors['BusinessHoursOpeningTime'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Business Hours Closing Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Business Hours Closing Time<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="BusinessHoursClosingTime"
@@ -804,18 +751,16 @@ const AdminCreateEnterprise = () => {
                                         type="time"
                                         placeholder="Office closing time"
                                         fullWidth
-                                    // error={!!errors['BusinessHoursClosingTime']}
-                                    // helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
                                     />
                                     {errors.BusinessHoursClosingTime && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors.BusinessHoursClosingTime.message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors.BusinessHoursClosingTime.message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Founded Year<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Founded Year<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="FoundedYear"
@@ -829,18 +774,16 @@ const AdminCreateEnterprise = () => {
                                         inputProps={{ maxLength: 4 }}
                                         placeholder="Type founded year here"
                                         fullWidth
-                                    // error={!!errors['FoundedYear']}
-                                    // helperText={errors['FoundedYear'] ? errors['FoundedYear'].message : ''}
                                     />
                                     {errors['FoundedYear'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['FoundedYear'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['FoundedYear'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Religious Certifications<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Religious Certifications<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="ReligiousCertifications"
@@ -853,11 +796,9 @@ const AdminCreateEnterprise = () => {
                                         type="outlined"
                                         placeholder="Kosher or any other"
                                         fullWidth
-                                    // error={!!errors['ReligiousCertifications']}
-                                    // helperText={errors['ReligiousCertifications'] ? errors['ReligiousCertifications'].message : ''}
                                     />
                                     {errors['ReligiousCertifications'] && (
-                                        <FormHelperText style={{ color: 'red' }}>{errors['ReligiousCertifications'].message}</FormHelperText>
+                                        <FormHelperText className='error-message'>{errors['ReligiousCertifications'].message}</FormHelperText>
                                     )}
                                 </div>
                             )}
@@ -871,13 +812,7 @@ const AdminCreateEnterprise = () => {
                             name="FrequentlyAskedQuestions"
                             render={({ field }) => (
                                 <TextareaAutosize
-                                    style={{
-                                        backgroundColor: '#eaf5ff',
-                                        border: '1px solid #6fa8dd',
-                                        borderRadius: '8px',
-                                        marginBottom: '16px',
-                                        color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                                    }}
+                                className='TextareaAutosize'
                                     {...field}
                                     placeholder="Type frequently asked questions (FAQs) here"
                                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -888,28 +823,19 @@ const AdminCreateEnterprise = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Enterprise identification keywords<sup className="required-icon">*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="EnterpriseIdentificationKeywords"
                             render={({ field }) => (
                                 <div>
                                     <TagsInput
+                                    className='TagsInput'
                                         value={tags}
                                         onChange={(newTags) => setTags(newTags)}
                                         addKeys={[13, 9]}
                                         placeholder="Type Enterprise identification keywords here"
                                         inputProps={{
-                                            style: {
-                                                backgroundColor: '#eaf5ff',
-                                                border: '1px solid #6fa8dd',
-                                                borderRadius: '8px',
-                                                marginBottom: '16px',
-                                                color: '#8bbae5',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: "60px",
-                                            },
                                             ...field,
                                             value: tagInput,
                                             onChange: (e) => setTagInput(e.target.value),
@@ -941,7 +867,7 @@ const AdminCreateEnterprise = () => {
                                         ))}
                                     </div>
                                     {isSubmitted && !tags.length && (
-                                        <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <FormHelperText className='error-message'>
                                             At least one keyword is required
                                         </FormHelperText>
                                     )}
@@ -955,7 +881,7 @@ const AdminCreateEnterprise = () => {
                             variant="outlined"
                             sx={{ marginY: { xs: '10px' } }}
                             fullWidth
-                            style={{ backgroundColor: '#13538b', color: 'lightblue', width:"150px" }}
+                            className='button-style'
                             onClick={enterpriseId !== null ? handleSubmit(updateEnterpriseDetails) : handleSubmit(createAdminEnterprise)}
                             disabled={isLoading}
                         >
@@ -985,10 +911,10 @@ const AdminCreateEnterprise = () => {
                                                 <TableCell style={styles.cell}>{enterprise.categoryName}</TableCell>
                                                 <TableCell style={styles.cell}>
                                                     <IconButton onClick={() => handleEditEnterprise(key, enterprise.enterpriseId, enterprise)}>
-                                                        <EditIcon style={{ color: '#fff' }} />
+                                                        <EditIcon className='color-white'/>
                                                     </IconButton>
                                                     <IconButton onClick={() => handleDeleteEnterprise(key, enterprise.enterpriseId, enterprise)}>
-                                                        <DeleteIcon style={{ color: '#fff' }} />
+                                                        <DeleteIcon className='color-white'/>
                                                     </IconButton>
                                                 </TableCell>
                                             </TableRow>

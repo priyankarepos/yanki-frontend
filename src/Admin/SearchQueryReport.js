@@ -16,7 +16,7 @@ const cellStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  maxWidth: '600px', // Adjust the width at which scrolling should start
+  maxWidth: '600px',
   position: 'relative',
   width:'100%'
 };

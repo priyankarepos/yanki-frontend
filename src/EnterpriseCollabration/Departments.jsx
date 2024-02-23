@@ -66,18 +66,15 @@ const styles = {
 const Departments = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
-  // const [isTagAvailable, setIsTagAvailable] = useState(true);
   const { drawerOpen } = useContext(Context);
   const [selectedDepartmentData, setSelectedDepartmentData] = useState({});
   const [departmentID, setDepartmentID] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  // const enterpriseId = sessionStorage.getItem('enterpriseId');
   const [triggerEffect, setTriggerEffect] = useState(false);
   const [tagCount, setTagCount] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [selectedDepartmentIndex, setSelectedDepartmentIndex] = useState(null);
-  // const [submitted, setSubmitted] = useState(false);
   const [confirmationText, setConfirmationText] = useState('');
   const [enterpriseDetails, setEnterpriseDetails] = useState({});
 
@@ -124,7 +121,6 @@ const Departments = () => {
   });
 
   const keywords = useWatch({ control, name: 'DepartmentIdentificationKeywords', defaultValue: [] });
-
 
   const checkEnterpriseKeyword = async (tag) => {
     try {
@@ -184,8 +180,6 @@ const Departments = () => {
 
       if (response && response.isSuccess) {
         setTagCount(tagCount + 1);
-
-        // setIsTagAvailable(response.isAvailable);
 
         if (response.isAvailable) {
           setTags((prevTags) => {
@@ -275,12 +269,8 @@ const Departments = () => {
   };
 
   const handleConfirmDelete = async () => {
-    // Close the confirmation dialog
     setConfirmDialogOpen(false);
-
-    // Get the department details using the selected index
     const { departmentId } = departmentsData[selectedDepartmentIndex];
-
     // Delete the department
     try {
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
@@ -346,7 +336,6 @@ const Departments = () => {
         console.log('Department details updated successfully');
         setSnackbarOpen(true);
         setSnackbarMessage('Department details updated successfully');
-        // setTags(response.data.departmentKeywords.split(','));
         reset();
         setSelectedDepartmentData({});
         setDepartmentsData([]);
@@ -405,7 +394,6 @@ const Departments = () => {
         setValue('EmailAddress', '');
         setValue('DepartmentDescription', '');
         setValue('DepartmentIdentificationKeywords', []);
-        // setSubmitted(false);
       } else {
         console.error('API error:', response.statusText);
         setSnackbarMessage('API error:', response.statusTex);
@@ -458,8 +446,6 @@ const Departments = () => {
                     placeholder="Customer Service"
                     fullWidth
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
-                  // error={!!errors['DepartmentName']}
-                  // helperText={errors['DepartmentName'] ? errors['DepartmentName'].message : ''}
                   />
                   {errors['DepartmentName'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['DepartmentName'].message}</FormHelperText>
@@ -493,8 +479,6 @@ const Departments = () => {
                     placeholder="John Deo"
                     fullWidth
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
-                  // error={!!errors['NameOfRepresentative']}
-                  // helperText={errors['NameOfRepresentative'] ? errors['NameOfRepresentative'].message : ''}
                   />
                   {errors['NameOfRepresentative'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['NameOfRepresentative'].message}</FormHelperText>
@@ -527,8 +511,6 @@ const Departments = () => {
                     placeholder="Type email address here"
                     fullWidth
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
-                  // error={!!errors['EmailAddress']}
-                  // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                   />
                   {errors['EmailAddress'] && (
                     <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
@@ -542,7 +524,6 @@ const Departments = () => {
             <Controller
               control={control}
               name="DepartmentDescription"
-              // rules={{ required: "Department description is required" }}
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
@@ -560,9 +541,6 @@ const Departments = () => {
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
-                  {/* {errors['DepartmentDescription'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['DepartmentDescription'].message}</FormHelperText>
-                  )} */}
                 </div>
               )}
             />
@@ -572,7 +550,6 @@ const Departments = () => {
             <Controller
               control={control}
               name="DepartmentIdentificationKeywords"
-              // rules={{ required: "At least one keyword is required" }}
               render={({ field }) => (
                 <div>
                   <TagsInput

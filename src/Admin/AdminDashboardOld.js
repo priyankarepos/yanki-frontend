@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Outlet, Link, NavLink } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -19,60 +19,60 @@ import {
   CircularProgress,
   ListItemText,
   ListItemIcon,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import DarkYankilogo from '../Assets/images/logo-dark.svg';
-import SearchQueryReport from './SearchQueryReport';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CreateAdminIcon from '@mui/icons-material/PersonAdd';
-import "./AdminStyle.css"
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import DarkYankilogo from "../Assets/images/logo-dark.svg";
+import SearchQueryReport from "./SearchQueryReport";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import CreateAdminIcon from "@mui/icons-material/PersonAdd";
+import "./AdminStyle.css";
 
 const styles = {
   adminDashboard: {
-    display: 'flex',
-    height: '100vh',
+    display: "flex",
+    height: "100vh",
   },
   appBar: {
-    backgroundColor: 'rgb(19 83 139);',
+    backgroundColor: "rgb(19 83 139);",
   },
   menuButton: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   title: {
     flexGrow: 1,
   },
   sidebar: {
-    width: '270px',
-    padding: '16px',
-    color: '#fff',
+    width: "270px",
+    padding: "16px",
+    color: "#fff",
   },
   content: {
     flex: 1,
-    padding: '16px',
-    marginLeft: '0',
-    transition: 'margin-left 0.3s',
+    padding: "16px",
+    marginLeft: "0",
+    transition: "margin-left 0.3s",
   },
   logoStyle: {
-    width: '150px',
+    width: "150px",
   },
   pagination: {
-    marginTop: '20px',
-    display: 'flex',
-    justifyContent: 'center',
+    marginTop: "20px",
+    display: "flex",
+    justifyContent: "center",
   },
 };
 
 const AdminDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState("");
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   const [endDate, setEndDate] = useState(
-    currentDate.toISOString().split('T')[0]
+    currentDate.toISOString().split("T")[0]
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [queryAnswer, setQueryAnswer] = useState(null);
 
   // Pagination and sorting state
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
     try {
       setIsSubmitting(true);
       setIsError(false);
-      setErrorMsg('');
+      setErrorMsg("");
       setQueryAnswer(null);
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
             ascending: ascending,
           },
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             TimeZone: timezone,
           },
         }
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
         setIsSubmitting(false);
         setQueryAnswer(response.data);
         setIsError(false);
-        setErrorMsg('');
+        setErrorMsg("");
       }
     } catch (error) {
       setIsSubmitting(false);
@@ -119,11 +119,11 @@ const AdminDashboard = () => {
       setQueryAnswer(null);
 
       if (error.response) {
-        setErrorMsg(error.response.data.message || 'Something went wrong');
+        setErrorMsg(error.response.data.message || "Something went wrong");
       } else if (error.request) {
-        setErrorMsg('No response from the server');
+        setErrorMsg("No response from the server");
       } else {
-        setErrorMsg('Something went wrong');
+        setErrorMsg("Something went wrong");
       }
     }
   };
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
-  const contentMargin = drawerOpen ? '272px' : '0';
+  const contentMargin = drawerOpen ? "272px" : "0";
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -152,7 +152,7 @@ const AdminDashboard = () => {
   };
 
   const handleSortingChange = (event) => {
-    setAscending(event.target.value === 'asc');
+    setAscending(event.target.value === "asc");
   };
 
   const handlePageSizeChange = (event) => {
@@ -164,10 +164,7 @@ const AdminDashboard = () => {
       <CssBaseline />
       <AppBar position="fixed" style={styles.appBar}>
         <Toolbar>
-          <Link
-            to="/"
-            style={{ textDecoration: 'none' }}
-          >
+          <Link to="/" style={{ textDecoration: "none" }}>
             <img
               src={DarkYankilogo}
               style={styles.logoStyle}
@@ -188,17 +185,14 @@ const AdminDashboard = () => {
       </AppBar>
       <Drawer open={drawerOpen} onClose={toggleDrawer} variant="persistent">
         <div style={styles.sidebar}>
-          <Link
-            to="/"
-            style={{ textDecoration: 'none' }}
-          >
+          <Link to="/" style={{ textDecoration: "none" }}>
             <img
               src={DarkYankilogo}
               style={{
                 ...styles.logoStyle,
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                marginBottom: '16px',
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginBottom: "16px",
               }}
               className="logo"
               alt="Yanki logo"
@@ -207,11 +201,11 @@ const AdminDashboard = () => {
           <List>
             <NavLink
               to="/admin"
-              style={{ textDecoration: 'none', color: '#fff' }}
+              style={{ textDecoration: "none", color: "#fff" }}
               activeClassName="active"
               exact
             >
-              <ListItem button className='highlightStyle'>
+              <ListItem button className="highlightStyle">
                 <ListItemIcon style={{ minWidth: "40px" }}>
                   <AssignmentIcon />
                 </ListItemIcon>
@@ -220,10 +214,10 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/change-role"
-              style={{ textDecoration: 'none', color: '#fff' }}
+              style={{ textDecoration: "none", color: "#fff" }}
               activeClassName="active"
             >
-              <ListItem button className='highlightStyle'>
+              <ListItem button className="highlightStyle">
                 <ListItemIcon style={{ minWidth: "40px" }}>
                   <CreateAdminIcon />
                 </ListItemIcon>
@@ -235,7 +229,9 @@ const AdminDashboard = () => {
       </Drawer>
       <Box style={{ ...styles.content, marginLeft: contentMargin }}>
         <Toolbar />
-        <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
+        <Typography variant="h6" sx={{ pb: 2 }}>
+          Search Query Report
+        </Typography>
         <Paper sx={{ p: 2 }}>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
@@ -268,7 +264,7 @@ const AdminDashboard = () => {
               <TextField
                 select
                 label="Sort Order"
-                value={ascending ? 'asc' : 'desc'}
+                value={ascending ? "asc" : "desc"}
                 onChange={handleSortingChange}
                 InputLabelProps={{
                   shrink: true,
@@ -296,8 +292,9 @@ const AdminDashboard = () => {
                 }}
                 fullWidth
                 disabled={
-                  (queryAnswer?.totalCount <= 10 && selectedPageSize > queryAnswer?.totalCount) ||
-                  (pageNumber * selectedPageSize >= queryAnswer?.totalCount)
+                  (queryAnswer?.totalCount <= 10 &&
+                    selectedPageSize > queryAnswer?.totalCount) ||
+                  pageNumber * selectedPageSize >= queryAnswer?.totalCount
                 }
               >
                 <option value={10}>10</option>
@@ -305,18 +302,24 @@ const AdminDashboard = () => {
                 <option value={30}>30</option>
                 <option value={50}>50</option>
               </TextField>
-
-
             </Grid>
-            <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid
+              item
+              xs={2}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 onClick={fetchData}
                 disabled={isSubmitting}
-                style={{ width: '100%', maxWidth: '120px' }}
+                style={{ width: "100%", maxWidth: "120px" }}
               >
-                {isSubmitting ? <CircularProgress size={24} /> : 'Submit'}
+                {isSubmitting ? <CircularProgress size={24} /> : "Submit"}
               </Button>
             </Grid>
           </Grid>
