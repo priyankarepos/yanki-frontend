@@ -13,6 +13,7 @@ import YoutubeContent from "../Components/YoutubeContent";
 // import YoutubeContent from "../Components/YoutubeContent";
 import IsItKosher from "../Components/IsItKosher";
 import EnterprisePdfAnswer from "../Components/EnterprisePdfAnswer";
+import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 
 const SearchHistoryItem = ({ query, response }) => {
 
@@ -47,7 +48,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-{response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
+      {response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <SentenceAnswer answer={response} />
@@ -104,7 +105,13 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-
+      {!response?.isSucess && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <SafetyChecker answer={response} />
+          </div>
+        </Paper>
+      )}
 
     </div>
   );
