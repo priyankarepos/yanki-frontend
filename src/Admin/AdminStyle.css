@@ -50,6 +50,7 @@ span.react-tagsinput-tags,
   width: 90vw;
   height: 88vh;
   position: relative;
+  text-align: center;
 }
 
 .pdf-modal .MuiIconButton-root {
@@ -160,4 +161,8 @@ span.react-tagsinput-tags,
 .isItKosher-wrapper{
   background-color: #0e3557;
   padding: 10px;
+}
+
+.add-eventpadding {
+  padding: 16px;
 }

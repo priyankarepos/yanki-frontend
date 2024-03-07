@@ -46,6 +46,8 @@ import AdminCreateDepartment from "./Admin/CreateDepartment";
 import AdminFileUpload from "./Admin/AdminFileUpload";
 import EnterpriseFileUpload from "./EnterpriseCollabration/EnterpriseUpload";
 import ChangePhoneNumber from "./Pages/ChangePhoneNumber";
+import AdminEventRequest from "./Admin/EventRequest";
+import EventLocationPage from "./Admin/EventLocationPage";
 
 // Exporting context
 export const Context = createContext("");
@@ -540,6 +542,22 @@ function App() {
                     element={
                       <UserPagesProtection>
                         <EnterpriseFileUpload />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/event-request"
+                    element={
+                      <UserPagesProtection>
+                        <AdminEventRequest />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/add-event-location"
+                    element={
+                      <UserPagesProtection>
+                        <EventLocationPage />
                       </UserPagesProtection>
                     }
                   />

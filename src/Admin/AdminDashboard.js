@@ -26,6 +26,8 @@ import CategoryIcon from "@mui/icons-material/Category";
 import AddIcon from "@mui/icons-material/Add";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import UploadIcon from "@mui/icons-material/Upload";
+import EventIcon from '@mui/icons-material/Event';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const styles = {
   enterpriseDashboard: {
@@ -241,6 +243,38 @@ const AdminDashboard = () => {
                   <UploadIcon />
                 </ListItemIcon>
                 <ListItemText primary="Upload Files" />
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/admin/event-request"
+              className="admin-dashboard-navlink"
+              activeClassName="active"
+            >
+              <ListItem
+                button
+                className="highlightStyle"
+                onClick={() => navigate("/admin/event-request")}
+              >
+                <ListItemIcon>
+                  <EventIcon />
+                </ListItemIcon>
+                <ListItemText primary="Event Requests" />
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/admin/add-event-location"
+              className="admin-dashboard-navlink"
+              activeClassName="active"
+            >
+              <ListItem
+                button
+                className="highlightStyle"
+                onClick={() => navigate("/admin/add-event-location")}
+              >
+                <ListItemIcon>
+                  <AddLocationAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add Event Location" />
               </ListItem>
             </NavLink>
           </List>

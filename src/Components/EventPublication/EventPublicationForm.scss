@@ -1,0 +1,69 @@
+.multiSelectContainer li:hover {
+    background: #13416a !important;
+    color: #fff;
+    cursor: pointer;
+}
+
+.highlightOption, .multiSelectContainer li {
+    background: #13416a !important;
+    color: #fff;
+}
+
+.chip{
+    background: #022b4f;
+}
+
+.notFound{
+    display: none !important;
+}
+
+.searchWrapper {
+    border: 1px solid #4a6a86;
+    border-radius: 12px;
+    min-height: 20px;
+    padding: 12px !important;
+    position: relative;
+    line-height: 30px;
+}
+
+.event-detail-input textarea{
+padding: 12px;
+}
+
+.event-form-file{
+    background-color: transparent;
+    border: 1px solid #4a6a86;
+    border-radius: 12px;
+    color: #8499ac;
+    width: 100%;
+    padding: 15px !important;
+    font-size: 15px;
+}
+
+.pdf-img-style-box {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #4a6a86;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    justify-content: space-between;
+
+    p {
+        margin: 5px 0;
+        font-size: 14px;
+
+        span {
+            cursor: pointer;
+
+            &:hover {
+                color: #6fa8dd;
+            }
+
+            &.icon-style {
+                margin-right: 10px; 
+            }
+        }
+    }
+}
