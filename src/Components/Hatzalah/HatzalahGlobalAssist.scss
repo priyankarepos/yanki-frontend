@@ -1,0 +1,29 @@
+.container {
+  padding: 10px;
+}
+
+.container-heading{
+  text-align: center;
+  margin-bottom: 15px !important;
+}
+.coordinates-text{
+  margin-bottom: 5px !important;
+  font-size: 16px !important;
+}
+.tap-to-call-button{
+  margin-top: 10px;
+  display: inline-block;
+  padding: 7px 15px;
+  background-color: #fff; 
+  color: #012e55; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  text-decoration: none;
+}
+.phonenumber-link{
+  color: #007bff;
+  cursor: pointer;
+}
