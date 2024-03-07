@@ -1,18 +1,13 @@
-.container {
-  padding: 10px;
-}
-
 .container-heading{
-  text-align: center;
-  margin-bottom: 15px !important;
-}
-.coordinates-text{
-  margin-bottom: 5px !important;
   font-size: 16px !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+}
+.coordinates-text1, .coordinates-text2 {
+  font-size: 16px !important;
+  border-bottom: 1px solid #2f587d !important;
 }
 .tap-to-call-button{
-  margin-top: 10px;
-  display: inline-block;
   padding: 7px 15px;
   background-color: #fff; 
   color: #012e55; 
@@ -22,8 +17,21 @@
   text-align: center;
   font-size: 16px;
   text-decoration: none;
+  width: max-content;
 }
 .phonenumber-link{
   color: #007bff;
   cursor: pointer;
+}
+td.coordinates-text1 {
+  border-right: 1px solid #2f587d;
+}
+.copy-icon{
+  text-align: right !important;
+}
+.coordinates-button{
+  border-bottom: 1px solid #2f587d !important; 
+}
+.table{
+  border: 1px solid #2f587d
 }

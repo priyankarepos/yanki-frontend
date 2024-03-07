@@ -1,8 +1,29 @@
+import { useState } from "react";
 import { Paper, Typography } from "@mui/material";
-import { Box } from "@mui/system";
 import "./HatzalahGlobalAssist.scss";
+import { Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import CheckIcon from "@mui/icons-material/Check";
 
 const HatzalahGlobalAssist = ({ answer }) => {
+  const [showCheckIcon, setShowCheckIcon] = useState(false);
+
+  const handleCopyClick = () => {
+    const address = `Address:${answer.globalAssist.fullAddress}`;
+    const latitude = `Latitude:${answer.globalAssist.latitude}`;
+    const longitude = `Longitude:${answer.globalAssist.longitude}`;
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${answer.globalAssist.latitude},${answer.globalAssist.longitude}`;
+    navigator.clipboard.writeText(
+      `${address}\n${latitude}\n${longitude}\n${googleMapsUrl}`
+    );
+    setShowCheckIcon(true);
+
+    setTimeout(() => {
+      setShowCheckIcon(false);
+    }, 3000);
+  };
+
   const renderClickableContent = (text) => {
     const phoneRegex = /\b\d{10,}\b/g;
 
@@ -21,7 +42,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
               className="tap-to-call-button"
               onClick={() => (window.location.href = `tel:${word}`)}
             >
-              Tap To call
+              TAP TO CALL
             </p>
           );
         } else {
@@ -56,12 +77,11 @@ const HatzalahGlobalAssist = ({ answer }) => {
   };
   return (
     <>
-      <Box>
-        <Paper elevation={3} className="container">
-          {answer.globalAssist.fullAddress &&
+      <Paper sx={{ p: 2 }}>
+        {answer.globalAssist.fullAddress &&
           answer.globalAssist.latitude &&
           answer.globalAssist.longitude &&
-          answer.globalAssist.phoneNumber ? (
+          answer.globalAssist.phoneNumber && (
             <>
               <Typography
                 component="div"
@@ -70,32 +90,57 @@ const HatzalahGlobalAssist = ({ answer }) => {
               >
                 {answer.globalAssist.message}
               </Typography>
-              <Typography
-                component="div"
-                variant="body1"
-                className="coordinates-text"
-              >
-                <strong>Location: </strong> {answer.globalAssist.fullAddress}
-              </Typography>
-              <Typography component="div" className="coordinates-container">
-                <Typography component="p" className="coordinates-text">
-                  <strong>LAT :</strong> {answer.globalAssist.latitude}
-                </Typography>
-                <Typography component="p" className="coordinates-text">
-                  <strong>LON :</strong> {answer.globalAssist.longitude}
-                </Typography>
-              </Typography>
-              <Typography component="div" variant="body1">
-                {renderClickableContent(answer.globalAssist.phoneNumber)}
-              </Typography>
+              <Table className="table">
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="coordinates-text1">
+                      <strong>Location:</strong>
+                    </TableCell>
+                    <TableCell className="coordinates-text2">
+                      {answer.globalAssist.fullAddress}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="coordinates-text1">
+                      <strong>Latitude:</strong>
+                    </TableCell>
+                    <TableCell className="coordinates-text2">
+                      {answer.globalAssist.latitude}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="coordinates-text1">
+                      <strong>Longitude:</strong>
+                    </TableCell>
+                    <TableCell className="coordinates-text2">
+                      {answer.globalAssist.longitude}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="coordinates-button">
+                      {renderClickableContent(answer.globalAssist.phoneNumber)}
+                    </TableCell>
+                    <TableCell className="copy-icon coordinates-button">
+                      {showCheckIcon ? (
+                        <Tooltip title="Copied">
+                          <IconButton>
+                            <CheckIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <IconButton onClick={handleCopyClick}>
+                          <Tooltip title="Copy">
+                            <FileCopyIcon />
+                          </Tooltip>
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </>
-          ) : (
-            <Typography component="div" variant="h6">
-              {renderClickableContent(answer.globalAssist.message)}
-            </Typography>
           )}
-        </Paper>
-      </Box>
+      </Paper>
     </>
   );
 };
