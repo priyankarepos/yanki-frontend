@@ -1,16 +1,20 @@
-.container-heading{
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  margin-bottom: 10px !important;
+.hatzala-info-box div{
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
-.coordinates-text1, .coordinates-text2 {
+.hatzala-error-box div{
+  font-size: 16px !important;
+}
+.coordinates-label,
+.coordinates-value {
   font-size: 16px !important;
   border-bottom: 1px solid #2f587d !important;
 }
-.tap-to-call-button{
+.tap-to-call-button {
   padding: 7px 15px;
-  background-color: #fff; 
-  color: #012e55; 
+  background-color: #fff;
+  color: #012e55;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -19,19 +23,38 @@
   text-decoration: none;
   width: max-content;
 }
-.phonenumber-link{
+.phonenumber-link {
   color: #007bff;
   cursor: pointer;
 }
-td.coordinates-text1 {
+td.coordinates-label {
   border-right: 1px solid #2f587d;
 }
-.copy-icon{
+.copy-icon {
   text-align: right !important;
 }
-.coordinates-button{
-  border-bottom: 1px solid #2f587d !important; 
+.coordinates-button {
+  border-color: #2f587d !important;
 }
-.table{
-  border: 1px solid #2f587d
+
+.hatzala-table-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.hatzala-table-wrapper:hover::-webkit-scrollbar {
+  display: block;
+  height: 5px;
+}
+.hatzala-table-wrapper:hover {
+  scrollbar-width: 20px;
+}
+
+.hatzala-table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #13416a; /* Set the color of the scrollbar thumb */
+}
+
+.hatzala-table-wrapper {
+  scrollbar-width: 0px;
+  border: 1px solid #2f587d;
+  width: 100%;
 }
