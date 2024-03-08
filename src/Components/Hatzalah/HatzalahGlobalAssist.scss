@@ -22,6 +22,7 @@
   font-size: 16px;
   text-decoration: none;
   width: max-content;
+  line-height: 32px;
 }
 .phonenumber-link {
   color: #007bff;
@@ -43,7 +44,7 @@ td.coordinates-label {
 
 .hatzala-table-wrapper:hover::-webkit-scrollbar {
   display: block;
-  height: 5px;
+  height: 3px;
 }
 .hatzala-table-wrapper:hover {
   scrollbar-width: 20px;
@@ -57,4 +58,8 @@ td.coordinates-label {
   scrollbar-width: 0px;
   border: 1px solid #2f587d;
   width: 100%;
+  transition-property: 20px !important;
+  transition-duration: 5s !important;
+  transition-timing-function: linear !important;
+  transition-delay: 1s !important;
 }
