@@ -56,13 +56,12 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </span>
           );
         }
-        // Add a space after the phone number, except for the last word
         if (index !== array.length - 1) {
           content.push(" ");
         }
       } else {
         const lastChar = word.slice(-1);
-        const punctuation = [".", ",", "-"]; // Add more punctuation characters if needed
+        const punctuation = [".", ",", "-"]; 
         const isLastCharPunctuation = punctuation.includes(lastChar);
 
         content.push(
