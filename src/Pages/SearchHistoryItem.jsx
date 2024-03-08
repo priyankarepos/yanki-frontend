@@ -13,6 +13,7 @@ import YoutubeContent from "../Components/YoutubeContent";
 // import YoutubeContent from "../Components/YoutubeContent";
 import IsItKosher from "../Components/IsItKosher";
 import EnterprisePdfAnswer from "../Components/EnterprisePdfAnswer";
+import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 
 const SearchHistoryItem = ({ query, response }) => {
 
@@ -21,7 +22,7 @@ const SearchHistoryItem = ({ query, response }) => {
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
-
+  const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
@@ -55,7 +56,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && !response?.contentResponse && response?.message
+      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess
         && (
           <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
             <div className="chat-bubble assistant-bubble">
@@ -101,6 +102,14 @@ const SearchHistoryItem = ({ query, response }) => {
           <div className="chat-bubble assistant-bubble">
             <IsItKosher answer={response} />
           </div>
+        </Paper>
+      )}
+
+      {isHatzalah && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <div>
+          <HatzalahGlobalAssist answer={response} />
+        </div>
         </Paper>
       )}
 

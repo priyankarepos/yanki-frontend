@@ -52,10 +52,10 @@ const DemoEnterpriseChat = ({ answer }) => {
     return (
         <Box className="demo-enterprise-wrapper">
             <Paper elevation={3}>
-                <div style={{ padding: '0px' }}>
-                    <List style={{ display: 'flex' }}>
-                        <InsertCommentIcon fontSize="small" style={{ marginRight: '8px', color: "#fff", marginTop: "5px", }} />
-                        <Typography style={{ fontSize: "16px", color: "#fff" }}>
+                <div>
+                    <List className='demo-enterprise-List'>
+                        <InsertCommentIcon className='demo-enterprise-InsertCommentIcon' fontSize="small" />
+                        <Typography className='demo-enterprise-Typography'>
                             {answer.message}
                         </Typography>
                     </List>

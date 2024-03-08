@@ -243,6 +243,7 @@ const NewHomePageMui = () => {
                                     isExclusiveContent: gptResponse.isExclusiveContent,
                                     isItKosher: gptResponse.isItKosher,
                                     enterprisePdfNames: gptResponse.enterprisePdfNames,
+                                    globalAssist: gptResponse.globalAssist
                                 }
                             }
                         };

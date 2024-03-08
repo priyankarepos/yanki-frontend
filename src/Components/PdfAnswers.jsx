@@ -4,7 +4,7 @@ import { pdfjs } from 'react-pdf';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import '@react-pdf-viewer/core/lib/styles/index.css'; // Import styles for PDF viewer
+import '@react-pdf-viewer/core/lib/styles/index.css';
 import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
 import { Button } from '@mui/base';
 import "./AnswerStyle.scss"
@@ -16,8 +16,7 @@ const PdfAnswers = ({ answer }) => {
     const [visiblePdfCount, setVisiblePdfCount] = useState(2);
 
     const pdfNames = answer?.pdfNames || [];
-    console.log("pdfNames", pdfNames);
-    const s3BaseUrl = "https://jewishprayer-text-pdf.s3.amazonaws.com/";
+    const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
 
     const openPdfModal = (pdfName) => {
         const cleanPdfName = pdfName.replace(/%27/g, '');
@@ -45,13 +44,13 @@ const PdfAnswers = ({ answer }) => {
                     justifyContent: 'center',
                 }}
             >
-                <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
+                <div className="pdf-modal">
                     <IconButton
-                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd", }}
+                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px',}}
                         onClick={closePdfModal}
                         aria-label="close"
                     >
-                        <CloseIcon style={{ color: "#fff" }} />
+                        <CloseIcon />
                     </IconButton>
                     {pdfLoadError ? (
                         <div>Error loading PDF. Please try again.</div>
@@ -93,7 +92,7 @@ const PdfAnswers = ({ answer }) => {
                                 src={`https://jewishprayer-text-pdf.s3.amazonaws.com/${pdfName.replace('.pdf', '.jpg')}`}
                                 alt={`${pdfName.replace('.pdf', '')} thumbnail`}
                             />
-                            <Typography style={{ fontSize: "16px", textAlign: "center", color: "#fff", marginTop: "10px", }}> {pdfName}</Typography>
+                            <Typography className='enterprise-pdf-name' sx={{ marginTop: "10px", }}> {pdfName}</Typography>
                         </div>
                     </Grid>
                 ))}

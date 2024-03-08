@@ -239,8 +239,6 @@ const TorahanytimeAnswer = ({ answer }) => {
                                     Speaker: {item._source.speaker_name}
                                 </Typography>
                             </div>
-
-
                         </StyledCarouselItem>
                     ))}
                 </Carousel>

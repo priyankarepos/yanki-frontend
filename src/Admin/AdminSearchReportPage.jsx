@@ -7,9 +7,9 @@ import AdminDashboard from './AdminDashboard';
 import SearchQueryReport from './SearchQueryReport';
 import { Outlet } from 'react-router-dom';
 import {
-    Pagination,
-    CircularProgress,
-  } from '@mui/material';
+  Pagination,
+  CircularProgress,
+} from '@mui/material';
 
 
 const styles = {
@@ -83,22 +83,22 @@ const AdminSearchRepostPage = () => {
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        const response = await axios.get(
-            `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-user-report`,
-            {
-            params: {
-                startDate: startDate,
-                endDate: endDate,
-                pageNumber: pageNumber,
-                pageSize: selectedPageSize,
-                ascending: ascending,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-                TimeZone: timezone,
-            },
-            }
-        );
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-user-report`,
+        {
+          params: {
+            startDate: startDate,
+            endDate: endDate,
+            pageNumber: pageNumber,
+            pageSize: selectedPageSize,
+            ascending: ascending,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            TimeZone: timezone,
+          },
+        }
+      );
 
       if (response.status === 200) {
         setIsSubmitting(false);
@@ -151,117 +151,117 @@ const AdminSearchRepostPage = () => {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   return (
-    <Box style={{display:"flex"}}>
-        <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-        <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
+    <Box style={{ display: "flex" }}>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
+      <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-        <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
-        <Paper sx={{ p: 2 }}>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <TextField
-                id="startDate"
-                label="Start Date"
-                type="date"
-                value={startDate}
-                onChange={(e) => handleStartDateChange(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <TextField
-                id="endDate"
-                label="End Date"
-                type="date"
-                value={endDate}
-                onChange={(e) => handleEndDateChange(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={2}>
-              <TextField
-                select
-                label="Sort Order"
-                value={ascending ? 'asc' : 'desc'}
-                onChange={handleSortingChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                SelectProps={{
-                  native: true,
-                }}
-                fullWidth
-              >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={2}>
-              <TextField
-                select
-                label="Queries per Page"
-                value={selectedPageSize}
-                onChange={handlePageSizeChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                SelectProps={{
-                  native: true,
-                }}
-                fullWidth
-                disabled={
-                  (queryAnswer?.totalCount <= 10 && selectedPageSize > queryAnswer?.totalCount) ||
-                  (pageNumber * selectedPageSize >= queryAnswer?.totalCount)
-                }
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={30}>30</option>
-                <option value={50}>50</option>
-              </TextField>
+          <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
+          <Paper sx={{ p: 2 }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <TextField
+                  id="startDate"
+                  label="Start Date"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => handleStartDateChange(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={3}>
+                <TextField
+                  id="endDate"
+                  label="End Date"
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => handleEndDateChange(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
+                <TextField
+                  select
+                  label="Sort Order"
+                  value={ascending ? 'asc' : 'desc'}
+                  onChange={handleSortingChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fullWidth
+                >
+                  <option value="asc">Ascending</option>
+                  <option value="desc">Descending</option>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
+                <TextField
+                  select
+                  label="Queries per Page"
+                  value={selectedPageSize}
+                  onChange={handlePageSizeChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fullWidth
+                  disabled={
+                    (queryAnswer?.totalCount <= 10 && selectedPageSize > queryAnswer?.totalCount) ||
+                    (pageNumber * selectedPageSize >= queryAnswer?.totalCount)
+                  }
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </TextField>
 
 
+              </Grid>
+              <Grid item xs={12} sm={12} md={2} lg={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={fetchData}
+                  disabled={isSubmitting}
+                  style={{ width: '100%', maxWidth: '120px' }}
+                >
+                  {isSubmitting ? <CircularProgress size={24} /> : 'Submit'}
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} md={2} lg={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={fetchData}
-                disabled={isSubmitting}
-                style={{ width: '100%', maxWidth: '120px' }}
-              >
-                {isSubmitting ? <CircularProgress size={24} /> : 'Submit'}
-              </Button>
-            </Grid>
+          </Paper>
+          {isError && (
+            <Typography variant="body1" color="error">
+              {errorMsg}
+            </Typography>
+          )}
+          <Grid item xs={12}>
+            <SearchQueryReport queryAnswer={queryAnswer} />
           </Grid>
-        </Paper>
-        {isError && (
-          <Typography variant="body1" color="error">
-            {errorMsg}
-          </Typography>
-        )}
-        <Grid item xs={12}>
-          <SearchQueryReport queryAnswer={queryAnswer} />
-        </Grid>
-        <Outlet />
-        {queryAnswer && queryAnswer.totalCount > selectedPageSize && (
-          <div style={styles.pagination}>
-            <Pagination
-              count={Math.ceil(queryAnswer.totalCount / selectedPageSize)} // Use selectedPageSize
-              page={pageNumber}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </div>
-        )}
-      </Box>
+          <Outlet />
+          {queryAnswer && queryAnswer.totalCount > selectedPageSize && (
+            <div style={styles.pagination}>
+              <Pagination
+                count={Math.ceil(queryAnswer.totalCount / selectedPageSize)} // Use selectedPageSize
+                page={pageNumber}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </div>
+          )}
         </Box>
+      </Box>
     </Box>
   )
 }

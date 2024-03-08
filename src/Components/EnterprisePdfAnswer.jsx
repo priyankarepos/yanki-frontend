@@ -11,189 +11,170 @@ import "./AnswerStyle.scss";
 import Tooltip from '@mui/material/Tooltip';
 
 const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
-    const [pdfLoadError, setPdfLoadError] = useState(false);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
+  const closeModal = () => {
+    setPdfLoadError(false);
+    onClose();
+  };
 
-    const closeModal = () => {
-        setPdfLoadError(false);
-        onClose();
-    };
-
-    return (
-        <Modal
-            open={isOpen}
-            onClose={closeModal}
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
+  return (
+    <Modal
+      open={isOpen}
+      onClose={closeModal}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <div className="pdf-modal">
+        <IconButton
+          onClick={closeModal}
+          aria-label="close"
         >
-            <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
-                <IconButton
-                    style={{ position: 'absolute', top: '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd" }}
-                    onClick={closeModal}
-                    aria-label="close"
-                >
-                    <CloseIcon style={{ color: "#fff" }} />
-                </IconButton>
-                {!pdfLoadError ? (
-                    <>
-                        {isPdf ? (
-                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                                <Viewer fileUrl={pdfUrl} />
-                            </Worker>
-                        ) : (
-                            <img
-                                src={pdfUrl}
-                                alt="PDF Document"
-                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                onError={() => setPdfLoadError(true)}
-                            />
-                        )}
-                    </>
-                ) : (
-                    <div>Error loading content. Please try again.</div>
-                )}
-            </div>
-        </Modal>
-    );
+          <CloseIcon />
+        </IconButton>
+        {!pdfLoadError ? (
+          <>
+            {isPdf ? (
+              <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                <Viewer fileUrl={pdfUrl} />
+              </Worker>
+            ) : (
+              <img
+              className='enterprise-pdf-img'
+                src={pdfUrl}
+                alt="PDF Document"
+                onError={() => setPdfLoadError(true)}
+              />
+            )}
+          </>
+        ) : (
+          <div>Error loading content. Please try again.</div>
+        )}
+      </div>
+    </Modal>
+  );
 };
 
 const EnterprisePdfAnswer = ({ answer }) => {
-    const [selectedPdf, setSelectedPdf] = useState(null);
-    const [showPdfGrid, setShowPdfGrid] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [showPdfGrid, setShowPdfGrid] = useState(false);
 
-    const getShortPdfName = (pdfName) => pdfName ? pdfName.split('/').pop() : '';
+  const getShortPdfName = (pdfName) => pdfName ? pdfName.split('/').pop() : '';
 
-    const handleSeePdfClick = () => {
-        setShowPdfGrid(!showPdfGrid);
-        setSelectedPdf(null);
-    };
+  const handleSeePdfClick = () => {
+    setShowPdfGrid(!showPdfGrid);
+    setSelectedPdf(null);
+  };
 
+  const handleItemClick = (pdfUrl) => {
+    setSelectedPdf(pdfUrl);
+  };
 
-    const handleItemClick = (pdfUrl) => {
-        setSelectedPdf(pdfUrl);
-    };
+  const closePdfModal = () => {
+    setSelectedPdf(null);
+  };
 
-    const closePdfModal = () => {
-        setSelectedPdf(null);
-    };
+  const renderClickableContent = (text) => {
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+    const phoneRegex = /\b\d{10,}\b/g;
+    const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
 
-    const renderClickableContent = (text) => {
-      const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-      const phoneRegex = /\b\d{10,}\b/g;
-      const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
-    
-      let content = [];
-    
-      // Remove dashes at the beginning of lines without affecting clickable links
-      const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
-    
-      cleanedText.split(/\s+/).forEach((word, index, array) => {
-        if (word.match(emailRegex)) {
-          content.push(
-            <span
-              key={index}
-              style={{ color: "#007bff", cursor: "pointer" }}
-              onClick={() => window.location.href = `mailto:${word}`}
-            >
-              {word}
-            </span>
-          );
-          // Add a space after the email link, except for the last word
-          if (index !== array.length - 1) {
-            content.push(" ");
-          }
-        } else if (word.match(phoneRegex)) {
-          content.push(
-            <span
-              key={index}
-              style={{ color: "#007bff", cursor: "pointer" }}
-              onClick={() => window.location.href = `tel:${word}`}
-            >
-              {word}
-            </span>
-          );
-          // Add a space after the phone number, except for the last word
-          if (index !== array.length - 1) {
-            content.push(" ");
-          }
-        } else if (word.match(urlRegex)) {
-          content.push(
-            <span
-              key={index}
-              style={{ color: "#007bff", cursor: "pointer" }}
-              onClick={() => window.open(word, '_blank')}
-            >
-              {word}
-            </span>
-          );
-          // Add a space after the URL, except for the last word
-          if (index !== array.length - 1) {
-            content.push(" ");
-          }
-        } else {
-          const lastChar = word.slice(-1);
-          const punctuation = ['.', ',', '-']; // Add more punctuation characters if needed
-          const isLastCharPunctuation = punctuation.includes(lastChar);
-    
-          content.push(
-            <span key={index}>
-              {isLastCharPunctuation ? word.slice(0, -1) : word}{" "}
-            </span>
-          );
+    let content = [];
+
+    const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
+
+    cleanedText.split(/\s+/).forEach((word, index, array) => {
+      if (word.match(emailRegex)) {
+        content.push(
+          <span
+            key={index}
+            className='enterprise-pdf-link'
+            onClick={() => window.location.href = `mailto:${word}`}
+          >
+            {word}
+          </span>
+        );
+        if (index !== array.length - 1) {
+          content.push(" ");
         }
-      });
-    
-      return content;
-    };
-    
-    
+      } else if (word.match(phoneRegex)) {
+        content.push(
+          <span
+            key={index}
+            className='enterprise-pdf-link'
+            onClick={() => window.location.href = `tel:${word}`}
+          >
+            {word}
+          </span>
+        );
+        if (index !== array.length - 1) {
+          content.push(" ");
+        }
+      } else if (word.match(urlRegex)) {
+        content.push(
+          <span
+            key={index}
+            className='enterprise-pdf-link'
+            onClick={() => window.open(word, '_blank')}
+          >
+            {word}
+          </span>
+        );
+        if (index !== array.length - 1) {
+          content.push(" ");
+        }
+      } else {
+        const lastChar = word.slice(-1);
+        const punctuation = ['.', ',', '-'];
+        const isLastCharPunctuation = punctuation.includes(lastChar);
+        content.push(
+          <span key={index}>
+            {isLastCharPunctuation ? word.slice(0, -1) : word}{" "}
+          </span>
+        );
+      }
+    });
 
-    return (
-        <Paper sx={{
-            p: 2,
-        }}>
-            <Box>
-                <Typography variant="h6" component="div" style={{ fontSize: "16px", marginBottom: "12px", }}>
-                {renderClickableContent(answer?.contentResponse)}
-                </Typography>
-            </Box>
-            <Typography variant="h6" component="div" className="enterprise-pdf-icon" onClick={handleSeePdfClick}>
-                <Tooltip title="Enterprise document" arrow>
-                    <span className='cursor-pointer flex'><PictureAsPdfIcon /></span>
+    return content;
+  };
+
+  return (
+    <Paper sx={{
+      p: 2,
+    }}>
+      <Box>
+        <Typography className='enterprise-pdf-text' variant="h6" component="div">
+          {renderClickableContent(answer?.contentResponse)}
+        </Typography>
+      </Box>
+      <Typography variant="h6" component="div" className="enterprise-pdf-icon" onClick={handleSeePdfClick}>
+        <Tooltip title="Enterprise document" arrow>
+          <span className='cursor-pointer flex'><PictureAsPdfIcon /></span>
+        </Tooltip>
+      </Typography>
+      {showPdfGrid && (
+        <Grid container spacing={2} className='enterprise-pdf-btn'>
+          {answer?.enterprisePdfNames.map((pdfName, index) => (
+            <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
+              <div
+              className='enterprise-pdf-thumbnail'
+                onClick={() => handleItemClick(pdfName)}
+              >
+                <Tooltip title={pdfName} arrow>
+                  <Typography className='enterprise-pdf-name'>
+                    {getShortPdfName(pdfName)}
+                  </Typography>
                 </Tooltip>
-            </Typography>
-            {showPdfGrid && (
-                <Grid container spacing={2} className='enterprise-pdf-btn'>
-                    {answer?.enterprisePdfNames.map((pdfName, index) => (
-                        <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
-                            <div
-                                style={{
-                                    backgroundColor: "rgb(47, 88, 125)",
-                                    cursor: 'pointer',
-                                    padding: '10px',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => handleItemClick(pdfName)}
-                            >
-                                <Tooltip title={pdfName} arrow>
-                                    <Typography style={{ fontSize: "16px", textAlign: "center", color: "#fff", }}>
-                                        {getShortPdfName(pdfName)}
-                                    </Typography>
-                                </Tooltip>
-                            </div>
-                        </Grid>
-                    ))}
-                </Grid>
-            )}
-            <PdfModal isOpen={Boolean(selectedPdf)} onClose={closePdfModal} pdfUrl={selectedPdf} isPdf={selectedPdf?.toLowerCase().endsWith('.pdf')} />
-        </Paper>
-    );
+              </div>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+      <PdfModal isOpen={Boolean(selectedPdf)} onClose={closePdfModal} pdfUrl={selectedPdf} isPdf={selectedPdf?.toLowerCase().endsWith('.pdf')} />
+    </Paper>
+  );
 };
 
 export default EnterprisePdfAnswer;

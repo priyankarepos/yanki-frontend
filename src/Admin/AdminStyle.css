@@ -1,42 +1,163 @@
-.active .highlightStyle{
-    text-decoration: none;
-    background-color: rgba(255, 255, 255, 0.08);
+.active .highlightStyle {
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 
 /* width */
 ::-webkit-scrollbar {
-    width: 0px;
-  }
- 
-  .enterprise-request-table::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-
-  .react-tagsinput {
-    background-color: transparent !important;
-    border: none !important;
-    padding-left: 0px !important;
+  width: 0px;
 }
 
+.enterprise-request-table::-webkit-scrollbar {
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.react-tagsinput {
+  background-color: transparent !important;
+  border: none !important;
+  padding-left: 0px !important;
+}
+
+span.react-tagsinput-tags,
 .react-tagsinput-tag {
   background-color: #6fa8dd !important;
-  border-radius: 5px!important;
-  border: 1px solid #a9cae9!important;
-  color: #fdfdfd!important;
+  border-radius: 5px !important;
+  border: 1px solid #a9cae9 !important;
+  color: #fdfdfd !important;
+}
+
+.keyword-update-box p {
+  margin-bottom: 8px;
+}
+
+.pdf-modal {
+  width: 90vw;
+  height: 88vh;
+  position: relative;
+}
+
+.pdf-modal .MuiIconButton-root {
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  z-index: 1;
+  background-color: #6fa8dd;
+}
+
+.pdf-modal .MuiIconButton-root:hover {
+  background-color: #5c8dbb;
+}
+
+.form-input input {
+  background-color: #eaf5ff;
+  border: 1px solid #6fa8dd;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  color: #8bbae5;
+  width: 100%;
+  min-height: 15%;
+  padding: 15px;
+  font-size: 16px;
+}
+
+.error-message {
+  color: red !important;
+  font-size: 12px !important;
+  margin: 0 !important;
+}
+
+.admin-dashbard-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 270px);
+}
+
+.admin-dashboard-navlink,
+.color-white {
+  text-decoration: none;
+  color: white;
+}
+
+.no-data-found {
+  margin-top: 20px;
+  color: #6fa8dd;
+  text-align: center;
+}
+
+.margin-top-20 {
+  margin-top: 20px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.table-heading {
+  padding-bottom: 16px;
+  color: #6fa8dd;
+}
+
+.table-devider {
+  margin: 20px 0;
+  background-color: #8bbae5;
+}
+
+.required-icon {
+  color: red;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#enterpriseDropdown {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-height: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  color: #5fa3dd;
+  height: 50px;
+  width: 100%;
+}
+
+.TextareaAutosize, .TagsInput {
+  background-color: #eaf5ff;
+  border: 1px solid #6fa8dd;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  color: #8bbae5;
+  width: 100%;
+  min-height: 15%;
+  padding: 15px;
+  outline: none;
+  font-size: 16px;
+  height: 60px;
+}
+
+.button-style{
+  background-color: #13538b;
+  color: lightblue;
+  width: 150px;
+}
+
+.isItKosher-wrapper{
+  background-color: #0e3557;
+  padding: 10px;
 }
