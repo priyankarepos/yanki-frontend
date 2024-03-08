@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Paper, Typography } from "@mui/material";
+import { Paper, TableContainer, Typography } from "@mui/material";
 import "./HatzalahGlobalAssist.scss";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
@@ -79,18 +79,19 @@ const HatzalahGlobalAssist = ({ answer }) => {
     <>
       <Paper sx={{ p: 2 }}>
         {answer.globalAssist.fullAddress &&
-          answer.globalAssist.latitude &&
-          answer.globalAssist.longitude &&
-          answer.globalAssist.phoneNumber && (
-            <>
-              <Typography
-                component="div"
-                variant="h6"
-                className="container-heading"
-              >
-                {answer.globalAssist.message}
-              </Typography>
-              <Table className="table">
+        answer.globalAssist.latitude &&
+        answer.globalAssist.longitude &&
+        answer.globalAssist.phoneNumber ? (
+          <>
+            <Typography
+              component="div"
+              variant="h6"
+              className="container-heading"
+            >
+              {answer.globalAssist.message}
+            </Typography>
+            <TableContainer component={Paper} className="main">
+              <Table className="table-responsive table">
                 <TableBody>
                   <TableRow>
                     <TableCell className="coordinates-text1">
@@ -138,8 +139,17 @@ const HatzalahGlobalAssist = ({ answer }) => {
                   </TableRow>
                 </TableBody>
               </Table>
-            </>
-          )}
+            </TableContainer>
+          </>
+        ) : (
+          <Typography
+            component="div"
+            variant="h6"
+            className="container-error-message"
+          >
+            {renderClickableContent(answer.globalAssist.message)}
+          </Typography>
+        )}
       </Paper>
     </>
   );

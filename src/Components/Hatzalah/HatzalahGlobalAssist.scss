@@ -1,16 +1,21 @@
-.container-heading{
+.container-heading {
   font-size: 16px !important;
   font-weight: 600 !important;
   margin-bottom: 10px !important;
 }
-.coordinates-text1, .coordinates-text2 {
+.container-error-message {
+  font-size: 16px !important;
+}
+.coordinates-text1,
+.coordinates-text2 {
   font-size: 16px !important;
   border-bottom: 1px solid #2f587d !important;
 }
-.tap-to-call-button{
+
+.tap-to-call-button {
   padding: 7px 15px;
-  background-color: #fff; 
-  color: #012e55; 
+  background-color: #fff;
+  color: #012e55;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -19,19 +24,28 @@
   text-decoration: none;
   width: max-content;
 }
-.phonenumber-link{
+.phonenumber-link {
   color: #007bff;
   cursor: pointer;
 }
 td.coordinates-text1 {
   border-right: 1px solid #2f587d;
 }
-.copy-icon{
+.copy-icon {
   text-align: right !important;
 }
-.coordinates-button{
-  border-bottom: 1px solid #2f587d !important; 
+.coordinates-button {
+  border-bottom: 1px solid #2f587d !important;
 }
-.table{
-  border: 1px solid #2f587d
+.table {
+  border: 1px solid #2f587d;
+  width: 100%;
+}
+
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+.main {
+  scrollbar-width: none;
 }
