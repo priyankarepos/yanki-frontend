@@ -39,27 +39,28 @@ td.coordinates-label {
 }
 
 .hatzala-table-wrapper::-webkit-scrollbar {
-  display: none;
+  opacity: 0;
+  height: 0px;
+  transition: 0px 3s linear;
 }
 
 .hatzala-table-wrapper:hover::-webkit-scrollbar {
-  display: block;
-  height: 3px;
+  opacity: 0.5;
+  height: 1px;
+  transition: 2px 2px 3s ease-in-out;
+
 }
 .hatzala-table-wrapper:hover {
   scrollbar-width: 20px;
 }
 
 .hatzala-table-wrapper::-webkit-scrollbar-thumb {
-  background-color: #13416a; /* Set the color of the scrollbar thumb */
+  background-color: #13416a; 
 }
 
 .hatzala-table-wrapper {
   scrollbar-width: 0px;
   border: 1px solid #2f587d;
   width: 100%;
-  transition-property: 20px !important;
-  transition-duration: 5s !important;
-  transition-timing-function: linear !important;
-  transition-delay: 1s !important;
+  transition: 2px 2px 3s ease-in-out !important;
 }
