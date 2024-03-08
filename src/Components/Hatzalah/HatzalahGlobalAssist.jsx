@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Paper, TableContainer, Typography } from "@mui/material";
+import { Box, Paper, TableContainer, Typography } from "@mui/material";
 import "./HatzalahGlobalAssist.scss";
 import { Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
@@ -83,37 +83,35 @@ const HatzalahGlobalAssist = ({ answer }) => {
         answer.globalAssist.longitude &&
         answer.globalAssist.phoneNumber ? (
           <>
-            <Typography
-              component="div"
-              variant="h6"
-              className="container-heading"
-            >
-              {answer.globalAssist.message}
-            </Typography>
-            <TableContainer component={Paper} className="main">
-              <Table className="table-responsive table">
+            <Box className="hatzala-info-box">
+              <Typography component="div" variant="h6">
+                {answer.globalAssist.message}
+              </Typography>
+            </Box>
+            <TableContainer component={Paper} className="hatzala-table-wrapper">
+              <Table className="table-responsive">
                 <TableBody>
                   <TableRow>
-                    <TableCell className="coordinates-text1">
+                    <TableCell className="coordinates-label">
                       <strong>Location:</strong>
                     </TableCell>
-                    <TableCell className="coordinates-text2">
+                    <TableCell className="coordinates-value">
                       {answer.globalAssist.fullAddress}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="coordinates-text1">
+                    <TableCell className="coordinates-label">
                       <strong>Latitude:</strong>
                     </TableCell>
-                    <TableCell className="coordinates-text2">
+                    <TableCell className="coordinates-value">
                       {answer.globalAssist.latitude}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell className="coordinates-text1">
+                    <TableCell className="coordinates-label">
                       <strong>Longitude:</strong>
                     </TableCell>
-                    <TableCell className="coordinates-text2">
+                    <TableCell className="coordinates-value">
                       {answer.globalAssist.longitude}
                     </TableCell>
                   </TableRow>
@@ -142,13 +140,11 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </TableContainer>
           </>
         ) : (
-          <Typography
-            component="div"
-            variant="h6"
-            className="container-error-message"
-          >
-            {renderClickableContent(answer.globalAssist.message)}
-          </Typography>
+          <Box className="hatzala-error-box">
+            <Typography component="div" variant="h6">
+              {renderClickableContent(answer.globalAssist.message)}
+            </Typography>
+          </Box>
         )}
       </Paper>
     </>
