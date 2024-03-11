@@ -67,3 +67,12 @@ padding: 12px;
         }
     }
 }
+
+.event-model-close-btn {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    button {
+        background: #6fa8dd;
+    }
+}

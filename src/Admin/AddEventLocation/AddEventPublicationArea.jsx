@@ -72,108 +72,109 @@ const styles = {
 
 const AdminAddEventPublicationArea = () => {
   const { drawerOpen } = useContext(Context);
-  const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+  const [publicationArea, setPublicationArea] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
-  const [editCategoryId, setEditCategoryId] = useState('');
+  const [publicationAreaName, setPublicationAreaName] = useState('');
+  const [editPublicationAreaId, setEditPublicationAreaId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedAreaId, setSelectedAreaId] = useState(null);
   const [confirmationText, setConfirmationText] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEnterpriseCategories = async () => {
+    const fetchEventPublicationArea = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`);
-
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+  
         if (response.status === 200) {
-          setEnterpriseCategories(response.data);
+          setPublicationArea(response.data);
         } else {
-          console.error('Failed to fetch enterprise categories');
+          console.error('Failed to fetch publication area');
         }
       } catch (error) {
-        console.error('Error fetching enterprise categories:', error);
-        setSnackbarMessage('Error fetching enterprise categories');
+        console.error('Error fetching publication area:', error);
+        setSnackbarMessage('Error fetching publication area');
         setSnackbarOpen(true);
       }
     };
-    fetchEnterpriseCategories();
+  
+    fetchEventPublicationArea();
   }, [isModalOpen]);
 
   const handleEdit = (id) => {
-    const category = enterpriseCategories.find((category) => category.id === id);
-    setCategoryName(category.name);
-    setEditCategoryId(id);
+    const area = publicationArea.find((publicationArea) => publicationArea.id === id);
+    setPublicationAreaName(area.eventPublicationAreaName);
+    setEditPublicationAreaId(id);
     setIsModalOpen(true);
   };
 
-  const handleDeleteCategory = (id) => {
+  const handleDeleteArea = (id) => {
     setConfirmDialogOpen(true);
-    setSelectedCategoryId(id);
-    setConfirmationText(`Are you sure you want to delete this category?`);
+    setSelectedAreaId(id);
+    setConfirmationText(`Are you sure you want to delete this publication area?`);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
+        `${process.env.REACT_APP_API_HOST}/api/event-publication-area/delete-event-publicationArea/${selectedAreaId}`
       );
-
+  
       if (response.status === 200) {
-        const updatedCategories = enterpriseCategories.filter((category) => category.id !== selectedCategoryId);
-        setEnterpriseCategories(updatedCategories);
+        const updatedAreas = publicationArea.filter((area) => area.id !== selectedAreaId);
+        setPublicationArea(updatedAreas);
         setConfirmDialogOpen(false);
-        setSnackbarMessage('Category deleted successfully');
+        setSnackbarMessage('Publication Area deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete enterprise category');
-        setSnackbarMessage('Failed to delete enterprise category');
+        console.error('Failed to delete publication area');
+        setSnackbarMessage('Failed to delete publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error deleting enterprise category');
+      setSnackbarMessage('Error deleting publication area');
       setSnackbarOpen(true);
     }
   };
 
-  const handleAddCategory = () => {
-    setCategoryName('');
-    setEditCategoryId(null);
+  const handleAddPublicationArea = () => {
+    setPublicationAreaName('');
+    setEditPublicationAreaId(null);
     setIsModalOpen(true);
   };
 
-  const handleSaveCategory = async () => {
+  const handleSaveArea = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
-        setSnackbarMessage('This category name already exists!');
+      if (publicationArea.some(area => area.eventPublicationAreaName.toLowerCase() === publicationAreaName.toLowerCase())) {
+        setSnackbarMessage('This publication area already exists!');
         setSnackbarOpen(true);
         return;
       }
-
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
-      const response = await axios.post(apiUrl, { name: categoryName });
-
+  
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/add-event-publicationArea`;
+  
+      const response = await axios.post(apiUrl, { eventPublicationAreaName: publicationAreaName });
+  
       if (response.status === 200) {
-        const newCategory = response.data;
-        setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
+        const newPublicationArea = response.data;
+        setPublicationArea((prevArea) => [...prevArea, newPublicationArea]);
         setIsModalOpen(false);
-        setCategoryName('');
-        setEditCategoryId('');
-        setSnackbarMessage('Category saved successfully');
+        setPublicationAreaName('');
+        setEditPublicationAreaId('');
+        setSnackbarMessage('Publication area saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save enterprise category');
-        setSnackbarMessage('Failed to save enterprise category');
+        console.error('Failed to save publication area');
+        setSnackbarMessage('Failed to save publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error saving enterprise category');
+      setSnackbarMessage('Error saving publication area');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -183,32 +184,35 @@ const AdminAddEventPublicationArea = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name === categoryName && category.id !== editCategoryId)) {
-        setSnackbarMessage('This category name already exists!');
+      if (publicationArea.some(area => area.eventPublicationAreaName === publicationAreaName && area.id !== editPublicationAreaId)) {
+        setSnackbarMessage('This publication area already exists!');
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-      const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
+  
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/update-event-publicationArea`;
+      
+      const response = await axios.put(apiUrl, { id: editPublicationAreaId, eventPublicationAreaName: publicationAreaName });
+  
       if (response.status === 200) {
-        const updatedCategory = response.data;
-        setEnterpriseCategories((prevCategories) => {
-          const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
+        const updatedArea = response.data;
+        setPublicationArea((prevArea) => {
+          const updatedAreas = prevArea.map((area) => (area.id === editPublicationAreaId ? updatedArea : area));
           setIsModalOpen(false);
-          setCategoryName('');
-          setEditCategoryId(null);
-          return updatedCategories;
+          setPublicationAreaName('');
+          setEditPublicationAreaId(null);
+          return updatedAreas;
         });
-        setSnackbarMessage('Category updated successfully');
+        setSnackbarMessage('Publication area updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update enterprise category');
-        setSnackbarMessage('Failed to update enterprise category');
+        console.error('Failed to update publication area');
+        setSnackbarMessage('Failed to update publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error updating enterprise category');
+      setSnackbarMessage('Error updating publication area');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -225,11 +229,11 @@ const AdminAddEventPublicationArea = () => {
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Publication Area
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddCategory}>
+            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddPublicationArea}>
               <AddIcon /> Add
             </IconButton>
           </Box>
-          {enterpriseCategories.length > 0 ? (
+          {publicationArea.length > 0 ? (
             <TableContainer component={Paper} style={styles.tableContainer}>
               <Table style={styles.table}>
                 <TableHead>
@@ -239,14 +243,14 @@ const AdminAddEventPublicationArea = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enterpriseCategories.map((row) => (
+                  {publicationArea.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell style={styles.cell}>{row.name}</TableCell>
+                      <TableCell style={styles.cell}>{row.eventPublicationAreaName}</TableCell>
                       <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                         <IconButton onClick={() => handleEdit(row.id)}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleDeleteCategory(row.id)}>
+                        <IconButton onClick={() => handleDeleteArea(row.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
@@ -270,20 +274,20 @@ const AdminAddEventPublicationArea = () => {
       >
         <Box style={styles.modalContent}>
           <Typography variant="h5" sx={styles.modalTitle}>
-            {editCategoryId !== null ? "Edit Event Publication Area" : "Add Event Publication Area"}
+            {editPublicationAreaId !== null ? "Edit Event Publication Area" : "Add Event Publication Area"}
           </Typography>
           <form
             style={styles.modalForm}
             onSubmit={(e) => {
               e.preventDefault();
-              editCategoryId !== null ? handleUpdate() : handleSaveCategory();
+              editPublicationAreaId !== null ? handleUpdate() : handleSaveArea();
             }}
           >
             <InputLabel style={styles.label}>Publication Area</InputLabel>
             <TextField
               variant="outlined"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
+              value={publicationAreaName}
+              onChange={(e) => setPublicationAreaName(e.target.value)}
               placeholder='Enter Publication Area'
             />
             <Button
@@ -293,7 +297,7 @@ const AdminAddEventPublicationArea = () => {
               style={styles.modalButton}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : (editCategoryId !== null ? "Save Changes" : "Save & Add")}
+              {loading ? <CircularProgress size={24} /> : (editPublicationAreaId !== null ? "Save Changes" : "Save & Add")}
             </Button>
           </form>
         </Box>

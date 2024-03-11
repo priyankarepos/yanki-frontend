@@ -73,108 +73,109 @@ const styles = {
 
 const AdminAddEventLocation = () => {
   const { drawerOpen } = useContext(Context);
-  const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+  const [eventLocations, setEventLocations] = useState([]);
+  console.log("eventLocations", eventLocations);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
-  const [editCategoryId, setEditCategoryId] = useState('');
+  const [locationName, setLocationName] = useState('');
+  const [editLocationId, setEditLocationId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [confirmationText, setConfirmationText] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEnterpriseCategories = async () => {
+    const fetchEventLocations = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`);
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
 
         if (response.status === 200) {
-          setEnterpriseCategories(response.data);
+          setEventLocations(response.data);
         } else {
-          console.error('Failed to fetch enterprise categories');
+          console.error('Failed to fetch event location');
+          setSnackbarMessage('Failed to fetch event location');
+          setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error('Error fetching enterprise categories:', error);
-        setSnackbarMessage('Error fetching enterprise categories');
+        console.error('Error fetching event location:', error);
+        setSnackbarMessage('Error fetching event location');
         setSnackbarOpen(true);
       }
     };
-    fetchEnterpriseCategories();
+
+    fetchEventLocations();
   }, [isModalOpen]);
 
   const handleEdit = (id) => {
-    const category = enterpriseCategories.find((category) => category.id === id);
-    setCategoryName(category.name);
-    setEditCategoryId(id);
+    const location = eventLocations.find((location) => location.id === id);
+    setLocationName(location.eventLocationName);
+    setEditLocationId(id);
     setIsModalOpen(true);
   };
 
-  const handleDeleteCategory = (id) => {
+  const handleDeleteLocation = (id) => {
     setConfirmDialogOpen(true);
-    setSelectedCategoryId(id);
-    setConfirmationText(`Are you sure you want to delete this category?`);
+    setSelectedLocationId(id);
+    setConfirmationText(`Are you sure you want to delete this location?`);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
+        `${process.env.REACT_APP_API_HOST}/api/event-location/delete-event-location/${selectedLocationId}`
       );
-
+  
       if (response.status === 200) {
-        const updatedCategories = enterpriseCategories.filter((category) => category.id !== selectedCategoryId);
-        setEnterpriseCategories(updatedCategories);
+        const updatedCategories = eventLocations.filter((location) => location.id !== selectedLocationId);
+        setEventLocations(updatedCategories);
         setConfirmDialogOpen(false);
-        setSnackbarMessage('Category deleted successfully');
+        setSnackbarMessage('Location deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete enterprise category');
-        setSnackbarMessage('Failed to delete enterprise category');
+        console.error('Failed to delete event location');
+        setSnackbarMessage('Failed to delete event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error deleting enterprise category');
+      setSnackbarMessage('Error deleting event location');
       setSnackbarOpen(true);
     }
   };
 
-  const handleAddCategory = () => {
-    setCategoryName('');
-    setEditCategoryId(null);
+  const handleAddLocation = () => {
+    setLocationName('');
+    setEditLocationId(null);
     setIsModalOpen(true);
   };
 
-  const handleSaveCategory = async () => {
+  const handleSaveLocation = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
-        setSnackbarMessage('This category name already exists!');
+      if (eventLocations.some(location => location.eventLocationName.toLowerCase() === locationName.toLowerCase())) {
+        setSnackbarMessage('This location already exists!');
         setSnackbarOpen(true);
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
-      const response = await axios.post(apiUrl, { name: categoryName });
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/event-location/add-event-location`, { eventLocationName: locationName });
 
       if (response.status === 200) {
-        const newCategory = response.data;
-        setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
+        const newLocation = response.data;
+        setEventLocations((prevCategories) => [...prevCategories, newLocation]);
         setIsModalOpen(false);
-        setCategoryName('');
-        setEditCategoryId('');
-        setSnackbarMessage('Category saved successfully');
+        setLocationName('');
+        setSnackbarMessage('Location saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save enterprise category');
-        setSnackbarMessage('Failed to save enterprise category');
+        console.error('Failed to save event location');
+        setSnackbarMessage('Failed to save event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error saving enterprise category');
+      setSnackbarMessage('Error saving event location');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -184,32 +185,32 @@ const AdminAddEventLocation = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name === categoryName && category.id !== editCategoryId)) {
-        setSnackbarMessage('This category name already exists!');
+      if (eventLocations.some(location => location.eventLocationName === locationName && location.id !== editLocationId)) {
+        setSnackbarMessage('This location already exists!');
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-      const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-location/update-event-location`;
+      const response = await axios.put(apiUrl, { id: editLocationId, eventLocationName: locationName });
       if (response.status === 200) {
-        const updatedCategory = response.data;
-        setEnterpriseCategories((prevCategories) => {
-          const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
+        const updatedLocation = response.data;
+        setEventLocations((prevCategories) => {
+          const updatedCategories = prevCategories.map((location) => (location.id === editLocationId ? updatedLocation : location));
           setIsModalOpen(false);
-          setCategoryName('');
-          setEditCategoryId(null);
+          setLocationName('');
+          setEditLocationId(null);
           return updatedCategories;
         });
-        setSnackbarMessage('Category updated successfully');
+        setSnackbarMessage('Location updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update enterprise category');
-        setSnackbarMessage('Failed to update enterprise category');
+        console.error('Failed to update event location');
+        setSnackbarMessage('Failed to update event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error updating enterprise category');
+      setSnackbarMessage('Error updating event location');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -225,28 +226,28 @@ const AdminAddEventLocation = () => {
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Location
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddCategory}>
+            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddLocation}>
               <AddIcon /> Add
             </IconButton>
           </Box>
-          {enterpriseCategories.length > 0 ? (
+          {eventLocations.length > 0 ? (
             <TableContainer component={Paper} style={styles.tableContainer}>
               <Table style={styles.table}>
                 <TableHead>
                   <TableRow>
-                    <TableCell style={styles.headerCell}>Category Name</TableCell>
+                    <TableCell style={styles.headerCell}>Location</TableCell>
                     <TableCell style={{ ...styles.headerCell, textAlign: "right", }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enterpriseCategories.map((row) => (
+                  {eventLocations.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell style={styles.cell}>{row.name}</TableCell>
+                      <TableCell style={styles.cell}>{row.eventLocationName}</TableCell>
                       <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                         <IconButton onClick={() => handleEdit(row.id)}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleDeleteCategory(row.id)}>
+                        <IconButton onClick={() => handleDeleteLocation(row.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
@@ -269,20 +270,20 @@ const AdminAddEventLocation = () => {
       >
         <Box style={styles.modalContent}>
           <Typography variant="h5" sx={styles.modalTitle}>
-            {editCategoryId !== null ? "Edit Event Location" : "Add Event Location"}
+            {editLocationId !== null ? "Edit Event Location" : "Add Event Location"}
           </Typography>
           <form
             style={styles.modalForm}
             onSubmit={(e) => {
               e.preventDefault();
-              editCategoryId !== null ? handleUpdate() : handleSaveCategory();
+              editLocationId !== null ? handleUpdate() : handleSaveLocation();
             }}
           >
             <InputLabel style={styles.label}>Location</InputLabel>
             <TextField
               variant="outlined"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
+              value={locationName}
+              onChange={(e) => setLocationName(e.target.value)}
               placeholder='Enter Location'
             />
             <Button
@@ -292,7 +293,7 @@ const AdminAddEventLocation = () => {
               style={styles.modalButton}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : (editCategoryId !== null ? "Save Changes" : "Save & Add")}
+              {loading ? <CircularProgress size={24} /> : (editLocationId !== null ? "Save Changes" : "Save & Add")}
             </Button>
           </form>
         </Box>

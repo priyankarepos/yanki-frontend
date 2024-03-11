@@ -72,108 +72,109 @@ const styles = {
 
 const AdminAddEventType = () => {
   const { drawerOpen } = useContext(Context);
-  const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+  const [eventTypes, setEventTypes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
-  const [editCategoryId, setEditCategoryId] = useState('');
+  const [eventTypeName, setEventTypeName] = useState('');
+  const [editEventTypeId, setEditEventTypeId] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedEventTypeId, setSelectedEventTypeId] = useState(null);
   const [confirmationText, setConfirmationText] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEnterpriseCategories = async () => {
+    const fetchEventTypes = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`);
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
 
         if (response.status === 200) {
-          setEnterpriseCategories(response.data);
+          setEventTypes(response.data);
         } else {
-          console.error('Failed to fetch enterprise categories');
+          console.error('Failed to fetch event types');
         }
       } catch (error) {
-        console.error('Error fetching enterprise categories:', error);
-        setSnackbarMessage('Error fetching enterprise categories');
+        console.error('Error fetching event types:', error);
+        setSnackbarMessage('Error fetching event types');
         setSnackbarOpen(true);
       }
     };
-    fetchEnterpriseCategories();
+
+    fetchEventTypes();
   }, [isModalOpen]);
 
   const handleEdit = (id) => {
-    const category = enterpriseCategories.find((category) => category.id === id);
-    setCategoryName(category.name);
-    setEditCategoryId(id);
+    const eventType = eventTypes.find((event) => event.id === id);
+    setEventTypeName(eventType.eventTypeName);
+    setEditEventTypeId(id);
     setIsModalOpen(true);
   };
 
-  const handleDeleteCategory = (id) => {
+  const handleDeleteEventType = (id) => {
     setConfirmDialogOpen(true);
-    setSelectedCategoryId(id);
-    setConfirmationText(`Are you sure you want to delete this category?`);
+    setSelectedEventTypeId(id);
+    setConfirmationText(`Are you sure you want to delete this event type?`);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
+        `${process.env.REACT_APP_API_HOST}/api/event-type/delete-event-type/${selectedEventTypeId}`
       );
-
+  
       if (response.status === 200) {
-        const updatedCategories = enterpriseCategories.filter((category) => category.id !== selectedCategoryId);
-        setEnterpriseCategories(updatedCategories);
+        const updatedEventTypes = eventTypes.filter((event) => event.id !== selectedEventTypeId);
+        setEventTypes(updatedEventTypes);
         setConfirmDialogOpen(false);
-        setSnackbarMessage('Category deleted successfully');
+        setSnackbarMessage('Event type deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete enterprise category');
-        setSnackbarMessage('Failed to delete enterprise category');
+        console.error('Failed to delete Event type');
+        setSnackbarMessage('Failed to delete Event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error deleting enterprise category');
+      setSnackbarMessage('Error deleting Event type');
       setSnackbarOpen(true);
     }
   };
 
-  const handleAddCategory = () => {
-    setCategoryName('');
-    setEditCategoryId(null);
+  const handleAddEventType = () => {
+    setEventTypeName('');
+    setEditEventTypeId(null);
     setIsModalOpen(true);
   };
 
-  const handleSaveCategory = async () => {
+  const handleSaveEventType = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name.toLowerCase() === categoryName.toLowerCase())) {
-        setSnackbarMessage('This category name already exists!');
+      if (eventTypes.some(event => event.eventTypeName.toLowerCase() === eventTypeName.toLowerCase())) {
+        setSnackbarMessage('This event type name already exists!');
         setSnackbarOpen(true);
         return;
       }
-
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
-      const response = await axios.post(apiUrl, { name: categoryName });
-
+  
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/add-event-type`;
+  
+      const response = await axios.post(apiUrl, { eventTypeName });
+  
       if (response.status === 200) {
-        const newCategory = response.data;
-        setEnterpriseCategories((prevCategories) => [...prevCategories, newCategory]);
+        const newEventType = response.data;
+        setEventTypes((prevEventTypes) => [...prevEventTypes, newEventType]);
         setIsModalOpen(false);
-        setCategoryName('');
-        setEditCategoryId('');
-        setSnackbarMessage('Category saved successfully');
+        setEventTypeName('');
+        setEditEventTypeId('');
+        setSnackbarMessage('Event type saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save enterprise category');
-        setSnackbarMessage('Failed to save enterprise category');
+        console.error('Failed to save enterprise event type');
+        setSnackbarMessage('Failed to save enterprise event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error saving enterprise category');
+      setSnackbarMessage('Error saving event type');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -183,32 +184,35 @@ const AdminAddEventType = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      if (enterpriseCategories.some(category => category.name === categoryName && category.id !== editCategoryId)) {
-        setSnackbarMessage('This category name already exists!');
+      if (eventTypes.some(event => event.eventTypeName === eventTypeName && event.id !== editEventTypeId)) {
+        setSnackbarMessage('This event type already exists!');
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-      const response = await axios.put(apiUrl, { name: categoryName, id: editCategoryId });
+  
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/update-event-type`;
+  
+      const response = await axios.put(apiUrl, { id: editEventTypeId, eventTypeName });
+  
       if (response.status === 200) {
-        const updatedCategory = response.data;
-        setEnterpriseCategories((prevCategories) => {
-          const updatedCategories = prevCategories.map((category) => (category.id === editCategoryId ? updatedCategory : category));
+        const updatedEventType = response.data;
+        setEventTypes((prevEventTypes) => {
+          const updatedCategories = prevEventTypes.map((event) => (event.id === editEventTypeId ? updatedEventType : event));
           setIsModalOpen(false);
-          setCategoryName('');
-          setEditCategoryId(null);
+          setEventTypeName('');
+          setEditEventTypeId(null);
           return updatedCategories;
         });
-        setSnackbarMessage('Category updated successfully');
+        setSnackbarMessage('Event type updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update enterprise category');
-        setSnackbarMessage('Failed to update enterprise category');
+        console.error('Failed to update event type');
+        setSnackbarMessage('Failed to update event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.error('Error:', error);
-      setSnackbarMessage('Error updating enterprise category');
+      setSnackbarMessage('Error updating event type');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -219,17 +223,17 @@ const AdminAddEventType = () => {
 
   return (
     <Box style={{ display: "flex" }}>
-      <Box style={{ ...styles.content}} className="enterpriseFormBox">
+      <Box style={{ ...styles.content }} className="enterpriseFormBox">
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
           <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Type
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddCategory}>
+            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddEventType}>
               <AddIcon /> Add
             </IconButton>
           </Box>
-          {enterpriseCategories.length > 0 ? (
+          {eventTypes.length > 0 ? (
             <TableContainer component={Paper} style={styles.tableContainer}>
               <Table style={styles.table}>
                 <TableHead>
@@ -239,14 +243,14 @@ const AdminAddEventType = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enterpriseCategories.map((row) => (
+                  {eventTypes.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell style={styles.cell}>{row.name}</TableCell>
+                      <TableCell style={styles.cell}>{row.eventTypeName}</TableCell>
                       <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                         <IconButton onClick={() => handleEdit(row.id)}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleDeleteCategory(row.id)}>
+                        <IconButton onClick={() => handleDeleteEventType(row.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
@@ -270,20 +274,20 @@ const AdminAddEventType = () => {
       >
         <Box style={styles.modalContent}>
           <Typography variant="h5" sx={styles.modalTitle}>
-            {editCategoryId !== null ? "Edit Event Type" : "Add Event Type"}
+            {editEventTypeId !== null ? "Edit Event Type" : "Add Event Type"}
           </Typography>
           <form
             style={styles.modalForm}
             onSubmit={(e) => {
               e.preventDefault();
-              editCategoryId !== null ? handleUpdate() : handleSaveCategory();
+              editEventTypeId !== null ? handleUpdate() : handleSaveEventType();
             }}
           >
             <InputLabel style={styles.label}>Event Type</InputLabel>
             <TextField
               variant="outlined"
-              value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
+              value={eventTypeName}
+              onChange={(e) => setEventTypeName(e.target.value)}
               placeholder='Enter Type'
             />
             <Button
@@ -293,7 +297,7 @@ const AdminAddEventType = () => {
               style={styles.modalButton}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : (editCategoryId !== null ? "Save Changes" : "Save & Add")}
+              {loading ? <CircularProgress size={24} /> : (editEventTypeId !== null ? "Save Changes" : "Save & Add")}
             </Button>
           </form>
         </Box>

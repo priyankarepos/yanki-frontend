@@ -147,6 +147,9 @@ const AdminEventRequest = () => {
                         <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
                             Event Submission Requests
                         </Typography>
+                        <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }}>
+                            <AddIcon /> Add
+                        </IconButton>
                     </Box>
                     {!eventRequest.length > 0 ? (
                         <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
