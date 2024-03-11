@@ -1,12 +1,36 @@
-import { Paper, TextField, Button, Typography } from '@mui/material';
+import { Paper, TextField, Button, Typography, Snackbar, CircularProgress, FormHelperText } from '@mui/material';
 import React, { useState } from 'react';
+import axios from "axios";
 
-const SafetyChecker = () => {
+const SafetyChecker = ({ answer }) => {
     const [content, setContent] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [touched, setTouched] = useState(false);
 
-    const handleSafetyCheck = () => {
-        // Assuming you have a function to send the content to the specified email
-        sendSafetyCheckEmail(content);
+    const handleSafetyCheck = async () => {
+        try {
+            setLoading(true);
+            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/safety-checker-email`;
+            const response = await axios.post(apiUrl, { content });
+            if (response.status === 200) {
+                setSnackbarMessage(response?.data?.message)
+                setSnackbarOpen(true)
+                setLoading(false);
+                setContent("");
+                setTouched(false)
+            } else {
+                setSnackbarMessage('Failed to send safety check email')
+                setSnackbarOpen(true)
+            }
+        } catch (error) {
+            console.error('Error sending safety check email:', error);
+        }
+    };
+
+    const handleBlur = () => {
+        setTouched(true);
     };
 
     return (
@@ -15,10 +39,7 @@ const SafetyChecker = () => {
                 Safety Checker
             </Typography>
             <Typography>
-                What content would you like the agent to check?
-            </Typography>
-            <Typography>
-                Please fill in the URL or content details below:
+                {answer?.message}
             </Typography>
             <TextField
                 multiline
@@ -29,32 +50,29 @@ const SafetyChecker = () => {
                 placeholder="Enter the website URL or content here"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onBlur={handleBlur}
+                error={touched && !content.trim()}
             />
+            <FormHelperText className="error-message">
+                {touched && !content.trim() && 'This field is required.'}
+            </FormHelperText>
             <Button
                 variant="contained"
                 color="primary"
                 onClick={handleSafetyCheck}
+                disabled={content.length === 0 || loading}
+                sx={{mt:"8px"}}
             >
-                Submit Safety Check
+                {loading ? <CircularProgress /> : "Submit Safety Check"}
             </Button>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </Paper>
     );
-};
-
-// Function to send safety check email
-const sendSafetyCheckEmail = (content) => {
-    // Assuming logic to send an email to pa@yanki.ai from torah@yanki.ai with user details
-    const emailData = {
-        content,
-        user: {
-            name: 'User Name', // Replace with actual user details
-            contactNumber: 'User Contact Number',
-            email: 'User Email',
-        },
-    };
-
-    // Implement logic to send the email with the emailData
-    console.log('Email sent:', emailData);
 };
 
 export default SafetyChecker;

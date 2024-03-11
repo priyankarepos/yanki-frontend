@@ -57,7 +57,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && !response?.contentResponse && response?.message
-        && (
+        && !response?.safetyChecker && (
           <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
             <div className="chat-bubble assistant-bubble">
               <DemoEnterpriseChat answer={response} />
@@ -105,7 +105,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {!response?.isSucess && (
+      {response?.isSucess && response?.safetyChecker && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <SafetyChecker answer={response} />
