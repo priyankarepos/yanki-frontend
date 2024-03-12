@@ -8,6 +8,8 @@ const SafetyChecker = ({ answer }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
+    const [mailMessage, setMailMessage]= useState("")
+    console.log("answer",answer);
 
     const handleSafetyCheck = async () => {
         try {
@@ -16,6 +18,7 @@ const SafetyChecker = ({ answer }) => {
             const response = await axios.post(apiUrl, { content });
             if (response.status === 200) {
                 setSnackbarMessage(response?.data?.message)
+                setMailMessage(response?.data?.message)
                 setSnackbarOpen(true)
                 setLoading(false);
                 setContent("");
@@ -52,6 +55,7 @@ const SafetyChecker = ({ answer }) => {
                 onChange={(e) => setContent(e.target.value)}
                 onBlur={handleBlur}
                 error={touched && !content.trim()}
+                disabled={mailMessage !=="" || !answer?.safetyChecker === true}
             />
             <FormHelperText className="error-message">
                 {touched && !content.trim() && 'This field is required.'}
@@ -60,7 +64,7 @@ const SafetyChecker = ({ answer }) => {
                 variant="contained"
                 color="primary"
                 onClick={handleSafetyCheck}
-                disabled={content.length === 0 || loading}
+                disabled={content.length === 0 || loading || mailMessage !=="" || !answer?.safetyChecker === true}
                 sx={{mt:"8px"}}
             >
                 {loading ? <CircularProgress /> : "Submit Safety Check"}
