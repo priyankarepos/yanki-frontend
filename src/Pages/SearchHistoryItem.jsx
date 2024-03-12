@@ -73,7 +73,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.videoResult && response?.videoResult.length > 0 && response?.isExclusiveContent && (
+      {response?.isSucess && response?.vimeoVideoDetails && response?.vimeoVideoDetails.length > 0 && response?.isExclusiveContent && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <YoutubeContent answer={response} />
