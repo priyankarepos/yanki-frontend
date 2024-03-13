@@ -236,7 +236,7 @@ const NewHomePageMui = () => {
                                     isSucess: gptResponse.isSucess,
                                     message: gptResponse.message,
                                     torahAnytimeLectures: gptResponse.torahAnytimeLectures,
-                                    videoResult: gptResponse.videoResult,
+                                    vimeoVideoDetails: gptResponse.vimeoVideoDetails,
                                     enterpriseSelections: gptResponse.enterpriseSelections,
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,

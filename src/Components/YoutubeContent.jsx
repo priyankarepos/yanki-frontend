@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Vimeo from '@u-wave/react-vimeo';
-import YouTube from 'react-youtube';
 import { styled } from '@mui/system';
 import "./AnswerStyle.scss";
 
@@ -119,7 +118,7 @@ const YoutubeContent = ({ answer }) => {
     return (
         <Box onClick={(e) => e.stopPropagation()}>
             <Paper sx={{ p: 2, }} >
-                {isVideo && answer?.videoResult && answer?.torahAnytimeLectures && answer?.videoResult && answer?.videoResult.length > 0 && (
+                {isVideo && answer?.vimeoVideoDetails && answer?.torahAnytimeLectures && answer?.vimeoVideoDetails && answer?.vimeoVideoDetails.length > 0 && (
                     <Box className="youtube-container">
                         <Typography sx={{ marginBottom: "10px" }}>We have found data on multiple sources. Please select a source to give you the most accurate result</Typography>
                         <Typography
@@ -139,38 +138,48 @@ const YoutubeContent = ({ answer }) => {
 
                 <Carousel responsive={responsive}>
                     {showYouTubeVideos ? (
-                        answer?.videoResult.map((item, index) => (
-                            <Paper key={item.title} className='youtube-box'>
-                                {item.link && (
+                        answer?.vimeoVideoDetails.map((item, index) => (
+                            <Paper key={item.title}>
+                                <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
+                                    {item.link && (
+                                        <div>
+                                            <Vimeo
+                                                id={item.link.split('v=')[1]}
+                                                onReady={(event) => onReady(event, index)}
+                                                onPlay={() => handleVideoPlay(index)}
+                                                video={item.link}
+                                                width="100%"
+                                                height="150px"
+                                                autoplay={false}
+                                                controls={true}
+                                                showByline={false}
+                                                showTitle={false}
+                                                showPortrait={false}
+                                                loop={false}
+                                                autopause={true}
+                                            />
+                                        </div>
+                                    )}
                                     <div>
-                                        <YouTube
-                                            videoId={item.link.split('v=')[1]}
-                                            opts={{ width: '100%', height: '200px', playerVars: { showinfo: 0 } }}
-                                            onReady={(event) => onReady(event, index)}
-                                            onPlay={() => handleVideoPlay(index)}
-                                            containerClassName="youtube-video-container"
-                                        />
+                                        <Typography variant="h6" component="div">
+                                            <Tooltip title={item.title}>
+                                                <div
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis',
+                                                        display: '-webkit-box',
+                                                        '-webkit-line-clamp': 2,
+                                                        '-webkit-box-orient': 'vertical',
+                                                        textAlign: 'left',
+                                                    }}
+                                                >
+                                                    {item.title}
+                                                </div>
+                                            </Tooltip>
+                                        </Typography>
                                     </div>
-                                )}
-                                <div>
-                                    <Typography variant="h6" component="div">
-                                        <Tooltip title={item.title}>
-                                            <div
-                                                style={{
-                                                    maxWidth: '100%',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    display: '-webkit-box',
-                                                    '-webkit-line-clamp': 2,
-                                                    '-webkit-box-orient': 'vertical',
-                                                    textAlign: 'left',
-                                                }}
-                                            >
-                                                {item.title}
-                                            </div>
-                                        </Tooltip>
-                                    </Typography>
-                                </div>
+                                </StyledCarouselItem>
                             </Paper>
                         ))
                     ) : (showYouTubeVideos === false &&
