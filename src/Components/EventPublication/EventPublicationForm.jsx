@@ -9,7 +9,7 @@ import { pdfjs } from 'react-pdf';
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 
 const modalContentStyle = {
     display: 'flex',
@@ -60,42 +60,42 @@ const EventPublicationForm = () => {
     }, []);
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
-          try {
-            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-      
-            if (response.status === 200) {
-              setPublicationArea(response.data);
-            } else {
-              console.error('Failed to fetch publication area');
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+
+                if (response.status === 200) {
+                    setPublicationArea(response.data);
+                } else {
+                    console.error('Failed to fetch publication area');
+                }
+            } catch (error) {
+                console.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area');
+                setSnackbarOpen(true);
             }
-          } catch (error) {
-            console.error('Error fetching publication area:', error);
-            setSnackbarMessage('Error fetching publication area');
-            setSnackbarOpen(true);
-          }
         };
-      
+
         fetchEventPublicationArea();
-      }, []);
-      useEffect(() => {
+    }, []);
+    useEffect(() => {
         const fetchEventTypes = async () => {
-          try {
-            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-    
-            if (response.status === 200) {
-              setEventTypes(response.data);
-            } else {
-              console.error('Failed to fetch event types');
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
+
+                if (response.status === 200) {
+                    setEventTypes(response.data);
+                } else {
+                    console.error('Failed to fetch event types');
+                }
+            } catch (error) {
+                console.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types');
+                setSnackbarOpen(true);
             }
-          } catch (error) {
-            console.error('Error fetching event types:', error);
-            setSnackbarMessage('Error fetching event types');
-            setSnackbarOpen(true);
-          }
         };
-    
+
         fetchEventTypes();
-      }, []);
+    }, []);
     const handlePdfSelect = (file) => {
         setSelectedPdf(file);
         setPdfModalOpen(true);
@@ -106,8 +106,28 @@ const EventPublicationForm = () => {
     };
     const { control, handleSubmit, setValue, register, formState: { errors } } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        console.log("data", data);
+        try {
+            const requestData = {
+                EventName: data.EventName,
+                EventLocation: data.locations,
+                EventPublicationArea: data.publicationArea,
+                EventType: data.eventTypes,
+                EventDetails: data.eventDetails,
+                EventDateAndTime: `${data.date}T${data.time}`,
+                ImageUrl: data.uploadedFiles.map(file => file.name), 
+            };
+
+            // Make the API POST request
+            const response = await Axios.post('/api/events/add-event', requestData);
+
+            // Handle the response as needed
+            console.log(response.data);
+        } catch (error) {
+            // Handle errors
+            console.error('Error submitting event:', error);
+        }
     };
 
     const onSelect = (selectedList) => {
