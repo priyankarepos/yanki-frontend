@@ -9,7 +9,6 @@ const SafetyChecker = ({ answer }) => {
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
     const [mailMessage, setMailMessage]= useState("")
-    console.log("answer",answer);
 
     const handleSafetyCheck = async () => {
         try {
@@ -67,8 +66,9 @@ const SafetyChecker = ({ answer }) => {
                 disabled={content.length === 0 || loading || mailMessage !=="" || !answer?.safetyChecker === true}
                 sx={{mt:"8px"}}
             >
-                {loading ? <CircularProgress /> : "Submit Safety Check"}
+                {loading ? <CircularProgress size={24} /> : "Submit Safety Check"}
             </Button>
+            {mailMessage && <Typography sx={{mt:2}}>Your Safety Check submission is now under review by our agents. You can expect to receive the results at the email address registered with us.</Typography>}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
