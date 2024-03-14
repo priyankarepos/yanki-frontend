@@ -16,6 +16,7 @@ import EnterprisePdfAnswer from "../Components/EnterprisePdfAnswer";
 import EventPublicationForm from "../Components/EventPublication/EventPublicationForm";
 import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
+import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
@@ -25,6 +26,7 @@ const SearchHistoryItem = ({ query, response }) => {
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
+  const isPersonalAssistant = query == "personal assistant" ? true : false;
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
@@ -128,7 +130,13 @@ const SearchHistoryItem = ({ query, response }) => {
         </div>
         </Paper>
       )}
-
+      {isPersonalAssistant && (
+         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+         <div className="chat-bubble assistant-bubble">
+           <PersonalAssistant answer={response} />
+         </div>
+       </Paper>
+      )}
 
 
     </div>
