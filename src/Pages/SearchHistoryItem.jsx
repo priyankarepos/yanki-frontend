@@ -17,10 +17,11 @@ import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 
 const SearchHistoryItem = ({ query, response }) => {
+  debugger;
 
   const { activeTab } = React.useContext(Context);
 
-  const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
+  const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
