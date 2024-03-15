@@ -244,7 +244,8 @@ const NewHomePageMui = () => {
                                     isItKosher: gptResponse.isItKosher,
                                     enterprisePdfNames: gptResponse.enterprisePdfNames,
                                     safetyChecker: gptResponse.safetyChecker,
-                                    globalAssist: gptResponse.globalAssist
+                                    globalAssist: gptResponse.globalAssist,
+                                    isEvent: gptResponse.isEvent,
                                 }
                             }
                         };

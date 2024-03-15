@@ -523,7 +523,8 @@ const AdminEventRequest = () => {
                                         <TableCell style={styles.headerCell}>Event Detail</TableCell>
                                         <TableCell style={styles.headerCell}>Event Type</TableCell>
                                         <TableCell style={styles.headerCell}>Event Publication Area</TableCell>
-                                        <TableCell style={styles.headerCell}>Images</TableCell>
+                                        {/* This commented code is going to be used in next scope */}
+                                        {/* <TableCell style={styles.headerCell}>Images</TableCell> */}
                                         <TableCell style={styles.headerCell}>Status</TableCell>
                                         <TableCell style={{ ...styles.headerCell, textAlign: "right", }}>Action</TableCell>
                                     </TableRow>
@@ -538,13 +539,14 @@ const AdminEventRequest = () => {
                                             <TableCell style={styles.cell}>{event.eventDetails}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventType.join(', ')}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventPublicationArea.join(', ')}</TableCell>
-                                            <TableCell style={styles.cell}>
+                                            {/* This commented code is going to be used in next scope */}
+                                            {/* <TableCell style={styles.cell}>
                                                 {event.imageUrl.map((image, index) => (
                                                     <p key={index} onClick={() => handleImageClick(image)}>
-                                                        {image.imageUrl} {/* Assuming imageUrl is the name of the image */}
+                                                        {image.imageUrl}
                                                     </p>
                                                 ))}
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell style={styles.cell}>{event.status}</TableCell>
                                             <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                                                 <div style={{ display: 'flex', gap: '8px' }}>
@@ -839,7 +841,8 @@ const AdminEventRequest = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item lg={6} md={12} sm={12} xs={12}>
+                            {/* This commented code is going to be used in next scope */}
+                            {/* <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>Upload Files</InputLabel>
                                 <Controller
                                     control={control}
@@ -875,7 +878,7 @@ const AdminEventRequest = () => {
                                     )}
                                     rules={{ validate: validateFile }}
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                 <InputLabel>Event Details</InputLabel>
                                 <Controller

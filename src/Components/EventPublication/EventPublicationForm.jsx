@@ -392,7 +392,8 @@ const EventPublicationForm = ({answer}) => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item lg={6} md={12} sm={12} xs={12}>
+                            {/* This commented code is going to be used in next scope */}
+                            {/* <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>Upload Files</InputLabel>
                                 <Controller
                                     control={control}
@@ -428,7 +429,7 @@ const EventPublicationForm = ({answer}) => {
                                     )}
                                     rules={{ validate: validateFile }}
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                 <InputLabel>Event Details</InputLabel>
                                 <Controller
@@ -452,7 +453,6 @@ const EventPublicationForm = ({answer}) => {
                                     )}
                                 />
                             </Grid>
-
                             <Grid item xs={12}>
                                 <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
                                     {isLoading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : "Submit"}
