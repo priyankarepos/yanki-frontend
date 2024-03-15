@@ -18,6 +18,7 @@ import HatzalahDisclaimer from "./HatzalahDisclaimer";
 import HatzalahVideo from "./HatzalahVideo";
 
 const HatzalahGlobalAssist = ({ answer }) => {
+  debugger;
   const [showCheckIcon, setShowCheckIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const [openVideo, setOpenVideo] = useState(false);

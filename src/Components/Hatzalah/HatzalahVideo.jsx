@@ -21,12 +21,8 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
 }));
 
 const HatzalahVideo = ({ video }) => {
-  // const [showCRPVideos, setShowCRPVideos] = useState(false);
-  // const [showAEDVideos, setShowAEDVideos] = useState(false);
-  // const [showChokingVideos, setShowChokingVideos] = useState(false);
-  // const [showAllergiesVideos, setShowAllergiesVideos] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
-  const [videoDetails, setVideoDetails] = useState(null);
+  const [videoDetails, setVideoDetails] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const playerRefs = useRef([]);
 
