@@ -1,0 +1,92 @@
+.multiSelectContainer li:hover {
+    background: #13416a !important;
+    color: #fff;
+    cursor: pointer;
+}
+
+.highlightOption, .multiSelectContainer li {
+    background: #13416a !important;
+    color: #fff;
+}
+
+.chip{
+    background: #022b4f;
+}
+
+.notFound{
+    display: none !important;
+}
+
+.searchWrapper {
+    border: 1px solid #4a6a86;
+    border-radius: 12px;
+    min-height: 20px;
+    padding: 12px !important;
+    position: relative;
+    line-height: 30px;
+}
+
+.event-detail-input textarea{
+padding: 12px;
+}
+
+.event-form-file{
+    background-color: transparent;
+    border: 1px solid #4a6a86;
+    border-radius: 12px;
+    color: #8499ac;
+    width: 100%;
+    padding: 15px !important;
+    font-size: 15px;
+}
+
+.pdf-img-style-box {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #4a6a86;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    justify-content: space-between;
+
+    p {
+        margin: 5px 0;
+        font-size: 14px;
+
+        span {
+            cursor: pointer;
+
+            &:hover {
+                color: #6fa8dd;
+            }
+
+            &.icon-style {
+                margin-right: 10px; 
+            }
+        }
+    }
+}
+
+.event-model-close-btn {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    button {
+        background: #6fa8dd;
+    }
+}
+
+.Custom-Button {
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    color: #1d4a72;
+    background-color: #FFF;
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+    height: 48px;
+    border-radius: 12px;
+    margin-top: 8px;
+    display: inline-block;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}

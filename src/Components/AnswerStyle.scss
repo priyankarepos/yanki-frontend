@@ -104,9 +104,9 @@ p.kosher-text strong {
   padding-right: 20px;
 }
 
-.demo-enterprise-wrapper div {
-  padding: 0;
-}
+// .demo-enterprise-wrapper div {
+//   padding: 0;
+// }
 
 .demo-enterprise-InsertCommentIcon {
   margin-right: 8px;
@@ -186,6 +186,7 @@ p.kosher-text strong {
   width: 90vw;
   height: 88vh;
   position: relative;
+  text-align: center;
 }
 
 .pdf-modal .MuiIconButton-root {
@@ -224,8 +225,8 @@ p.kosher-text strong {
 }
 
 .enterprise-pdf-text{
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-size: 16px !important;
+  margin-bottom: 12px !important;
 }
 
 .enterprise-pdf-link{
