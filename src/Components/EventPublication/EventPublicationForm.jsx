@@ -1,15 +1,14 @@
-import { Autocomplete, Box, Button, FormControl, FormHelperText, Grid, IconButton, InputLabel, MenuItem, Modal, Paper, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
 import "./EventPublicationForm.scss"
-import { Input } from '@mui/base';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { pdfjs } from 'react-pdf';
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 
 const modalContentStyle = {
     display: 'flex',
@@ -22,21 +21,16 @@ const modalContentStyle = {
     marginTop: 'auto',
 };
 
-const EventPublicationForm = () => {
+const EventPublicationForm = ({answer}) => {
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
-    console.log("eventLocations", eventLocations);
-    console.log("publicationArea", publicationArea);
-    console.log("eventTypes", eventTypes);
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [selectedValues, setSelectedValues] = useState([]);
-    console.log("selectedValues", selectedValues);
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [isPdfModalOpen, setPdfModalOpen] = useState(false);
     const [isFormModalOpen, setFormModalOpen] = useState(false);
+    const [responseMessage, setResponseMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
@@ -46,13 +40,9 @@ const EventPublicationForm = () => {
                     setEventLocations(response.data);
                 } else {
                     console.error('Failed to fetch event location');
-                    setSnackbarMessage('Failed to fetch event location');
-                    setSnackbarOpen(true);
                 }
             } catch (error) {
                 console.error('Error fetching event location:', error);
-                setSnackbarMessage('Error fetching event location');
-                setSnackbarOpen(true);
             }
         };
 
@@ -70,8 +60,6 @@ const EventPublicationForm = () => {
                 }
             } catch (error) {
                 console.error('Error fetching publication area:', error);
-                setSnackbarMessage('Error fetching publication area');
-                setSnackbarOpen(true);
             }
         };
 
@@ -89,8 +77,6 @@ const EventPublicationForm = () => {
                 }
             } catch (error) {
                 console.error('Error fetching event types:', error);
-                setSnackbarMessage('Error fetching event types');
-                setSnackbarOpen(true);
             }
         };
 
@@ -104,56 +90,103 @@ const EventPublicationForm = () => {
         setSelectedPdf(null);
         setPdfModalOpen(false);
     };
-    const { control, handleSubmit, setValue, register, formState: { errors } } = useForm();
+    const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
         console.log("data", data);
         try {
+            setIsLoading(true);
+            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
+
             const requestData = {
-                EventName: data.EventName,
-                EventLocation: data.locations,
-                EventPublicationArea: data.publicationArea,
-                EventType: data.eventTypes,
-                EventDetails: data.eventDetails,
-                EventDateAndTime: `${data.date}T${data.time}`,
-                ImageUrl: data.uploadedFiles.map(file => file.name), 
+                eventName: data.EventName,
+                eventLocation: data.locations.map(item => item.name),
+                eventPublicationArea: data.publicationArea.map(item => item.name),
+                eventType: data.eventTypes.map(item => item.name),
+                eventDetails: data.eventDetails,
+                eventDateAndTime: `${data.date}T${data.time}`,
+                // imageUrl: data.uploadedFiles.map(file => file.name), // Uncomment if needed
             };
 
-            // Make the API POST request
-            const response = await Axios.post('/api/events/add-event', requestData);
-
-            // Handle the response as needed
-            console.log(response.data);
+            const response = await axios.post(apiUrl, requestData);
+            setResponseMessage("Your event publish request has been sent successfully");
+            console.log("=====", response.data);
+            setFormModalOpen(false);
+            setIsLoading(false);
+            setUploadedFiles([]);
+            reset();
         } catch (error) {
-            // Handle errors
             console.error('Error submitting event:', error);
+            setIsLoading(false);
         }
     };
 
-    const onSelect = (selectedList) => {
-        console.log("==========", selectedList?.name);
-        setSelectedValues(selectedList?.name);
+    const onSelectLocations = (selectedList) => {
+        console.log("locations", selectedList);
+        setValue("locations", selectedList);
     };
 
-    const onRemove = (selectedList) => {
-        setSelectedValues(selectedList?.name);
+    const onRemoveLocations = (selectedList) => {
+        setValue("locations", selectedList);
     };
 
-    const handleFileChange = (event) => {
-        const selectedFiles = Array.from(event.target.files);
+    const onSelectEventTypes = (selectedList) => {
+        console.log("eventTypes", selectedList);
+        setValue("eventTypes", selectedList);
+    };
 
-        // Ensure only up to 3 files are selected
-        if (selectedFiles.length + uploadedFiles.length > 3) {
-            alert('You can upload up to 3 files.');
-            // Clear the input field value
-            event.target.value = '';
+    const onRemoveEventTypes = (selectedList) => {
+        setValue("eventTypes", selectedList);
+    };
+
+    const onSelectPublicationArea = (selectedList) => {
+        console.log("eventTypes", selectedList);
+        setValue("publicationArea", selectedList);
+    };
+
+    const onRemovePublicationArea = (selectedList) => {
+        setValue("publicationArea", selectedList);
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+    
+        // Check if all selected files are of allowed types
+        const invalidFiles = selectedFiles.filter(file => !["image/jpeg", "image/png"].includes(file.type));
+        if (invalidFiles.length > 0) {
+            alert("Please select only JPG or PNG files.");
+            e.target.value = ''; // Clear the input field
             return;
         }
-
-        // Update state with the new files
+    
+        // Set the value of 'uploadedFiles' using setValue
+        setValue('uploadedFiles', selectedFiles);
+    
+        // Check if the total number of files exceeds 3
+        if (selectedFiles.length + uploadedFiles.length > 3) {
+            alert('You can upload up to 3 files.');
+            e.target.value = ''; // Clear the input field
+            return;
+        }
+    
+        // Add the selected files to the 'uploadedFiles' state
         setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-        // Clear the input field value
-        event.target.value = '';
+    
+        // Clear the input field
+        e.target.value = '';
+    };
+
+    const validateFile = (value) => {
+        if (!value || value.length === 0 || !value[0]) {
+            return "File is required";
+        }
+
+        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowedTypes.includes(value[0].type)) {
+            return "Please select a valid file (PDF, JPG, or PNG)";
+        }
+
+        return true;
     };
 
     const handleFileRemove = (fileName) => {
@@ -175,11 +208,12 @@ const EventPublicationForm = () => {
             <Paper elevation={3}>
                 <Typography variant="h6">Event Submission</Typography>
                 <Typography variant="body2" color="textSecondary">
-                    Please click the "Open Form" button to submit your event details.
+                    {answer?.message}
                 </Typography>
-                <Button variant="contained" color="primary" onClick={openFormModal} style={{ marginTop: '20px' }}>
+                <Typography className='Custom-Button' onClick={openFormModal} style={{ marginTop: '20px' }}>
                     Open Form
-                </Button>
+                </Typography>
+                {responseMessage && <Typography sx={{mt:2}}>{responseMessage}</Typography>}
             </Paper>
             <Modal
                 open={isFormModalOpen}
@@ -248,9 +282,15 @@ const EventPublicationForm = () => {
                                                 name: location.eventLocationName,
                                                 id: location.id,
                                             }))}
-                                            selectedValues={selectedValues}
-                                            onSelect={onSelect}
-                                            onRemove={onRemove}
+                                            selectedValues={field.value}
+                                            onSelect={(selectedList) => {
+                                                onSelectLocations(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
+                                            onRemoveLocation={(selectedList) => {
+                                                onRemoveLocations(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
                                             displayValue="name"
                                         />
                                     )}
@@ -304,17 +344,23 @@ const EventPublicationForm = () => {
                                 <InputLabel>Publication Area</InputLabel>
                                 <Controller
                                     control={control}
-                                    name="locations"
+                                    name="publicationArea"
                                     defaultValue={[]}
                                     render={({ field }) => (
                                         <Multiselect
-                                            options={publicationArea.map(location => ({
-                                                name: location.eventPublicationAreaName,
-                                                id: location.id,
+                                            options={publicationArea.map(item => ({
+                                                name: item.eventPublicationAreaName,
+                                                id: item.id,
                                             }))}
-                                            selectedValues={selectedValues}
-                                            onSelect={onSelect}
-                                            onRemove={onRemove}
+                                            selectedValues={field.value}
+                                            onSelect={(selectedList) => {
+                                                onSelectPublicationArea(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
+                                            onRemove={(selectedList) => {
+                                                onRemovePublicationArea(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
                                             displayValue="name"
                                         />
                                     )}
@@ -324,17 +370,23 @@ const EventPublicationForm = () => {
                                 <InputLabel>Event Type</InputLabel>
                                 <Controller
                                     control={control}
-                                    name="locations"
+                                    name="eventTypes"
                                     defaultValue={[]}
                                     render={({ field }) => (
                                         <Multiselect
-                                            options={eventTypes.map(location => ({
-                                                name: location.eventTypeName,
-                                                id: location.id,
+                                            options={eventTypes.map(item => ({
+                                                name: item.eventTypeName,
+                                                id: item.id,
                                             }))}
-                                            selectedValues={selectedValues}
-                                            onSelect={onSelect}
-                                            onRemove={onRemove}
+                                            selectedValues={field.value}
+                                            onSelect={(selectedList) => {
+                                                onSelectEventTypes(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
+                                            onRemove={(selectedList) => {
+                                                onRemoveEventTypes(selectedList);
+                                                field.onChange(selectedList);
+                                            }}
                                             displayValue="name"
                                         />
                                     )}
@@ -342,29 +394,40 @@ const EventPublicationForm = () => {
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>Upload Files</InputLabel>
-                                <FormControl fullWidth>
-                                    <input
-                                        className='event-form-file'
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        accept="image/*, .pdf"
-                                        multiple
-                                    />
-                                    {uploadedFiles.map((file) => (
-                                        <div className='pdf-img-style-box' key={file.name}>
-                                            <p>{file.name}</p>
-                                            <p>
-                                                <span onClick={() => handlePdfSelect(file)} className="icon-style"><VisibilityIcon /></span>
-                                                <span onClick={() => handleFileRemove(file.name)} className="icon-style2"><DeleteIcon /></span>
-                                            </p>
-                                        </div>
-                                    ))}
-                                    {uploadedFiles.length > 0 && (
-                                        <FormHelperText className='error-message'>
-                                            {`Can not upload more than 3 files: ${uploadedFiles.length}/3`}
-                                        </FormHelperText>
+                                <Controller
+                                    control={control}
+                                    name="uploadedFiles"
+                                    render={({ field }) => (
+                                        <FormControl fullWidth>
+                                            <input
+                                                className='event-form-file'
+                                                type="file"
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    handleFileChange(e);
+                                                }}
+                                                accept="image/*, .pdf"
+                                                multiple
+                                                name="uploadedFiles"
+                                            />
+                                            {uploadedFiles.map((file) => (
+                                                <div className='pdf-img-style-box' key={file.name}>
+                                                    <p>{file.name}</p>
+                                                    <p>
+                                                        <span onClick={() => handlePdfSelect(file)} className="icon-style"><VisibilityIcon /></span>
+                                                        <span onClick={() => handleFileRemove(file.name)} className="icon-style2"><DeleteIcon /></span>
+                                                    </p>
+                                                </div>
+                                            ))}
+                                            {uploadedFiles.length > 3 && (
+                                                <FormHelperText className='error-message'>
+                                                    {`Can not upload more than 3 files: ${field.value.length}/3`}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
                                     )}
-                                </FormControl>
+                                    rules={{ validate: validateFile }}
+                                />
                             </Grid>
                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                 <InputLabel>Event Details</InputLabel>
@@ -375,7 +438,7 @@ const EventPublicationForm = () => {
                                         required: 'Event Details are required',
                                     }}
                                     render={({ field }) => (
-                                        <div className='event-detail-input'>
+                                        <div>
                                             <TextField
                                                 {...field}
                                                 multiline
@@ -391,8 +454,8 @@ const EventPublicationForm = () => {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <Button type="submit" variant="contained" color="primary">
-                                    Submit
+                                <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
+                                    {isLoading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : "Submit"}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -418,9 +481,15 @@ const EventPublicationForm = () => {
                         <CloseIcon />
                     </IconButton>
                     {selectedPdf && (
-                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                            <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />
-                        </Worker>
+                        <>
+                            {selectedPdf.type.startsWith('image/') ? (
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} />
+                            ) : (
+                                <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                                    <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />
+                                </Worker>
+                            )}
+                        </>
                     )}
                 </div>
             </Modal>
