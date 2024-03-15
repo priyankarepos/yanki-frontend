@@ -137,7 +137,7 @@ const YoutubeContent = ({ answer }) => {
                 )}
 
                 <Carousel responsive={responsive}>
-                    {showYouTubeVideos ? (
+                    {showYouTubeVideos || (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess) ? (
                         answer?.vimeoVideoDetails.map((item, index) => (
                             <Paper key={item.title}>
                                 <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
