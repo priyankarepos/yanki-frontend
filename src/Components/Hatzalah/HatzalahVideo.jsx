@@ -24,10 +24,27 @@ const HatzalahVideo = () => {
   const [showCRPVideos, setShowCRPVideos] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
   const playerRefs = useRef([]);
-  const handleCRPContentClick = (e) => {
+
+  const handleCPRContentClick = (e) => {
     e.stopPropagation();
     setShowCRPVideos(true);
   };
+
+  const handleAEDContentClick = (e) => {
+    e.stopPropagation();
+  }
+
+  const handleChokingContentClick = (e) => {
+    e.stopPropagation();
+  }
+
+  const handleAllergiesCRPContentClick = (e) => {
+    e.stopPropagation();
+  }
+
+  const handleBleedingContentClick = (e) => {
+    e.stopPropagation();
+  }
 
   const vimeoVideoDetails = [
     {
@@ -81,15 +98,15 @@ const HatzalahVideo = () => {
         <Paper sx={{ p: 2 }}>
           <Box>
             <Typography
-              onClick={handleCRPContentClick}
+              onClick={handleCPRContentClick}
               className={`switch-button ${showCRPVideos ? "selected" : ""}`}
             >
-              CRP
+              CPR
             </Typography>
-            <Typography className="switch-button">AED</Typography>
-            <Typography className="switch-button">Choking</Typography>
-            <Typography className="switch-button">Allergies</Typography>
-            <Typography className="switch-button">Bleeding</Typography>
+            <Typography className="switch-button" onClick={handleAEDContentClick}>AED</Typography>
+            <Typography className="switch-button" onClick={handleChokingContentClick}>Choking</Typography>
+            <Typography className="switch-button" onClick={handleAllergiesCRPContentClick}>Allergies</Typography>
+            <Typography className="switch-button" onClick={handleBleedingContentClick}>Bleeding</Typography>
           </Box>
 
           <Carousel responsive={responsive}>
