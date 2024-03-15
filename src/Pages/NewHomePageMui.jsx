@@ -47,7 +47,7 @@ const styles = {
         paddingLeft: "15px",
     },
     content: {
-        marginLeft: "0",
+        marginLeft: "0px",
         transition: "margin-left 0.3s",
         position: "relative",
     },
@@ -236,13 +236,15 @@ const NewHomePageMui = () => {
                                     isSucess: gptResponse.isSucess,
                                     message: gptResponse.message,
                                     torahAnytimeLectures: gptResponse.torahAnytimeLectures,
-                                    videoResult: gptResponse.videoResult,
+                                    vimeoVideoDetails: gptResponse.vimeoVideoDetails,
                                     enterpriseSelections: gptResponse.enterpriseSelections,
                                     pdfNames: gptResponse.pdfNames,
                                     userType: gptResponse.userType,
                                     isExclusiveContent: gptResponse.isExclusiveContent,
                                     isItKosher: gptResponse.isItKosher,
                                     enterprisePdfNames: gptResponse.enterprisePdfNames,
+                                    safetyChecker: gptResponse.safetyChecker,
+                                    globalAssist: gptResponse.globalAssist
                                 }
                             }
                         };
@@ -606,7 +608,7 @@ const NewHomePageMui = () => {
                                         whiteSpace: "nowrap",
                                         overflow: "hidden",
                                         textAlign: "left",
-                                        marginLeft: "0px",
+                                        marginLeft: "auto",
                                     }}>
                                         &nbsp; {chatSession.name}
                                     </Typography>
@@ -652,22 +654,22 @@ const NewHomePageMui = () => {
                         width: { xs: "100%", sm: "96%" },
                         marginX: "auto",
                         padding: "20px",
-                        height: "90vh",
+                        height: "100vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
                         borderRadius: "20px",
                         bottom: "20px",
                         marginTop: "0px",
-                        '@media (min-width: 1300px)': {
-                            height: "100vh",
-                        },
+                        // '@media (min-width: 1300px)': {
+                        //     height: "100vh",
+                        // },
                     }}
                 >
                     <Box className="answerBox" ref={chatContainerRef}
                         style={{
                             width: "100%",
                             marginX: "auto",
-                            minHeight: "calc(100% - 90px)",
-                            maxHeight: "calc(100% - 90px)",
+                            minHeight: "calc(100% - 80px)",
+                            maxHeight: "calc(100% - 80px)",
                             overflowY: "auto",
                             overflowX: "hidden",
                         }}>
@@ -707,7 +709,7 @@ const NewHomePageMui = () => {
                     </Box>
 
                     <Box sx={{
-                        marginLeft: drawerOpen && !isSmallScreen ? "280px" : "0px", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
+                        marginLeft: drawerOpen && !isSmallScreen ? "260px" : "auto", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
                         background: activeTab === 1 ? "#eaf5ff" : "transparent", '@media (min-width: 1300px)': {
                             background: activeTab === 1 ? "#eaf5ff" : "#13416a",
                             bottom: "20px",
@@ -804,7 +806,7 @@ const NewHomePageMui = () => {
                                     zIndex: 1000,
                                     display: "flex",
                                     alignItems: "center",
-                                }}
+                                                                    }}
                                 className="search-wrapper"
                             >
                                 <TextField

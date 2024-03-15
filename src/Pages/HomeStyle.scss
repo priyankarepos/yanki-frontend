@@ -5,11 +5,9 @@
 .fixedSearchBox {
     position: fixed;
     // bottom: 0px;
-    left: 20px;
-    right: 40px;
-    margin: 0px auto 0px;
-    // width: 100%;
-    max-width: 92%;
+    left: 30px;
+    right: 30px;
+    max-width: 100%;
     // padding-top: 20px;
 }
 
@@ -67,13 +65,42 @@
   @media (max-width: 600px) {
     .fixedSearchBox {
         right: 20px;
+        left: 20px;
     }
+}
+@media (min-width: 1100px) {
+  .fixedSearchBox{
+    left: 40px;
+    right: 40px;
+  }
+}
+
+@media (min-width: 1300px) {
+  .fixedSearchBox{
+    left: 50px;
+    right: 50px;
+  }
 }
 
 @media (min-width: 1800px) {
   .fixedSearchBox {
-      max-width: 83%;
+      max-width: 100%;
       left: 60px;
       right: 60px;
+  }
+}
+
+@media (min-width: 2300px) {
+  .fixedSearchBox {
+      max-width: 100%;
+      left: 70px;
+      right: 70px;
+  }
+}
+@media (min-width: 2800px) {
+  .fixedSearchBox {
+      max-width: 100%;
+      left: 80px;
+      right: 80px;
   }
 }
