@@ -17,8 +17,6 @@ import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 
 const SearchHistoryItem = ({ query, response }) => {
-  debugger;
-
   const { activeTab } = React.useContext(Context);
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
