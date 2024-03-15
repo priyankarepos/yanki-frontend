@@ -64,3 +64,55 @@ td.coordinates-label {
   width: 100%;
   transition: 2px 2px 3s ease-in-out !important;
 }
+.hatzala-disclaimer-box{
+  margin-top: 10px;
+  color: #007bff;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+}
+.switch-button {
+  background-color: #2f587d;
+  padding: 12px;
+  display: inline-block;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px !important;
+  min-width: 5vw;
+  text-align: center;
+}
+.switch-button.selected {
+  background-color: #6fa8dd;
+}
+
+@media (min-width: 0px) {
+  .switch-button {
+    min-width: 40vw;
+  }
+}
+
+@media (min-width: 600px) {
+  .switch-button {
+    min-width: 25vw;
+  }
+}
+
+@media (min-width: 900px) {
+  .switch-button {
+    min-width: 20vw;
+  }
+}
+@media (min-width: 1300px) {
+  .switch-button {
+    min-width: 10vw;
+  }
+}
+.youtube-box {
+  padding: 16px;
+  background-color: #011c34 !important;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #214564;
+  margin-top: 20px;
+  padding: 16px;
+}
