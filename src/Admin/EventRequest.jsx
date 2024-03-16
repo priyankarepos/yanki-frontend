@@ -614,7 +614,7 @@ const AdminEventRequest = () => {
                                                         size="small"
                                                         style={styles.approveButton}
                                                         disabled={loadingRows.includes(event.eventId)}
-                                                        onClick={() => handleDeleteClick(event.eventId, event.eventName)}
+                                                        onClick={() => handleDeleteClick(event.eventId, event.userId, event.eventName)}
                                                     >
                                                         Delete
                                                     </Button>
