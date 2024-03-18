@@ -374,7 +374,7 @@ const AdminEventRequest = () => {
 
             if (response.status === 200) {
 
-                setSnackbarMessage(`Event ${EventName} mail sent successfully`, 'success');
+                setSnackbarMessage(`The request for more information has been sent successfully`);
                 setSnackbarOpen(true);
                 fetchEventRequest();
             } else {
