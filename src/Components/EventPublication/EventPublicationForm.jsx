@@ -21,14 +21,16 @@ const modalContentStyle = {
     marginTop: 'auto',
 };
 
-const EventPublicationForm = ({answer}) => {
+const EventPublicationForm = ({ answer }) => {
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
+    console.log("uploadedFiles", uploadedFiles);
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [isPdfModalOpen, setPdfModalOpen] = useState(false);
     const [isFormModalOpen, setFormModalOpen] = useState(false);
+    console.log("isFormModalOpen", isFormModalOpen);
     const [responseMessage, setResponseMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -93,12 +95,12 @@ const EventPublicationForm = ({answer}) => {
     const { control, handleSubmit, setValue, reset, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
-        console.log("data", data);
         try {
             setIsLoading(true);
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
 
-            const requestData = {
+            // Call the add-event API
+            const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
+            const addEventData = {
                 eventName: data.EventName,
                 eventLocation: data.locations.map(item => item.name),
                 eventPublicationArea: data.publicationArea.map(item => item.name),
@@ -107,10 +109,35 @@ const EventPublicationForm = ({answer}) => {
                 eventDateAndTime: `${data.date}T${data.time}`,
                 // imageUrl: data.uploadedFiles.map(file => file.name), // Uncomment if needed
             };
+            const addEventResponse = await axios.post(addEventUrl, addEventData);
+            const eventId = addEventResponse.data;
+            console.log("eventId0", eventId);
 
-            const response = await axios.post(apiUrl, requestData);
+            // Call the event-image-upload API
+            const formData = new FormData();
+            if (Array.isArray(data.uploadedFiles)) { // Check if uploadedFiles is an array
+                data.uploadedFiles.forEach(file => {
+                    formData.append('imageFiles', file);
+                });
+            } else {
+                console.error('Error: uploadedFiles is not an array');
+                setIsLoading(false);
+                return;
+            }
+            console.log("data.uploadedFiles0", data.uploadedFiles);
+            console.log("formData", formData);
+            const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+            const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log("imageUploadResponse", imageUploadResponse);
+            console.log("Event added successfully:", addEventResponse.data);
+            console.log("Image uploaded successfully:", imageUploadResponse.data);
+
+            // Reset form and state
             setResponseMessage("Your event publish request has been sent successfully");
-            console.log("=====", response.data);
             setFormModalOpen(false);
             setIsLoading(false);
             setUploadedFiles([]);
@@ -119,7 +146,9 @@ const EventPublicationForm = ({answer}) => {
             console.error('Error submitting event:', error);
             setIsLoading(false);
         }
+        setFormModalOpen(false);
     };
+
 
     const onSelectLocations = (selectedList) => {
         console.log("locations", selectedList);
@@ -150,43 +179,22 @@ const EventPublicationForm = ({answer}) => {
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
-    
-        // Check if all selected files are of allowed types
         const invalidFiles = selectedFiles.filter(file => !["image/jpeg", "image/png"].includes(file.type));
         if (invalidFiles.length > 0) {
             alert("Please select only JPG or PNG files.");
-            e.target.value = ''; // Clear the input field
+            e.target.value = '';
             return;
         }
-    
-        // Set the value of 'uploadedFiles' using setValue
-        setValue('uploadedFiles', selectedFiles);
-    
-        // Check if the total number of files exceeds 3
-        if (selectedFiles.length + uploadedFiles.length > 3) {
+        const newFiles = [...uploadedFiles, ...selectedFiles];  // Concatenate new files with existing ones
+        setValue('uploadedFiles', newFiles);
+
+        if (newFiles.length > 3) {  // Check the total number of files
             alert('You can upload up to 3 files.');
-            e.target.value = ''; // Clear the input field
+            e.target.value = '';
             return;
         }
-    
-        // Add the selected files to the 'uploadedFiles' state
-        setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-    
-        // Clear the input field
+        setUploadedFiles(newFiles);  // Update the state with the concatenated array
         e.target.value = '';
-    };
-
-    const validateFile = (value) => {
-        if (!value || value.length === 0 || !value[0]) {
-            return "File is required";
-        }
-
-        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
-        if (!allowedTypes.includes(value[0].type)) {
-            return "Please select a valid file (PDF, JPG, or PNG)";
-        }
-
-        return true;
     };
 
     const handleFileRemove = (fileName) => {
@@ -213,7 +221,7 @@ const EventPublicationForm = ({answer}) => {
                 <Typography className='Custom-Button' onClick={openFormModal} style={{ marginTop: '20px' }}>
                     Open Form
                 </Typography>
-                {responseMessage && <Typography sx={{mt:2}}>{responseMessage}</Typography>}
+                {responseMessage && <Typography sx={{ mt: 2 }}>{responseMessage}</Typography>}
             </Paper>
             <Modal
                 open={isFormModalOpen}
@@ -276,23 +284,27 @@ const EventPublicationForm = ({answer}) => {
                                     control={control}
                                     name="locations"
                                     defaultValue={[]}
+                                    rules={{ required: 'Location is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={eventLocations.map(location => ({
-                                                name: location.eventLocationName,
-                                                id: location.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectLocations(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemoveLocation={(selectedList) => {
-                                                onRemoveLocations(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={eventLocations.map(location => ({
+                                                    name: location.eventLocationName,
+                                                    id: location.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectLocations(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemoveLocation={(selectedList) => {
+                                                    onRemoveLocations(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
@@ -346,23 +358,27 @@ const EventPublicationForm = ({answer}) => {
                                     control={control}
                                     name="publicationArea"
                                     defaultValue={[]}
+                                    rules={{ required: 'Publication area is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={publicationArea.map(item => ({
-                                                name: item.eventPublicationAreaName,
-                                                id: item.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectPublicationArea(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemove={(selectedList) => {
-                                                onRemovePublicationArea(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={publicationArea.map(item => ({
+                                                    name: item.eventPublicationAreaName,
+                                                    id: item.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectPublicationArea(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemove={(selectedList) => {
+                                                    onRemovePublicationArea(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
@@ -372,28 +388,31 @@ const EventPublicationForm = ({answer}) => {
                                     control={control}
                                     name="eventTypes"
                                     defaultValue={[]}
+                                    rules={{ required: 'Event type is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={eventTypes.map(item => ({
-                                                name: item.eventTypeName,
-                                                id: item.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectEventTypes(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemove={(selectedList) => {
-                                                onRemoveEventTypes(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={eventTypes.map(item => ({
+                                                    name: item.eventTypeName,
+                                                    id: item.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectEventTypes(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemove={(selectedList) => {
+                                                    onRemoveEventTypes(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
-                            {/* This commented code is going to be used in next scope */}
-                            {/* <Grid item lg={6} md={12} sm={12} xs={12}>
+                            <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>Upload Files</InputLabel>
                                 <Controller
                                     control={control}
@@ -403,10 +422,7 @@ const EventPublicationForm = ({answer}) => {
                                             <input
                                                 className='event-form-file'
                                                 type="file"
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    handleFileChange(e);
-                                                }}
+                                                onChange={handleFileChange}
                                                 accept="image/*, .pdf"
                                                 multiple
                                                 name="uploadedFiles"
@@ -427,9 +443,8 @@ const EventPublicationForm = ({answer}) => {
                                             )}
                                         </FormControl>
                                     )}
-                                    rules={{ validate: validateFile }}
                                 />
-                            </Grid> */}
+                            </Grid>
                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                 <InputLabel>Event Details</InputLabel>
                                 <Controller
