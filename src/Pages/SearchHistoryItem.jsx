@@ -19,8 +19,9 @@ import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
+  console.log("response", response);
 
-  const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length;
+  const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length > 0;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
