@@ -7,8 +7,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import "./PersonalAssistant.scss";
-
+import "../SafetyChecker/SafetyChecker.scss";
 const PersonalAssistant = ({ answer }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
