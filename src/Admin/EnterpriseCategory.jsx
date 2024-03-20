@@ -297,7 +297,7 @@ const AdminEnterpriseCategory = () => {
               color="primary"
               type="submit"
               style={styles.modalButton}
-              disabled={loading}
+              disabled={loading || !categoryName.trim()}
             >
               {loading ? <CircularProgress size={24} /> : (editCategoryId !== null ? "Save Changes" : "Save & Add")}
             </Button>

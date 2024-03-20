@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Context } from "../App";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import TuneIcon from '@mui/icons-material/Tune';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -59,6 +61,11 @@ export default function ProfielCircle() {
     handleClose();
     navigate("/change-phone-number");
   };
+
+  const onClickAICustomization = () => {
+    handleClose();
+    navigate("/ai-customization");
+  }
 
   const onClickAdmin = () => {
     handleClose();
@@ -178,9 +185,19 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Phone Number
           </MenuItem>
-
+          <MenuItem onClick={onClickChangeNumber}>
+            <ListItemIcon>
+              <NotificationsNoneIcon />
+            </ListItemIcon>
+            Notification
+          </MenuItem>
+          <MenuItem onClick={onClickAICustomization}>
+            <ListItemIcon>
+              <TuneIcon />
+            </ListItemIcon>
+            AI Customization
+          </MenuItem>
           <Divider />
-
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
               <Logout fontSize="small" />
