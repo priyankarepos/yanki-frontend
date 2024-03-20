@@ -26,7 +26,7 @@ const SearchHistoryItem = ({ query, response }) => {
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
-  const isPersonalAssistant = query == "personal assistant" ? true : false;
+  const isPersonalAssistant = response.isSucess && response.message && response.isPersonalAssistant;
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
@@ -60,7 +60,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && (
+      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && (
           <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
             <div className="chat-bubble assistant-bubble">
               <DemoEnterpriseChat answer={response} />

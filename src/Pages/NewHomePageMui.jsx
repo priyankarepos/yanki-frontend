@@ -246,6 +246,7 @@ const NewHomePageMui = () => {
                                     safetyChecker: gptResponse.safetyChecker,
                                     globalAssist: gptResponse.globalAssist,
                                     isEvent: gptResponse.isEvent,
+                                    isPersonalAssistant: gptResponse.isPersonalAssistant,
                                 }
                             }
                         };
@@ -705,7 +706,7 @@ const NewHomePageMui = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 color: activeTab === 0 ? "#fff" : "#063762",
-                            }}>Hi! Not sure where to start today?</Typography>
+                            }}>What mitzvah can AI help you with?</Typography>
                         </Box>}
                     </Box>
 
