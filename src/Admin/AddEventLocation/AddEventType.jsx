@@ -295,7 +295,7 @@ const AdminAddEventType = () => {
               color="primary"
               type="submit"
               style={styles.modalButton}
-              disabled={loading}
+              disabled={loading || !eventTypeName.trim()}
             >
               {loading ? <CircularProgress size={24} /> : (editEventTypeId !== null ? "Save Changes" : "Save & Add")}
             </Button>

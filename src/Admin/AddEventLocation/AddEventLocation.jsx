@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -6,7 +6,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
-import { Context } from '../../App';
 
 const styles = {
   tableContainer: {
@@ -72,9 +71,7 @@ const styles = {
 };
 
 const AdminAddEventLocation = () => {
-  const { drawerOpen } = useContext(Context);
   const [eventLocations, setEventLocations] = useState([]);
-  console.log("eventLocations", eventLocations);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [locationName, setLocationName] = useState('');
   const [editLocationId, setEditLocationId] = useState('');
@@ -217,8 +214,6 @@ const AdminAddEventLocation = () => {
     }
   };
 
-  const contentMargin = drawerOpen ? '0' : '0';
-
   return (
     <Box style={{ display: "flex" }}>
       <Box style={{ ...styles.content}} className="enterpriseFormBox">
@@ -291,7 +286,7 @@ const AdminAddEventLocation = () => {
               color="primary"
               type="submit"
               style={styles.modalButton}
-              disabled={loading}
+              disabled={loading || !locationName.trim()}
             >
               {loading ? <CircularProgress size={24} /> : (editLocationId !== null ? "Save Changes" : "Save & Add")}
             </Button>
