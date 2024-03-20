@@ -85,7 +85,6 @@ const AdminCreateEnterprise = () => {
                 const responseData = response.data;
                 setEnterpriseDetails(responseData);
                 setEnterpriseList(responseData)
-                console.log('Enterprise Details:', responseData);
 
             } else {
                 console.error('Failed to fetch enterprise details');
@@ -178,8 +177,6 @@ const AdminCreateEnterprise = () => {
                 const keywordExists = response.data.exists;
 
                 if (keywordExists !== undefined) {
-                    console.log("keywordExists", keywordExists);
-
                     if (keywordExists) {
                         console.log('Keyword already exists:', tag);
                     } else {
@@ -320,9 +317,7 @@ const AdminCreateEnterprise = () => {
     const departmentsData = JSON.parse(sessionStorage.getItem('departmentsData')) || [];
 
     const handleEditEnterprise = (key, enterpriseId, enterprise) => {
-        console.log("edit department", key, enterpriseId, enterprise);
         setEnterpriseId(enterpriseId)
-
         setValue("EnterpriseName", enterprise.enterpriseName || "");
         setValue("EnterprisePointOfContact", enterprise.contactPersonName || "");
         setValue("EnterpriseAddress", enterprise.enterpriseAddress || "");
@@ -342,14 +337,12 @@ const AdminCreateEnterprise = () => {
 
         if (enterprise.enterpriseKeywords) {
             const keywordsArray = enterprise.enterpriseKeywords.split(',');
-            console.log("keywordsArray", keywordsArray);
             setTags(keywordsArray);
             setValue("EnterpriseIdentificationKeywords", keywordsArray || []);
         }
     };
 
     const handleDeleteEnterprise = (key, enterpriseId) => {
-        console.log("key", key, enterpriseId);
         setEnterpriseId(enterpriseId)
         setConfirmDialogOpen(true);
         setConfirmationText(`Are you sure you want to delete the enterprise "${enterpriseList[key].enterpriseName}"?`);
