@@ -94,9 +94,7 @@ const AdminCreateDepartment = () => {
 
                 if (response.status === 200) {
                     const responseData = response.data;
-                    setEnterpriseList(responseData)
-                    console.log('Enterprise Details:', responseData);
-
+                    setEnterpriseList(responseData);
                 } else {
                     console.error('Failed to fetch enterprise details');
                 }
@@ -139,8 +137,6 @@ const AdminCreateDepartment = () => {
             if (response.status === 200) {
                 const keywordExists = response.data.exists;
                 if (keywordExists !== undefined) {
-                    console.log("keywordExists", keywordExists);
-
                     if (keywordExists) {
                         console.log('Keyword already exists:', tag);
                     } else {
@@ -224,7 +220,6 @@ const AdminCreateDepartment = () => {
     }, [tags]);
 
     const [departmentsData, setDepartmentsData] = useState([]);
-    console.log("departmentsData", departmentsData);
 
     useEffect(() => {
         const fetchData = async () => {
