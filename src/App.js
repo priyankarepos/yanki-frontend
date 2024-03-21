@@ -48,6 +48,7 @@ import EnterpriseFileUpload from "./EnterpriseCollabration/EnterpriseUpload";
 import ChangePhoneNumber from "./Pages/ChangePhoneNumber";
 import AdminEventRequest from "./Admin/EventRequest";
 import EventLocationPage from "./Admin/EventLocationPage";
+import AiCustomization from "./Pages/AiCustomization/AiCustomization";
 
 // Exporting context
 export const Context = createContext("");
@@ -558,6 +559,16 @@ function App() {
                     element={
                       <UserPagesProtection>
                         <EventLocationPage />
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/ai-customization"
+                    element={
+                      <UserPagesProtection>
+                        <UserPageLayout>
+                          <AiCustomization />
+                        </UserPageLayout>
                       </UserPagesProtection>
                     }
                   />

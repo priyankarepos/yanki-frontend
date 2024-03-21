@@ -109,21 +109,15 @@ const AdminEventRequest = () => {
     const [eventRequests, setEventRequests] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
-    //const [selectedValues, setSelectedValues] = useState([]);
     const [isFormModalOpen, setFormModalOpen] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    // const [responseMessage, setResponseMessage] = useState("");
     const [loadingRows, setLoadingRows] = useState([]);
-     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
     const [isPending, setIsPending] = useState(false);
     const [eventIdToDelete, setEventIdToDelete] = useState(null);
-    const [userIdToDelete, setUserIdToDelete] = useState(null);
     const [editEventData, setEditEventData] = useState(null);
     const [editEventId, setEditEventId] = useState(null);
-    console.log("editEventData", editEventData);
-    console.log("editEventId", editEventId);
 
     const fetchEventRequest = async () => {
         try {
@@ -209,30 +203,55 @@ const AdminEventRequest = () => {
     };
 
     const onSubmit = async (data) => {
-        console.log("data", data);
         try {
             setIsLoading(true);
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
-
-            const requestData = {
+            const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
+            const addEventData = {
                 eventName: data.EventName,
                 eventLocation: data.locations.map(item => item.name),
                 eventPublicationArea: data.publicationArea.map(item => item.name),
                 eventType: data.eventTypes.map(item => item.name),
                 eventDetails: data.eventDetails,
                 eventDateAndTime: `${data.date}T${data.time}`,
-                // imageUrl: data.uploadedFiles.map(file => file.name), // Uncomment if needed
             };
+            const addEventResponse = await axios.post(addEventUrl, addEventData);
+            const eventId = addEventResponse.data;
+            if (!uploadedFiles || uploadedFiles.length === 0) {
+                window.location.reload();
+            }
+            const formData = new FormData();
+            if (Array.isArray(data.uploadedFiles)) {
+                data.uploadedFiles.forEach(file => {
+                    formData.append('imageFiles', file);
+                });
+            } else {
+                console.error('Error: uploadedFiles is not an array');
+                setIsLoading(false);
+                return;
+            }
 
-            const response = await axios.post(apiUrl, requestData);
-            //setResponseMessage("Your event publish request has been sent successfully");
-            console.log("=====", response.data);
-            setFormModalOpen(false);
+            const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+            const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log("imageUploadResponse", imageUploadResponse);
+            console.log("Event added successfully:", addEventResponse.data);
+            console.log("Image uploaded successfully:", imageUploadResponse.data);
             setIsLoading(false);
             setUploadedFiles([]);
+            setEventLocations([]);
+            setEventTypes([])
+            setPublicationArea([])
             reset();
+            setFormModalOpen(false);
+            setSnackbarMessage('Your event publish request has been sent successfully');
+            setSnackbarOpen(true);
         } catch (error) {
             console.error('Error submitting event:', error);
+            setSnackbarMessage('Error submitting event:', error);
+            setSnackbarOpen(true);
             setIsLoading(false);
         }
     };
@@ -257,7 +276,6 @@ const AdminEventRequest = () => {
             const formData = getValues();
             const requestData = {
                 eventId: editEventId,
-                //userId: formData.userId, 
                 eventName: formData.EventName,
                 status: formData.status,
                 eventLocation: formData.locations.map(item => item.name),
@@ -265,33 +283,36 @@ const AdminEventRequest = () => {
                 eventType: formData.eventTypes.map(item => item.name),
                 eventDetails: formData.eventDetails,
                 eventDateAndTime: `${formData.date}T${formData.time}`,
-                //imageUrl: formData.uploadedFiles.map(file => file.name), // If imageUrl is available
             };
 
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/events/update-event`;
             const response = await axios.put(apiUrl, requestData);
-
-            // Handle response as needed
             console.log('Update response:', response.data);
+            if (Array.isArray(formData.uploadedFiles) && formData.uploadedFiles.length > 0) {
+                const formDataImages = new FormData();
+                formData.uploadedFiles.forEach(file => {
+                    formDataImages.append('imageFiles', file);
+                });
+                const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${editEventId}`;
+                await axios.post(imageUploadUrl, formDataImages, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log("Image(s) uploaded successfully.");
+            }
 
-            // Perform actions after successful update
-            //setResponseMessage(response.data);
             setFormModalOpen(false);
             setIsLoading(false);
             setUploadedFiles([]);
-            reset(); // Reset form if needed
-            window.location.reload(); // Refresh the page
+            reset();
+            window.location.reload();
+            setSnackbarMessage("Event has been updated successfully");
+            setSnackbarOpen(true);
         } catch (error) {
-            console.error('Error submitting event:', error);
+            console.error('Error updating event:', error);
             setIsLoading(false);
-            // Handle error as needed
         }
-    };
-
-    const openSnackbar = (message, severity) => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
-        setSnackbarOpen(true);
     };
 
     const handleApprove = async (eventId, userId, EventName) => {
@@ -299,14 +320,16 @@ const AdminEventRequest = () => {
             const updatedLoadingRows = [...loadingRows, eventId];
             setLoadingRows(updatedLoadingRows);
 
-            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-enterprises-requests/${eventId}/approve`;
+            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                openSnackbar(`Enterprise ${EventName} approved successfully`, 'success');
+                setSnackbarMessage(`Event ${EventName} approved successfully`, 'success');
+                setSnackbarOpen(true);
                 fetchEventRequest();
             } else {
-                openSnackbar('Failed to approve enterprise request', 'error');
+                setSnackbarMessage('Failed to approve event request', 'error');
+                setSnackbarOpen(true);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -321,14 +344,17 @@ const AdminEventRequest = () => {
             const updatedLoadingRows = [...loadingRows, eventId];
             setLoadingRows(updatedLoadingRows);
 
-            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-enterprises-requests/${eventId}/reject`;
+            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/reject`;
             const response = await axios.post(url);
 
             if (response.status === 200) {
-                openSnackbar(`Enterprise ${EventName} rejected successfully`, 'success');
+                setSnackbarMessage(`Event ${EventName} rejected successfully`, 'success');
+                setSnackbarOpen(true);
                 fetchEventRequest();
             } else {
-                openSnackbar('Failed to reject enterprise request', 'error');
+                setSnackbarMessage('Failed to reject event request', 'error');;
+                setSnackbarOpen(true);
+
             }
         } catch (error) {
             console.error("Error:", error);
@@ -343,15 +369,17 @@ const AdminEventRequest = () => {
             const updatedLoadingRows = [...loadingRows, eventId];
             setLoadingRows(updatedLoadingRows);
 
-            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-enterprises-requests/${eventId}/askformoreinformation`;
+            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/askformoreinformation`;
             const response = await axios.post(url);
 
             if (response.status === 200) {
 
-                openSnackbar(`Enterprise ${EventName} rejected successfully`, 'success');
+                setSnackbarMessage(`The request for more information has been sent successfully`);
+                setSnackbarOpen(true);
                 fetchEventRequest();
             } else {
-                openSnackbar('Failed to reject enterprise request', 'error');
+                setSnackbarMessage('Failed to reject Event request', 'error');
+                setSnackbarOpen(true);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -361,12 +389,10 @@ const AdminEventRequest = () => {
         }
     };
 
-    const handleDeleteClick = (eventId, userId, EventName) => {
-        console.log("eventId", eventId);
+    const handleDeleteClick = (eventId, EventName) => {
         setConfirmationText(`Are you sure you want to delete the request for ${EventName}?`);
         setConfirmDialogOpen(true);
         setEventIdToDelete(eventId);
-        setUserIdToDelete(userId);
     };
 
     const handleConfirmDelete = async () => {
@@ -376,9 +402,12 @@ const AdminEventRequest = () => {
 
             if (response.status === 200) {
                 fetchEventRequest();
-                openSnackbar(`Request deleted successfully`, 'success');
+                setSnackbarMessage(`Request deleted successfully`, 'success');
+                setSnackbarOpen(true);
             } else {
-                openSnackbar('Failed to delete the request', 'error');
+                setSnackbarMessage('Failed to delete the request', 'error');
+                setSnackbarMessage(`Request deleted successfully`, 'success');
+                setSnackbarOpen(true);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -413,48 +442,47 @@ const AdminEventRequest = () => {
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
-
-        // Check if all selected files are of allowed types
         const invalidFiles = selectedFiles.filter(file => !["image/jpeg", "image/png"].includes(file.type));
         if (invalidFiles.length > 0) {
             alert("Please select only JPG or PNG files.");
-            e.target.value = ''; // Clear the input field
+            e.target.value = '';
             return;
         }
+        const newFiles = [...uploadedFiles, ...selectedFiles];
+        setValue('uploadedFiles', newFiles);
 
-        // Set the value of 'uploadedFiles' using setValue
-        setValue('uploadedFiles', selectedFiles);
-
-        // Check if the total number of files exceeds 3
-        if (selectedFiles.length + uploadedFiles.length > 3) {
+        const totalFilesCount = editEventData ? editEventData.imageUrl.length + uploadedFiles.length : uploadedFiles.length;
+        if (totalFilesCount + selectedFiles.length > 3) {
             alert('You can upload up to 3 files.');
-            e.target.value = ''; // Clear the input field
+            e.target.value = '';
             return;
         }
-
-        // Add the selected files to the 'uploadedFiles' state
-        setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-
-        // Clear the input field
+        setUploadedFiles(newFiles);
         e.target.value = '';
-    };
-
-    const validateFile = (value) => {
-        if (!value || value.length === 0 || !value[0]) {
-            return "File is required";
-        }
-
-        const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
-        if (!allowedTypes.includes(value[0].type)) {
-            return "Please select a valid file (PDF, JPG, or PNG)";
-        }
-
-        return true;
     };
 
     const handleFileRemove = (fileName) => {
         const updatedFiles = uploadedFiles.filter((file) => file.name !== fileName);
         setUploadedFiles(updatedFiles);
+    };
+
+    const handleDeleteImage = async (imageId) => {
+        try {
+            const deleteImageUrl = `${process.env.REACT_APP_API_HOST}/api/events/delete-event-image/${imageId}`;
+            const response = await axios.delete(deleteImageUrl);
+            console.log('Image deleted successfully:', response.data);
+            setSnackbarMessage("Image deleted successfully");
+            setSnackbarOpen(true);
+            const updatedImages = editEventData.imageUrl.filter(image => image.imageId !== imageId);
+            const updatedEditEventData = {
+                ...editEventData,
+                imageUrl: updatedImages,
+            };
+
+            setEditEventData(updatedEditEventData);
+        } catch (error) {
+            console.error('Error deleting image:', error);
+        }
     };
 
     const openFormModal = () => {
@@ -465,25 +493,6 @@ const AdminEventRequest = () => {
         setFormModalOpen(false);
         reset();
     };
-    const dummyImageUrls = [
-        {
-            url: 'https://m.media-amazon.com/images/I/71GUQN6ivhL._AC_UF1000,1000_QL80_.jpg',
-            name: 'Image 1',
-        },
-        {
-            url: 'https://m.media-amazon.com/images/I/71GUQN6ivhL._AC_UF1000,1000_QL80_.jpg',
-            name: 'Image 2',
-        },
-        {
-            url: 'https://m.media-amazon.com/images/I/71GUQN6ivhL._AC_UF1000,1000_QL80_.jpg',
-            name: 'Image 3',
-        },
-    ];
-
-    const openPdfModal = (pdfUrl) => {
-        setSelectedPdf(pdfUrl);
-        setPdfModalOpen(true);
-    };
 
     const closePdfModal = () => {
         setPdfModalOpen(false);
@@ -491,8 +500,13 @@ const AdminEventRequest = () => {
     };
 
     const handleImageClick = (imageUrl) => {
-        setSelectedImage({ url: imageUrl.url });
+        setSelectedImage({ url: imageUrl.imageUrl });
         setIsImageModalOpen(true);
+    };
+
+    const getImageFilename = (imageUrl) => {
+        const parts = imageUrl.split('/');
+        return parts.pop();
     };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -523,8 +537,7 @@ const AdminEventRequest = () => {
                                         <TableCell style={styles.headerCell}>Event Detail</TableCell>
                                         <TableCell style={styles.headerCell}>Event Type</TableCell>
                                         <TableCell style={styles.headerCell}>Event Publication Area</TableCell>
-                                        {/* This commented code is going to be used in next scope */}
-                                        {/* <TableCell style={styles.headerCell}>Images</TableCell> */}
+                                        <TableCell style={styles.headerCell}>Images</TableCell>
                                         <TableCell style={styles.headerCell}>Status</TableCell>
                                         <TableCell style={{ ...styles.headerCell, textAlign: "right", }}>Action</TableCell>
                                     </TableRow>
@@ -539,14 +552,17 @@ const AdminEventRequest = () => {
                                             <TableCell style={styles.cell}>{event.eventDetails}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventType.join(', ')}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventPublicationArea.join(', ')}</TableCell>
-                                            {/* This commented code is going to be used in next scope */}
-                                            {/* <TableCell style={styles.cell}>
-                                                {event.imageUrl.map((image, index) => (
-                                                    <p key={index} onClick={() => handleImageClick(image)}>
-                                                        {image.imageUrl}
-                                                    </p>
-                                                ))}
-                                            </TableCell> */}
+                                            <TableCell style={styles.cell}>
+                                                {event.imageUrl && event.imageUrl.length > 0 ? (
+                                                    event.imageUrl.map((image, index) => (
+                                                        <p style={{ cursor: "pointer", }} key={index} onClick={() => handleImageClick(image)}>
+                                                            {getImageFilename(image.imageUrl)}
+                                                        </p>
+                                                    ))
+                                                ) : (
+                                                    <p>N/A</p>
+                                                )}
+                                            </TableCell>
                                             <TableCell style={styles.cell}>{event.status}</TableCell>
                                             <TableCell style={{ ...styles.cell, textAlign: "right", }}>
                                                 <div style={{ display: 'flex', gap: '8px' }}>
@@ -652,7 +668,7 @@ const AdminEventRequest = () => {
                     }} aria-label="close">
                         <CloseIcon />
                     </IconButton>
-                    {selectedImage && (
+                    {selectedImage && selectedImage.url && (
                         <img
                             src={selectedImage.url}
                             alt={selectedImage.name || 'Image'}
@@ -723,23 +739,27 @@ const AdminEventRequest = () => {
                                     control={control}
                                     name="locations"
                                     defaultValue={editEventData && editEventData.eventLocation ? editEventData.eventLocation.flatMap(location => location.split(',')).map(location => ({ name: location })) : []}
+                                    rules={{ required: 'Location is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={eventLocations.map(location => ({
-                                                name: location.eventLocationName,
-                                                id: location.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectLocations(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemoveLocation={(selectedList) => {
-                                                onRemoveLocations(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={eventLocations.map(location => ({
+                                                    name: location.eventLocationName,
+                                                    id: location.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectLocations(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemoveLocation={(selectedList) => {
+                                                    onRemoveLocations(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
@@ -795,23 +815,27 @@ const AdminEventRequest = () => {
                                     control={control}
                                     name="publicationArea"
                                     defaultValue={editEventData && editEventData.eventPublicationArea ? editEventData.eventPublicationArea.flatMap(area => area.split(',')).map(area => ({ name: area })) : []}
+                                    rules={{ required: 'Publication area is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={publicationArea.map(item => ({
-                                                name: item.eventPublicationAreaName,
-                                                id: item.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectPublicationArea(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemove={(selectedList) => {
-                                                onRemovePublicationArea(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={publicationArea.map(item => ({
+                                                    name: item.eventPublicationAreaName,
+                                                    id: item.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectPublicationArea(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemove={(selectedList) => {
+                                                    onRemovePublicationArea(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
@@ -821,28 +845,31 @@ const AdminEventRequest = () => {
                                     control={control}
                                     name="eventTypes"
                                     defaultValue={editEventData && editEventData.eventType ? editEventData.eventType.flatMap(type => type.split(',')).map(type => ({ name: type })) : []}
+                                    rules={{ required: 'Event type is required.' }}
                                     render={({ field }) => (
-                                        <Multiselect
-                                            options={eventTypes.map(item => ({
-                                                name: item.eventTypeName,
-                                                id: item.id,
-                                            }))}
-                                            selectedValues={field.value}
-                                            onSelect={(selectedList) => {
-                                                onSelectEventTypes(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            onRemove={(selectedList) => {
-                                                onRemoveEventTypes(selectedList);
-                                                field.onChange(selectedList);
-                                            }}
-                                            displayValue="name"
-                                        />
+                                        <>
+                                            <Multiselect
+                                                options={eventTypes.map(item => ({
+                                                    name: item.eventTypeName,
+                                                    id: item.id,
+                                                }))}
+                                                selectedValues={field.value}
+                                                onSelect={(selectedList) => {
+                                                    onSelectEventTypes(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                onRemove={(selectedList) => {
+                                                    onRemoveEventTypes(selectedList);
+                                                    field.onChange(selectedList);
+                                                }}
+                                                displayValue="name"
+                                            />
+                                            {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
+                                        </>
                                     )}
                                 />
                             </Grid>
-                            {/* This commented code is going to be used in next scope */}
-                            {/* <Grid item lg={6} md={12} sm={12} xs={12}>
+                            <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>Upload Files</InputLabel>
                                 <Controller
                                     control={control}
@@ -852,23 +879,32 @@ const AdminEventRequest = () => {
                                             <input
                                                 className='event-form-file'
                                                 type="file"
-                                                onChange={(e) => {
-                                                    field.onChange(e);
-                                                    handleFileChange(e);
-                                                }}
+                                                onChange={handleFileChange}
                                                 accept="image/*, .pdf"
                                                 multiple
                                                 name="uploadedFiles"
                                             />
-                                            {uploadedFiles.map((file) => (
-                                                <div className='pdf-img-style-box' key={file.name}>
-                                                    <p>{file.name}</p>
-                                                    <p>
-                                                        <span onClick={() => handlePdfSelect(file)} className="icon-style"><VisibilityIcon /></span>
-                                                        <span onClick={() => handleFileRemove(file.name)} className="icon-style2"><DeleteIcon /></span>
-                                                    </p>
-                                                </div>
-                                            ))}
+                                            <>
+                                                {editEventData && editEventData.imageUrl && editEventData.imageUrl.map((file) => (
+                                                    <div className='pdf-img-style-box' key={file.imageId}>
+                                                        <p>{getImageFilename(file.imageUrl)}</p>
+                                                        <p>
+                                                            <span onClick={() => handleImageClick(file)} className="icon-style"><VisibilityIcon /></span>
+                                                            <span onClick={() => handleDeleteImage(file.imageId)} className="icon-style2"><DeleteIcon /></span>
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                                {uploadedFiles.map((file) => (
+                                                    <div className='pdf-img-style-box' key={file.name}>
+                                                        <p>{file.name}</p>
+                                                        <p>
+                                                            <span onClick={() => handlePdfSelect(file)} className="icon-style"><VisibilityIcon /></span>
+                                                            <span onClick={() => handleFileRemove(file.name)} className="icon-style2"><DeleteIcon /></span>
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </>
+
                                             {uploadedFiles.length > 3 && (
                                                 <FormHelperText className='error-message'>
                                                     {`Can not upload more than 3 files: ${field.value.length}/3`}
@@ -876,9 +912,8 @@ const AdminEventRequest = () => {
                                             )}
                                         </FormControl>
                                     )}
-                                    rules={{ validate: validateFile }}
                                 />
-                            </Grid> */}
+                            </Grid>
                             <Grid item lg={12} md={12} sm={12} xs={12}>
                                 <InputLabel>Event Details</InputLabel>
                                 <Controller

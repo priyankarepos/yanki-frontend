@@ -295,7 +295,7 @@ const AdminAddEventPublicationArea = () => {
               color="primary"
               type="submit"
               style={styles.modalButton}
-              disabled={loading}
+              disabled={loading || !publicationAreaName.trim()}
             >
               {loading ? <CircularProgress size={24} /> : (editPublicationAreaId !== null ? "Save Changes" : "Save & Add")}
             </Button>
