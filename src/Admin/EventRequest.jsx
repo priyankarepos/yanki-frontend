@@ -555,7 +555,7 @@ const AdminEventRequest = () => {
                                             <TableCell style={styles.cell}>
                                                 {event.imageUrl && event.imageUrl.length > 0 ? (
                                                     event.imageUrl.map((image, index) => (
-                                                        <p style={{ cursor: "pointer", }} key={index} onClick={() => handleImageClick(image)}>
+                                                        <p style={{ cursor: "pointer", textDecoration: 'underline'}} key={index} onClick={() => handleImageClick(image)}>
                                                             {getImageFilename(image.imageUrl)}
                                                         </p>
                                                     ))
@@ -969,7 +969,7 @@ const AdminEventRequest = () => {
                     {selectedPdf && (
                         <>
                             {selectedPdf.type.startsWith('image/') ? (
-                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} />
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} style={{ width: '100%', height: '100%' }} />
                             ) : (
                                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />

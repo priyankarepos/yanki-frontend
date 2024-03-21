@@ -1,0 +1,21 @@
+.notification-wrapper {
+    background-color: #08365e !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    width: 70%;
+    margin: auto;
+    border-radius: 12px !important;
+    @media (max-width: 768px) {
+        width: 95%;
+    }
+    .notification-margin-bottom {
+        margin-top: 15px;
+        label {
+            margin-bottom: 5px;
+        }
+    }
+    .notification-button {
+        margin-top: 15px;
+    }
+}
