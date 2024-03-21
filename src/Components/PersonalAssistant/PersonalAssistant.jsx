@@ -82,9 +82,10 @@ const PersonalAssistant = ({ answer }) => {
       </Typography>
       {mailMessage && (
         <Typography sx={{ mt: 2 }}>
-          Your Personal Assistant submission is now under review by our agents. You
-          can expect to receive the results at the email address registered with
-          us.
+          Your personal assistance request has been received and is currently
+          being reviewed by our YankiAI agents. Depending on your subscription
+          you can expect to receive a response via the email address or SMS
+          number registered with us
         </Typography>
       )}
     </Paper>
