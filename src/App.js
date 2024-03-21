@@ -49,6 +49,7 @@ import ChangePhoneNumber from "./Pages/ChangePhoneNumber";
 import AdminEventRequest from "./Admin/EventRequest";
 import EventLocationPage from "./Admin/EventLocationPage";
 import AiCustomization from "./Pages/AiCustomization/AiCustomization";
+import SubscribeNotification from "./Components/Notification/SubscribeNotification";
 
 // Exporting context
 export const Context = createContext("");
@@ -568,6 +569,16 @@ function App() {
                       <UserPagesProtection>
                         <UserPageLayout>
                           <AiCustomization />
+                        </UserPageLayout>
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/notification"
+                    element={
+                      <UserPagesProtection>
+                        <UserPageLayout>
+                          <SubscribeNotification />
                         </UserPageLayout>
                       </UserPagesProtection>
                     }
