@@ -117,6 +117,7 @@ const SubscribeNotification = ({ answer }) => {
             if (addSubscriptionResponse.status === 200) {
                 setSnackbarMessage('Your subscription has been added successfully');
                 setSnackbarOpen(true);
+                window.location.reload();
             } else {
                 console.error('Failed to add subscription');
             }
@@ -192,24 +193,24 @@ const SubscribeNotification = ({ answer }) => {
     const handleUnsubscribe = async (data) => {
         try {
             setIsLoading(true);
-            const updateSubscriptionData = {
-                isSubscribeToEvent: false,
-            };
-
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-            const updateSubscriptionResponse = await axios.put(apiUrl, updateSubscriptionData);
-
-            if (updateSubscriptionResponse.status === 200) {
+    
+            // Define the API URL with the subscriptionId as a query parameter
+            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
+    
+            // Make the DELETE request
+            const deleteSubscriptionResponse = await axios.delete(apiUrl);
+    
+            // Check if the request was successful
+            if (deleteSubscriptionResponse.status === 200) {
                 setSnackbarMessage('Your request has been unsubscribed successfully');
                 setSnackbarOpen(true);
                 reset();
                 window.location.reload();
             } else {
-                console.error('Failed to update subscription');
+                console.error('Failed to delete subscription');
             }
-
         } catch (error) {
-            console.error('Error updating subscription:', error);
+            console.error('Error deleting subscription:', error);
         } finally {
             setIsLoading(false);
         }
