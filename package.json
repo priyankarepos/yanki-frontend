@@ -22,6 +22,7 @@
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "multiselect-react-dropdown": "^2.0.25",
+    "pdfjs-dist": "^3.11.174",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
