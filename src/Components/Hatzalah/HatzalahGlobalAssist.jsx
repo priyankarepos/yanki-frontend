@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { Box, Paper, TableContainer, Typography } from "@mui/material";
 import "./HatzalahGlobalAssist.scss";
-import { Table, TableBody, TableCell, TableRow } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import HatzalahDisclaimer from "./HatzalahDisclaimer";
+import HatzalahVideo from "./HatzalahVideo";
 
 const HatzalahGlobalAssist = ({ answer }) => {
   const [showCheckIcon, setShowCheckIcon] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openVideo, setOpenVideo] = useState(false);
 
   const handleCopyClick = () => {
     const address = `Address:${answer.globalAssist.fullAddress}`;
@@ -61,7 +74,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
         }
       } else {
         const lastChar = word.slice(-1);
-        const punctuation = [".", ",", "-"]; 
+        const punctuation = [".", ",", "-"];
         const isLastCharPunctuation = punctuation.includes(lastChar);
 
         content.push(
@@ -74,6 +87,15 @@ const HatzalahGlobalAssist = ({ answer }) => {
 
     return content;
   };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <Paper sx={{ p: 2 }}>
@@ -137,6 +159,24 @@ const HatzalahGlobalAssist = ({ answer }) => {
                 </TableBody>
               </Table>
             </TableContainer>
+            {answer.firstAidVideos && (
+              <Box className="hatzala-disclaimer-box">
+                <Typography
+                  onClick={() => setOpenVideo(!openVideo)}
+                  className="hatzala-training"
+                >
+                  Training
+                </Typography>
+                <Typography>|</Typography>
+                <Typography
+                  variant="outlined"
+                  onClick={handleOpen}
+                  className="hatzala-disclaimer"
+                >
+                  Disclaimer
+                </Typography>
+              </Box>
+            )}
           </>
         ) : (
           <Box className="hatzala-error-box">
@@ -146,6 +186,41 @@ const HatzalahGlobalAssist = ({ answer }) => {
           </Box>
         )}
       </Paper>
+
+      <Dialog
+        open={open}
+        sx={{
+          "& .MuiDialog-paper": {
+            backgroundColor: "#f0f0f0",
+            minWidth: "70vw",
+            height: "95vh",
+            margin: "auto 25px",
+          },
+        }}
+      >
+        <DialogTitle variant="h6" style={{ color: "#012e55" }}>
+          Emergency Instructional Videos Disclaimer
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              right: "8px",
+              top: "8px",
+              color: "black",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Typography style={{ color: "#012e55" }}>
+            <HatzalahDisclaimer />
+          </Typography>
+        </DialogContent>
+      </Dialog>
+
+      {openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
     </>
   );
 };
