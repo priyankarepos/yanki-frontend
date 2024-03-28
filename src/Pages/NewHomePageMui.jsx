@@ -247,6 +247,7 @@ const NewHomePageMui = () => {
                                     globalAssist: gptResponse.globalAssist,
                                     isEvent: gptResponse.isEvent,
                                     isPersonalAssistant: gptResponse.isPersonalAssistant,
+                                    firstAidVideos: gptResponse.firstAidVideos,
                                 }
                             }
                         };
