@@ -20,40 +20,87 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
   },
 }));
 
-const HatzalahVideo = () => {
-  const [showCRPVideos, setShowCRPVideos] = useState(false);
+const HatzalahVideo = ({ video }) => {
+  // const [showCRPVideos, setShowCRPVideos] = useState(false);
+  // const [showAEDVideos, setShowAEDVideos] = useState(false);
+  // const [showChokingVideos, setShowChokingVideos] = useState(false);
+  // const [showAllergiesVideos, setShowAllergiesVideos] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
+  const [videoDetails, setVideoDetails] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
   const playerRefs = useRef([]);
 
   const handleCPRContentClick = (e) => {
     e.stopPropagation();
-    setShowCRPVideos(true);
+    setVideoDetails(null);
+    setSelectedClass("CPR");
+    setVideoDetails([
+      {
+        title: "Adult CPR",
+        link: video["cprVideos"]["adultCpr"],
+      },
+      {
+        title: "Baby CPR",
+        link: video["cprVideos"]["babyCpr"],
+      },
+    ]);
   };
 
   const handleAEDContentClick = (e) => {
     e.stopPropagation();
-  }
+    setVideoDetails(null);
+    setSelectedClass("AED");
+    setVideoDetails([
+      {
+        title: "AED",
+        link: video["aedVideos"]["aedVideo"],
+      }
+    ]);
+  };
 
   const handleChokingContentClick = (e) => {
     e.stopPropagation();
-  }
+    setVideoDetails(null);
+    setSelectedClass("Choking")
+    setVideoDetails([
+      {
+        title: "Choking Adult",
+        link: video["chokingVideos"]["chokingAdult"],
+      },
+      {
+        title: "Choking Alone",
+        link: video["chokingVideos"]["chokingAlone"],
+      },
+      {
+        title: "Choking Baby",
+        link: video["chokingVideos"]["chokingBaby"],
+      }
+    ]);
+  };
 
-  const handleAllergiesCRPContentClick = (e) => {
+  const handleAllergiesContentClick = (e) => {
     e.stopPropagation();
-  }
+    setVideoDetails(null);
+    setSelectedClass("Allergies")
+    setVideoDetails([
+      {
+        title: "Allergies",
+        link: video["allergieVideos"]["allergiesVideo"],
+      }
+    ]);
+  };
 
   const handleBleedingContentClick = (e) => {
     e.stopPropagation();
-  }
-
-  const vimeoVideoDetails = [
-    {
-      title: "road",
-      link: "https://player.vimeo.com/video/920561618?h=be3ac1cc2a",
-      embedLink:
-        "<iframe src=https://player.vimeo.com/video/920561618?badge=0&autopause=0&player_id=0&app_id=288468 width=576 height=1024 frameborder=0 allow=autoplay; fullscreen; picture-in-picture; clipboard-write title=road></iframe>",
-    },
-  ];
+    setVideoDetails(null);
+    setSelectedClass("Bleeding")
+    setVideoDetails([
+      {
+        title: "Bleeding",
+        link: video["bleedingVideos"]["bleedingVideo"],
+      }
+    ]);
+  };
 
   const responsive = {
     superLargeDesktop: {
@@ -99,19 +146,39 @@ const HatzalahVideo = () => {
           <Box>
             <Typography
               onClick={handleCPRContentClick}
-              className={`switch-button ${showCRPVideos ? "selected" : ""}`}
+              className={`switch-button ${selectedClass === "CPR" ? "selected" : ""}`}
             >
               CPR
             </Typography>
-            <Typography className="switch-button" onClick={handleAEDContentClick}>AED</Typography>
-            <Typography className="switch-button" onClick={handleChokingContentClick}>Choking</Typography>
-            <Typography className="switch-button" onClick={handleAllergiesCRPContentClick}>Allergies</Typography>
-            <Typography className="switch-button" onClick={handleBleedingContentClick}>Bleeding</Typography>
+            <Typography
+              className={`switch-button ${selectedClass === "AED" ? "selected" : ""}`}
+              onClick={handleAEDContentClick}
+            >
+              AED
+            </Typography>
+            <Typography
+              className={`switch-button ${selectedClass === "Choking" ? "selected" : ""}`}
+              onClick={handleChokingContentClick}
+            >
+              Choking
+            </Typography>
+            <Typography
+              className={`switch-button ${selectedClass === "Allergies" ? "selected" : ""}`}
+              onClick={handleAllergiesContentClick}
+            >
+              Allergies
+            </Typography>
+            <Typography
+              className={`switch-button ${selectedClass === "Bleeding" ? "selected" : ""}`}
+              onClick={handleBleedingContentClick}
+            >
+              Bleeding
+            </Typography>
           </Box>
 
           <Carousel responsive={responsive}>
-            {showCRPVideos &&
-              vimeoVideoDetails.map((item, index) => (
+            { selectedClass != null &&
+              videoDetails.map((item, index) => (
                 <Paper key={item.title}>
                   <StyledCarouselItem
                     key={item.title}

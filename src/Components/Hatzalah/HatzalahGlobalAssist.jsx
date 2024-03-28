@@ -159,14 +159,24 @@ const HatzalahGlobalAssist = ({ answer }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box className="hatzala-disclaimer-box">
-              <Typography style={{marginRight: "10px"}} onClick={() => setOpenVideo(!openVideo)}>
-              Training
-              </Typography>
-              <Typography variant="outlined" onClick={handleOpen}>
-                Disclaimer
-              </Typography>
-            </Box>
+            {answer.firstAidVideos && (
+              <Box className="hatzala-disclaimer-box">
+                <Typography
+                  onClick={() => setOpenVideo(!openVideo)}
+                  className="hatzala-training"
+                >
+                  Training
+                </Typography>
+                <Typography>|</Typography>
+                <Typography
+                  variant="outlined"
+                  onClick={handleOpen}
+                  className="hatzala-disclaimer"
+                >
+                  Disclaimer
+                </Typography>
+              </Box>
+            )}
           </>
         ) : (
           <Box className="hatzala-error-box">
@@ -209,12 +219,8 @@ const HatzalahGlobalAssist = ({ answer }) => {
           </Typography>
         </DialogContent>
       </Dialog>
-    
-      {openVideo && (
-        // <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
-        // <div>
-          <HatzalahVideo />
-      )}
+
+      {openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
     </>
   );
 };
