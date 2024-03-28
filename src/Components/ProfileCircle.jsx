@@ -67,6 +67,11 @@ export default function ProfielCircle() {
     navigate("/ai-customization");
   }
 
+  const onClickSubscribeNotification = () => {
+    handleClose();
+    navigate("/notification");
+  }
+
   const onClickAdmin = () => {
     handleClose();
     navigate("/admin/search-query-report");
@@ -185,7 +190,7 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Phone Number
           </MenuItem>
-          <MenuItem onClick={onClickChangeNumber}>
+          <MenuItem onClick={onClickSubscribeNotification}>
             <ListItemIcon>
               <NotificationsNoneIcon />
             </ListItemIcon>

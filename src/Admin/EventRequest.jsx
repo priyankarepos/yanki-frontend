@@ -319,11 +319,11 @@ const AdminEventRequest = () => {
         try {
             const updatedLoadingRows = [...loadingRows, eventId];
             setLoadingRows(updatedLoadingRows);
-
-            const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
-            const response = await axios.post(url);
-
-            if (response.status === 200) {
+            const approveUrl = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
+            const approveResponse = await axios.post(approveUrl);
+            if (approveResponse.status === 200) {
+                const emailUrl = `${process.env.REACT_APP_API_HOST}/api/events/send-email-to-eventSubscribers?eventId=${eventId}`;
+                await axios.post(emailUrl);
                 setSnackbarMessage(`Event ${EventName} approved successfully`, 'success');
                 setSnackbarOpen(true);
                 fetchEventRequest();
@@ -555,7 +555,7 @@ const AdminEventRequest = () => {
                                             <TableCell style={styles.cell}>
                                                 {event.imageUrl && event.imageUrl.length > 0 ? (
                                                     event.imageUrl.map((image, index) => (
-                                                        <p style={{ cursor: "pointer", }} key={index} onClick={() => handleImageClick(image)}>
+                                                        <p style={{ cursor: "pointer", textDecoration: 'underline' }} key={index} onClick={() => handleImageClick(image)}>
                                                             {getImageFilename(image.imageUrl)}
                                                         </p>
                                                     ))
@@ -672,7 +672,7 @@ const AdminEventRequest = () => {
                         <img
                             src={selectedImage.url}
                             alt={selectedImage.name || 'Image'}
-                            style={{ maxWidth: '100%', maxHeight: '100%' }}
+                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', }}
                         />
                     )}
                 </div>
@@ -969,7 +969,7 @@ const AdminEventRequest = () => {
                     {selectedPdf && (
                         <>
                             {selectedPdf.type.startsWith('image/') ? (
-                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} />
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} style={{ width: '100%', height: '100%', objectFit: 'contain', }} />
                             ) : (
                                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />

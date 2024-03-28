@@ -26,11 +26,9 @@ const EventPublicationForm = ({ answer }) => {
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    console.log("uploadedFiles", uploadedFiles);
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [isPdfModalOpen, setPdfModalOpen] = useState(false);
     const [isFormModalOpen, setFormModalOpen] = useState(false);
-    console.log("isFormModalOpen", isFormModalOpen);
     const [responseMessage, setResponseMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -107,15 +105,11 @@ const EventPublicationForm = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 eventDetails: data.eventDetails,
                 eventDateAndTime: `${data.date}T${data.time}`,
-                // imageUrl: data.uploadedFiles.map(file => file.name), // Uncomment if needed
             };
             const addEventResponse = await axios.post(addEventUrl, addEventData);
             const eventId = addEventResponse.data;
-            console.log("eventId0", eventId);
-
-            // Call the event-image-upload API
             const formData = new FormData();
-            if (Array.isArray(data.uploadedFiles)) { // Check if uploadedFiles is an array
+            if (Array.isArray(data.uploadedFiles)) {
                 data.uploadedFiles.forEach(file => {
                     formData.append('imageFiles', file);
                 });
@@ -124,8 +118,6 @@ const EventPublicationForm = ({ answer }) => {
                 setIsLoading(false);
                 return;
             }
-            console.log("data.uploadedFiles0", data.uploadedFiles);
-            console.log("formData", formData);
             const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
             const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
                 headers: {
@@ -151,7 +143,6 @@ const EventPublicationForm = ({ answer }) => {
 
 
     const onSelectLocations = (selectedList) => {
-        console.log("locations", selectedList);
         setValue("locations", selectedList);
     };
 
@@ -160,7 +151,6 @@ const EventPublicationForm = ({ answer }) => {
     };
 
     const onSelectEventTypes = (selectedList) => {
-        console.log("eventTypes", selectedList);
         setValue("eventTypes", selectedList);
     };
 
@@ -169,7 +159,6 @@ const EventPublicationForm = ({ answer }) => {
     };
 
     const onSelectPublicationArea = (selectedList) => {
-        console.log("eventTypes", selectedList);
         setValue("publicationArea", selectedList);
     };
 
@@ -498,7 +487,7 @@ const EventPublicationForm = ({ answer }) => {
                     {selectedPdf && (
                         <>
                             {selectedPdf.type.startsWith('image/') ? (
-                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} />
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} style={{ width: '100%', height: '100%', objectFit: 'contain', }} />
                             ) : (
                                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />
