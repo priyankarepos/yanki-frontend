@@ -176,7 +176,7 @@ const AdminEnterpriseRequest = () => {
     };
 
     const handleDeleteClick = (enterpriseId, userId, enterpriseName) => {
-        setConfirmationText(`Are you sure you want to delete the request for ${enterpriseName}?`);
+        setConfirmationText(`Are you sure you want to delete this event`);
         setConfirmDialogOpen(true);
         setEnterpriseIdToDelete(enterpriseId);
         setUserIdToDelete(userId);
