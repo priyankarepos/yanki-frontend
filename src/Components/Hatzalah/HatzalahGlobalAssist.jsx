@@ -20,7 +20,7 @@ import HatzalahVideo from "./HatzalahVideo";
 const HatzalahGlobalAssist = ({ answer }) => {
   const [showCheckIcon, setShowCheckIcon] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openVideo, setOpenVideo] = useState(false);
+  const [openVideo, setOpenVideo] = useState(true);
 
   const handleCopyClick = () => {
     const address = `Address:${answer.globalAssist.fullAddress}`;
@@ -159,24 +159,6 @@ const HatzalahGlobalAssist = ({ answer }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            {answer.firstAidVideos && (
-              <Box className="hatzala-disclaimer-box">
-                <Typography
-                  onClick={() => setOpenVideo(!openVideo)}
-                  className="hatzala-training"
-                >
-                  Training
-                </Typography>
-                <Typography>|</Typography>
-                <Typography
-                  variant="outlined"
-                  onClick={handleOpen}
-                  className="hatzala-disclaimer"
-                >
-                  Disclaimer
-                </Typography>
-              </Box>
-            )}
           </>
         ) : (
           <Box className="hatzala-error-box">
@@ -185,6 +167,25 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </Typography>
           </Box>
         )}
+        {answer.firstAidVideos && (
+          <Box className="hatzala-disclaimer-box">
+            <Typography
+              onClick={() => setOpenVideo(!openVideo)}
+              className="hatzala-training"
+            >
+              Training
+            </Typography>
+            <Typography>|</Typography>
+            <Typography
+              variant="outlined"
+              onClick={handleOpen}
+              className="hatzala-disclaimer"
+            >
+              Disclaimer
+            </Typography>
+          </Box>
+        )}
+        {answer.firstAidVideos && openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
       </Paper>
 
       <Dialog
@@ -219,8 +220,6 @@ const HatzalahGlobalAssist = ({ answer }) => {
           </Typography>
         </DialogContent>
       </Dialog>
-
-      {openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
     </>
   );
 };
