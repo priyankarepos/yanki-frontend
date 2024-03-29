@@ -77,7 +77,6 @@ const PdfAnswers = ({ answer }) => {
     useEffect(() => {
         pdfjs.GlobalWorkerOptions.workerSrc = pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
-    // Load PDF documents
     const promises = pdfNames.slice(0, visiblePdfCount).map(async (pdfName) => {
       const pdfUrl = `${s3BaseUrl}${pdfName}`;
       return pdfjs.getDocument(pdfUrl).promise.then((pdf) => {
@@ -101,7 +100,6 @@ const PdfAnswers = ({ answer }) => {
 
     Promise.all(promises).then((thumbnails) => {
       setThumbnailUrls(thumbnails);
-      console.log(thumbnails);
     });
   }, [pdfNames, visiblePdfCount, s3BaseUrl]);
 

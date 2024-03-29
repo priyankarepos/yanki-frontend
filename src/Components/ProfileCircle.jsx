@@ -194,7 +194,7 @@ export default function ProfielCircle() {
             <ListItemIcon>
               <NotificationsNoneIcon />
             </ListItemIcon>
-            Notification
+            Notifications
           </MenuItem>
           <MenuItem onClick={onClickAICustomization}>
             <ListItemIcon>

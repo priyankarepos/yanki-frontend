@@ -225,7 +225,7 @@ const SubscribeNotification = ({ answer }) => {
                 <form onSubmit={subscribeNotification !== null ? handleSubmit(handleUpdate) : handleSubmit(onSubmit)}>
                     <div container spacing={3}>
                         <div sx={{ mt: 2 }}>
-                            <Typography variant="h6">Select Your Notification Preference</Typography>
+                            <Typography variant="h6">Select Your Notifications Preferences</Typography>
                         </div>
                         <div className='notification-margin-bottom'>
                             <InputLabel>Location</InputLabel>
