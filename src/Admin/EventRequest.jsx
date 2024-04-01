@@ -208,6 +208,7 @@ const AdminEventRequest = () => {
             const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
+                eventAddress: data.EventLocationAddress,
                 eventLocation: data.locations.map(item => item.name),
                 eventPublicationArea: data.publicationArea.map(item => item.name),
                 eventType: data.eventTypes.map(item => item.name),
@@ -262,6 +263,7 @@ const AdminEventRequest = () => {
         openFormModal();
         if (editEventData) {
             setValue('EventName', event.eventName || "");
+            setValue('EventLocationAddress', event.eventAddress || "");
             setValue('EventDetails', event.eventDetails || "");
             setValue('EventDateAndTime', event.eventDateAndTime || "");
             setValue('locations', editEventData.eventLocation ? editEventData.eventLocation.flatMap(location => location.split(',')).map(location => ({ name: location })) : []);
@@ -277,6 +279,7 @@ const AdminEventRequest = () => {
             const requestData = {
                 eventId: editEventId,
                 eventName: formData.EventName,
+                eventAddress: formData.EventLocationAddress,
                 status: formData.status,
                 eventLocation: formData.locations.map(item => item.name),
                 eventPublicationArea: formData.publicationArea.map(item => item.name),
@@ -532,6 +535,7 @@ const AdminEventRequest = () => {
                                     <TableRow>
                                         <TableCell style={styles.headerCell}>Name</TableCell>
                                         <TableCell style={styles.headerCell}>Location</TableCell>
+                                        <TableCell style={styles.headerCell}>Address</TableCell>
                                         <TableCell style={styles.headerCell}>Date</TableCell>
                                         <TableCell style={styles.headerCell}>Time</TableCell>
                                         <TableCell style={styles.headerCell}>Event Detail</TableCell>
@@ -547,6 +551,7 @@ const AdminEventRequest = () => {
                                         <TableRow key={index}>
                                             <TableCell style={styles.cell}>{event.eventName}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventLocation.join(', ')}</TableCell>
+                                            <TableCell style={styles.cell}>{event.eventAddress}</TableCell>
                                             <TableCell style={styles.cell}>{new Date(event.eventDateAndTime).toLocaleDateString()}</TableCell>
                                             <TableCell style={styles.cell}>{new Date(event.eventDateAndTime).toLocaleTimeString()}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventDetails}</TableCell>
@@ -760,6 +765,30 @@ const AdminEventRequest = () => {
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item lg={6} md={12} sm={12} xs={12}>
+                                <InputLabel>Event Location Address</InputLabel>
+                                <Controller
+                                    control={control}
+                                    name="EventLocationAddress"
+                                    rules={{
+                                        required: "Event location address is required.",
+                                    }}
+                                    render={({ field }) => (
+                                        <div>
+                                            <TextField
+                                                {...field}
+                                                variant="outlined"
+                                                placeholder="Event location address"
+                                                fullWidth
+                                                defaultValue={editEventData?.eventAddress}
+                                            />
+                                            {errors['EventLocationAddress'] && (
+                                                <FormHelperText className='error-message'>{errors['EventLocationAddress'].message}</FormHelperText>
+                                            )}
+                                        </div>
                                     )}
                                 />
                             </Grid>
