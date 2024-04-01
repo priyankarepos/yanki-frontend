@@ -100,6 +100,7 @@ const EventPublicationForm = ({ answer }) => {
             const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
+                eventAddress: data.EventLocationAddress,
                 eventLocation: data.locations.map(item => item.name),
                 eventPublicationArea: data.publicationArea.map(item => item.name),
                 eventType: data.eventTypes.map(item => item.name),
@@ -294,6 +295,29 @@ const EventPublicationForm = ({ answer }) => {
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item lg={6} md={12} sm={12} xs={12}>
+                                <InputLabel>Event Location Address</InputLabel>
+                                <Controller
+                                    control={control}
+                                    name="EventLocationAddress"
+                                    rules={{
+                                        required: "Event location address is required.",
+                                    }}
+                                    render={({ field }) => (
+                                        <div>
+                                            <TextField
+                                                {...field}
+                                                variant="outlined"
+                                                placeholder="Event location address"
+                                                fullWidth
+                                            />
+                                            {errors['EventLocationAddress'] && (
+                                                <FormHelperText className='error-message'>{errors['EventLocationAddress'].message}</FormHelperText>
+                                            )}
+                                        </div>
                                     )}
                                 />
                             </Grid>
