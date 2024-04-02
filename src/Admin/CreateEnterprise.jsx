@@ -272,7 +272,7 @@ const AdminCreateEnterprise = () => {
                     enterpriseName: formData.EnterpriseName,
                     categoryId: selectedCategory || formData.EnterpriseCategories,
                     contactPersonName: formData.EnterprisePointOfContact,
-                    website: formData.WebsiteUrl,
+                    website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
                     enterpriseAddress: formData.EnterpriseAddress,
                     enterprisePhoneNumber: formData.PhoneNumber,
                     enterpriseEmail: formData.EmailAddress,
@@ -376,7 +376,7 @@ const AdminCreateEnterprise = () => {
                 enterpriseName: formData.EnterpriseName,
                 categoryId: selectedCategory || formData.EnterpriseCategories,
                 contactPersonName: formData.EnterprisePointOfContact,
-                website: formData.WebsiteUrl,
+                website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
                 enterpriseAddress: formData.EnterpriseAddress,
                 enterprisePhoneNumber: formData.PhoneNumber,
                 enterpriseEmail: formData.EmailAddress,
@@ -587,11 +587,10 @@ const AdminCreateEnterprise = () => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Website URL<sup className="required-icon">*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Website URL</InputLabel>
                         <Controller
                             control={control}
                             name="WebsiteUrl"
-                            rules={{ required: "Website URL is required" }}
                             render={({ field }) => (
                                 <div>
                                     <TextField
@@ -601,9 +600,6 @@ const AdminCreateEnterprise = () => {
                                         placeholder="Type website URL here"
                                         fullWidth
                                     />
-                                    {errors['WebsiteUrl'] && (
-                                        <FormHelperText className='error-message'>{errors['WebsiteUrl'].message}</FormHelperText>
-                                    )}
                                 </div>
                             )}
                         />

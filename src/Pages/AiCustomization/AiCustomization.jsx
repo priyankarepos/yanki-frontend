@@ -21,6 +21,8 @@ import axios from "axios";
 import "./AiCustomization.scss";
 
 const AiCustomization = () => {
+  const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+  const userRoles = yankiUser?.userObject?.userRoles || '';
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [customizeMessage, setCustomizeMessage] = useState("");
@@ -199,7 +201,7 @@ const AiCustomization = () => {
           helpful resources and ideas to make your religious life easier. All
           responses will be kept confidential.
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} className="section-container">
+        <form onSubmit={handleSubmit(onSubmit)} className={userRoles==="Enterprise" ? "section-container-light" : "section-container"}>
           <Grid container spacing={2}>
             <Grid item xl={6} lg={6} md={6} xs={12}>
               <Box>
@@ -366,8 +368,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                             />
@@ -386,8 +388,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                             />
@@ -405,8 +407,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={field.value.includes("shabbat")}
@@ -425,8 +427,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={field.value.includes("jewishHolidays")}
@@ -445,8 +447,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={field.value.includes("dailyPrayers")}
@@ -465,8 +467,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={field.value.includes("familyPurityLaws")}
@@ -485,8 +487,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...field.value, value]
                                   : field.value.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={field.value.includes(
@@ -730,10 +732,10 @@ const AiCustomization = () => {
                       )}
                     />
                     {errors["religiousStudies"] && (
-                    <FormHelperText className="error-message">
-                      {errors["religiousStudies"].message}
-                    </FormHelperText>
-                  )}
+                      <FormHelperText className="error-message">
+                        {errors["religiousStudies"].message}
+                      </FormHelperText>
+                    )}
                   </Grid>
                 )}
               </Box>
