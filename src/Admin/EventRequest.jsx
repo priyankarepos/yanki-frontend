@@ -389,8 +389,8 @@ const AdminEventRequest = () => {
         }
     };
 
-    const handleDeleteClick = (eventId, EventName) => {
-        setConfirmationText(`Are you sure you want to delete the request for ${EventName}?`);
+    const handleDeleteClick = (eventId) => {
+        setConfirmationText(`Are you sure you want to delete this event`);
         setConfirmDialogOpen(true);
         setEventIdToDelete(eventId);
     };
@@ -630,7 +630,7 @@ const AdminEventRequest = () => {
                                                         size="small"
                                                         style={styles.approveButton}
                                                         disabled={loadingRows.includes(event.eventId)}
-                                                        onClick={() => handleDeleteClick(event.eventId, event.userId, event.eventName)}
+                                                        onClick={() => handleDeleteClick(event.eventId)}
                                                     >
                                                         Delete
                                                     </Button>

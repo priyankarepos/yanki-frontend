@@ -130,7 +130,7 @@ const EnterpriseSignup = () => {
                 phoneNumber: data.signInPhone,
                 enterpriseName: data.EnterpriseName,
                 contactPersonName: data.PointOfContact,
-                website: data.Website,
+                website: data.Website ? data.Website : null,
                 categoryId: selectedCategory,
                 // isTermAndPrivacy: data.signTermsAndCondition
                 userType: "Enterprise",
@@ -446,9 +446,9 @@ const EnterpriseSignup = () => {
                                 <Controller
                                     control={control}
                                     name="Website"
-                                    rules={{
-                                        required: "Website URL is required.",
-                                    }}
+                                    // rules={{
+                                    //     required: "Website URL is required.",
+                                    // }}
                                     render={({ field }) => (
                                         <TextField
                                             className={activeTab === 1 ? 'EnterpriseInputFieldColor' : ''}
@@ -464,8 +464,8 @@ const EnterpriseSignup = () => {
                                             }}
                                             fullWidth
                                             sx={activeTab === 1 && { ...styles.inputField }}
-                                            error={!!errors["Website"]}
-                                            helperText={errors["Website"] ? errors["Website"].message : ""}
+                                            //error={!!errors["Website"]}
+                                            // helperText={errors["Website"] ? errors["Website"].message : ""}
                                             disabled={signinLoading}
                                         />
                                     )}

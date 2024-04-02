@@ -14,6 +14,8 @@ const SubscribeNotification = ({ answer }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
+    const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+    const userRoles = yankiUser?.userObject?.userRoles || '';
     useEffect(() => {
         const yankiUser = window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
         if (yankiUser) {
@@ -218,7 +220,7 @@ const SubscribeNotification = ({ answer }) => {
 
     return (
         <Box>
-            <Paper className="notification-wrapper" elevation={3}>
+            <Paper className={userRoles==="Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
                 </Typography>

@@ -450,6 +450,7 @@ const EnterpriseProfile = () => {
       setIsLoading(true);
 
       const formData = getValues();
+      console.log("formData", formData);
       const tagsAsString = tags.join(',');
       const response = await axios.put(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
@@ -458,7 +459,7 @@ const EnterpriseProfile = () => {
           enterpriseName: formData.EnterpriseName,
           categoryId: selectedCategory || formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
-          website: formData.WebsiteUrl,
+          website: formData.WebsiteUrl ? formData.WebsiteUrl : null,
           enterpriseAddress: formData.EnterpriseAddress,
           enterprisePhoneNumber: formData.PhoneNumber,
           enterpriseEmail: formData.EmailAddress,
@@ -746,11 +747,10 @@ Service Offerings:
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Website URL<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+            <InputLabel style={styles.label}>Website URL</InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
-              rules={{ required: "Website URL is required" }}
               render={({ field }) => (
                 <div>
                   <TextField
@@ -759,12 +759,7 @@ Service Offerings:
                     type="outlined"
                     placeholder="Type website URL here"
                     fullWidth
-                  // error={!!errors['WebsiteUrl']}
-                  // helperText={errors['WebsiteUrl'] ? errors['WebsiteUrl'].message : ''}
                   />
-                  {errors['WebsiteUrl'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['WebsiteUrl'].message}</FormHelperText>
-                  )}
                 </div>
               )}
             />
