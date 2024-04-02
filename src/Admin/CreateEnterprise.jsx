@@ -13,6 +13,7 @@ import { FormControl, Select, MenuItem } from '@mui/material';
 import { emailRegex, phoneRegex } from '../Utils/validations/validation';
 import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
 import "../EnterpriseCollabration/EnterpriseStyle.scss";
+import ReactPhoneInput from 'react-phone-input-2';
 
 const styles = {
     inputField: {
@@ -272,7 +273,7 @@ const AdminCreateEnterprise = () => {
                     enterpriseName: formData.EnterpriseName,
                     categoryId: selectedCategory || formData.EnterpriseCategories,
                     contactPersonName: formData.EnterprisePointOfContact,
-                    website: formData.WebsiteUrl,
+                    website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
                     enterpriseAddress: formData.EnterpriseAddress,
                     enterprisePhoneNumber: formData.PhoneNumber,
                     enterpriseEmail: formData.EmailAddress,
@@ -376,7 +377,7 @@ const AdminCreateEnterprise = () => {
                 enterpriseName: formData.EnterpriseName,
                 categoryId: selectedCategory || formData.EnterpriseCategories,
                 contactPersonName: formData.EnterprisePointOfContact,
-                website: formData.WebsiteUrl,
+                website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
                 enterpriseAddress: formData.EnterpriseAddress,
                 enterprisePhoneNumber: formData.PhoneNumber,
                 enterpriseEmail: formData.EmailAddress,
@@ -510,7 +511,7 @@ const AdminCreateEnterprise = () => {
                             render={({ field }) => (
                                 <div>
                                     <TextareaAutosize
-                                    className='TextareaAutosize'
+                                        className='TextareaAutosize'
                                         {...field}
                                         placeholder="Type enterprise address here"
                                         onFocus={(e) => e.target.style.outline = 'none'}
@@ -556,7 +557,7 @@ const AdminCreateEnterprise = () => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Phone Number<sup className="required-icon">*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Phone Number<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
                         <Controller
                             control={control}
                             name="PhoneNumber"
@@ -567,31 +568,53 @@ const AdminCreateEnterprise = () => {
                                 },
                                 pattern: {
                                     value: phoneRegex,
-                                    message: "Invalid phone number format.",
+                                    message: "Enter valid phone number",
                                 },
                             }}
                             render={({ field }) => (
-                                <div>
-                                    <TextField
-                                        sx={{ ...styles.inputField }}
-                                        {...field}
-                                        type="outlined"
-                                        placeholder="Type phone number here"
-                                        fullWidth
+                                <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                    <ReactPhoneInput
+                                        style={{
+                                            border: errors["PhoneNumber"] ? '1px solid #ffc9c9' : '1px solid #6fa8dd',
+                                            backgroundColor: '#eaf5ff',
+                                            borderRadius: '8px',
+                                            marginBottom: '16px',
+                                            color: "#8bbae5",
+                                            with: "100%",
+                                            height: '55px',
+                                            lineHeight: "52px",
+                                        }}
+                                        inputExtraProps={{
+                                            name: field.name,
+                                            onBlur: field.onBlur,
+                                        }}
+                                        value={field.value}
+                                        preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                                        placeholder="Phone number"
+                                        onChange={(value, country, event) => {
+                                            field.onChange(value);
+                                        }}
+                                        onBlur={() => field.onBlur()}
+                                        error={!!errors["PhoneNumber"]}
                                     />
                                     {errors['PhoneNumber'] && (
-                                        <FormHelperText className='error-message'>{errors['PhoneNumber'].message}</FormHelperText>
+                                        <FormHelperText
+                                            style={{
+                                                color: '#ffc9c9',
+                                            }}
+                                        >
+                                            {errors['PhoneNumber'].message}
+                                        </FormHelperText>
                                     )}
                                 </div>
                             )}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-                        <InputLabel style={styles.label}>Website URL<sup className="required-icon">*</sup></InputLabel>
+                        <InputLabel style={styles.label}>Website URL</InputLabel>
                         <Controller
                             control={control}
                             name="WebsiteUrl"
-                            rules={{ required: "Website URL is required" }}
                             render={({ field }) => (
                                 <div>
                                     <TextField
@@ -601,9 +624,6 @@ const AdminCreateEnterprise = () => {
                                         placeholder="Type website URL here"
                                         fullWidth
                                     />
-                                    {errors['WebsiteUrl'] && (
-                                        <FormHelperText className='error-message'>{errors['WebsiteUrl'].message}</FormHelperText>
-                                    )}
                                 </div>
                             )}
                         />
@@ -672,7 +692,7 @@ const AdminCreateEnterprise = () => {
                             render={({ field }) => (
                                 <div>
                                     <TextareaAutosize
-                                    className='TextareaAutosize'
+                                        className='TextareaAutosize'
                                         {...field}
                                         placeholder={placeholderText}
                                         onFocus={(e) => e.target.style.outline = 'none'}
@@ -805,7 +825,7 @@ const AdminCreateEnterprise = () => {
                             name="FrequentlyAskedQuestions"
                             render={({ field }) => (
                                 <TextareaAutosize
-                                className='TextareaAutosize'
+                                    className='TextareaAutosize'
                                     {...field}
                                     placeholder="Type frequently asked questions (FAQs) here"
                                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -823,7 +843,7 @@ const AdminCreateEnterprise = () => {
                             render={({ field }) => (
                                 <div>
                                     <TagsInput
-                                    className='TagsInput'
+                                        className='TagsInput'
                                         value={tags}
                                         onChange={(newTags) => setTags(newTags)}
                                         addKeys={[13, 9]}
@@ -900,14 +920,16 @@ const AdminCreateEnterprise = () => {
                                             <TableRow key={key}>
                                                 <TableCell style={styles.cell}>{enterprise.enterpriseName}</TableCell>
                                                 <TableCell style={styles.cell}>{enterprise.contactPersonName}</TableCell>
-                                                <TableCell style={styles.cell}>{enterprise.website}</TableCell>
+                                                <TableCell style={styles.cell}>
+                                                    {enterprise.website ? enterprise.website : "NA"}
+                                                </TableCell>
                                                 <TableCell style={styles.cell}>{enterprise.categoryName}</TableCell>
                                                 <TableCell style={styles.cell}>
                                                     <IconButton onClick={() => handleEditEnterprise(key, enterprise.enterpriseId, enterprise)}>
-                                                        <EditIcon className='color-white'/>
+                                                        <EditIcon className='color-white' />
                                                     </IconButton>
                                                     <IconButton onClick={() => handleDeleteEnterprise(key, enterprise.enterpriseId, enterprise)}>
-                                                        <DeleteIcon className='color-white'/>
+                                                        <DeleteIcon className='color-white' />
                                                     </IconButton>
                                                 </TableCell>
                                             </TableRow>

@@ -11,7 +11,7 @@ h4.Ai-Heading {
     margin-bottom: 25px;
 }
  
-.section-container {
+.section-container, .section-container-light {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     padding: 16px;
@@ -27,3 +27,10 @@ h4.Ai-Heading {
     color: #6fa8dd !important;
     margin-bottom: 5px !important;
 }
+
+.section-container-light{
+    border: 1px solid #202020;
+} .ai-input-label {
+    color: #202020 !important;
+}
+
