@@ -269,9 +269,13 @@ const AdminEnterpriseRequest = () => {
                                             <TableCell style={styles.cell}>{row.phoneNumber}</TableCell>
                                             <TableCell style={styles.cell}>{row.contactPersonName}</TableCell>
                                             <TableCell style={styles.cell}>
-                                                <a href={row.website} style={{ color: "#fff" }}>
-                                                    {row.website}
-                                                </a>
+                                                {row.website ? (
+                                                    <a href={row.website} style={{ color: "#fff" }}>
+                                                        {row.website}
+                                                    </a>
+                                                ) : (
+                                                    "NA"
+                                                )}
                                             </TableCell>
                                             <TableCell style={styles.cell}>  {new Date(row.requestDate).toLocaleDateString('en-GB')}</TableCell>
                                             <TableCell style={styles.cell}>{row.status}</TableCell>
