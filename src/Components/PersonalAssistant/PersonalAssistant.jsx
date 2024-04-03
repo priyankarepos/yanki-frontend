@@ -13,6 +13,8 @@ const PersonalAssistant = ({ answer }) => {
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mailMessage, setMailMessage] = useState("");
+  const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+  const userRoles = yankiUser?.userObject?.userRoles || '';
 
   const handlePersonalAssistant = async () => {
     try {
@@ -59,9 +61,7 @@ const PersonalAssistant = ({ answer }) => {
         {touched && !content.trim() && "This field is required."}
       </FormHelperText>
       <Typography
-        className={`${
-          content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
-        }`}
+        className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
         onClick={content.length === 0 ? null : handlePersonalAssistant}
         sx={{
           mt: "8px",

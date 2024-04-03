@@ -140,7 +140,7 @@ const YoutubeContent = ({ answer }) => {
                     {showYouTubeVideos || (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess) ? (
                         answer?.vimeoVideoDetails.map((item, index) => (
                             <Paper key={item.title}>
-                                <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
+                                <StyledCarouselItem key={item._id} sx={{ marginRight: '5px' }}>
                                     {item.link && (
                                         <div>
                                             <Vimeo
