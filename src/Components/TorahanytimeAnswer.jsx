@@ -122,7 +122,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                 )}
                 <Carousel responsive={responsive}>
                     {data?.length && data?.map((item) => (
-                        (isAudio && isVideo && (!item._source.vimeo_video_links || !item._source.vimeo_video_links.length)) ? null : <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
+                        (isAudio && isVideo && (!item._source.vimeo_video_links || !item._source.vimeo_video_links.length)) ? null : <StyledCarouselItem key={item._id} sx={{ marginRight: '5px' }}>
                             {isVideo && !isAudio && item._source.vimeo_video_links && item._source.vimeo_video_links?.length && (
                                 <div key={item._id}>
                                     {item?._id <= fixedId ? (
@@ -220,7 +220,6 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 <Typography sx={{ pt: 2 }} variant="h6" component="div">
                                     <Tooltip title={item._source.title}>
                                         <div
-                                            className='color-white'
                                             style={{
                                                 maxWidth: 300,
                                                 maxHeight: '70px',
@@ -236,7 +235,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                         </div>
                                     </Tooltip>
                                 </Typography>
-                                <Typography className='color-white' style={{ textAlign: 'left' }}>
+                                <Typography  style={{ textAlign: 'left' }}>
                                     Speaker: {item._source.speaker_name}
                                 </Typography>
                             </div>

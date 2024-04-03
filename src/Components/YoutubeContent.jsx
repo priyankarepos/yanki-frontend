@@ -140,7 +140,7 @@ const YoutubeContent = ({ answer }) => {
                     {showYouTubeVideos || (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess) ? (
                         answer?.vimeoVideoDetails.map((item, index) => (
                             <Paper key={item.title}>
-                                <StyledCarouselItem key={item._id} className="youtube-box" sx={{ marginRight: '5px' }}>
+                                <StyledCarouselItem key={item._id} sx={{ marginRight: '5px' }}>
                                     {item.link && (
                                         <div>
                                             <Vimeo
@@ -220,12 +220,12 @@ const YoutubeContent = ({ answer }) => {
                                 {<div>
                                     <Typography sx={{ pt: 2 }} variant="h6" component="div">
                                         <Tooltip title={item._source.title}>
-                                            <div className='video-title color-white'>
+                                            <div className='video-title'>
                                                 {item._source.title}
                                             </div>
                                         </Tooltip>
                                     </Typography>
-                                    <Typography className='color-white' style={{ textAlign: 'left' }}>
+                                    <Typography style={{ textAlign: 'left' }}>
                                         Speaker: {item._source.speaker_name}
                                     </Typography>
                                 </div>}
