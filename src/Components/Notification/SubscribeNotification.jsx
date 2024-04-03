@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -137,7 +137,7 @@ const SubscribeNotification = ({ answer }) => {
             setValue('publicationArea', subscribeNotification.eventPublicationArea ? subscribeNotification.eventPublicationArea.flatMap(area => area.split(',')).map(area => ({ name: area })) : []);
             setValue('eventTypes', subscribeNotification.eventType ? subscribeNotification.eventType.flatMap(area => area.split(',')).map(area => ({ name: area })) : []);
         }
-    }, [setValue,subscribeNotification]);
+    }, [setValue, subscribeNotification]);
 
     const handleUpdate = async (data) => {
         try {
@@ -195,13 +195,13 @@ const SubscribeNotification = ({ answer }) => {
     const handleUnsubscribe = async (data) => {
         try {
             setIsLoading(true);
-    
+
             // Define the API URL with the subscriptionId as a query parameter
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-    
+
             // Make the DELETE request
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
-    
+
             // Check if the request was successful
             if (deleteSubscriptionResponse.status === 200) {
                 setSnackbarMessage('Your request has been unsubscribed successfully');
@@ -218,9 +218,20 @@ const SubscribeNotification = ({ answer }) => {
         }
     };
 
+    const dummyReminders = [
+        { id: 1, message: "Reminder 1", time: "10:00 AM" },
+        { id: 2, message: "Reminder 2", time: "12:00 PM" },
+        { id: 3, message: "Reminder 3", time: "3:00 PM" }
+    ];
+
+    const handleCancel = (id) => {
+        // Handle cancel action here
+        console.log("Cancel reminder with ID:", id);
+    };
+
     return (
         <Box>
-            <Paper className={userRoles==="Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
+            <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
                 </Typography>
@@ -333,7 +344,35 @@ const SubscribeNotification = ({ answer }) => {
                         </div>
                     </div>
                 </form>
+                
             </Paper>
+            <Box className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"}>
+                    <Typography variant="h6" gutterBottom>
+                        Reminder
+                    </Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Message</TableCell>
+                                    <TableCell>Time</TableCell>
+                                    <TableCell>Action</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {dummyReminders.map((reminder) => (
+                                    <TableRow key={reminder.id}>
+                                        <TableCell>{reminder.message}</TableCell>
+                                        <TableCell>{reminder.time}</TableCell>
+                                        <TableCell>
+                                            <Typography className='Custom-Button' onClick={() => handleCancel(reminder.id)}>Cancel</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}

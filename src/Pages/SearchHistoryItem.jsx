@@ -17,6 +17,7 @@ import EventPublicationForm from "../Components/EventPublication/EventPublicatio
 import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
+import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
@@ -134,8 +135,15 @@ const SearchHistoryItem = ({ query, response }) => {
          <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
          <div className="chat-bubble assistant-bubble">
            <PersonalAssistant answer={response} />
-         </div>
-       </Paper>
+          </div>
+        </Paper>
+      )}
+      {!response?.isSucess && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <ReminderNotification answer={response} />
+          </div>
+        </Paper>
       )}
 
 
