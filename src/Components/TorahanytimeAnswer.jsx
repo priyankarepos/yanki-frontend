@@ -220,6 +220,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 <Typography sx={{ pt: 2 }} variant="h6" component="div">
                                     <Tooltip title={item._source.title}>
                                         <div
+                                            className='color-white'
                                             style={{
                                                 maxWidth: 300,
                                                 maxHeight: '70px',
@@ -235,7 +236,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                                         </div>
                                     </Tooltip>
                                 </Typography>
-                                <Typography style={{ textAlign: 'left' }}>
+                                <Typography className='color-white' style={{ textAlign: 'left' }}>
                                     Speaker: {item._source.speaker_name}
                                 </Typography>
                             </div>

@@ -7,7 +7,9 @@ const SafetyChecker = ({ answer }) => {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
-    const [mailMessage, setMailMessage]= useState("")
+    const [mailMessage, setMailMessage] = useState("")
+    const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+    const userRoles = yankiUser?.userObject?.userRoles || '';
 
     const handleSafetyCheck = async () => {
         try {
@@ -50,19 +52,19 @@ const SafetyChecker = ({ answer }) => {
                 onChange={(e) => setContent(e.target.value)}
                 onBlur={handleBlur}
                 error={touched && !content.trim()}
-                disabled={mailMessage !=="" || !answer?.safetyChecker === true}
+                disabled={mailMessage !== "" || !answer?.safetyChecker === true}
             />
             <FormHelperText className="error-message">
                 {touched && !content.trim() && 'This field is required.'}
             </FormHelperText>
             <Typography
-                className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"}`}
+                className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
                 onClick={content.length === 0 ? null : handleSafetyCheck}
                 sx={{ mt: "8px", cursor: (content.length === 0 || loading || mailMessage !== "" || !answer?.safetyChecker === true) ? 'text' : 'pointer' }}
             >
-                {loading ? <CircularProgress size={24} sx={{color:"#1d4a72"}} /> : "Submit Safety Check"}
+                {loading ? <CircularProgress size={24} sx={{ color: "#1d4a72" }} /> : "Submit Safety Check"}
             </Typography>
-            {mailMessage && <Typography sx={{mt:2}}>Your Safety Check submission is now under review by our agents. You can expect to receive the results at the email address registered with us.</Typography>}
+            {mailMessage && <Typography sx={{ mt: 2 }}>Your Safety Check submission is now under review by our agents. You can expect to receive the results at the email address registered with us.</Typography>}
         </Paper>
     );
 };
