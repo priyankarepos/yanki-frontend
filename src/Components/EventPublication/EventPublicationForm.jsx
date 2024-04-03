@@ -202,8 +202,8 @@ const EventPublicationForm = ({ answer }) => {
     };
 
     return (
-        <Box className="demo-enterprise-wrapper">
-            <Paper elevation={3}>
+        <>
+            <Paper elevation={3} sx={{p:3}}>
                 <Typography variant="h6">Event Submission</Typography>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
@@ -228,7 +228,7 @@ const EventPublicationForm = ({ answer }) => {
                 <Paper elevation={3} className="event-form-modal" style={modalContentStyle}>
                     <div className='event-model-close-btn'>
                         <IconButton onClick={closeFormModal} aria-label="close">
-                            <CloseIcon />
+                            <CloseIcon className='color-white' />
                         </IconButton>
                     </div>
 
@@ -521,7 +521,7 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
-        </Box >
+        </ >
 
     );
 };
