@@ -95,8 +95,6 @@ const EventPublicationForm = ({ answer }) => {
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
-
-            // Call the add-event API
             const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
@@ -108,26 +106,23 @@ const EventPublicationForm = ({ answer }) => {
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
             const addEventResponse = await axios.post(addEventUrl, addEventData);
-            const eventId = addEventResponse.data;
-            const formData = new FormData();
-            if (Array.isArray(data.uploadedFiles)) {
+            console.log("Event added successfully:", addEventResponse.data);
+
+            // Upload files if any
+            if (data.uploadedFiles && data.uploadedFiles.length > 0) {
+                const formData = new FormData();
                 data.uploadedFiles.forEach(file => {
                     formData.append('imageFiles', file);
                 });
-            } else {
-                console.error('Error: uploadedFiles is not an array');
-                setIsLoading(false);
-                return;
+                const eventId = addEventResponse.data;
+                const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+                const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log("Image uploaded successfully:", imageUploadResponse.data);
             }
-            const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
-            const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            console.log("imageUploadResponse", imageUploadResponse);
-            console.log("Event added successfully:", addEventResponse.data);
-            console.log("Image uploaded successfully:", imageUploadResponse.data);
 
             // Reset form and state
             setResponseMessage("Your event publish request has been sent successfully");
@@ -139,10 +134,8 @@ const EventPublicationForm = ({ answer }) => {
             console.error('Error submitting event:', error);
             setIsLoading(false);
         }
-        setFormModalOpen(false);
     };
-
-
+    
     const onSelectLocations = (selectedList) => {
         setValue("locations", selectedList);
     };
@@ -203,7 +196,7 @@ const EventPublicationForm = ({ answer }) => {
 
     return (
         <>
-            <Paper elevation={3} sx={{p:3}}>
+            <Paper elevation={3} sx={{ p: 3 }}>
                 <Typography variant="h6">Event Submission</Typography>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
