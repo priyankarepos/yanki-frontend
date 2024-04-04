@@ -190,18 +190,18 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Phone Number
           </MenuItem>
-          <MenuItem onClick={onClickSubscribeNotification}>
+          {userRoles === "Admin" && activeTab === 0 &&<MenuItem onClick={onClickSubscribeNotification}>
             <ListItemIcon>
               <NotificationsNoneIcon />
             </ListItemIcon>
             Notifications
-          </MenuItem>
-          <MenuItem onClick={onClickAICustomization}>
+          </MenuItem>}
+          {userRoles === "Admin" && activeTab === 0 &&<MenuItem onClick={onClickAICustomization}>
             <ListItemIcon>
               <TuneIcon />
             </ListItemIcon>
             AI Customization
-          </MenuItem>
+          </MenuItem>}
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
