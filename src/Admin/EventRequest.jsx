@@ -119,6 +119,13 @@ const AdminEventRequest = () => {
     const [editEventData, setEditEventData] = useState(null);
     const [editEventId, setEditEventId] = useState(null);
 
+    useEffect(() => {
+        if (editEventData) {
+            setValue('EventName', editEventData?.eventName || "");  // Set default value for EventName
+            setValue('EventLocationAddress', editEventData?.eventAddress || "");  // Set default value for EventLocationAddress
+        }
+    }, [editEventData, setValue]);
+
     const fetchEventRequest = async () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/events/get-allevents`);
@@ -729,7 +736,9 @@ const AdminEventRequest = () => {
                                                 type="outlined"
                                                 placeholder="Event name"
                                                 fullWidth
-                                                defaultValue={editEventData?.eventName}
+                                                //defaultValue={editEventData?.eventName}
+                                                value={field.value} // Use value prop
+                                                onChange={field.onChange} // Use onChange prop
                                             />
                                             {errors['EventName'] && (
                                                 <FormHelperText className='error-message'>{errors['EventName'].message}</FormHelperText>
@@ -783,7 +792,9 @@ const AdminEventRequest = () => {
                                                 variant="outlined"
                                                 placeholder="Event location address"
                                                 fullWidth
-                                                defaultValue={editEventData?.eventAddress}
+                                                //defaultValue={editEventData?.eventAddress}
+                                                value={field.value} // Use value prop
+                                                onChange={field.onChange} // Use onChange prop
                                             />
                                             {errors['EventLocationAddress'] && (
                                                 <FormHelperText className='error-message'>{errors['EventLocationAddress'].message}</FormHelperText>
