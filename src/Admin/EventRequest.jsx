@@ -15,6 +15,8 @@ import Multiselect from 'multiselect-react-dropdown';
 import { Controller, useForm } from 'react-hook-form';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { FormControl } from '@mui/base';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const styles = {
     tableContainer: {
@@ -118,6 +120,27 @@ const AdminEventRequest = () => {
     const [eventIdToDelete, setEventIdToDelete] = useState(null);
     const [editEventData, setEditEventData] = useState(null);
     const [editEventId, setEditEventId] = useState(null);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+    const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
+    const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+
+    const handleLocationDropdownToggle = () => {
+        setIsLocationDropdownOpen(!isLocationDropdownOpen);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handlePublicationAreaDropdownToggle = () => {
+        setIsPublicationAreaDropdownOpen(!isPublicationAreaDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handleEventTypeDropdownToggle = () => {
+        setIsEventTypeDropdownOpen(!isEventTypeDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+    };
 
     useEffect(() => {
         if (editEventData) {
@@ -502,6 +525,9 @@ const AdminEventRequest = () => {
     const closeFormModal = () => {
         setFormModalOpen(false);
         reset();
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
     };
 
     const closePdfModal = () => {
@@ -771,6 +797,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isLocationDropdownOpen}
+                                                className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
@@ -873,6 +905,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isPublicationAreaDropdownOpen}
+                                                className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
                                         </>
@@ -903,6 +941,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isEventTypeDropdownOpen}
+                                                className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
                                         </>

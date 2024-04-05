@@ -173,3 +173,23 @@ span.react-tagsinput-tags,
 .add-eventpadding {
   padding: 16px;
 }
+
+.icon_down_dir:before {
+  content: "\e803";
+  display: none;
+}
+
+.displayBlockShow .optionListContainer.displayNone{
+display: block !important;
+}
+
+.displayNoneShow .optionListContainer.displayBlock{
+display: none !important;
+}
+
+.icon_down_dir {
+  position: absolute;
+  right: 15px !important;
+  padding-top: 8px !important;
+  color: #8b9eae;
+}
