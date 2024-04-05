@@ -9,6 +9,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const modalContentStyle = {
     display: 'flex',
@@ -31,6 +33,27 @@ const EventPublicationForm = ({ answer }) => {
     const [isFormModalOpen, setFormModalOpen] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+    const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
+    const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+
+    const handleLocationDropdownToggle = () => {
+        setIsLocationDropdownOpen(!isLocationDropdownOpen);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handlePublicationAreaDropdownToggle = () => {
+        setIsPublicationAreaDropdownOpen(!isPublicationAreaDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handleEventTypeDropdownToggle = () => {
+        setIsEventTypeDropdownOpen(!isEventTypeDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+    };
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
@@ -192,6 +215,9 @@ const EventPublicationForm = ({ answer }) => {
 
     const closeFormModal = () => {
         setFormModalOpen(false);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
     };
 
     return (
@@ -285,6 +311,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isLocationDropdownOpen}
+                                                className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
@@ -382,6 +414,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isPublicationAreaDropdownOpen}
+                                                className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
                                         </>
@@ -412,6 +450,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isEventTypeDropdownOpen}
+                                                className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
                                         </>
