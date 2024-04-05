@@ -125,7 +125,6 @@ const AdminEventRequest = () => {
     const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [pageNumber, setPageNumber] = useState(1);
-    console.log("eventRequests", eventRequests);
     const handlePageChange = (event, newPage) => {
         setPageNumber(newPage);
         fetchEventRequest(newPage);
