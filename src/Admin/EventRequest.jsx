@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress, useMediaQuery, Grid, FormHelperText } from '@mui/material';
+import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress, useMediaQuery, Grid, FormHelperText, Pagination } from '@mui/material';
 import AdminDashboard from './AdminDashboard';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -123,6 +123,13 @@ const AdminEventRequest = () => {
     const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
     const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
     const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
+    console.log("eventRequests", eventRequests);
+    const handlePageChange = (event, newPage) => {
+        setPageNumber(newPage);
+        fetchEventRequest(newPage);
+    };
 
     const handleLocationDropdownToggle = () => {
         setIsLocationDropdownOpen(!isLocationDropdownOpen);
@@ -149,12 +156,13 @@ const AdminEventRequest = () => {
         }
     }, [editEventData, setValue]);
 
-    const fetchEventRequest = async () => {
+    const fetchEventRequest = async (pageNumber) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/events/get-allevents`);
-
+            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`);
+    
             if (response.status === 200) {
                 setEventRequests(response.data);
+                setTotalPages(Math.ceil(response.data.totalCount / 10));
             } else {
                 console.error('Failed to fetch event location');
                 setSnackbarMessage('Failed to fetch event location');
@@ -166,10 +174,10 @@ const AdminEventRequest = () => {
             setSnackbarOpen(true);
         }
     };
-
+    
     useEffect(() => {
-        fetchEventRequest();
-    }, [isFormModalOpen]);
+        fetchEventRequest(pageNumber);
+    }, [isFormModalOpen, pageNumber]);
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
@@ -561,7 +569,7 @@ const AdminEventRequest = () => {
                             <AddIcon /> Add
                         </IconButton>
                     </Box>
-                    {Array.isArray(eventRequests) && eventRequests.length > 0 ? (
+                    {Array.isArray(eventRequests.events) && eventRequests.events.length > 0 ? (
                         <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
                             <Table style={styles.table}>
                                 <TableHead>
@@ -580,8 +588,10 @@ const AdminEventRequest = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {Array.isArray(eventRequests) &&
-        [...eventRequests.filter(event => event.status === 'Pending'), ...eventRequests.filter(event => event.status !== 'Pending')].map((event, index) => (
+                                    {[
+                                        ...eventRequests.events.filter(event => event.status === 'Pending'),
+                                        ...eventRequests.events.filter(event => event.status !== 'Pending')
+                                    ].map((event, index) => (
                                         <TableRow key={index}>
                                             <TableCell style={styles.cell}>{event.eventName}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventLocation.join(', ')}</TableCell>
@@ -679,9 +689,18 @@ const AdminEventRequest = () => {
                                     ))}
                                 </TableBody>
                             </Table>
+                            {totalPages > 1 && (
+                                <Pagination
+                                    count={totalPages}
+                                    page={pageNumber}
+                                    onChange={handlePageChange}
+                                    color="primary"
+                                    style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}
+                                />
+                            )}
                         </TableContainer>) : (
                         <Typography variant="body1" className='no-data-found'>
-                            No event submession request available.
+                            No event submission request available.
                         </Typography>
                     )}
                 </Box>
