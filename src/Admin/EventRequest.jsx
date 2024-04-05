@@ -580,7 +580,8 @@ const AdminEventRequest = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {Array.isArray(eventRequests) && eventRequests.map((event, index) => (
+                                {Array.isArray(eventRequests) &&
+        [...eventRequests.filter(event => event.status === 'Pending'), ...eventRequests.filter(event => event.status !== 'Pending')].map((event, index) => (
                                         <TableRow key={index}>
                                             <TableCell style={styles.cell}>{event.eventName}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventLocation.join(', ')}</TableCell>
