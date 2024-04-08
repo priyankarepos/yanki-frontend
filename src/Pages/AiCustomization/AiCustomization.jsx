@@ -567,7 +567,6 @@ const AiCustomization = () => {
                           fullWidth
                           variant="outlined"
                           placeholder="Enter your interests"
-                          required
                         />
                       )}
                     />
@@ -695,7 +694,6 @@ const AiCustomization = () => {
                           fullWidth
                           variant="outlined"
                           placeholder="Enter your interests"
-                          required
                         />
                       )}
                     />
