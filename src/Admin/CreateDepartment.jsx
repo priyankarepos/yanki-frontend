@@ -96,10 +96,12 @@ const AdminCreateDepartment = () => {
                     const responseData = response.data;
                     setEnterpriseList(responseData);
                 } else {
-                    console.error('Failed to fetch enterprise details');
+                    setSnackbarMessage('Failed to fetch enterprise details');
+                    setSnackbarOpen(true);
                 }
             } catch (error) {
-                console.error('Error fetching enterprise details:', error);
+                setSnackbarMessage('Error fetching enterprise details:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -133,26 +135,30 @@ const AdminCreateDepartment = () => {
             const response = await axios.get(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${selectedEnterpriseId}/${tag}`
             );
-            console.log('Keyword Check Response:', response.data);
+            setSnackbarMessage('Keyword Check Response:', response.data);
+            setSnackbarOpen(true);
+
             if (response.status === 200) {
                 const keywordExists = response.data.exists;
                 if (keywordExists !== undefined) {
                     if (keywordExists) {
-                        console.log('Keyword already exists:', tag);
+                        setSnackbarMessage('Keyword already exists:', tag);
+                        setSnackbarOpen(true);
                     } else {
-                        console.log('Keyword does not exist:', tag);
-
                         setTags((prevTags) => [...prevTags, tag]);
                     }
                 } else {
-                    console.log('Keyword existence is undefined for:', tag);
+                    setSnackbarMessage('Keyword existence is undefined for:', tag);
+                    setSnackbarOpen(true);
                 }
             } else {
-                console.error('Failed to check enterprise keyword');
+                setSnackbarMessage('Failed to check enterprise keyword');
+                setSnackbarOpen(true);
             }
             return response.data;
         } catch (error) {
-            console.error('Error checking enterprise keyword:', error);
+            setSnackbarMessage('Error checking enterprise keyword:', error);
+            setSnackbarOpen(true);
             return { isSuccess: false };
         }
     };
@@ -194,12 +200,12 @@ const AdminCreateDepartment = () => {
                     setSnackbarOpen(true);
                 }
             } else {
-                console.error('Failed to check enterprise keyword');
                 setSnackbarMessage('Failed to check enterprise keyword');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error handling tag:', error);
+            setSnackbarMessage('Error handling tag:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -231,10 +237,12 @@ const AdminCreateDepartment = () => {
                 if (response.status === 200) {
                     setDepartmentsData(response.data);
                 } else {
-                    console.error('Failed to fetch departments:', response.statusText);
+                    setSnackbarMessage('Failed to fetch departments:', response.statusText);
+                    setSnackbarOpen(true);
                 }
             } catch (error) {
-                console.error('Error occurred while fetching departments:', error.message);
+                setSnackbarMessage('Error occurred while fetching departments:', error.message);
+                setSnackbarOpen(true);
             }
         };
 
@@ -272,19 +280,18 @@ const AdminCreateDepartment = () => {
             const response = await axios.delete(apiUrl);
 
             if (response.status === 200) {
-                console.log('Department deleted successfully.');
                 setSnackbarMessage('Department deleted successfully');
                 setSnackbarOpen(true);
                 const updatedDepartments = [...departmentsData];
                 updatedDepartments.splice(selectedDepartmentIndex, 1);
                 setDepartmentsData(updatedDepartments);
             } else {
-                console.error('Failed to delete department:', response.statusText);
                 setSnackbarMessage('Failed to delete department:');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error deleting department:', error.message);
+            setSnackbarMessage('Error deleting department:', error.message);
+            setSnackbarOpen(true);
         }
     };
 
@@ -321,11 +328,8 @@ const AdminCreateDepartment = () => {
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
                 payload
             );
-            console.log('Update Department Details Response:', response.data);
             setTriggerEffect((prev) => !prev);
-
             if (response.status === 200) {
-                console.log('Department details updated successfully');
                 setSnackbarOpen(true);
                 setSnackbarMessage('Department details updated successfully');
                 reset();
@@ -334,13 +338,13 @@ const AdminCreateDepartment = () => {
                 setTags([])
                 setDepartmentID(null)
             } else {
-                console.error(`Failed to update Department details. Status: ${response.status}`);
                 setSnackbarMessage(`Failed to update Department details. Status: ${response.status}`);
                 setSnackbarOpen(true);
 
             }
         } catch (error) {
-            console.error('Error updating Department details:', error.message);
+            setSnackbarMessage('Error updating Department details:', error.message);
+            setSnackbarOpen(true);
         }
         setSelectedDepartmentData("");
     };
@@ -387,13 +391,11 @@ const AdminCreateDepartment = () => {
                 setValue('DepartmentDescription', '');
                 setValue('DepartmentIdentificationKeywords', []);
             } else {
-                console.error('API error:', response.statusText);
                 setSnackbarMessage('API error: ' + response.statusText);
                 setSnackbarOpen(true);
             }
             setTriggerEffect((prev) => !prev);
         } catch (error) {
-            console.error('Error occurred while fetching API:', error.message);
             setSnackbarMessage('Error occurred while fetching API:', error.message);
             setSnackbarOpen(true);
         }

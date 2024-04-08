@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
 import { Context } from '../../App';
+import "./EventLocation.scss";
 
 const styles = {
   tableContainer: {
@@ -91,11 +92,11 @@ const AdminAddEventType = () => {
         if (response.status === 200) {
           setEventTypes(response.data);
         } else {
-          console.error('Failed to fetch event types');
+          setSnackbarMessage('Failed to fetch event types');
+          setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error('Error fetching event types:', error);
-        setSnackbarMessage('Error fetching event types');
+        setSnackbarMessage('Error:', error);
         setSnackbarOpen(true);
       }
     };
@@ -121,7 +122,7 @@ const AdminAddEventType = () => {
       const response = await axios.delete(
         `${process.env.REACT_APP_API_HOST}/api/event-type/delete-event-type/${selectedEventTypeId}`
       );
-  
+
       if (response.status === 200) {
         const updatedEventTypes = eventTypes.filter((event) => event.id !== selectedEventTypeId);
         setEventTypes(updatedEventTypes);
@@ -129,13 +130,11 @@ const AdminAddEventType = () => {
         setSnackbarMessage('Event type deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete Event type');
         setSnackbarMessage('Failed to delete Event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error deleting Event type');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     }
   };
@@ -154,11 +153,11 @@ const AdminAddEventType = () => {
         setSnackbarOpen(true);
         return;
       }
-  
+
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/add-event-type`;
-  
+
       const response = await axios.post(apiUrl, { eventTypeName });
-  
+
       if (response.status === 200) {
         const newEventType = response.data;
         setEventTypes((prevEventTypes) => [...prevEventTypes, newEventType]);
@@ -168,13 +167,11 @@ const AdminAddEventType = () => {
         setSnackbarMessage('Event type saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save enterprise event type');
         setSnackbarMessage('Failed to save enterprise event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error saving event type');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -189,11 +186,11 @@ const AdminAddEventType = () => {
         setSnackbarOpen(true);
         return;
       }
-  
+
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/update-event-type`;
-  
+
       const response = await axios.put(apiUrl, { id: editEventTypeId, eventTypeName });
-  
+
       if (response.status === 200) {
         const updatedEventType = response.data;
         setEventTypes((prevEventTypes) => {
@@ -206,13 +203,11 @@ const AdminAddEventType = () => {
         setSnackbarMessage('Event type updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update event type');
         setSnackbarMessage('Failed to update event type');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error updating event type');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -222,14 +217,14 @@ const AdminAddEventType = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
-    <Box style={{ display: "flex" }}>
+    <Box sx={{ display: "flex" }}>
       <Box style={{ ...styles.content }} className="enterpriseFormBox">
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
+          <Box className="event-top-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Type
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddEventType}>
+            <IconButton color="primary" size="small" onClick={handleAddEventType}>
               <AddIcon /> Add
             </IconButton>
           </Box>
