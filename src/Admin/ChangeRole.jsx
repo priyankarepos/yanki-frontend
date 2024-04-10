@@ -4,17 +4,11 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-
 import { useForm, Controller } from "react-hook-form";
-import { emailRegex, passwordRegex } from "../Utils/validations/validation";
+import { emailRegex } from "../Utils/validations/validation";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
@@ -23,7 +17,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ChangeRole = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
@@ -40,8 +33,6 @@ const ChangeRole = () => {
     mode: "onChange",
     defaultValues: {
       logInEmail: "",
-      logInPassword: "",
-      logInRemeber: false,
     },
   });
 
@@ -54,7 +45,6 @@ const ChangeRole = () => {
       setLoginLoading(true);
       const dataToSend = {
         email: data.logInEmail,
-        password: data.logInPassword,
       };
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/change-role`,
@@ -145,59 +135,6 @@ return (
               />
             )}
           />
-          <Controller
-            control={control}
-            name="logInPassword"
-            rules={{
-              required: {
-                value: true,
-                message: "Password is required",
-              },
-              pattern: {
-                value: passwordRegex,
-                message:
-                  "Password must have length of atleast 8 characters. It must contain uppercase letter, lowercase letter, spcial character and digit.",
-              },
-            }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="outlined"
-                placeholder="Password"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <HttpsOutlinedIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOffOutlinedIcon />
-                        ) : (
-                          <VisibilityOutlinedIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  type: showPassword ? "text" : "password",
-                }}
-                fullWidth
-                sx={{ marginBottom: "10px" }}
-                error={!!errors["logInPassword"]}
-                helperText={
-                  errors["logInPassword"]
-                    ? errors["logInPassword"].message
-                    : ""
-                }
-                disabled={loginLoading}
-              />
-            )}
-          />
           {loginError && (
             <Alert severity="error" sx={{ marginBottom: "10px" }}>
               {loginErrorMsg}
@@ -211,7 +148,7 @@ return (
             disabled={loginLoading}
             sx={{ marginTop: "30px" }}
           >
-            {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
+            {loginLoading ? <CircularProgress size="0.875rem" /> : "Create Admin"}
           </Button>
         </Box>
       </Box>

@@ -19,6 +19,7 @@ import {
     TableHead,
     Table,
     Snackbar,
+    Paper,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -36,6 +37,7 @@ import SearchHistoryItem from "./SearchHistoryItem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 
 const styles = {
@@ -96,6 +98,7 @@ const NewHomePageMui = () => {
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
+        sessionStorage.setItem('searchQuery', searchQuery);
         try {
             setIsSubmitting(true);
             setIsError(false);
@@ -111,7 +114,6 @@ const NewHomePageMui = () => {
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        // "Content-Type": "multipart/byteranges",
                         "Location-Allowed": isLocationAllowed,
                         TimeZone: timezone,
                         "User-Lat": userLatitude,
@@ -126,9 +128,7 @@ const NewHomePageMui = () => {
                 setQueryAnswer(response.data);
                 setIsError(false);
                 setErrorMsg("");
-
                 const newChatId = response.data.chatId;
-
                 if (!selectedChatId && !searchHistory.length) {
                     setSelectedChatId(newChatId);
                 }
@@ -138,10 +138,14 @@ const NewHomePageMui = () => {
                 //     ...prevSessions,
                 // ]);
 
-                setSearchHistory((prevHistory) => [
-                    ...prevHistory,
-                    { query: searchQuery, response: response.data },
-                ]);
+                setSearchHistory((prevHistory) => {
+                    const updatedHistory = [
+                      ...prevHistory,
+                      { query: searchQuery, response: response.data },
+                    ];
+                    sessionStorage.removeItem('searchQuery');
+                    return updatedHistory;
+                });
             }
 
         } catch (error) {
@@ -177,6 +181,8 @@ const NewHomePageMui = () => {
             setDrawerOpen(true);
         }
     };
+
+    const storedSearchQuery = sessionStorage.getItem('searchQuery');
 
 
     useEffect(() => {
@@ -296,6 +302,7 @@ const NewHomePageMui = () => {
             if (response.status === 200) {
 
                 console.log(response.data.chatHistory);
+                sessionStorage.removeItem('searchQuery');
             }
         } catch (error) {
             console.error("Error fetching chat history:", error);
@@ -431,28 +438,28 @@ const NewHomePageMui = () => {
 
     // useEffect(() => {
     //     const chatContainerNode = chatContainerRef.current;
-    
+
     //     const scrollToBottom = () => {
     //       if (shouldScrollRef.current) {
     //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
     //         shouldScrollRef.current = false;
     //       }
     //     };
-    
+
     //     scrollToBottom();
-    
+
     //     chatContainerNode.style.scrollBehavior = 'auto';
-    
+
     //     const observer = new MutationObserver(scrollToBottom);
     //     observer.observe(chatContainerNode, { childList: true, subtree: true });
-    
+
     //     // Clean up
     //     return () => {
     //       chatContainerNode.style.scrollBehavior = 'smooth';
     //       observer.disconnect();
     //     };
     //   }, []);
-    
+
 
 
     return (
@@ -687,6 +694,14 @@ const NewHomePageMui = () => {
                                     searchQuery={searchQuery}
                                 />
                             ))}
+                            {storedSearchQuery && <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
+                                <div style={{ padding: "10px" }}>
+                                    <Box style={{ display: 'flex', alignItems: 'center' }}>
+                                        <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
+                                        <Typography style={{ fontSize: "16px", color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{storedSearchQuery}</Typography>
+                                    </Box>
+                                </div>
+                            </Paper>}
                         </Box>
                         {isSubmitting && (
                             <Box
@@ -809,7 +824,7 @@ const NewHomePageMui = () => {
                                     zIndex: 1000,
                                     display: "flex",
                                     alignItems: "center",
-                                                                    }}
+                                }}
                                 className="search-wrapper"
                             >
                                 <TextField

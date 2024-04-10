@@ -551,7 +551,7 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInVolunteer") == "true" || watch("isInterestInVolunteer") == true) && (
+                {(watch("isInterestInVolunteer") === "true" || watch("isInterestInVolunteer") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what type of volunteering interests you?
@@ -676,7 +676,7 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInReligiousStudies") == "true" || watch("isInterestInReligiousStudies") == true) && (
+                {(watch("isInterestInReligiousStudies") === "true" || watch("isInterestInReligiousStudies") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what topics are you most interested in? (e.g.,
@@ -690,7 +690,7 @@ const AiCustomization = () => {
                       render={({ field }) => (
                         <TextField
                           {...field}
-                          value={watch("isInterestInReligiousStudies") == false ? "" : field.value}
+                          value={watch("isInterestInReligiousStudies") === false ? "" : field.value}
                           fullWidth
                           variant="outlined"
                           placeholder="Enter your interests"
