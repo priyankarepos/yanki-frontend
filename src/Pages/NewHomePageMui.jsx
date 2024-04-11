@@ -66,7 +66,6 @@ const styles = {
 const NewHomePageMui = () => {
     const { activeTab } = React.useContext(Context);
     const [drawerOpen, setDrawerOpen] = useState(true);
-
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -271,11 +270,6 @@ const NewHomePageMui = () => {
                     setSnackbarOpen(true);
 
                 }
-                // if (!isLargeScreen) {
-                //     setDrawerOpen(false);
-                // } else {
-                //     setDrawerOpen(true);
-                // }
             }
         } catch (error) {
             setSnackbarMessage('Error:', error);
@@ -287,7 +281,6 @@ const NewHomePageMui = () => {
     useEffect(() => {
         if (initialChatOpen && chatSessions.length > 0) {
             const storedChatId = sessionStorage.getItem("selectedChatId");
-            // const firstChatId = storedChatId || chatSessions[0].id;
             const firstChatId = storedChatId;
             handleChatSessionClick(firstChatId);
             setInitialChatOpen(false);
@@ -370,8 +363,6 @@ const NewHomePageMui = () => {
             if (response.status === 200) {
                 const updatedChatSessions = chatSessions.filter((session) => session.id !== selectedChatId);
                 setChatSessions(updatedChatSessions);
-
-                // Update other state or show snackbar message as needed
                 setSnackbarMessage(response?.data?.message);
                 setSnackbarOpen(true);
                 resetPage()
@@ -435,33 +426,6 @@ const NewHomePageMui = () => {
             observer.disconnect();
         };
     }, []);
-
-    // const shouldScrollRef = useRef(true);
-
-    // useEffect(() => {
-    //     const chatContainerNode = chatContainerRef.current;
-
-    //     const scrollToBottom = () => {
-    //       if (shouldScrollRef.current) {
-    //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    //         shouldScrollRef.current = false;
-    //       }
-    //     };
-
-    //     scrollToBottom();
-
-    //     chatContainerNode.style.scrollBehavior = 'auto';
-
-    //     const observer = new MutationObserver(scrollToBottom);
-    //     observer.observe(chatContainerNode, { childList: true, subtree: true });
-
-    //     // Clean up
-    //     return () => {
-    //       chatContainerNode.style.scrollBehavior = 'smooth';
-    //       observer.disconnect();
-    //     };
-    //   }, []);
-
 
 
     return (
