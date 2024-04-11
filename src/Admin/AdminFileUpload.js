@@ -136,7 +136,8 @@ const AdminFileUpload = () => {
         );
         setTableData(response.data.jewishPrayerTexts);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        setSnackbarMessage("Error fetching data:", error);
+        setSnackbarOpen(true);
       }
     };
     fetchData();
@@ -246,7 +247,6 @@ const AdminFileUpload = () => {
   };
 
   const handleUpdate = (pdfData, pdfId) => {
-    console.log("pdfId", pdfId, pdfData);
     try {
       let tagsArray = [];
 
@@ -257,11 +257,13 @@ const AdminFileUpload = () => {
       } else if (Array.isArray(pdfData.keywords)) {
         tagsArray = JSON.parse(pdfData.keywords.flat());
       } else {
-        console.error("Invalid keywords format:", pdfData.keywords);
+        setSnackbarMessage("Invalid keywords format:", pdfData.keywords);
+        setSnackbarOpen(true);
       }
       setTags(tagsArray);
     } catch (error) {
-      console.error("Error handling keywords:", error);
+      setSnackbarMessage("Error handling keywords:", error);
+      setSnackbarOpen(true);
       setTags([]);
     }
     setEditIsModalOpen(true);
@@ -299,7 +301,8 @@ const AdminFileUpload = () => {
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error("Error updating keywords:", error);
+      setSnackbarMessage("Error updating keywords:", error);
+      setSnackbarOpen(true);
     } finally {
       setLoading(false);
       setEditIsModalOpen(false);

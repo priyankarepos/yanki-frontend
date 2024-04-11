@@ -66,7 +66,6 @@ const styles = {
 const NewHomePageMui = () => {
     const { activeTab } = React.useContext(Context);
     const [drawerOpen, setDrawerOpen] = useState(true);
-
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -140,8 +139,8 @@ const NewHomePageMui = () => {
 
                 setSearchHistory((prevHistory) => {
                     const updatedHistory = [
-                      ...prevHistory,
-                      { query: searchQuery, response: response.data },
+                        ...prevHistory,
+                        { query: searchQuery, response: response.data },
                     ];
                     sessionStorage.removeItem('searchQuery');
                     return updatedHistory;
@@ -213,7 +212,8 @@ const NewHomePageMui = () => {
                 }
             }
         } catch (error) {
-            console.error("Error fetching chat sessions:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -266,17 +266,14 @@ const NewHomePageMui = () => {
                     setSearchHistory([...allResponses].reverse());
 
                 } catch (parseError) {
-                    console.error("Error parsing chat history:", parseError);
+                    setSnackbarMessage('Error:', parseError);
+                    setSnackbarOpen(true);
 
                 }
-                // if (!isLargeScreen) {
-                //     setDrawerOpen(false);
-                // } else {
-                //     setDrawerOpen(true);
-                // }
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
 
         }
     }, []);
@@ -284,7 +281,6 @@ const NewHomePageMui = () => {
     useEffect(() => {
         if (initialChatOpen && chatSessions.length > 0) {
             const storedChatId = sessionStorage.getItem("selectedChatId");
-            // const firstChatId = storedChatId || chatSessions[0].id;
             const firstChatId = storedChatId;
             handleChatSessionClick(firstChatId);
             setInitialChatOpen(false);
@@ -300,13 +296,11 @@ const NewHomePageMui = () => {
             );
 
             if (response.status === 200) {
-
-                console.log(response.data.chatHistory);
                 sessionStorage.removeItem('searchQuery');
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
-            console.log("Full error response:", error.response);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -369,17 +363,16 @@ const NewHomePageMui = () => {
             if (response.status === 200) {
                 const updatedChatSessions = chatSessions.filter((session) => session.id !== selectedChatId);
                 setChatSessions(updatedChatSessions);
-
-                // Update other state or show snackbar message as needed
                 setSnackbarMessage(response?.data?.message);
                 setSnackbarOpen(true);
-                console.log('Chat session deleted successfully');
                 resetPage()
             } else {
-                console.error('Failed to delete chat session');
+                setSnackbarMessage('Failed to delete chat session');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error:', error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         } finally {
             setConfirmDialogOpen(false);
         }
@@ -433,33 +426,6 @@ const NewHomePageMui = () => {
             observer.disconnect();
         };
     }, []);
-
-    // const shouldScrollRef = useRef(true);
-
-    // useEffect(() => {
-    //     const chatContainerNode = chatContainerRef.current;
-
-    //     const scrollToBottom = () => {
-    //       if (shouldScrollRef.current) {
-    //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    //         shouldScrollRef.current = false;
-    //       }
-    //     };
-
-    //     scrollToBottom();
-
-    //     chatContainerNode.style.scrollBehavior = 'auto';
-
-    //     const observer = new MutationObserver(scrollToBottom);
-    //     observer.observe(chatContainerNode, { childList: true, subtree: true });
-
-    //     // Clean up
-    //     return () => {
-    //       chatContainerNode.style.scrollBehavior = 'smooth';
-    //       observer.disconnect();
-    //     };
-    //   }, []);
-
 
 
     return (

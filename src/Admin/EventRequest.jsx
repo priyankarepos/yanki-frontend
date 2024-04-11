@@ -163,13 +163,11 @@ const AdminEventRequest = () => {
                 setEventRequests(response.data);
                 setTotalPages(Math.ceil(response.data.totalCount / 10));
             } else {
-                console.error('Failed to fetch event location');
                 setSnackbarMessage('Failed to fetch event location');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error fetching event location:', error);
-            setSnackbarMessage('Error fetching event location');
+            setSnackbarMessage('Error fetching event location', error);
             setSnackbarOpen(true);
         }
     };
@@ -188,8 +186,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch event location');
                 }
             } catch (error) {
-                console.error('Error fetching event location:', error);
-                setSnackbarMessage('Error fetching event location');
+                setSnackbarMessage('Error fetching event location', error);
                 setSnackbarOpen(true);
             }
         };
@@ -207,8 +204,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch publication area');
                 }
             } catch (error) {
-                console.error('Error fetching publication area:', error);
-                setSnackbarMessage('Error fetching publication area');
+                setSnackbarMessage('Error fetching publication area', error);
                 setSnackbarOpen(true);
             }
         };
@@ -226,8 +222,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch event types');
                 }
             } catch (error) {
-                console.error('Error fetching event types:', error);
-                setSnackbarMessage('Error fetching event types');
+                setSnackbarMessage('Error fetching event types', error);
                 setSnackbarOpen(true);
             }
         };
@@ -263,7 +258,6 @@ const AdminEventRequest = () => {
                     formData.append('imageFiles', file);
                 });
             } else {
-                console.error('Error: uploadedFiles is not an array');
                 setIsLoading(false);
                 return;
             }
