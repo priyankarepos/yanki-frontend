@@ -140,8 +140,8 @@ const NewHomePageMui = () => {
 
                 setSearchHistory((prevHistory) => {
                     const updatedHistory = [
-                      ...prevHistory,
-                      { query: searchQuery, response: response.data },
+                        ...prevHistory,
+                        { query: searchQuery, response: response.data },
                     ];
                     sessionStorage.removeItem('searchQuery');
                     return updatedHistory;
@@ -213,7 +213,8 @@ const NewHomePageMui = () => {
                 }
             }
         } catch (error) {
-            console.error("Error fetching chat sessions:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -266,7 +267,8 @@ const NewHomePageMui = () => {
                     setSearchHistory([...allResponses].reverse());
 
                 } catch (parseError) {
-                    console.error("Error parsing chat history:", parseError);
+                    setSnackbarMessage('Error:', parseError);
+                    setSnackbarOpen(true);
 
                 }
                 // if (!isLargeScreen) {
@@ -276,7 +278,8 @@ const NewHomePageMui = () => {
                 // }
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
 
         }
     }, []);
@@ -300,13 +303,11 @@ const NewHomePageMui = () => {
             );
 
             if (response.status === 200) {
-
-                console.log(response.data.chatHistory);
                 sessionStorage.removeItem('searchQuery');
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
-            console.log("Full error response:", error.response);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -373,13 +374,14 @@ const NewHomePageMui = () => {
                 // Update other state or show snackbar message as needed
                 setSnackbarMessage(response?.data?.message);
                 setSnackbarOpen(true);
-                console.log('Chat session deleted successfully');
                 resetPage()
             } else {
-                console.error('Failed to delete chat session');
+                setSnackbarMessage('Failed to delete chat session');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error:', error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         } finally {
             setConfirmDialogOpen(false);
         }

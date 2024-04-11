@@ -37,7 +37,8 @@ const ChangeRole = () => {
   });
 
   const onError = (data) => {
-    console.log("error data: ", data);
+    setSnackbarMessage("error data: ", data);
+    setSnackbarOpen(true);
   };
 
   const onSubmit = async (data) => {

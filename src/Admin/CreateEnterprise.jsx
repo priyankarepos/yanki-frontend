@@ -88,10 +88,12 @@ const AdminCreateEnterprise = () => {
                 setEnterpriseList(responseData)
 
             } else {
-                console.error('Failed to fetch enterprise details');
+                setSnackbarMessage('Failed to fetch enterprise details');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error fetching enterprise details:', error);
+            setSnackbarMessage('Error fetching enterprise details:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -107,15 +109,15 @@ const AdminCreateEnterprise = () => {
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
                 );
 
-                console.log('API Response:', response.data);
-
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
                 } else {
-                    console.error("Failed to fetch enterprise categories");
+                    setSnackbarMessage("Failed to fetch enterprise categories");
+                    setSnackbarOpen(true);
                 }
             } catch (error) {
-                console.error("Error:", error);
+                setSnackbarMessage("Error:", error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -172,28 +174,29 @@ const AdminCreateEnterprise = () => {
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/${tag}`
             );
 
-            console.log('Keyword Check Response:', response.data);
-
             if (response.status === 200) {
                 const keywordExists = response.data.exists;
 
                 if (keywordExists !== undefined) {
                     if (keywordExists) {
-                        console.log('Keyword already exists:', tag);
+                        setSnackbarMessage('Keyword already exists:', tag);
+                        setSnackbarOpen(true);
                     } else {
-                        console.log('Keyword does not exist:', tag);
 
                         setTags((prevTags) => [...prevTags, tag]);
                     }
                 } else {
-                    console.log('Keyword existence is undefined for:', tag);
+                    setSnackbarMessage('Keyword existence is undefined for:', tag);
+                    setSnackbarOpen(true);
                 }
             } else {
-                console.error('Failed to check enterprise keyword');
+                setSnackbarMessage('Failed to check enterprise keyword');
+                setSnackbarOpen(true);
             }
             return response.data;
         } catch (error) {
-            console.error('Error checking enterprise keyword:', error);
+            setSnackbarMessage('Error checking enterprise keyword:', error);
+            setSnackbarOpen(true);
             return { isSuccess: false };
         }
     };
@@ -234,12 +237,12 @@ const AdminCreateEnterprise = () => {
                     setSnackbarOpen(true);
                 }
             } else {
-                console.error('Failed to check enterprise keyword');
                 setSnackbarMessage('Failed to check enterprise keyword');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error handling tag:', error);
+            setSnackbarMessage('Error handling tag:', error);
+            setSnackbarOpen(true);
             setSnackbarOpen(true);
         }
     };
@@ -291,24 +294,23 @@ const AdminCreateEnterprise = () => {
                 }
             );
 
-            console.log('Create Enterprise Response:', response.data);
-
             if (response.status === 200) {
-                console.log('Enterprise details created successfully');
                 if (departmentsData.length === 0) {
                     setSnackbarMessage('Enterprise details created successfully.');
+                    setSnackbarOpen(true);
                 } else {
                     setSnackbarMessage('Enterprise details created successfully');
+                    setSnackbarOpen(true);
                 }
                 setSnackbarOpen(true);
                 getEnterpriseDetails();
             } else {
-                console.error('Failed to create enterprise details');
                 setSnackbarMessage('Failed to create enterprise details');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error creating enterprise details:', error);
+            setSnackbarMessage('Error creating enterprise details:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -355,15 +357,15 @@ const AdminCreateEnterprise = () => {
             const response = await axios.delete(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-delete-enterprise/${enterpriseId}`
             );
-            console.log('Delete Enterprise Response:', response.data);
             if (response.status === 200) {
-                console.log('Enterprise deleted successfully');
                 getEnterpriseDetails()
             } else {
-                console.error('Failed to delete enterprise');
+                setSnackbarMessage('Failed to delete enterprise');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error deleting enterprise:', error);
+            setSnackbarMessage('Error deleting enterprise:', error);
+                setSnackbarOpen(true);
         }
     };
 
@@ -396,9 +398,7 @@ const AdminCreateEnterprise = () => {
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
                 requestBody
             );
-            console.log('Update Enterprise Details Response:', response.data);
             if (response.status === 200) {
-                console.log('Enterprise details updated successfully');
                 if (departmentsData.length === 0) {
                     setSnackbarMessage('Enterprise details updated successfully.');
                 } else {
@@ -407,12 +407,12 @@ const AdminCreateEnterprise = () => {
                 setSnackbarOpen(true);
                 getEnterpriseDetails();
             } else {
-                console.error('Failed to update enterprise details');
                 setSnackbarMessage('Failed to update enterprise details');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error updating enterprise details:', error);
+            setSnackbarMessage('Error updating enterprise details:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }

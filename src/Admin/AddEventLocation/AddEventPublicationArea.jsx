@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
 import { Context } from '../../App';
+import "./EventLocation.scss";
 
 const styles = {
   tableContainer: {
@@ -87,19 +88,19 @@ const AdminAddEventPublicationArea = () => {
     const fetchEventPublicationArea = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-  
+
         if (response.status === 200) {
           setPublicationArea(response.data);
         } else {
-          console.error('Failed to fetch publication area');
+          setSnackbarMessage('Failed to fetch publication area');
+          setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error('Error fetching publication area:', error);
-        setSnackbarMessage('Error fetching publication area');
+        setSnackbarMessage(error);
         setSnackbarOpen(true);
       }
     };
-  
+
     fetchEventPublicationArea();
   }, [isModalOpen]);
 
@@ -121,7 +122,7 @@ const AdminAddEventPublicationArea = () => {
       const response = await axios.delete(
         `${process.env.REACT_APP_API_HOST}/api/event-publication-area/delete-event-publicationArea/${selectedAreaId}`
       );
-  
+
       if (response.status === 200) {
         const updatedAreas = publicationArea.filter((area) => area.id !== selectedAreaId);
         setPublicationArea(updatedAreas);
@@ -129,13 +130,11 @@ const AdminAddEventPublicationArea = () => {
         setSnackbarMessage('Publication Area deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete publication area');
         setSnackbarMessage('Failed to delete publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error deleting publication area');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     }
   };
@@ -154,11 +153,11 @@ const AdminAddEventPublicationArea = () => {
         setSnackbarOpen(true);
         return;
       }
-  
+
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/add-event-publicationArea`;
-  
+
       const response = await axios.post(apiUrl, { eventPublicationAreaName: publicationAreaName });
-  
+
       if (response.status === 200) {
         const newPublicationArea = response.data;
         setPublicationArea((prevArea) => [...prevArea, newPublicationArea]);
@@ -168,13 +167,11 @@ const AdminAddEventPublicationArea = () => {
         setSnackbarMessage('Publication area saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save publication area');
         setSnackbarMessage('Failed to save publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error saving publication area');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -189,11 +186,11 @@ const AdminAddEventPublicationArea = () => {
         setSnackbarOpen(true);
         return;
       }
-  
+
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/update-event-publicationArea`;
-      
+
       const response = await axios.put(apiUrl, { id: editPublicationAreaId, eventPublicationAreaName: publicationAreaName });
-  
+
       if (response.status === 200) {
         const updatedArea = response.data;
         setPublicationArea((prevArea) => {
@@ -206,13 +203,11 @@ const AdminAddEventPublicationArea = () => {
         setSnackbarMessage('Publication area updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update publication area');
         setSnackbarMessage('Failed to update publication area');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error updating publication area');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -222,14 +217,14 @@ const AdminAddEventPublicationArea = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
-    <Box style={{ display: "flex" }}>
+    <Box sx={{ display: "flex" }}>
       <Box style={{ ...styles.content }} className="enterpriseFormBox">
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
+          <Box className="event-top-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Publication Area
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddPublicationArea}>
+            <IconButton color="primary" size="small" onClick={handleAddPublicationArea}>
               <AddIcon /> Add
             </IconButton>
           </Box>
