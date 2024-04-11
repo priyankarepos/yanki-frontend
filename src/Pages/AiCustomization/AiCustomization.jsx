@@ -146,11 +146,11 @@ const AiCustomization = () => {
         religiousPractices: formData.religiousPractices,
         synagogueCommunity: formData.synagogueCommunity,
         updatedWithCommunityEvents: formData.updatedWithCommunityEvents,
-        volunteerInterests: formData.isInterestInVolunteer==="false" ? "" : formData.volunteerInterests,
+        volunteerInterests: formData.isInterestInVolunteer === "false" ? "" : formData.volunteerInterests,
         religiousChallenges: formData.religiousChallenges,
         toolForOvercomeChallenges: formData.toolForOvercomeChallenges,
         ideaToEnhanceReligiousExperience: formData.ideaToEnhanceReligiousExperience,
-        religiousStudies: formData.isInterestInReligiousStudies==="false" ? "" : formData.religiousStudies,
+        religiousStudies: formData.isInterestInReligiousStudies === "false" ? "" : formData.religiousStudies,
         isInterestInVolunteer: JSON.parse(formData.isInterestInVolunteer),
         isInterestInReligiousStudies: JSON.parse(formData.isInterestInReligiousStudies),
       };
@@ -222,14 +222,23 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="ageRange"
+                    rules={{ min: 1, max: 200 }}
                     render={({ field }) => (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        variant="outlined"
-                        placeholder="Enter your age range"
-                        type="number"
-                      />
+                      <>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          variant="outlined"
+                          placeholder="Enter your age range"
+                          type="number"
+                        />
+                        {errors.ageRange && errors.ageRange.type === "min" && (
+                          <FormHelperText className="error-message">Minimum age is 1</FormHelperText>
+                        )}
+                        {errors.ageRange && errors.ageRange.type === "max" && (
+                          <FormHelperText className="error-message">Maximum age is 200</FormHelperText>
+                        )}
+                      </>
                     )}
                   />
                 </Grid>
@@ -551,7 +560,7 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInVolunteer") == "true" || watch("isInterestInVolunteer") == true) && (
+                {(watch("isInterestInVolunteer") === "true" || watch("isInterestInVolunteer") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what type of volunteering interests you?
@@ -676,7 +685,7 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInReligiousStudies") == "true" || watch("isInterestInReligiousStudies") == true) && (
+                {(watch("isInterestInReligiousStudies") === "true" || watch("isInterestInReligiousStudies") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what topics are you most interested in? (e.g.,
@@ -690,7 +699,7 @@ const AiCustomization = () => {
                       render={({ field }) => (
                         <TextField
                           {...field}
-                          value={watch("isInterestInReligiousStudies") == false ? "" : field.value}
+                          value={watch("isInterestInReligiousStudies") === false ? "" : field.value}
                           fullWidth
                           variant="outlined"
                           placeholder="Enter your interests"
