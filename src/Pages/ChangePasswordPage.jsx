@@ -47,12 +47,7 @@ const ChangePasswordPage = () => {
 
   const watchNewPassword = watch("newPassword");
 
-  const onError = (data) => {
-    console.log(data);
-  };
-
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       setIsSubmitting(true);
       const response = await axios.post(
@@ -100,7 +95,7 @@ const ChangePasswordPage = () => {
             >
               Change password
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 control={control}
                 name="currentPassword"

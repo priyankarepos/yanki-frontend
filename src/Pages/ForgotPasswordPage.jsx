@@ -39,10 +39,6 @@ const ForgotPasswordPage = () => {
     },
   });
 
-  const onError = (data) => {
-    console.log("error data: ", data);
-  };
-
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
@@ -96,7 +92,7 @@ const ForgotPasswordPage = () => {
             >
               No worries, we'll send you reset instructions.
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 control={control}
                 name="emailAddress"

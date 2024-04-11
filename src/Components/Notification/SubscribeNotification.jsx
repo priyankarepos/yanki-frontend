@@ -4,6 +4,8 @@ import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
 import axios from 'axios';
 import "./SubscribeNotification.scss";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SubscribeNotification = ({ answer }) => {
     const [eventLocations, setEventLocations] = useState([]);
@@ -27,51 +29,36 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    console.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                toast.error('Error fetching event location:', error);
             }
         };
-
+    
         fetchEventLocations();
     }, []);
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    console.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
                 console.error('Error fetching publication area:', error);
             }
         };
-
+    
         fetchEventPublicationArea();
     }, []);
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    console.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
                 console.error('Error fetching event types:', error);
             }
         };
-
+    
         fetchEventTypes();
     }, []);
 
@@ -80,24 +67,20 @@ const SubscribeNotification = ({ answer }) => {
             try {
                 const yankiUser = window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
                 let userId = '';
-
+    
                 if (yankiUser) {
                     const parsedUserObject = JSON.parse(yankiUser);
                     userId = parsedUserObject?.userObject?.userId || '';
                 }
-
+    
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
-
-                if (response.status === 200) {
-                    setSubscribeNotification(response.data);
-                } else {
-                    console.error('Failed to fetch user subscription');
-                }
+                
+                setSubscribeNotification(response.data);
             } catch (error) {
                 console.error('Error fetching user subscription:', error);
             }
         };
-
+    
         fetchSubscribeNotification();
     }, [userId]);
 
@@ -247,7 +230,7 @@ const SubscribeNotification = ({ answer }) => {
                                                 onSelectLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}
-                                            onRemoveLocation={(selectedList) => {
+                                            onRemove={(selectedList) => {
                                                 onRemoveLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}
@@ -340,6 +323,7 @@ const SubscribeNotification = ({ answer }) => {
                 onClose={() => setSnackbarOpen(false)}
                 message={snackbarMessage}
             />
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         </Box >
 
     );

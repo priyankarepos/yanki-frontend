@@ -52,12 +52,7 @@ const ResetPasswordPage = () => {
 
   const watchNewPassword = watch("newPassword");
 
-  const onError = (data) => {
-    console.log("on error data: ", data);
-  };
-
   const onSubmit = async (data) => {
-    console.log("data",data);
     try {
       setIsSubmitting(false);
       const queryParamsObj = Object.fromEntries([...searchParams]);
@@ -124,7 +119,7 @@ const ResetPasswordPage = () => {
             >
               Reset password
             </Typography>
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 control={control}
                 name="newPassword"

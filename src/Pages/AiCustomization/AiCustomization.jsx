@@ -49,7 +49,8 @@ const AiCustomization = () => {
           setCustomizeMessage(response.data);
         }
       } catch (error) {
-        console.error("Error fetching current phone number:", error);
+        setSnackbarMessage("Error fetching current phone number:", error);
+      setSnackbarOpen(true);
       }
     };
     fetchCurrentAiCustomizeData();
@@ -64,14 +65,10 @@ const AiCustomization = () => {
   }, [customizeMessage, setValue]);
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data);
-
     try {
       // Check if religiousPractices is an array
       if (Array.isArray(data.religiousPractices)) {
         const selectedPractices = data.religiousPractices;
-
-        console.log("Selected Practices:", selectedPractices);
 
         // Rest of your code remains unchanged
         const requestBody = {
@@ -102,15 +99,16 @@ const AiCustomization = () => {
             },
           }
         );
-        console.log(response.data);
-        setSnackbarMessage("Custom prompt added successfully");
+        setSnackbarMessage(response.data.message);
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        console.error("Error: religiousPractices is not an array");
+        setSnackbarMessage("Error: religiousPractices is not an array");
+        setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error("Error:", error);
+      setSnackbarMessage("Error: please fill the data");
+      setSnackbarOpen(true);
     }
   };
 
@@ -125,17 +123,18 @@ const AiCustomization = () => {
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        console.error("Failed to delete prompt");
+        setSnackbarMessage("Failed to delete prompt");
+        setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error("Error:", error);
+      setSnackbarMessage("Error: Failed to delete prompt", error);
+      setSnackbarOpen(true);
     }
   };
 
   const handleUpdate = async () => {
     try {
       const formData = getValues();
-      console.log("formData", formData);
       const requestBody = {
         judaismBranch: formData.judaismBranch,
         ageRange: formData.ageRange,
@@ -170,10 +169,12 @@ const AiCustomization = () => {
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        console.error("Failed to update prompt");
+        setSnackbarMessage("Failed to update prompt");
+        setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error("Error:", error);
+      setSnackbarMessage("Error: Failed to update prompt", error);
+      setSnackbarOpen(true);
     }
   };
 

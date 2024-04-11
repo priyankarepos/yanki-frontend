@@ -47,7 +47,6 @@ const ActiveAccountPage = () => {
         setErrorMsg("");
       }
     } catch (e) {
-      console.log("e: ", e);
       setActivating(false);
       setErrorOnActive(true);
       if (e?.response?.data?.message) {

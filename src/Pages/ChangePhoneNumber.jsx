@@ -35,7 +35,8 @@ const ChangePhoneNumber = () => {
                     setCurrentPhoneNumber(response.data.phoneNumber);
                 }
             } catch (error) {
-                console.error("Error fetching current phone number:", error);
+                setSnackbarMessage("Error fetching current phone number:", error)
+                setSnackbarOpen(true);
             }
         };
 
@@ -59,7 +60,8 @@ const ChangePhoneNumber = () => {
     });
 
     const onError = (data) => {
-        console.log(data);
+        setSnackbarMessage(data)
+        setSnackbarOpen(true);
     };
 
     useEffect(() => {
@@ -68,7 +70,6 @@ const ChangePhoneNumber = () => {
     }, [setValue]);
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
             const response = await axios.put(
                 `${process.env.REACT_APP_API_HOST}/api/auth/change-phoneNumber`,
@@ -114,7 +115,7 @@ const ChangePhoneNumber = () => {
                                 control={control}
                                 name="currentSignInPhone"
                                 render={({ field }) => (
-                                    <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                    <div className="currentSignInPhone-style">
                                         <ReactPhoneInput
                                             inputExtraProps={{
                                                 name: field.name,
@@ -128,15 +129,9 @@ const ChangePhoneNumber = () => {
                                             }}
                                             onBlur={() => field.onBlur()}
                                             error={!!errors["currentSignInPhone"]}
+                                            className="ReactPhoneInput-style"
                                             style={{
-                                                border: errors["currentSignInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
-                                                borderRadius: '8px',
-                                                marginBottom: '0px',
-                                                padding: '10px',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: '55px',
-                                                color: "#fff",
+                                                border: errors["currentSignInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',  
                                             }}
                                             disabled={true}
                                         />
@@ -158,7 +153,7 @@ const ChangePhoneNumber = () => {
                                     },
                                 }}
                                 render={({ field }) => (
-                                    <div style={{ marginBottom: '16px', position: 'relative' }}>
+                                    <div className="currentSignInPhone-style">
                                         <ReactPhoneInput
                                             inputExtraProps={{
                                                 name: field.name,
@@ -171,16 +166,10 @@ const ChangePhoneNumber = () => {
                                                 field.onChange(value);
                                             }}
                                             onBlur={() => field.onBlur()}
+                                            className="ReactPhoneInput-style"
                                             error={!!errors["signInPhone"]}
                                             style={{
                                                 border: errors["signInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
-                                                borderRadius: '8px',
-                                                marginBottom: '0px',
-                                                padding: '10px',
-                                                width: '100%',
-                                                outline: 'none',
-                                                height: '55px',
-                                                color: "#fff",
                                             }}
                                         />
                                         {errors['signInPhone'] && (
