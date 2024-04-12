@@ -149,11 +149,11 @@ const AdminCreateDepartment = () => {
                     }
                 } else {
                     setSnackbarMessage('Keyword existence is undefined for:', tag);
-                    setSnackbarOpen(true);
+                    setSnackbarOpen(false);
                 }
             } else {
                 setSnackbarMessage('Failed to check enterprise keyword');
-                setSnackbarOpen(true);
+                setSnackbarOpen(false);
             }
             return response.data;
         } catch (error) {

@@ -681,7 +681,7 @@ const NewHomePageMui = () => {
                         )}
 
                         <form>
-                            <Box className="ya-home-search-wrapper">
+                            <Box className={activeTab===0 ? "ya-home-search-wrapper" : "ya-home-search-wrapper ya-home-search-wrapper-light"}>
                                 <TextField
                                     fullWidth
                                     name="searchQuery"
