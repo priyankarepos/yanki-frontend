@@ -23,74 +23,6 @@ import ConfirmDialog from './ConfirmDialog';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-const styles = {
-  inputField: {
-    backgroundColor: '#eaf5ff',
-    border: '1px solid #6fa8dd',
-    borderRadius: '8px',
-    marginBottom: '16px',
-    color: "#8bbae5",
-    with: "100%"
-  },
-  label: {
-    color: '#8bbae5',
-    marginBottom: '8px',
-  },
-  tagsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-  tag: {
-    backgroundColor: '#6fa8dd',
-    color: '#fff',
-    borderRadius: '4px',
-    padding: '4px 8px',
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  tagText: {
-    marginRight: '8px',
-  },
-  removeTag: {
-    cursor: 'pointer',
-  },
-  content: {
-    flex: 1,
-    padding: '16px',
-    marginLeft: '0',
-    transition: 'margin-left 0.3s',
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#063762',
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-    padding: '35px 25px',
-    width: '500px',
-    borderRadius: '8px',
-  },
-  modalTitle: {
-    fontWeight: 'medium',
-    marginBottom: '16px',
-    color: "#fff",
-  },
-  modalButton: {
-    backgroundColor: '#fff',
-    color: '#063762',
-    textTransform: 'capitalize',
-    borderRadius: '10px',
-    padding: '20px 15px',
-    fontSize: '16px',
-    marginTop: "20px",
-  },
-};
-
 const EnterpriseProfile = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
@@ -120,7 +52,8 @@ const EnterpriseProfile = () => {
       setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      setSnackbarMessage('Error fetching data:', error);
+      setSnackbarOpen(false);
     }
   };
 
@@ -182,7 +115,8 @@ const EnterpriseProfile = () => {
         fetchData();
         //window.location.reload();
       } else {
-        console.log("Failed to upload file");
+        setSnackbarMessage('Failed to upload file');
+        setSnackbarOpen(true);
         setIsModalOpen(false);
       }
     } catch (error) {
@@ -291,10 +225,12 @@ const EnterpriseProfile = () => {
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
-          console.error("Failed to fetch enterprise categories");
+          setSnackbarMessage('Failed to fetch enterprise categories');
+          setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error("Error:", error);
+        setSnackbarMessage('Error:', error);
+        setSnackbarOpen(true);
       }
     };
 
@@ -310,9 +246,12 @@ const EnterpriseProfile = () => {
           setEnterpriseDetails(response.data);
           sessionStorage.setItem('enterpriseId', response.data.enterpriseId);
         } else {
-          console.error('Failed to fetch enterprise details');
+          setSnackbarMessage('Failed to fetch enterprise details');
+          setSnackbarOpen(true);
         }
       } catch (error) {
+        setSnackbarMessage('Error:', error);
+        setSnackbarOpen(true);
       }
     };
 
@@ -354,24 +293,30 @@ const EnterpriseProfile = () => {
         const keywordExists = response.data.exists;
 
         if (keywordExists !== undefined) {
-          console.log("keywordExists", keywordExists);
+          setSnackbarMessage('keywordExists', keywordExists);
+          setSnackbarOpen(true);
 
           if (keywordExists) {
-            console.log('Keyword already exists:', tag);
+            setSnackbarMessage('Keyword already exists:', tag);
+            setSnackbarOpen(true);
           } else {
-            console.log('Keyword does not exist:', tag);
+            setSnackbarMessage('Keyword does not exist:', tag);
+            setSnackbarOpen(true);
 
             setTags((prevTags) => [...prevTags, tag]);
           }
         } else {
-          console.log('Keyword existence is undefined for:', tag);
+          setSnackbarMessage('Keyword existence is undefined for:', tag);
+          setSnackbarOpen(true);
         }
       } else {
-        console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarOpen(true);
       }
       return response.data;
     } catch (error) {
-      console.error('Error checking enterprise keyword:', error);
+      setSnackbarMessage('Error checking enterprise keyword:', error);
+      setSnackbarOpen(true);
       return { isSuccess: false };
     }
   };
@@ -415,12 +360,11 @@ const EnterpriseProfile = () => {
           setSnackbarOpen(true);
         }
       } else {
-        console.error('Failed to check enterprise keyword');
         setSnackbarMessage('Failed to check enterprise keyword');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error handling tag:', error);
+      setSnackbarMessage('Error handling tag:', error);
       setSnackbarOpen(true);
     }
   };
@@ -450,7 +394,6 @@ const EnterpriseProfile = () => {
       setIsLoading(true);
 
       const formData = getValues();
-      console.log("formData", formData);
       const tagsAsString = tags.join(',');
       const response = await axios.put(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
@@ -476,10 +419,7 @@ const EnterpriseProfile = () => {
         }
       );
 
-      console.log('Update Enterprise Details Response:', response.data);
-
       if (response.status === 200) {
-        console.log('Enterprise details updated successfully');
         if (departmentsData.length === 0) {
           setSnackbarMessage('Enterprise details updated successfully. You can now start adding departments');
         } else {
@@ -489,12 +429,12 @@ const EnterpriseProfile = () => {
         // setIsButtonClick(true)
         window.location.reload();
       } else {
-        console.error('Failed to update enterprise details');
         setSnackbarMessage('Failed to update enterprise details');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error updating enterprise details:', error);
+      setSnackbarMessage('Error updating enterprise details:', error);
+      setSnackbarOpen(true);
     }
   };
 
@@ -517,19 +457,16 @@ Service Offerings:
       <Modal
         open={Boolean(selectedPdf)}
         onClose={closePdfModal}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className='enterprise-profile-modal'
       >
-        <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
+        <div className="enterprise-profile-pdf-modal">
           <IconButton
-            style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd" }}
+            className='enterprise-profile-pdf-modal-icon-button'
+            style={{ top: !isLargeScreen ? '40px' : '20px' }}
             onClick={closePdfModal}
             aria-label="close"
           >
-            <CloseIcon style={{ color: "#fff" }} />
+            <CloseIcon className='enterprise-white-color' />
           </IconButton>
           {!pdfLoadError ? (
             selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
@@ -540,7 +477,7 @@ Service Offerings:
               <img
                 src={selectedPdf?.pdfUrl}
                 alt=""
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                className='enterprise-profile-image'
                 onError={() => setPdfLoadError(true)}
               />
             )
@@ -555,17 +492,17 @@ Service Offerings:
 
 
   return (
-    <Box sx={{ display: 'flex', backgroundColor: '#fff' }}>
+    <Box className="enterprise-box">
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
-      <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-        <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
+      <Box style={{ marginLeft: contentMargin }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+        <Typography variant="h6" className='enterprise-heading'>
           My Enterprise Profile
         </Typography>
         <Grid container spacing={2} className='enterprise-profile'>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise Name<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Enterprise Name<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
@@ -583,21 +520,21 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Type enterprise name here"
                     fullWidth
                   />
                   {errors['EnterpriseName'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseName'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EnterpriseName'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Enterprise point of contact<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Enterprise point of contact<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterprisePointOfContact"
@@ -615,7 +552,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={styles.inputField}
+                   className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Enterprise point of contact name"
@@ -624,14 +561,14 @@ Service Offerings:
                   // helperText={errors['EnterprisePointOfContact'] ? errors['EnterprisePointOfContact'].message : ''}
                   />
                   {errors['EnterprisePointOfContact'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EnterprisePointOfContact'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EnterprisePointOfContact'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+            <InputLabel className='enterprise-input-lable'>Enterprise address<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseAddress"
@@ -639,13 +576,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
-                    style={{
-                      backgroundColor: '#eaf5ff',
-                      border: '1px solid #6fa8dd',
-                      borderRadius: '8px',
-                      marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                    }}
+                    className='enterprise-text-area'
                     {...field}
                     placeholder="Type enterprise address here"
                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -653,14 +584,14 @@ Service Offerings:
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
                   />
                   {errors['EnterpriseAddress'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseAddress'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EnterpriseAddress'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Email Address<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
@@ -677,7 +608,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Type email address here"
@@ -686,14 +617,14 @@ Service Offerings:
                   // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                   />
                   {errors['EmailAddress'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EmailAddress'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Phone Number<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Phone Number<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="PhoneNumber"
@@ -708,53 +639,33 @@ Service Offerings:
                 },
               }}
               render={({ field }) => (
-                <div style={{ marginBottom: '16px', position: 'relative' }}>
-                  <ReactPhoneInput
-                    style={{
-                      border: errors["PhoneNumber"] ? '1px solid #ffc9c9' : '1px solid #6fa8dd',
-                      backgroundColor: '#eaf5ff',
-                      borderRadius: '8px',
-                      marginBottom: '16px',
-                      color: "#8bbae5",
-                      with: "100%",
-                      height: '55px',
-                      lineHeight: "52px",
-                    }}
-                    inputExtraProps={{
-                      name: field.name,
-                      onBlur: field.onBlur,
-                    }}
+                <div>
+                  <ReactPhoneInput className='enterprise-input-field'
                     value={field.value}
                     preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
                     placeholder="Phone number"
                     onChange={(value, country, event) => {
                       field.onChange(value);
                     }}
-                    onBlur={() => field.onBlur()}
                     error={!!errors["PhoneNumber"]}
                   />
                   {errors['PhoneNumber'] && (
-                    <FormHelperText
-                      style={{
-                        color: '#ffc9c9',
-                      }}
-                    >
-                      {errors['PhoneNumber'].message}
-                    </FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['PhoneNumber'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Website URL</InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Website URL</InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Type website URL here"
@@ -764,15 +675,17 @@ Service Offerings:
               )}
             />
           </Grid>
-          <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>WhatsApp Phone Number</InputLabel>
+
+          <Grid item xs={12}><Divider sx={{ marginY: { xs: '10px' } }}  className="custom-divider"></Divider></Grid>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>WhatsApp Phone Number</InputLabel>
             <Controller
               control={control}
               name="WhatsappPhoneNumber"
               render={({ field }) => (
                 <TextField
-                  sx={{ ...styles.inputField }}
+                  className='enterprise-input-field'
                   {...field}
                   type="outlined"
                   placeholder="Type WhatsApp phone number here"
@@ -783,14 +696,15 @@ Service Offerings:
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Instagram Username</InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Instagram Username</InputLabel>
             <Controller
               control={control}
               name="InstagramUsername"
               render={({ field }) => (
                 <TextField
-                  sx={{ ...styles.inputField }}
+                  className='enterprise-input-field'
                   {...field}
                   type="outlined"
                   placeholder="Type Instagram username here"
@@ -801,14 +715,15 @@ Service Offerings:
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>LinkedIn Username</InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>LinkedIn Username</InputLabel>
             <Controller
               control={control}
               name="LinkedinUsername"
               render={({ field }) => (
                 <TextField
-                  sx={{ ...styles.inputField }}
+                  className='enterprise-input-field'
                   {...field}
                   type="outlined"
                   placeholder="Type LinkedIn username here"
@@ -819,8 +734,9 @@ Service Offerings:
               )}
             />
           </Grid>
+
           <Grid item xs={12} className="Enterprise-Description">
-            <InputLabel style={styles.label}>Enterprise Description<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+            <InputLabel className='enterprise-input-lable'>Enterprise Description<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseDescription"
@@ -828,13 +744,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
-                    style={{
-                      backgroundColor: '#eaf5ff',
-                      border: '1px solid #6fa8dd',
-                      borderRadius: '8px',
-                      marginBottom: '16px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px", fontFamily: "unset", textTransform: "none",
-                    }}
+                   className='enterprise-text-area enterprise-description-text-area'
                     {...field}
                     placeholder={placeholderText}
                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -842,15 +752,15 @@ Service Offerings:
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
                   />
                   {errors['EnterpriseDescription'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EnterpriseDescription'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EnterpriseDescription'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
-
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem} className='enterprise-profile-category'>
-            <InputLabel style={styles.label}>Enterprise Categories<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4} className='enterprise-profile-category'>
+            <InputLabel className='enterprise-input-lable'>Enterprise Categories<sup className='asterisk'>*</sup></InputLabel>
             <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
               <Controller
                 control={control}
@@ -862,8 +772,7 @@ Service Offerings:
                     value={selectedCategory}
                     onChange={(event) => setSelectedCategory(event.target.value)}
                     displayEmpty
-                    sx={{ ...styles.inputField }}
-                    className='EnterpriseCategorySelect'
+                    className='enterprise-input-field EnterpriseCategorySelect'
                   >
                     <MenuItem value="" disabled>
                       {enterpriseDetails[0]?.categoryName}
@@ -879,14 +788,15 @@ Service Offerings:
                 )}
               />
               {errors['EnterpriseCategories'] && (
-                <FormHelperText style={{ color: 'red' }}>
+                <FormHelperText className='error-handling'>
                   {errors['EnterpriseCategories'].message}
                 </FormHelperText>
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Opening Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Business Hours Opening Time<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursOpeningTime"
@@ -894,7 +804,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     // type="outlined"
                     type="time"
@@ -904,14 +814,15 @@ Service Offerings:
                   // helperText={errors['BusinessHoursOpeningTime'] ? errors['BusinessHoursOpeningTime'].message : ''}
                   />
                   {errors['BusinessHoursOpeningTime'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Business Hours Closing Time<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Business Hours Closing Time<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursClosingTime"
@@ -919,7 +830,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="time"
                     placeholder="Office closing time"
@@ -928,14 +839,15 @@ Service Offerings:
                   // helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
                   />
                   {errors.BusinessHoursClosingTime && (
-                    <FormHelperText style={{ color: 'red' }}>{errors.BusinessHoursClosingTime.message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors.BusinessHoursClosingTime.message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Founded Year<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Founded Year<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="FoundedYear"
@@ -943,7 +855,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     inputProps={{ maxLength: 4 }}
@@ -953,14 +865,15 @@ Service Offerings:
                   // helperText={errors['FoundedYear'] ? errors['FoundedYear'].message : ''}
                   />
                   {errors['FoundedYear'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['FoundedYear'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['FoundedYear'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Religious Certifications<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Religious Certifications<sup className='asterisk'>*</sup></InputLabel>
             {/* <Controller
               control={control}
               name="ReligiousCertifications"
@@ -968,7 +881,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Kosher or any other"
@@ -977,56 +890,54 @@ Service Offerings:
                   // helperText={errors['ReligiousCertifications'] ? errors['ReligiousCertifications'].message : ''}
                   />
                   {errors['ReligiousCertifications'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['ReligiousCertifications'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['ReligiousCertifications'].message}</FormHelperText>
                   )}
                 </div>
               )}
             /> */}
+
             <Button
               variant="contained"
               component="label"
               startIcon={<CloudUploadIcon />}
               fullWidth
-              style={{ height: "60px" }}
+              className='enterprise-profile-upload-button'
               disabled={enterpriseDetails[0]?.isProfileCompleted === false}
               onClick={() => setIsModalOpen(true)}
-            >{enterpriseDetails[0]?.isProfileCompleted === false && "Please complete your profile first."}</Button>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            >{enterpriseDetails[0]?.isProfileCompleted === false && "Please complete your profile first."}
+            </Button>
+
+            <ul className='enterprise-profile-ul'>
               {tableData.map((row, index) => (
-                <li key={index + 1} style={{ borderBottom: '1px solid #ccc', padding: '10px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ flex: '1' }}>
-                    <a href={row.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#6fa8dd', wordWrap: 'break-word', display: "inline-block", width: "200px" }}>
+                <li key={index + 1} className='enterprise-profile-list'>
+                  <div className='enterprise-profile-list-container'>
+                    <a href={row.pdfUrl} target="_blank" rel="noopener noreferrer" className='enterprise-profile-list-link' >
                       {row.id} - {row.pdfUrl ? row.pdfUrl.split('/').pop() : ''}
                     </a>
                   </div>
                   <div>
-                    <IconButton onClick={() => openPdfModal(index)} style={{ marginLeft: '8px' }}>
-                      <VisibilityIcon style={{ color: '#6fa8dd' }} />
+                    <IconButton onClick={() => openPdfModal(index)} className='enterprise-profile-list-icon-button'>
+                      <VisibilityIcon className='enterprise-profile-list-icon' />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(row.pdfUrl.split('/').pop())} style={{ marginLeft: '8px' }}>
-                      <DeleteIcon style={{ color: '#6fa8dd' }} />
+                    <IconButton onClick={() => handleDelete(row.pdfUrl.split('/').pop())} className='enterprise-profile-list-icon-button' >
+                      <DeleteIcon className='enterprise-profile-list-icon' />
                     </IconButton>
                   </div>
                 </li>
               ))}
             </ul>
-
           </Grid>
-          <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
+
+          <Grid item xs={12}><Divider sx={{ marginY: { xs: '10px' } }} className='custom-divider'></Divider></Grid>
+
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Frequently Asked Questions (FAQs)</InputLabel>
+            <InputLabel className='enterprise-input-lable'>Frequently Asked Questions (FAQs)</InputLabel>
             <Controller
               control={control}
               name="FrequentlyAskedQuestions"
               render={({ field }) => (
                 <TextareaAutosize
-                  style={{
-                    backgroundColor: '#eaf5ff',
-                    border: '1px solid #6fa8dd',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
-                    color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                  }}
+                  className='enterprise-text-area'
                   {...field}
                   placeholder="Type frequently asked questions (FAQs) here"
                   onFocus={(e) => e.target.style.outline = 'none'}
@@ -1036,8 +947,9 @@ Service Offerings:
               )}
             />
           </Grid>
+
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+            <InputLabel className='enterprise-input-lable'>Enterprise identification keywords<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseIdentificationKeywords"
@@ -1048,17 +960,8 @@ Service Offerings:
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
                     placeholder="Type Enterprise identification keywords here"
+                    className='enterprise-input-field'
                     inputProps={{
-                      style: {
-                        backgroundColor: '#eaf5ff',
-                        border: '1px solid #6fa8dd',
-                        borderRadius: '8px',
-                        marginBottom: '16px',
-                        color: '#8bbae5',
-                        width: '100%',
-                        outline: 'none',
-                        height: "60px",
-                      },
                       ...field,
                       value: tagInput,
                       onChange: (e) => setTagInput(e.target.value),
@@ -1073,15 +976,14 @@ Service Offerings:
                       },
                     }}
                   />
-                  <div style={styles.tagsContainer}>
+                  <div className='enterprise-tags-container'>
                     {tags.map((tag, index) => (
-                      <div key={`${tag}-${index}`} style={{
-                        ...styles.tag,
+                      <div key={`${tag}-${index}`} className='enterprise-tag' style={{
                         backgroundColor: tag === tagInput ? '#ff7070' : '#6fa8dd',
                       }}>
-                        <span style={styles.tagText}>{tag}</span>
+                        <span className='enterprise-tag-text'>{tag}</span>
                         <span
-                          style={styles.removeTag}
+                          className='enterprise-remove-tag'
                           onClick={() => handleRemoveTag(tag)}
                         >
                           &times;
@@ -1090,34 +992,34 @@ Service Offerings:
                     ))}
                   </div>
                   {isSubmitted && !tags.length && (
-                    <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                    <FormHelperText className='error-handling'>
                       At least one keyword is required
                     </FormHelperText>
                   )}
-                  {!tags.length && <Typography style={{ color: "gray" }}>Enterprise identification keywords (press enter after each keywords to register)</Typography>}
+                  {!tags.length && <Typography className='enterprise-profile-description'>Enterprise identification keywords (press enter after each keywords to register)</Typography>}
                 </div>
               )}
             />
           </Grid>
+
           <Grid item xs={3}>
             {(isButtonClick || selectedCategory) ? <Button
               variant="outlined"
-              sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
+              className='enterprise-profile-submit-button'
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={isLoading}
             >
-              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
+              {isLoading ? <CircularProgress size={24} className='enterprise-white-color' /> : 'Save'}
             </Button> : <Button
               variant="outlined"
               sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              style={{ backgroundColor: '#13538b', color: 'lightblue' }}
+              className='enterprise-profile-submit-button'
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={!isDirty || isLoading}
             >
-              {isLoading ? <CircularProgress size={24} style={{ color: "#fff", }} /> : 'Save'}
+              {isLoading ? <CircularProgress size={24} className='enterprise-white-color'/> : 'Save'}
             </Button>}
           </Grid>
         </Grid>
@@ -1128,40 +1030,30 @@ Service Offerings:
         onClose={() => setIsModalOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={styles.modal}
+        className='enterprise-profile-modal'
       >
-        <Box style={styles.modalContent}>
-          <Typography variant="h5" sx={styles.modalTitle}>"Upload File"</Typography>
+        <Box className='enterprise-profile-modal-content' >
+          <Typography variant="h5" className='enterprise-modal-title'>"Upload File"</Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* File Upload */}
             <div>
               <input
                 type="file"
                 onChange={handleFileChange}
-                style={{
-                  backgroundColor: '#eaf5ff',
-                  border: '1px solid #6fa8dd',
-                  borderRadius: '8px',
-                  marginBottom: '6px',
-                  color: '#8bbae5',
-                  width: '100%',
-                  minHeight: '15%',
-                  padding: '15px',
-                  fontSize: '16px',
-                }}
+                className='enterprise-input-field enterprise-profile-modal-input-field'
               />
               {fileError && (
-                <span style={{ color: 'red', fontSize: '12px', margin: 0 }}>{fileError}</span>
+                <span className='error-handling'>{fileError}</span>
               )}
             </div>
             <Button
               variant="contained"
               color="primary"
-              style={styles.modalButton}
+              className='enterprise-profile-modal-button'
               type="submit"
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : 'Upload'}
+              {loading ? <CircularProgress size={24} className='enterprise-profile-modal-button-loader'/> : 'Upload'}
             </Button>
           </form>
         </Box>
