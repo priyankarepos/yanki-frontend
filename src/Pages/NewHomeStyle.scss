@@ -91,23 +91,26 @@
 }
 
 .ya-question-box {
-    margin-bottom: 10px;
-    background-color: #1d4a72;
+    margin-bottom: 10px !important;
+    background-color: #1d4a72 !important;
 
     .ya-question-box-flex {
-        display: flex;
-        align-items: center;
+        display: flex!important;
+        align-items: center!important;
 
         .ya-ChatBubbleOutlineIcon {
-            margin-right: 8px;
+            margin-right: 8px!important;
+        }
+        .ya-question-box-text{
+            font-size: 16px !important;
         }
     }
 }
 
 .ya-progress-bar-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
 }
 
 .ya-home-main-text-heading {

@@ -78,6 +78,7 @@ const NewHomePageMui = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [hoverChatId, setHoverChatId] = useState(null);
+    const chatContainerRef = useRef(null);
 
     const handleMouseEnter = (chatId) => {
         setHoverChatId(chatId);
@@ -207,7 +208,7 @@ const NewHomePageMui = () => {
             }
         } catch (error) {
             setSnackbarMessage('Error:', error);
-            setSnackbarOpen(true);
+            setSnackbarOpen(false);
         }
     };
 
@@ -261,7 +262,7 @@ const NewHomePageMui = () => {
 
                 } catch (parseError) {
                     setSnackbarMessage('Error:', parseError);
-                    setSnackbarOpen(true);
+                    setSnackbarOpen(false);
 
                 }
             }
@@ -366,12 +367,11 @@ const NewHomePageMui = () => {
             }
         } catch (error) {
             setSnackbarMessage('Error:', error);
-            setSnackbarOpen(true);
+            setSnackbarOpen(false);
         } finally {
             setConfirmDialogOpen(false);
         }
     };
-
 
     const contentMargin = drawerOpen && !isSmallScreen ? "260px" : "0";
     const fontSize = isSmallScreen ? "14px" : "16px";
@@ -397,8 +397,6 @@ const NewHomePageMui = () => {
             partialVisibilityGutter: 10,
         },
     };
-
-    const chatContainerRef = useRef(null);
 
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
@@ -596,9 +594,9 @@ const NewHomePageMui = () => {
                             ))}
                             {storedSearchQuery && <Paper elevation={3} className="ya-question-box">
                                 <div sx={{ p: 2 }}>
-                                    <Box className="ya-question-box-flex">
+                                    <Box sx={{ p: 2 }} className="ya-question-box-flex">
                                         <ChatBubbleOutlineIcon fontSize="small" className="ya-ChatBubbleOutlineIcon" style={{ color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
-                                        <Typography fontSize="small" style={{ color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{storedSearchQuery}</Typography>
+                                        <Typography className="ya-question-box-text" style={{ color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{storedSearchQuery}</Typography>
                                     </Box>
                                 </div>
                             </Paper>}

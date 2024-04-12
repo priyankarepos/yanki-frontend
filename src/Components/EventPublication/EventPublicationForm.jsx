@@ -11,6 +11,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const modalContentStyle = {
     display: 'flex',
@@ -557,6 +559,7 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         </ >
 
     );
