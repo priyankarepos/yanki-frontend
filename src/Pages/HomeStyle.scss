@@ -38,6 +38,10 @@
     width: 0px;
   }
 
+  ::-webkit-scrollbar {
+    height: 4px;
+  }
+
   .home-table-scroll::-webkit-scrollbar {
     height: 0px;
   }
