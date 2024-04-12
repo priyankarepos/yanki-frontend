@@ -17,9 +17,9 @@ const ConfirmDialog = ({ open, handleClose, handleConfirm, confirmationText,load
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button style={{ textTransform: "none", fontWeight: "600", minWidth: "120px" }} onClick={handleClose}>Cancel</Button>
-        <Button style={{ textTransform: "none", fontWeight: "600", minWidth: "120px" }} onClick={handleConfirm} color="error"  disabled={loading}>
-        {loading ? <CircularProgress size={24} style={{ color: "#fff" }} /> : 'Delete'}
+        <Button className='confirm-delete-button' onClick={handleClose}>Cancel</Button>
+        <Button className='confirm-delete-button' onClick={handleConfirm} color="error"  disabled={loading}>
+        {loading ? <CircularProgress size={24} className='enterprise-white-color' /> : 'Delete'}
         </Button>
       </DialogActions>
     </Dialog>
