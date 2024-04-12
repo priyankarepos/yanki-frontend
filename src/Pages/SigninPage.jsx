@@ -76,10 +76,6 @@ const SigninPage = () => {
     setValue('signInPhone', '+44', { shouldValidate: false });
   }, [setValue]);
 
-  const onError = (data) => {
-    console.log("error data: ", data);
-  };
-
   const onSubmit = async (data) => {
     try {
       setSigninLoading(true);
@@ -414,7 +410,7 @@ const SigninPage = () => {
             <Button
               variant="contained"
               fullWidth
-              onClick={handleSubmit(onSubmit, onError)}
+              onClick={handleSubmit(onSubmit)}
               disabled={signinLoading}
             >
               {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}

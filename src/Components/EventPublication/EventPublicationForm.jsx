@@ -1,4 +1,4 @@
-import {Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -11,6 +11,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const modalContentStyle = {
     display: 'flex',
@@ -62,10 +64,10 @@ const EventPublicationForm = ({ answer }) => {
                 if (response.status === 200) {
                     setEventLocations(response.data);
                 } else {
-                    console.error('Failed to fetch event location');
+                    toast.error('Failed to fetch event location');
                 }
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                toast.error('Error fetching event location:', error);
             }
         };
 
@@ -79,10 +81,10 @@ const EventPublicationForm = ({ answer }) => {
                 if (response.status === 200) {
                     setPublicationArea(response.data);
                 } else {
-                    console.error('Failed to fetch publication area');
+                    toast.error('Failed to fetch publication area');
                 }
             } catch (error) {
-                console.error('Error fetching publication area:', error);
+                toast.error('Error fetching publication area:', error);
             }
         };
 
@@ -96,10 +98,10 @@ const EventPublicationForm = ({ answer }) => {
                 if (response.status === 200) {
                     setEventTypes(response.data);
                 } else {
-                    console.error('Failed to fetch event types');
+                    toast.error('Failed to fetch event types');
                 }
             } catch (error) {
-                console.error('Error fetching event types:', error);
+                toast.error('Error fetching event types:', error);
             }
         };
 
@@ -129,7 +131,6 @@ const EventPublicationForm = ({ answer }) => {
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
             const addEventResponse = await axios.post(addEventUrl, addEventData);
-            console.log("Event added successfully:", addEventResponse.data);
 
             // Upload files if any
             if (data.uploadedFiles && data.uploadedFiles.length > 0) {
@@ -144,7 +145,7 @@ const EventPublicationForm = ({ answer }) => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log("Image uploaded successfully:", imageUploadResponse.data);
+                toast.error("Image uploaded successfully:", imageUploadResponse.data);
             }
 
             // Reset form and state
@@ -154,11 +155,11 @@ const EventPublicationForm = ({ answer }) => {
             setUploadedFiles([]);
             reset();
         } catch (error) {
-            console.error('Error submitting event:', error);
+            toast.error('Error submitting event:', error);
             setIsLoading(false);
         }
     };
-    
+
     const onSelectLocations = (selectedList) => {
         setValue("locations", selectedList);
     };
@@ -558,6 +559,7 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         </ >
 
     );

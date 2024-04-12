@@ -34,24 +34,16 @@ import {
 } from "../Utils/validations/validation";
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import "./PagesStyle.scss";
 
 const styles = {
     inputField: {
-        // backgroundColor: '#eaf5ff',
-        // border: '1px solid #6fa8dd',
         borderRadius: '8px',
         marginBottom: '10px',
-        // color: "#8bbae5",
         with: "100%"
     },
-};
-
-const linkStyle = {
-    color: "#457bac",
-    fontSize: "15px",
-    textDecoration: "none",
-    paddingRight: "20px",
-    borderRight: "1px solid #457bac",
 };
 
 const EnterpriseSignup = () => {
@@ -98,25 +90,18 @@ const EnterpriseSignup = () => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
                 );
-
-                console.log('API Response:', response.data);
-
                 if (response.status === 200) {
                     setEnterpriseCategories(response.data);
                 } else {
-                    console.error("Failed to fetch enterprise categories");
+                    toast.error("Failed to fetch enterprise categories");
                 }
             } catch (error) {
-                console.error("Error:", error);
+                toast.error("Error:", error);
             }
         };
 
         fetchEnterpriseCategories();
     }, []);
-
-    const onError = (data) => {
-        console.log("error data: ", data);
-    };
 
     const onSubmit = async (data) => {
         try {
@@ -165,7 +150,7 @@ const EnterpriseSignup = () => {
             <Container maxWidth="xl">
                 <Box className="flex justify-center items-center min-h-70-screen">
                     <Box sx={{ maxWidth: isLargeScreen ? 620 : "100%" }}>
-                        <Box className="w-full object-contain flex items-center justify-center marginY-28">
+                        <Box className="object-contain flex items-center justify-center marginY-28">
                             <Link
                                 to="/auth"
                                 className="w-full object-contain flex items-center justify-center"
@@ -173,12 +158,9 @@ const EnterpriseSignup = () => {
                                 <img
                                     src={"/auth-logo-light.svg"}
                                     alt="logo"
+                                    className='yanki-logo'
                                     style={{
-                                        width: "100%",
                                         maxWidth: isLargeScreen ? "250px" : "200px",
-                                        marginLeft: "auto",
-                                        marginRight: "auto",
-                                        display: "block",
                                     }}
                                 />
                             </Link>
@@ -550,7 +532,7 @@ const EnterpriseSignup = () => {
                             <Button
                                 variant="contained"
                                 fullWidth
-                                onClick={handleSubmit(onSubmit, onError)}
+                                onClick={handleSubmit(onSubmit)}
                                 disabled={signinLoading}
                             >
                                 {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
@@ -575,20 +557,21 @@ const EnterpriseSignup = () => {
                             </Typography>
                         </Box>
                         <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
-                            <Link to="/terms-of-use" style={linkStyle}>
+                            <Link to="/terms-of-use" className='linkStyle'>
                                 Terms of Use
                             </Link>
                             <Link
+                            className='linkStyle linkStyle-center-space'
                                 to="/privacy-policy"
-                                style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
                             >
                                 Privacy Policy
                             </Link>
                             <Typography variant="caption">
-                                <a style={{ ...linkStyle, borderRight: "none" }}
+                                <a style={{borderRight: "none" }}
                                     href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
                                     target="_blank"
                                     rel="noreferrer"
+                                    className='linkStyle'
                                 >
                                     hello@yanki.ai
                                 </a>
@@ -597,6 +580,7 @@ const EnterpriseSignup = () => {
                     </Box>
                 </Box >
             </Container >
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         </>
     )
 }
