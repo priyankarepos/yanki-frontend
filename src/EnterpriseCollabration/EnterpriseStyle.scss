@@ -249,10 +249,10 @@
 }
 
 .enterprise-profile-pdf-modal-icon-button {
-  position: absolute;
+  position: absolute !important;
   right: 8px; 
   z-Index: 1; 
-  background-color: #6fa8dd;
+  background-color: #6fa8dd !important;
 }
 
 .enterprise-profile-image {
