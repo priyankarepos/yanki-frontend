@@ -1,4 +1,4 @@
-import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography, Snackbar } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -11,8 +11,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const modalContentStyle = {
     display: 'flex',
@@ -38,6 +36,8 @@ const EventPublicationForm = ({ answer }) => {
     const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
     const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
     const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const handleLocationDropdownToggle = () => {
         setIsLocationDropdownOpen(!isLocationDropdownOpen);
@@ -133,7 +133,8 @@ const EventPublicationForm = ({ answer }) => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                toast.success("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarMessage("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarOpen(true);
             }
 
             // Reset form and state
@@ -143,7 +144,8 @@ const EventPublicationForm = ({ answer }) => {
             setUploadedFiles([]);
             reset();
         } catch (error) {
-            toast.error('Error submitting event:', error);
+            setSnackbarMessage('Error submitting event:', error);
+            setSnackbarOpen(true);
             setIsLoading(false);
         }
     };
@@ -547,7 +549,12 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
-            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </ >
 
     );
