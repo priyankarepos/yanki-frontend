@@ -60,14 +60,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    toast.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                toast.error('Error fetching event location:', error);
+                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -77,14 +73,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    toast.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
-                toast.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -94,14 +86,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    toast.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
-                toast.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -145,7 +133,7 @@ const EventPublicationForm = ({ answer }) => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                toast.error("Image uploaded successfully:", imageUploadResponse.data);
+                toast.success("Image uploaded successfully:", imageUploadResponse.data);
             }
 
             // Reset form and state

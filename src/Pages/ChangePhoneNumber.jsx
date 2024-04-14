@@ -59,11 +59,6 @@ const ChangePhoneNumber = () => {
         },
     });
 
-    const onError = (data) => {
-        setSnackbarMessage(data)
-        setSnackbarOpen(true);
-    };
-
     useEffect(() => {
         setValue('signInPhone', '1', { shouldValidate: false });
         // setValue('currentSignInPhone', '1', { shouldValidate: false });
@@ -109,7 +104,7 @@ const ChangePhoneNumber = () => {
                         >
                             Change Phone Number
                         </Typography>
-                        <form onSubmit={handleSubmit(onSubmit, onError)}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <InputLabel>Current Phone:</InputLabel>
                             <Controller
                                 control={control}

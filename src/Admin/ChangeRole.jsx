@@ -36,10 +36,6 @@ const ChangeRole = () => {
     },
   });
 
-  const onError = (data) => {
-    toast.error("error data:", data);
-  };
-
   const onSubmit = async (data) => {
     try {
       setLoginLoading(true);
@@ -144,7 +140,7 @@ return (
           <Button
             variant="contained"
             fullWidth
-            onClick={handleSubmit(onSubmit, onError)}
+            onClick={handleSubmit(onSubmit)}
             disabled={loginLoading}
             sx={{ marginTop: "30px" }}
           >
