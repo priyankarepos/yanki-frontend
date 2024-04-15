@@ -1,9 +1,10 @@
-import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
 import axios from 'axios';
 import "./SubscribeNotification.scss";
+import ReminderNotification from '../ReminderNotification/ReminderNotification';
 
 const SubscribeNotification = ({ answer }) => {
     const [eventLocations, setEventLocations] = useState([]);
@@ -209,6 +210,17 @@ const SubscribeNotification = ({ answer }) => {
         }
     };
 
+    const dummyReminders = [
+        { id: 1, message: "Reminder 1", time: "10:00 AM" },
+        { id: 2, message: "Reminder 2", time: "12:00 PM" },
+        { id: 3, message: "Reminder 3", time: "3:00 PM" }
+    ];
+
+    const handleCancel = (id) => {
+        // Handle cancel action here
+        console.log("Cancel reminder with ID:", id);
+    };
+
     return (
         <Box>
             <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
@@ -324,7 +336,14 @@ const SubscribeNotification = ({ answer }) => {
                         </div>
                     </div>
                 </form>
+
             </Paper>
+            <Box className={userRoles === "Enterprise" ? "notification-wrapper-light reminder-wrapper-light" : "notification-wrapper reminder-wrapper"}>
+                <Typography variant="h6" gutterBottom>
+                    Below are your reminders.
+                </Typography>
+                <div className='ReminderNotification'><ReminderNotification /></div>
+            </Box>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
