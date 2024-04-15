@@ -95,10 +95,10 @@ const AdminEnterpriseCategory = () => {
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
-          console.error('Failed to fetch enterprise categories');
+        setSnackbarMessage('Failed to fetch enterprise categories');
+        setSnackbarOpen(true); 
         }
       } catch (error) {
-        console.error('Error fetching enterprise categories:', error);
         setSnackbarMessage('Error fetching enterprise categories');
         setSnackbarOpen(true);
       }
@@ -132,12 +132,10 @@ const AdminEnterpriseCategory = () => {
         setSnackbarMessage('Category deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete enterprise category');
         setSnackbarMessage('Failed to delete enterprise category');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
       setSnackbarMessage('Error deleting enterprise category');
       setSnackbarOpen(true);
     }
@@ -171,12 +169,10 @@ const AdminEnterpriseCategory = () => {
         setSnackbarMessage('Category saved successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save enterprise category');
         setSnackbarMessage('Failed to save enterprise category');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
       setSnackbarMessage('Error saving enterprise category');
       setSnackbarOpen(true);
     } finally {
@@ -206,12 +202,10 @@ const AdminEnterpriseCategory = () => {
         setSnackbarMessage('Category updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update enterprise category');
         setSnackbarMessage('Failed to update enterprise category');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
       setSnackbarMessage('Error updating enterprise category');
       setSnackbarOpen(true);
     } finally {

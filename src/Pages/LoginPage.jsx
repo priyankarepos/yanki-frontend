@@ -66,10 +66,6 @@ const LoginPage = () => {
     },
   });
 
-  const onError = (data) => {
-    console.log("error data: ", data);
-  };
-
   const onSubmit = async (data) => {
     try {
       setLoginLoading(true);
@@ -129,14 +125,11 @@ const LoginPage = () => {
     try {
       setLoginLoading(true);
       const { access_token } = codeResponse;
-      console.log("access_token", access_token)
-      console.log("codeResponse", codeResponse)
       const response = await axios.post(
         `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
         { access_token }
       );
       if (response.status === 200) {
-        console.log("response", response.data.contentResponse);
         // setLoginLoading(false);
         window.localStorage.setItem(
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
@@ -148,7 +141,6 @@ const LoginPage = () => {
         setLoginErrorMsg("Authentication failed.");
       }
     } catch (error) {
-      console.error("Error:", error);
       setLoginError(true);
       setLoginErrorMsg("Something went wrong.");
     } finally {
@@ -313,7 +305,7 @@ const LoginPage = () => {
             <Button
               variant="contained"
               fullWidth
-              onClick={handleSubmit(onSubmit, onError)}
+              onClick={handleSubmit(onSubmit)}
               disabled={loginLoading}
               sx={{ textTransform: "capitalize", }}
             >

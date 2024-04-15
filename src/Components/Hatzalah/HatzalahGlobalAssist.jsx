@@ -204,18 +204,13 @@ const HatzalahGlobalAssist = ({ answer }) => {
           <IconButton
             aria-label="close"
             onClick={handleClose}
-            style={{
-              position: "absolute",
-              right: "8px",
-              top: "8px",
-              color: "black",
-            }}
+            className="hatzhala-modal-close-btn"
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Typography style={{ color: "#012e55" }}>
+          <Typography className="hatzhala-model-color">
             <HatzalahDisclaimer />
           </Typography>
         </DialogContent>

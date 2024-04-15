@@ -14,69 +14,6 @@ import { Worker, Viewer } from '@react-pdf-viewer/core';
 import CloseIcon from '@mui/icons-material/Close';
 import EnterpriseDashboard from './EnterpriseDashboard';
 
-
-const styles = {
-    tableContainer: {
-        marginBottom: '0',
-    },
-    label: {
-        color: '#8bbae5',
-        marginBottom: '8px',
-    },
-    headerCell: {
-        fontWeight: 'bold',
-        background: '#13538b',
-        color: 'white',
-        minWidth: "200px",
-        fontSize: 16,
-    },
-    cell: {
-        fontSize: 16,
-    },
-    approveButton: {
-        backgroundColor: "#063762",
-        color: "#fff",
-        textTransform: "capitalize",
-        borderRadius: "50px",
-        padding: "0 15px",
-        height: "40px",
-        marginLeft: "7px",
-    },
-    content: {
-        flex: 1,
-        marginLeft: '0',
-        transition: 'margin-left 0.3s',
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    modalContent: {
-        backgroundColor: '#063762',
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-        padding: '35px 25px',
-        width: '500px',
-        borderRadius: '8px',
-    },
-    modalTitle: {
-        fontWeight: 'medium',
-        marginBottom: '16px',
-        color: "#fff",
-    },
-    modalButton: {
-        backgroundColor: '#fff',
-        color: '#063762',
-        textTransform: 'capitalize',
-        borderRadius: '10px',
-        padding: '20px 15px',
-        fontSize: '16px',
-        marginTop: "20px",
-    },
-};
-
 const EnterpriseFileUpload = () => {
     const { drawerOpen } = useContext(Context);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -104,7 +41,8 @@ const EnterpriseFileUpload = () => {
                 setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
 
             } catch (error) {
-                console.error('Error fetching data:', error);
+                setSnackbarMessage('Error fetching data:', error);
+                setSnackbarOpen(false);
             }
         };
 
@@ -213,66 +151,63 @@ const EnterpriseFileUpload = () => {
 
     const renderPdfModal = () => {
         return (
-            <Modal
-                open={Boolean(selectedPdf)}
-                onClose={closePdfModal}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                <div className="pdf-modal" style={{ width: '90vw', height: '88vh', position: 'relative' }}>
-                    <IconButton
-                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px', right: '8px', zIndex: 1, backgroundColor: "#6fa8dd" }}
-                        onClick={closePdfModal}
-                        aria-label="close"
-                    >
-                        <CloseIcon style={{ color: "#fff" }} />
-                    </IconButton>
-                    {!pdfLoadError ? (
-                        selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
-                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                                <Viewer fileUrl={selectedPdf?.pdfUrl} />
-                            </Worker>
-                        ) : (
-                            <img
-                                src={selectedPdf?.pdfUrl}
-                                alt="PDF Document"
-                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                onError={() => setPdfLoadError(true)}
-                            />
-                        )
-                    ) : (
-                        <div>Error loading content. Please try again.</div>
-                    )}
-                </div>
-            </Modal>
+          <Modal
+            open={Boolean(selectedPdf)}
+            onClose={closePdfModal}
+            className='enterprise-profile-modal'
+          >
+            <div className="enterprise-profile-pdf-modal">
+              <IconButton
+                className='enterprise-profile-pdf-modal-icon-button'
+                style={{ top: !isLargeScreen ? '40px' : '20px' }}
+                onClick={closePdfModal}
+                aria-label="close"
+              >
+                <CloseIcon className='enterprise-white-color' />
+              </IconButton>
+              {!pdfLoadError ? (
+                selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
+                  <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                    <Viewer fileUrl={selectedPdf?.pdfUrl} />
+                  </Worker>
+                ) : (
+                  <img
+                    src={selectedPdf?.pdfUrl}
+                    alt=""
+                    className='enterprise-profile-image'
+                    onError={() => setPdfLoadError(true)}
+                  />
+                )
+              ) : (
+                <div>Error loading content. Please try again.</div>
+              )}
+            </div>
+          </Modal>
         );
-    };
+      };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
     const contentMargin = drawerOpen ? '0' : '0';
 
     return (
-        <Box style={{ display: "flex" }}>
+        <Box className='enterprise-box'>
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><EnterpriseDashboard /></Box>
-            <Box style={{ ...styles.content, marginLeft: contentMargin, }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '50px', padding: '16px' }}>
-                <Box style={{ ...styles.content, marginLeft: contentMargin, display: "flex", alignItems: "center", }}>
-                    <Typography variant="h6" sx={{ ...styles.modalTitle, marginBottom: "0px", color: "#6fa8dd" }} >Upload Files</Typography >
+            <Box style={{ marginLeft: contentMargin, }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`}>
+                <Box className='enterprise-upload-box'>
+                    <Typography variant="h6" className='enterprise-upload-modal-title' >Upload Files</Typography >
                     <Button
                         variant="outlined"
-                        sx={{ marginY: { xs: "10px" }, width: "150px" }}
+                        sx={{ marginY: { xs: "10px" } }}
+                        className='enterprise-add-file-button enterprise-profile-modal-button'
                         color="primary"
-                        style={styles.modalButton}
                         onClick={() => setIsModalOpen(true)}
                     >
                         Add Files
                     </Button>
                 </Box>
                 {tableData.length === 0 ? (
-                    <Typography variant="h6" sx={{ marginTop: '20px', color: '#6fa8dd', textAlign: "center" }}>
+                    <Typography variant="h6" className='enterprise-upload-empty-message'>
                         No data available.
                     </Typography>
                 ) : (
@@ -311,10 +246,10 @@ const EnterpriseFileUpload = () => {
                 onClose={() => setIsModalOpen(false)}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                style={styles.modal}
+                className='enterprise-profile-modal'
             >
-                <Box style={styles.modalContent}>
-                    <Typography variant="h5" sx={styles.modalTitle}>"Upload File"</Typography>
+                <Box className='enterprise-upload-modal-content'>
+                    <Typography variant="h5" className='enterprise-modal-title'>"Upload File"</Typography>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* File Upload */}
                         <Controller
@@ -329,16 +264,10 @@ const EnterpriseFileUpload = () => {
                                             setValue('file', [selectedFile]);
                                             trigger('file');
                                         }}
-                                        style={{
-                                            backgroundColor: '#eaf5ff',
-                                            border: '1px solid #6fa8dd',
-                                            borderRadius: '8px',
-                                            marginBottom: '6px',
-                                            color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                                        }}
+                                        className='enterprise-input-field enterprise-profile-modal-input-field'
                                     />
                                     {errors.file && (
-                                        <span style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                                        <span className='error-handling'>
                                             {errors.file.message}
                                         </span>
                                     )}
@@ -349,12 +278,12 @@ const EnterpriseFileUpload = () => {
                         <Button
                             variant="contained"
                             color="primary"
-                            style={styles.modalButton}
+                            className='enterprise-profile-modal-button'
                             type="submit"
                             disabled={loading}
                         // onClick={(e) => handleSubmit(e)}
                         >
-                            {loading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : 'Upload'}
+                            {loading ? <CircularProgress size={24} className='enterprise-profile-modal-button-loader' /> : 'Upload'}
                         </Button>
                     </form>
                 </Box>

@@ -32,7 +32,7 @@
     color: #6fa8dd;
 }
 
-.enterpriseSidebar .css-2ug087-MuiPaper-root-MuiDrawer-paper, .enterpriseSidebar .css-1gs76nv{
+.enterprise-dashboard-sidebar .css-2ug087-MuiPaper-root-MuiDrawer-paper, .enterprise-dashboard-sidebar .css-1gs76nv{
     background-color: #13538b;
 }
 
@@ -55,6 +55,311 @@
   color: #b0cbe6 !important;
 }
 
+.enterprise-box{
+  display: flex; 
+  background-color: #fff;
+}
+
+.enterpriseFormBox{
+  flex: 1;
+  padding: 16px;
+  margin-left: 0;
+  transition: margin-left 0.3s;
+  margin-top: 70px;
+}
+
+.sidebar-content{
+  width: calc(100% - 270px);
+}
+
+.main-content{
+  width: 100%
+}
+
+.enterprise-heading{
+  padding-bottom: 16px; 
+  color: #6fa8dd
+}
+
+.asterisk {
+  color: red; 
+  font-size: 18px; 
+  font-weight: 600;
+}
+
+.error-handling{
+  color: red !important;
+}
+
+.enterprise-input-lable{
+  color: #8bbae5;
+  margin-bottom: 8px;
+}
+
+.enterprise-text-area{
+  background-color: #eaf5ff;
+  border: 1px solid #6fa8dd;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  color: #8bbae5; 
+  width: 100%; 
+  min-height: 15%; 
+  padding: 15px; 
+  font-size: 16px;
+}
+
+.enterprise-description-text-area {
+  font-family: unset;
+  text-transform: "none";
+}
+
+.enterprise-input-field {
+  background-color: #eaf5ff !important; 
+  border: 1px solid #6fa8dd !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  color: #8bbae5 !important;
+  line-height: 52px;
+  outline: none;
+}
+
+.custom-divider {
+  background: #8bbae5;
+}
+
+.enterprise-tags-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.enterprise-tag {
+  background-color: #6fa8dd;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.enterprise-tag-text {
+  margin-right: 8px;
+}
+
+.enterprise-remove-tag {
+  cursor: pointer,
+}
+
+.enterprise-profile-upload-button {
+  height: 60px !important;
+}
+
+.enterprise-profile-ul {
+  list-style: none;
+  padding: 0;
+}
+
+.enterprise-profile-list {
+  border-bottom: 1px solid #ccc; 
+  padding: 10px 0; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between
+}
+
+.enterprise-profile-list-link {
+  text-decoration: none; 
+  color: #6fa8dd; 
+  word-wrap: break-word; 
+  display: inline-block; 
+  width: 200px; 
+}
+
+.enterprise-profile-list-icon {
+  color: #6fa8dd;
+}
+
+.enterprise-profile-list-icon-button {
+  margin-left: 8px;
+}
+
+.enterprise-profile-list-container {
+  flex: 1;
+}
+
+.enterprise-profile-description {
+  color: gray;
+}
+
+.enterprise-profile-submit-button {
+  background-color: #13538b;
+  color: lightblue !important;
+}
+
+.enterprise-white-color {
+  color: #fff !important;
+}
+
+.enterprise-profile-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enterprise-modal-title {
+  font-weight: medium;
+  margin-bottom: 16px !important;
+  color: #fff !important;
+}
+
+.enterprise-profile-modal-content {
+  background-color: #063762;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 35px 25px;
+  width: 500px;
+  border-radius: 8px;
+}
+
+.enterprise-profile-modal-input-field {
+  min-height: 15%;
+  padding: 15px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.enterprise-profile-modal-button {
+  background-color: #fff !important;
+  color: #063762 !important;
+  text-transform: capitalize !important;
+  border-radius: 10px !important;
+  padding: 20px 15px !important;
+  font-size: 16px !important;
+  margin-top: 20px !important;
+}
+.enterprise-profile-modal-button-loader {
+  color: #0d416f !important;
+}
+
+.enterprise-profile-pdf-modal {
+  width: 90vw; 
+  height: 88vh; 
+  position: relative;
+}
+
+.enterprise-profile-pdf-modal-icon-button {
+  position: absolute !important;
+  right: 8px; 
+  z-Index: 1; 
+  background-color: #6fa8dd !important;
+}
+
+.enterprise-profile-image {
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain;
+}
+
+.enterprise-dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+.enterprise-dashboard-small-screen-bar {
+  background-color: #fff !important;
+  color: #2f587c !important;
+  position: fixed;
+}
+
+.enterprise-dashboard-tool-bar {
+  justify-content: space-between;
+}
+
+.enterprise-dashboard-title-small-screen {
+  display: flex; 
+  align-items: center; 
+  width: 100%;
+}
+
+.enterprise-dashboard-menu-button {
+  margin-left: auto;
+}
+
+.enterprise-dashboard-sidebar-container {
+  width: 270px;
+  padding: 16px;
+  color: #fff;
+}
+
+.enterprise-dashboard-link {
+  text-decoration: none;
+}
+
+.enterprise-dashboard-yanki-logo {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 16px;
+  width: 150px;
+}
+
+.confirm-delete-button {
+  text-transform: none !important; 
+  font-weight: 600 !important; 
+  min-width: 120px !important;
+}
+
+.enterprise-department-info {
+  margin-top: 10px;
+  color: gray;
+}
+
+.enterprise-department-button, .enterprise-add-file-button {
+  width: 150px;
+}
+
+.enterprise-department-heading {
+  padding-bottom: 16px; 
+  color: #13538b;
+}
+
+.enterprise-department-table-cell {
+  padding: 12px !important;
+  border-bottom: 1px solid #ccc !important;
+  font-size: 16px !important;
+  font-weight: normal !important;
+  color: #fff !important;
+  background-color: #13538b !important;
+}
+
+.enterprise-upload-box {
+  flex: 1;
+  display: flex;
+  margin-left: 0;
+  transition: margin-left 0.3s;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.enterprise-upload-modal-title {
+  margin-bottom: '16px' !important;
+  color: #6fa8dd;
+}
+
+.enterprise-upload-empty-message {
+  margin-top: 20px; 
+  color: #6fa8dd; 
+  text-align: center;
+}
+
+.enterprise-upload-modal-content {
+  background-color: #063762;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 35px 25px;
+  width: 500px;
+  border-radius: 8px;
+}
+
 /* responsive.css */
 
 /* For small screens (max-width: 567px) */
@@ -65,7 +370,7 @@
       display: none !important;
     }
   
-    .titleSmallScreen {
+    .enterprise-dashboard-title-small-screen {
       width: 100% !important;
       h6 {
         font-size: 18px;

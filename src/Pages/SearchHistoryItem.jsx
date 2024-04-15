@@ -21,7 +21,6 @@ import ReminderNotification from "../Components/ReminderNotification/ReminderNot
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
-  console.log("response", response);
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length > 0;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
@@ -61,7 +60,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && (
+      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && !response?.isViewReminder && (
           <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
             <div className="chat-bubble assistant-bubble">
               <DemoEnterpriseChat answer={response} />
@@ -93,7 +92,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.isEvent && response?.message &&  (
+      {response?.isSucess && response?.isEvent && response?.message && activeTab===0 &&  (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <EventPublicationForm answer={response} />
@@ -138,7 +137,7 @@ const SearchHistoryItem = ({ query, response }) => {
           </div>
         </Paper>
       )}
-      {!response?.isSucess && (
+      {response?.isSucess && response?.isViewReminder && response?.message && (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <ReminderNotification answer={response} />

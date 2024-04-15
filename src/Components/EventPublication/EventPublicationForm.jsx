@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography, Snackbar } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -9,6 +9,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const modalContentStyle = {
     display: 'flex',
@@ -31,18 +33,37 @@ const EventPublicationForm = ({ answer }) => {
     const [isFormModalOpen, setFormModalOpen] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+    const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
+    const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleLocationDropdownToggle = () => {
+        setIsLocationDropdownOpen(!isLocationDropdownOpen);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handlePublicationAreaDropdownToggle = () => {
+        setIsPublicationAreaDropdownOpen(!isPublicationAreaDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handleEventTypeDropdownToggle = () => {
+        setIsEventTypeDropdownOpen(!isEventTypeDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+    };
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    console.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -52,14 +73,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    console.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
-                console.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -69,14 +86,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    console.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
-                console.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -95,8 +108,6 @@ const EventPublicationForm = ({ answer }) => {
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
-
-            // Call the add-event API
             const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
@@ -108,26 +119,23 @@ const EventPublicationForm = ({ answer }) => {
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
             const addEventResponse = await axios.post(addEventUrl, addEventData);
-            const eventId = addEventResponse.data;
-            const formData = new FormData();
-            if (Array.isArray(data.uploadedFiles)) {
+
+            // Upload files if any
+            if (data.uploadedFiles && data.uploadedFiles.length > 0) {
+                const formData = new FormData();
                 data.uploadedFiles.forEach(file => {
                     formData.append('imageFiles', file);
                 });
-            } else {
-                console.error('Error: uploadedFiles is not an array');
-                setIsLoading(false);
-                return;
+                const eventId = addEventResponse.data;
+                const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+                const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setSnackbarMessage("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarOpen(true);
             }
-            const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
-            const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            console.log("imageUploadResponse", imageUploadResponse);
-            console.log("Event added successfully:", addEventResponse.data);
-            console.log("Image uploaded successfully:", imageUploadResponse.data);
 
             // Reset form and state
             setResponseMessage("Your event publish request has been sent successfully");
@@ -136,12 +144,11 @@ const EventPublicationForm = ({ answer }) => {
             setUploadedFiles([]);
             reset();
         } catch (error) {
-            console.error('Error submitting event:', error);
+            setSnackbarMessage('Error submitting event:', error);
+            setSnackbarOpen(true);
             setIsLoading(false);
         }
-        setFormModalOpen(false);
     };
-
 
     const onSelectLocations = (selectedList) => {
         setValue("locations", selectedList);
@@ -199,11 +206,14 @@ const EventPublicationForm = ({ answer }) => {
 
     const closeFormModal = () => {
         setFormModalOpen(false);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
     };
 
     return (
-        <Box className="demo-enterprise-wrapper">
-            <Paper elevation={3}>
+        <>
+            <Paper elevation={3} sx={{ p: 3 }}>
                 <Typography variant="h6">Event Submission</Typography>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
@@ -228,7 +238,7 @@ const EventPublicationForm = ({ answer }) => {
                 <Paper elevation={3} className="event-form-modal" style={modalContentStyle}>
                     <div className='event-model-close-btn'>
                         <IconButton onClick={closeFormModal} aria-label="close">
-                            <CloseIcon />
+                            <CloseIcon className='color-white' />
                         </IconButton>
                     </div>
 
@@ -292,6 +302,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isLocationDropdownOpen}
+                                                className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
@@ -389,6 +405,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isPublicationAreaDropdownOpen}
+                                                className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
                                         </>
@@ -419,6 +441,12 @@ const EventPublicationForm = ({ answer }) => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isEventTypeDropdownOpen}
+                                                className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
                                         </>
@@ -521,7 +549,13 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
-        </Box >
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
+        </ >
 
     );
 };

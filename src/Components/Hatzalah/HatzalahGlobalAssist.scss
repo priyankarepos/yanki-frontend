@@ -1,16 +1,18 @@
-.hatzala-info-box div{
+.hatzala-info-box div {
   font-size: 16px;
-  font-weight: 600;
   margin-bottom: 10px;
 }
-.hatzala-error-box div{
+
+.hatzala-error-box div {
   font-size: 16px !important;
 }
+
 .coordinates-label,
 .coordinates-value {
   font-size: 16px !important;
   border-bottom: 1px solid #2f587d !important;
 }
+
 .tap-to-call-button {
   padding: 7px 15px;
   background-color: #fff;
@@ -24,16 +26,20 @@
   width: max-content;
   line-height: 32px;
 }
+
 .phonenumber-link {
   color: #007bff;
   cursor: pointer;
 }
+
 td.coordinates-label {
   border-right: 1px solid #2f587d;
 }
+
 .copy-icon {
   text-align: right !important;
 }
+
 .coordinates-button {
   border-color: #2f587d !important;
 }
@@ -50,12 +56,13 @@ td.coordinates-label {
   transition: 2px 2px 3s ease-in-out;
 
 }
+
 .hatzala-table-wrapper:hover {
   scrollbar-width: 20px;
 }
 
 .hatzala-table-wrapper::-webkit-scrollbar-thumb {
-  background-color: #13416a; 
+  background-color: #13416a;
 }
 
 .hatzala-table-wrapper {
@@ -64,13 +71,15 @@ td.coordinates-label {
   width: 100%;
   transition: 2px 2px 3s ease-in-out !important;
 }
-.hatzala-disclaimer-box{
+
+.hatzala-disclaimer-box {
   margin-top: 10px;
   color: #007bff;
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
 }
+
 .switch-button {
   background-color: #2f587d;
   padding: 12px;
@@ -80,7 +89,9 @@ td.coordinates-label {
   margin: 5px !important;
   min-width: 5vw;
   text-align: center;
+  color: #fff !important;
 }
+
 .switch-button.selected {
   background-color: #6fa8dd;
 }
@@ -102,11 +113,13 @@ td.coordinates-label {
     min-width: 20vw;
   }
 }
+
 @media (min-width: 1300px) {
   .switch-button {
     min-width: 10vw;
   }
 }
+
 .youtube-box {
   padding: 16px;
   background-color: #011c34 !important;
@@ -116,9 +129,21 @@ td.coordinates-label {
   margin-top: 20px;
   padding: 16px;
 }
-.hatzala-disclaimer{
+
+.hatzala-disclaimer {
   margin-left: 7px !important;
 }
-.hatzala-training{
+
+.hatzala-training {
   margin-right: 7px !important;
+}
+
+.hatzhala-model-color {
+  color: #012e55;
+}
+.hatzhala-modal-close-btn{
+  position: absolute !important;
+  right: 8px !important;
+  top: 8px !important;
+  color: #012e55 !important;
 }

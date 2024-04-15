@@ -137,7 +137,7 @@ const HatzalahVideo = ({ video }) => {
   };
   return (
     <>
-      <Box onClick={(e) => e.stopPropagation()}>
+      <Paper sx={{ p: 2 }} onClick={(e) => e.stopPropagation()}>
         <Box>
           <Typography
             onClick={handleCPRContentClick}
@@ -187,7 +187,6 @@ const HatzalahVideo = ({ video }) => {
               <Paper key={item.title}>
                 <StyledCarouselItem
                   key={item.title}
-                  className="youtube-box"
                   sx={{ marginRight: "5px" }}
                 >
                   {item.link && (
@@ -232,7 +231,7 @@ const HatzalahVideo = ({ video }) => {
               </Paper>
             ))}
         </Carousel>
-      </Box>
+      </Paper>
     </>
   );
 };

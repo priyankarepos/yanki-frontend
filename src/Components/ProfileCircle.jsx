@@ -18,10 +18,13 @@ import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Context } from "../App";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import TuneIcon from '@mui/icons-material/Tune';
+import { Typography } from "@mui/material";
+import { useLocation } from 'react-router-dom';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
+  const location = useLocation();
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -99,14 +102,28 @@ export default function ProfielCircle() {
     <React.Fragment>
       <Container maxWidth="xl">
         <Box
+          className="user-top-header"
           sx={{
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-start",
             textAlign: "center",
-            justifyContent: "right",
+            justifyContent: "space-between",
             py: 2,
           }}
         >
+          <Typography sx={{cursor:"pointer"}} onClick={() => navigate("/")}>
+            {location.pathname !== "/" && (
+              <img
+                src={
+                  activeTab === 0
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                style={{ width: "10em" }}
+                alt="logo"
+              />
+            )}
+          </Typography>
           <Tooltip title="Account settings">
             <IconButton
               onClick={handleClick}
@@ -190,18 +207,18 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Phone Number
           </MenuItem>
-          <MenuItem onClick={onClickSubscribeNotification}>
+          {userRoles !== "Enterprise" && <MenuItem onClick={onClickSubscribeNotification}>
             <ListItemIcon>
               <NotificationsNoneIcon />
             </ListItemIcon>
             Notifications
-          </MenuItem>
-          <MenuItem onClick={onClickAICustomization}>
+          </MenuItem>}
+          {userRoles !== "Enterprise" && <MenuItem onClick={onClickAICustomization}>
             <ListItemIcon>
               <TuneIcon />
             </ListItemIcon>
             AI Customization
-          </MenuItem>
+          </MenuItem>}
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>

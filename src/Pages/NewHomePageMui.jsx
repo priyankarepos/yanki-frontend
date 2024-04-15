@@ -19,6 +19,7 @@ import {
     TableHead,
     Table,
     Snackbar,
+    Paper,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ProfileCircle from "../Components/ProfileCircle";
@@ -36,16 +37,11 @@ import SearchHistoryItem from "./SearchHistoryItem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import "./NewHomeStyle.scss";
 
 
 const styles = {
-    sidebar: {
-        width: "270px",
-        padding: "16px",
-        color: "#fff",
-        border: "none",
-        paddingLeft: "15px",
-    },
     content: {
         marginLeft: "0px",
         transition: "margin-left 0.3s",
@@ -64,7 +60,6 @@ const styles = {
 const NewHomePageMui = () => {
     const { activeTab } = React.useContext(Context);
     const [drawerOpen, setDrawerOpen] = useState(true);
-
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
@@ -83,6 +78,7 @@ const NewHomePageMui = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [hoverChatId, setHoverChatId] = useState(null);
+    const chatContainerRef = useRef(null);
 
     const handleMouseEnter = (chatId) => {
         setHoverChatId(chatId);
@@ -96,6 +92,7 @@ const NewHomePageMui = () => {
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
+        sessionStorage.setItem('searchQuery', searchQuery);
         try {
             setIsSubmitting(true);
             setIsError(false);
@@ -111,7 +108,6 @@ const NewHomePageMui = () => {
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        // "Content-Type": "multipart/byteranges",
                         "Location-Allowed": isLocationAllowed,
                         TimeZone: timezone,
                         "User-Lat": userLatitude,
@@ -126,9 +122,7 @@ const NewHomePageMui = () => {
                 setQueryAnswer(response.data);
                 setIsError(false);
                 setErrorMsg("");
-
                 const newChatId = response.data.chatId;
-
                 if (!selectedChatId && !searchHistory.length) {
                     setSelectedChatId(newChatId);
                 }
@@ -138,10 +132,14 @@ const NewHomePageMui = () => {
                 //     ...prevSessions,
                 // ]);
 
-                setSearchHistory((prevHistory) => [
-                    ...prevHistory,
-                    { query: searchQuery, response: response.data },
-                ]);
+                setSearchHistory((prevHistory) => {
+                    const updatedHistory = [
+                        ...prevHistory,
+                        { query: searchQuery, response: response.data },
+                    ];
+                    sessionStorage.removeItem('searchQuery');
+                    return updatedHistory;
+                });
             }
 
         } catch (error) {
@@ -178,6 +176,8 @@ const NewHomePageMui = () => {
         }
     };
 
+    const storedSearchQuery = sessionStorage.getItem('searchQuery');
+
 
     useEffect(() => {
         if (queryAnswer?.isSucess === false) {
@@ -207,7 +207,8 @@ const NewHomePageMui = () => {
                 }
             }
         } catch (error) {
-            console.error("Error fetching chat sessions:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(false);
         }
     };
 
@@ -248,6 +249,7 @@ const NewHomePageMui = () => {
                                     isEvent: gptResponse.isEvent,
                                     isPersonalAssistant: gptResponse.isPersonalAssistant,
                                     firstAidVideos: gptResponse.firstAidVideos,
+                                    isViewReminder: gptResponse.isViewReminder,
                                 }
                             }
                         };
@@ -260,17 +262,14 @@ const NewHomePageMui = () => {
                     setSearchHistory([...allResponses].reverse());
 
                 } catch (parseError) {
-                    console.error("Error parsing chat history:", parseError);
+                    setSnackbarMessage('Error:', parseError);
+                    setSnackbarOpen(false);
 
                 }
-                // if (!isLargeScreen) {
-                //     setDrawerOpen(false);
-                // } else {
-                //     setDrawerOpen(true);
-                // }
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
 
         }
     }, []);
@@ -278,7 +277,6 @@ const NewHomePageMui = () => {
     useEffect(() => {
         if (initialChatOpen && chatSessions.length > 0) {
             const storedChatId = sessionStorage.getItem("selectedChatId");
-            // const firstChatId = storedChatId || chatSessions[0].id;
             const firstChatId = storedChatId;
             handleChatSessionClick(firstChatId);
             setInitialChatOpen(false);
@@ -294,12 +292,11 @@ const NewHomePageMui = () => {
             );
 
             if (response.status === 200) {
-
-                console.log(response.data.chatHistory);
+                sessionStorage.removeItem('searchQuery');
             }
         } catch (error) {
-            console.error("Error fetching chat history:", error);
-            console.log("Full error response:", error.response);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -362,22 +359,20 @@ const NewHomePageMui = () => {
             if (response.status === 200) {
                 const updatedChatSessions = chatSessions.filter((session) => session.id !== selectedChatId);
                 setChatSessions(updatedChatSessions);
-
-                // Update other state or show snackbar message as needed
                 setSnackbarMessage(response?.data?.message);
                 setSnackbarOpen(true);
-                console.log('Chat session deleted successfully');
                 resetPage()
             } else {
-                console.error('Failed to delete chat session');
+                setSnackbarMessage('Failed to delete chat session');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error:', error);
+            setSnackbarMessage('Error:', error);
+            setSnackbarOpen(false);
         } finally {
             setConfirmDialogOpen(false);
         }
     };
-
 
     const contentMargin = drawerOpen && !isSmallScreen ? "260px" : "0";
     const fontSize = isSmallScreen ? "14px" : "16px";
@@ -404,8 +399,6 @@ const NewHomePageMui = () => {
         },
     };
 
-    const chatContainerRef = useRef(null);
-
     useEffect(() => {
         const chatContainerNode = chatContainerRef.current;
 
@@ -427,36 +420,9 @@ const NewHomePageMui = () => {
         };
     }, []);
 
-    // const shouldScrollRef = useRef(true);
-
-    // useEffect(() => {
-    //     const chatContainerNode = chatContainerRef.current;
-    
-    //     const scrollToBottom = () => {
-    //       if (shouldScrollRef.current) {
-    //         chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    //         shouldScrollRef.current = false;
-    //       }
-    //     };
-    
-    //     scrollToBottom();
-    
-    //     chatContainerNode.style.scrollBehavior = 'auto';
-    
-    //     const observer = new MutationObserver(scrollToBottom);
-    //     observer.observe(chatContainerNode, { childList: true, subtree: true });
-    
-    //     // Clean up
-    //     return () => {
-    //       chatContainerNode.style.scrollBehavior = 'smooth';
-    //       observer.disconnect();
-    //     };
-    //   }, []);
-    
-
 
     return (
-        <Box style={styles.adminDashboard}>
+        <Box>
             <CssBaseline />
             <AppBar
                 position="fixed"
@@ -467,16 +433,7 @@ const NewHomePageMui = () => {
             >
                 <Toolbar>
                     {!drawerOpen &&
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                flexDirection: "row",
-                                marginX: "auto",
-                                width: "280px",
-                            }}
-                        >
+                        <Box className="ya-home-sidebar-box">
                             <img
                                 src={
                                     activeTab === 0
@@ -491,7 +448,7 @@ const NewHomePageMui = () => {
                                 color="inherit"
                                 aria-label="menu"
                                 onClick={toggleDrawer}
-                                style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                                style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -506,14 +463,8 @@ const NewHomePageMui = () => {
                 variant="persistent"
                 className="sidebarStyle"
             >
-                <div style={styles.sidebar}>
-                    {drawerOpen && <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexDirection: "row",
-                        }}
+                <div className="ya-sidebar-styles">
+                    {drawerOpen && <Box className="ya-sidebar-styles-box"
                     >
                         <Link to="/" style={{ textDecoration: "none" }}>
                             <img
@@ -531,39 +482,25 @@ const NewHomePageMui = () => {
                             color="inherit"
                             aria-label="menu"
                             onClick={toggleDrawer}
-                            style={{ ...styles.menuButton, color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                            style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
                         >
                             <MenuIcon />
                         </IconButton>
                     </Box>}
                     <IconButton
                         color="primary"
+                        className="ya-new-chat-btn"
                         style={{
                             backgroundColor:
                                 activeTab === 0 ? "#13416a" : "#eaf5ff",
                             color: activeTab === 0 ? "#fff" : "#72a9de",
-                            padding: "14px",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                            display: "flex",
-                            width: "100%",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            fontSize,
-                            justifyContent: "flex-start",
-                            alignItems: "center",
-                            marginTop: "10px",
                         }}
                         onClick={resetPage}
                     >
                         <AddIcon />
                         &nbsp; New Chat
                     </IconButton>
-                    <Box sx={{ marginTop: "25px" }} style={{
-                        maxHeight: "100vh", minHeight: "100vh", overflowX: "hidden", overflowY: "auto", width: "100%",
-                        marginX: "auto",
-                    }}>
+                    <Box className="ya-new-chat-box">
                         <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
@@ -578,6 +515,7 @@ const NewHomePageMui = () => {
                         {chatSessions.map((chatSession) => (
                             <div key={chatSession.id} style={{ position: "relative" }}>
                                 <IconButton
+                                    className="ya-chat-session-btn"
                                     color="primary"
                                     style={{
                                         backgroundColor: chatSession.id === selectedChatId
@@ -590,29 +528,13 @@ const NewHomePageMui = () => {
                                             : activeTab === 0
                                                 ? "#fff"
                                                 : "#72a9de",
-                                        padding: "11px",
-                                        borderRadius: "8px",
-                                        cursor: "pointer",
-                                        display: "flex",
-                                        fontSize,
-                                        justifyContent: "flex-start",
-                                        alignItems: "center",
-                                        marginTop: "10px",
-                                        position: "relative",
                                     }}
                                     onClick={() => handleChatSessionClick(chatSession.id)}
                                     onMouseEnter={() => handleMouseEnter(chatSession.id)}
                                     onMouseLeave={() => handleMouseLeave()}
                                 >
                                     <ChatBubbleIcon />
-                                    <Typography style={{
-                                        width: "190px",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textAlign: "left",
-                                        marginLeft: "auto",
-                                    }}>
+                                    <Typography className="ya-chat-session-name">
                                         &nbsp; {chatSession.name}
                                     </Typography>
                                     {chatSession.id === hoverChatId && (
@@ -653,29 +575,13 @@ const NewHomePageMui = () => {
             >
                 <Toolbar style={{ minHeight: "0px", }} />
                 <Box
+                    className="ya-home-box"
                     sx={{
                         width: { xs: "100%", sm: "96%" },
-                        marginX: "auto",
-                        padding: "20px",
-                        height: "100vh",
                         background: activeTab === 0 ? "#13416a" : "#eaf5ff",
-                        borderRadius: "20px",
-                        bottom: "20px",
-                        marginTop: "0px",
-                        // '@media (min-width: 1300px)': {
-                        //     height: "100vh",
-                        // },
                     }}
                 >
-                    <Box className="answerBox" ref={chatContainerRef}
-                        style={{
-                            width: "100%",
-                            marginX: "auto",
-                            minHeight: "calc(100% - 80px)",
-                            maxHeight: "calc(100% - 80px)",
-                            overflowY: "auto",
-                            overflowX: "hidden",
-                        }}>
+                    <Box className="ya-answerBox" ref={chatContainerRef}>
                         <Box>
                             {searchHistory.map((entry, index) => (
                                 <SearchHistoryItem
@@ -687,30 +593,27 @@ const NewHomePageMui = () => {
                                     searchQuery={searchQuery}
                                 />
                             ))}
+                            {storedSearchQuery && <Paper elevation={3} className="ya-question-box">
+                                <div sx={{ p: 2 }}>
+                                    <Box sx={{ p: 2 }} className="ya-question-box-flex">
+                                        <ChatBubbleOutlineIcon fontSize="small" className="ya-ChatBubbleOutlineIcon" style={{ color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
+                                        <Typography className="ya-question-box-text" style={{ color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{storedSearchQuery}</Typography>
+                                    </Box>
+                                </div>
+                            </Paper>}
                         </Box>
                         {isSubmitting && (
                             <Box
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
+                                className="ya-progress-bar-box">
                                 <Typography className="text-center">
                                     <CircularProgress />
                                 </Typography>
                             </Box>
                         )}
                         {searchHistory.length <= 0 && !isSubmitting && <Box className="centerText">
-                            <Typography style={{
-                                fontSize: "33px", textAlign: "center", height: "60vh", display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                color: activeTab === 0 ? "#fff" : "#063762",
-                            }}>What mitzvah can AI help you with?</Typography>
+                            <Typography className="ya-home-main-text-heading" style={{ color: activeTab === 0 ? "#fff" : "#063762", }}>What mitzvah can AI help you with?</Typography>
                         </Box>}
                     </Box>
-
                     <Box sx={{
                         marginLeft: drawerOpen && !isSmallScreen ? "260px" : "auto", height: searchHistory.length <= 0 && !isSubmitting ? "150px" : "70px", bottom: searchHistory.length <= 0 && !isSubmitting ? "20px" : "0px",
                         background: activeTab === 1 ? "#eaf5ff" : "transparent", '@media (min-width: 1300px)': {
@@ -738,21 +641,11 @@ const NewHomePageMui = () => {
                                         className="carousel-item"
                                     >
                                         <Button
+                                            className="ya-slider-btn"
                                             onClick={() => handleQuestionClick(question.text)}
                                             style={{
                                                 backgroundColor: activeTab === 0 ? "#fff" : "#fff",
                                                 color: activeTab === 0 ? "#13416a" : "#063762",
-                                                padding: "8px 12px",
-                                                borderRadius: "50px",
-                                                cursor: "pointer",
-                                                textAlign: "center",
-                                                display: "inline",
-                                                width: "100%",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                fontSize: "16px",
-                                                textTransform: "none",
                                             }}
                                         >
                                             <Tooltip title={question.text}>{question.text}</Tooltip>
@@ -769,24 +662,12 @@ const NewHomePageMui = () => {
                                             {initialQuestions.map((question) => (
                                                 <TableCell>
                                                     <Button
+                                                        className="ya-home-table-btn"
                                                         key={question.id}
                                                         onClick={() => handleQuestionClick(question.text)}
                                                         style={{
                                                             backgroundColor: activeTab === 0 ? "#fff" : "#fff",
                                                             color: activeTab === 0 ? "#13416a" : "#063762",
-                                                            padding: "8px 16px",
-                                                            borderRadius: "50px",
-                                                            cursor: "pointer",
-                                                            textAlign: "left",
-                                                            display: "inline",
-                                                            width: "100%",
-                                                            // minWidth: "200px",
-                                                            // maxWidth: "200px",
-                                                            whiteSpace: "nowrap",
-                                                            overflow: "hidden",
-                                                            textOverflow: "ellipsis",
-                                                            fontSize: "16px",
-                                                            textTransform: "none",
                                                         }}
                                                     >
                                                         <Tooltip title={question.text}>
@@ -801,17 +682,7 @@ const NewHomePageMui = () => {
                         )}
 
                         <form>
-                            <Box
-                                sx={{
-                                    bottom: 0,
-                                    backgroundColor: "transparent",
-                                    boxShadow: "none",
-                                    zIndex: 1000,
-                                    display: "flex",
-                                    alignItems: "center",
-                                                                    }}
-                                className="search-wrapper"
-                            >
+                            <Box className={activeTab===0 ? "ya-home-search-wrapper" : "ya-home-search-wrapper ya-home-search-wrapper-light"}>
                                 <TextField
                                     fullWidth
                                     name="searchQuery"
@@ -835,22 +706,14 @@ const NewHomePageMui = () => {
                                     error={isError}
                                 />
                                 <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        textAlign: "center",
-                                        justifyContent: "right",
-                                        paddingBottom: "16px",
-                                    }}
-                                >
+                                    className="ya-send-btn-box">
                                     <IconButton
                                         variant="contained"
                                         type="submit"
                                         disabled={!searchQuery}
                                         onClick={onSubmit}
+                                        className="ya-send-icon"
                                         sx={{
-                                            marginLeft: "16px",
-                                            marginTop: "0px",
                                             backgroundColor: themeMode === "dark" ? "#6fa8dd" : "#fff",
                                             color: themeMode === "dark" ? "#fff" : "#2a2b35",
                                             "&:hover": {

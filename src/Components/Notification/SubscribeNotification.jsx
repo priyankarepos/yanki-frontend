@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
 import axios from 'axios';
 import "./SubscribeNotification.scss";
+import ReminderNotification from '../ReminderNotification/ReminderNotification';
 
 const SubscribeNotification = ({ answer }) => {
     const [eventLocations, setEventLocations] = useState([]);
@@ -27,14 +28,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    console.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -44,14 +41,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    console.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
-                console.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -61,14 +54,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    console.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
-                console.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -88,13 +77,10 @@ const SubscribeNotification = ({ answer }) => {
 
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
 
-                if (response.status === 200) {
-                    setSubscribeNotification(response.data);
-                } else {
-                    console.error('Failed to fetch user subscription');
-                }
+                setSubscribeNotification(response.data);
             } catch (error) {
-                console.error('Error fetching user subscription:', error);
+                setSnackbarMessage('No data available', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -121,11 +107,13 @@ const SubscribeNotification = ({ answer }) => {
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                console.error('Failed to add subscription');
+                setSnackbarMessage('Failed to add subscription');
+                setSnackbarOpen(true);
             }
 
         } catch (error) {
-            console.error('Error adding subscription:', error);
+            setSnackbarMessage('Error adding subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -157,11 +145,13 @@ const SubscribeNotification = ({ answer }) => {
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                console.error('Failed to update subscription');
+                setSnackbarMessage('Failed to update subscription');
+                setSnackbarOpen(true);
             }
 
         } catch (error) {
-            console.error('Error updating subscription:', error);
+            setSnackbarMessage('Error updating subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -209,10 +199,12 @@ const SubscribeNotification = ({ answer }) => {
                 reset();
                 window.location.reload();
             } else {
-                console.error('Failed to delete subscription');
+                setSnackbarMessage('Failed to delete subscription');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error deleting subscription:', error);
+            setSnackbarMessage('Error deleting subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -258,7 +250,7 @@ const SubscribeNotification = ({ answer }) => {
                                                 onSelectLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}
-                                            onRemoveLocation={(selectedList) => {
+                                            onRemove={(selectedList) => {
                                                 onRemoveLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}
@@ -344,35 +336,14 @@ const SubscribeNotification = ({ answer }) => {
                         </div>
                     </div>
                 </form>
-                
+
             </Paper>
-            <Box className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"}>
-                    <Typography variant="h6" gutterBottom>
-                        Reminder
-                    </Typography>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Message</TableCell>
-                                    <TableCell>Time</TableCell>
-                                    <TableCell>Action</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {dummyReminders.map((reminder) => (
-                                    <TableRow key={reminder.id}>
-                                        <TableCell>{reminder.message}</TableCell>
-                                        <TableCell>{reminder.time}</TableCell>
-                                        <TableCell>
-                                            <Typography className='Custom-Button' onClick={() => handleCancel(reminder.id)}>Cancel</Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+            <Box className={userRoles === "Enterprise" ? "notification-wrapper-light reminder-wrapper-light" : "notification-wrapper reminder-wrapper"}>
+                <Typography variant="h6" gutterBottom>
+                    Below are your reminders.
+                </Typography>
+                <div className='ReminderNotification'><ReminderNotification /></div>
+            </Box>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}

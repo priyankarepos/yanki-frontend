@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
+import "./EventLocation.scss";
 
 const styles = {
   tableContainer: {
@@ -90,13 +91,11 @@ const AdminAddEventLocation = () => {
         if (response.status === 200) {
           setEventLocations(response.data);
         } else {
-          console.error('Failed to fetch event location');
           setSnackbarMessage('Failed to fetch event location');
           setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error('Error fetching event location:', error);
-        setSnackbarMessage('Error fetching event location');
+        setSnackbarMessage('Error fetching event location', error);
         setSnackbarOpen(true);
       }
     };
@@ -130,13 +129,11 @@ const AdminAddEventLocation = () => {
         setSnackbarMessage('Location deleted successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to delete event location');
         setSnackbarMessage('Failed to delete event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error deleting event location');
+      setSnackbarMessage('Error deleting event location',error);
       setSnackbarOpen(true);
     }
   };
@@ -163,16 +160,14 @@ const AdminAddEventLocation = () => {
         setEventLocations((prevCategories) => [...prevCategories, newLocation]);
         setIsModalOpen(false);
         setLocationName('');
-        setSnackbarMessage('Location saved successfully');
+        setSnackbarMessage(newLocation);
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to save event location');
         setSnackbarMessage('Failed to save event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error saving event location');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -201,13 +196,11 @@ const AdminAddEventLocation = () => {
         setSnackbarMessage('Location updated successfully');
         setSnackbarOpen(true);
       } else {
-        console.error('Failed to update event location');
         setSnackbarMessage('Failed to update event location');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSnackbarMessage('Error updating event location');
+      setSnackbarMessage('Error:', error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -215,13 +208,13 @@ const AdminAddEventLocation = () => {
   };
 
   return (
-    <Box style={{ display: "flex" }}>
-      <Box style={{ ...styles.content}} className="enterpriseFormBox">
-          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
+    <Box sx={{ display: "flex" }}>
+      <Box style={{ ...styles.content}}>
+          <Box className="event-top-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Add Event Location
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddLocation}>
+            <IconButton color="primary" size="small" onClick={handleAddLocation}>
               <AddIcon /> Add
             </IconButton>
           </Box>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress, useMediaQuery, Grid, FormHelperText } from '@mui/material';
+import { Box, Typography, TextField, Modal, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, Snackbar, CircularProgress, useMediaQuery, Grid, FormHelperText, Pagination } from '@mui/material';
 import AdminDashboard from './AdminDashboard';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
@@ -15,6 +15,8 @@ import Multiselect from 'multiselect-react-dropdown';
 import { Controller, useForm } from 'react-hook-form';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { FormControl } from '@mui/base';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
 const styles = {
     tableContainer: {
@@ -118,28 +120,61 @@ const AdminEventRequest = () => {
     const [eventIdToDelete, setEventIdToDelete] = useState(null);
     const [editEventData, setEditEventData] = useState(null);
     const [editEventId, setEditEventId] = useState(null);
+    const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+    const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
+    const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
+    const handlePageChange = (event, newPage) => {
+        setPageNumber(newPage);
+        fetchEventRequest(newPage);
+    };
 
-    const fetchEventRequest = async () => {
+    const handleLocationDropdownToggle = () => {
+        setIsLocationDropdownOpen(!isLocationDropdownOpen);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handlePublicationAreaDropdownToggle = () => {
+        setIsPublicationAreaDropdownOpen(!isPublicationAreaDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
+    };
+
+    const handleEventTypeDropdownToggle = () => {
+        setIsEventTypeDropdownOpen(!isEventTypeDropdownOpen);
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+    };
+
+    useEffect(() => {
+        if (editEventData) {
+            setValue('EventName', editEventData?.eventName || "");  // Set default value for EventName
+            setValue('EventLocationAddress', editEventData?.eventAddress || "");  // Set default value for EventLocationAddress
+        }
+    }, [editEventData, setValue]);
+
+    const fetchEventRequest = async (pageNumber) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/events/get-allevents`);
-
+            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`);
+    
             if (response.status === 200) {
                 setEventRequests(response.data);
+                setTotalPages(Math.ceil(response.data.totalCount / 10));
             } else {
-                console.error('Failed to fetch event location');
                 setSnackbarMessage('Failed to fetch event location');
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error fetching event location:', error);
-            setSnackbarMessage('Error fetching event location');
+            setSnackbarMessage('Error fetching event location', error);
             setSnackbarOpen(true);
         }
     };
-
+    
     useEffect(() => {
-        fetchEventRequest();
-    }, [isFormModalOpen]);
+        fetchEventRequest(pageNumber);
+    }, [isFormModalOpen, pageNumber]);
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
@@ -151,8 +186,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch event location');
                 }
             } catch (error) {
-                console.error('Error fetching event location:', error);
-                setSnackbarMessage('Error fetching event location');
+                setSnackbarMessage('Error fetching event location', error);
                 setSnackbarOpen(true);
             }
         };
@@ -170,8 +204,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch publication area');
                 }
             } catch (error) {
-                console.error('Error fetching publication area:', error);
-                setSnackbarMessage('Error fetching publication area');
+                setSnackbarMessage('Error fetching publication area', error);
                 setSnackbarOpen(true);
             }
         };
@@ -189,8 +222,7 @@ const AdminEventRequest = () => {
                     console.error('Failed to fetch event types');
                 }
             } catch (error) {
-                console.error('Error fetching event types:', error);
-                setSnackbarMessage('Error fetching event types');
+                setSnackbarMessage('Error fetching event types', error);
                 setSnackbarOpen(true);
             }
         };
@@ -226,7 +258,6 @@ const AdminEventRequest = () => {
                     formData.append('imageFiles', file);
                 });
             } else {
-                console.error('Error: uploadedFiles is not an array');
                 setIsLoading(false);
                 return;
             }
@@ -495,6 +526,9 @@ const AdminEventRequest = () => {
     const closeFormModal = () => {
         setFormModalOpen(false);
         reset();
+        setIsLocationDropdownOpen(false);
+        setIsPublicationAreaDropdownOpen(false);
+        setIsEventTypeDropdownOpen(false);
     };
 
     const closePdfModal = () => {
@@ -528,7 +562,7 @@ const AdminEventRequest = () => {
                             <AddIcon /> Add
                         </IconButton>
                     </Box>
-                    {Array.isArray(eventRequests) && eventRequests.length > 0 ? (
+                    {Array.isArray(eventRequests.events) && eventRequests.events.length > 0 ? (
                         <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
                             <Table style={styles.table}>
                                 <TableHead>
@@ -547,7 +581,10 @@ const AdminEventRequest = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {Array.isArray(eventRequests) && eventRequests.map((event, index) => (
+                                    {[
+                                        ...eventRequests.events.filter(event => event.status === 'Pending'),
+                                        ...eventRequests.events.filter(event => event.status !== 'Pending')
+                                    ].map((event, index) => (
                                         <TableRow key={index}>
                                             <TableCell style={styles.cell}>{event.eventName}</TableCell>
                                             <TableCell style={styles.cell}>{event.eventLocation.join(', ')}</TableCell>
@@ -645,9 +682,18 @@ const AdminEventRequest = () => {
                                     ))}
                                 </TableBody>
                             </Table>
+                            {totalPages > 1 && (
+                                <Pagination
+                                    count={totalPages}
+                                    page={pageNumber}
+                                    onChange={handlePageChange}
+                                    color="primary"
+                                    style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}
+                                />
+                            )}
                         </TableContainer>) : (
                         <Typography variant="body1" className='no-data-found'>
-                            No event submession request available.
+                            No event submission request available.
                         </Typography>
                     )}
                 </Box>
@@ -729,7 +775,9 @@ const AdminEventRequest = () => {
                                                 type="outlined"
                                                 placeholder="Event name"
                                                 fullWidth
-                                                defaultValue={editEventData?.eventName}
+                                                //defaultValue={editEventData?.eventName}
+                                                value={field.value} // Use value prop
+                                                onChange={field.onChange} // Use onChange prop
                                             />
                                             {errors['EventName'] && (
                                                 <FormHelperText className='error-message'>{errors['EventName'].message}</FormHelperText>
@@ -762,6 +810,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isLocationDropdownOpen}
+                                                className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
                                         </>
@@ -783,7 +837,9 @@ const AdminEventRequest = () => {
                                                 variant="outlined"
                                                 placeholder="Event location address"
                                                 fullWidth
-                                                defaultValue={editEventData?.eventAddress}
+                                                //defaultValue={editEventData?.eventAddress}
+                                                value={field.value} // Use value prop
+                                                onChange={field.onChange} // Use onChange prop
                                             />
                                             {errors['EventLocationAddress'] && (
                                                 <FormHelperText className='error-message'>{errors['EventLocationAddress'].message}</FormHelperText>
@@ -862,6 +918,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isPublicationAreaDropdownOpen}
+                                                className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
                                         </>
@@ -892,6 +954,12 @@ const AdminEventRequest = () => {
                                                     field.onChange(selectedList);
                                                 }}
                                                 displayValue="name"
+                                                showArrow
+                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} />}
+                                                closeOnSelect
+                                                showCheckbox
+                                                keepListOpen={isEventTypeDropdownOpen}
+                                                className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
                                         </>
