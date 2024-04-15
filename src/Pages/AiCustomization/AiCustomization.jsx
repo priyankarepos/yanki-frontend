@@ -21,8 +21,11 @@ import axios from "axios";
 import "./AiCustomization.scss";
 
 const AiCustomization = () => {
-  const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
-  const userRoles = yankiUser?.userObject?.userRoles || '';
+  const yankiUser = JSON.parse(
+    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+      "{}"
+  );
+  const userRoles = yankiUser?.userObject?.userRoles || "";
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [customizeMessage, setCustomizeMessage] = useState("");
@@ -50,7 +53,7 @@ const AiCustomization = () => {
         }
       } catch (error) {
         setSnackbarMessage("Error fetching current phone number:", error);
-      setSnackbarOpen(true);
+        setSnackbarOpen(true);
       }
     };
     fetchCurrentAiCustomizeData();
@@ -82,11 +85,14 @@ const AiCustomization = () => {
           synagogueCommunity: data.synagogueCommunity,
           updatedWithCommunityEvents: data.updatedWithCommunityEvents,
           isInterestInVolunteer: JSON.parse(data.isInterestInVolunteer),
-          isInterestInReligiousStudies: JSON.parse(data.isInterestInReligiousStudies),
+          isInterestInReligiousStudies: JSON.parse(
+            data.isInterestInReligiousStudies
+          ),
           volunteerInterests: data.volunteerInterests,
           religiousChallenges: data.religiousChallenges,
           toolForOvercomeChallenges: data.toolForOvercomeChallenges,
-          ideaToEnhanceReligiousExperience: data.ideaToEnhanceReligiousExperience,
+          ideaToEnhanceReligiousExperience:
+            data.ideaToEnhanceReligiousExperience,
           religiousStudies: data.religiousStudies,
         };
 
@@ -145,13 +151,22 @@ const AiCustomization = () => {
         religiousPractices: formData.religiousPractices,
         synagogueCommunity: formData.synagogueCommunity,
         updatedWithCommunityEvents: formData.updatedWithCommunityEvents,
-        volunteerInterests: formData.isInterestInVolunteer === "false" ? "" : formData.volunteerInterests,
+        volunteerInterests:
+          formData.isInterestInVolunteer === "false"
+            ? ""
+            : formData.volunteerInterests,
         religiousChallenges: formData.religiousChallenges,
         toolForOvercomeChallenges: formData.toolForOvercomeChallenges,
-        ideaToEnhanceReligiousExperience: formData.ideaToEnhanceReligiousExperience,
-        religiousStudies: formData.isInterestInReligiousStudies === "false" ? "" : formData.religiousStudies,
+        ideaToEnhanceReligiousExperience:
+          formData.ideaToEnhanceReligiousExperience,
+        religiousStudies:
+          formData.isInterestInReligiousStudies === "false"
+            ? ""
+            : formData.religiousStudies,
         isInterestInVolunteer: JSON.parse(formData.isInterestInVolunteer),
-        isInterestInReligiousStudies: JSON.parse(formData.isInterestInReligiousStudies),
+        isInterestInReligiousStudies: JSON.parse(
+          formData.isInterestInReligiousStudies
+        ),
       };
 
       const response = await axios.put(
@@ -190,7 +205,14 @@ const AiCustomization = () => {
           helpful resources and ideas to make your religious life easier. All
           responses will be kept confidential.
         </Typography>
-        <form onSubmit={handleSubmit(onSubmit)} className={userRoles === "Enterprise" ? "section-container-light" : "section-container"}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={
+            userRoles === "Enterprise"
+              ? "section-container-light"
+              : "section-container"
+          }
+        >
           <Grid container spacing={2}>
             <Grid item xl={6} lg={6} md={6} xs={12}>
               <Box>
@@ -234,10 +256,14 @@ const AiCustomization = () => {
                           type="number"
                         />
                         {errors.ageRange && errors.ageRange.type === "min" && (
-                          <FormHelperText className="error-message">Minimum age is 1</FormHelperText>
+                          <FormHelperText className="error-message">
+                            Minimum age is 1
+                          </FormHelperText>
                         )}
                         {errors.ageRange && errors.ageRange.type === "max" && (
-                          <FormHelperText className="error-message">Maximum age is 200</FormHelperText>
+                          <FormHelperText className="error-message">
+                            Maximum age is 200
+                          </FormHelperText>
                         )}
                       </>
                     )}
@@ -357,17 +383,21 @@ const AiCustomization = () => {
                             <Checkbox
                               {...field}
                               value="kosherDietaryLaws"
-                              checked={field.value.includes(
-                                "kosherDietaryLaws"
-                              )}
+                              checked={
+                                field.value &&
+                                field.value.includes("kosherDietaryLaws")
+                              }
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
                             />
@@ -379,15 +409,22 @@ const AiCustomization = () => {
                             <Checkbox
                               {...field}
                               value="chalabYisroel"
-                              checked={field.value.includes("chalabYisroel")}
+                              checked={
+                                (field.value &&
+                                  field.value.includes("chalabYisroel")) ||
+                                ""
+                              }
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
                             />
@@ -402,14 +439,19 @@ const AiCustomization = () => {
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
-                              checked={field.value.includes("shabbat")}
+                              checked={
+                                field.value && field.value.includes("shabbat")
+                              }
                             />
                           }
                           label="Shabbat"
@@ -422,14 +464,20 @@ const AiCustomization = () => {
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
-                              checked={field.value.includes("jewishHolidays")}
+                              checked={
+                                field.value &&
+                                field.value.includes("jewishHolidays")
+                              }
                             />
                           }
                           label="Jewish holidays"
@@ -442,14 +490,20 @@ const AiCustomization = () => {
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
-                              checked={field.value.includes("dailyPrayers")}
+                              checked={
+                                field.value &&
+                                field.value.includes("dailyPrayers")
+                              }
                             />
                           }
                           label="Daily prayers"
@@ -462,14 +516,20 @@ const AiCustomization = () => {
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
-                              checked={field.value.includes("familyPurityLaws")}
+                              checked={
+                                field.value &&
+                                field.value.includes("familyPurityLaws")
+                              }
                             />
                           }
                           label="Family purity laws"
@@ -482,16 +542,20 @@ const AiCustomization = () => {
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
                                 const value = e.target.value;
+                                const currentValue = Array.isArray(field.value)
+                                  ? field.value
+                                  : [];
                                 const updatedPractices = isChecked
-                                  ? [...field.value, value]
-                                  : field.value.filter(
-                                    (practice) => practice !== value
-                                  );
+                                  ? [...currentValue, value]
+                                  : currentValue.filter(
+                                      (practice) => practice !== value
+                                    );
                                 field.onChange(updatedPractices);
                               }}
-                              checked={field.value.includes(
-                                "dressModestyRequirements"
-                              )}
+                              checked={
+                                field.value &&
+                                field.value.includes("dressModestyRequirements")
+                              }
                             />
                           }
                           label="Dress/modesty requirements"
@@ -548,7 +612,9 @@ const AiCustomization = () => {
                     render={({ field }) => (
                       <RadioGroup {...field} row>
                         <FormControlLabel
-                          value={customizeMessage?.isInterestInVolunteer || true}
+                          value={
+                            customizeMessage?.isInterestInVolunteer || true
+                          }
                           control={<Radio />}
                           label="Yes"
                         />
@@ -561,7 +627,8 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInVolunteer") === "true" || watch("isInterestInVolunteer") === true) && (
+                {(watch("isInterestInVolunteer") === "true" ||
+                  watch("isInterestInVolunteer") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what type of volunteering interests you?
@@ -663,13 +730,14 @@ const AiCustomization = () => {
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
                     If yes, what topics are you most interested in? (e.g.,
-                    Talmud study, Jewish philosophy, Halacha)
-                    [Yes] [No]
+                    Talmud study, Jewish philosophy, Halacha) [Yes] [No]
                   </InputLabel>
                   <Controller
                     control={control}
                     name="isInterestInReligiousStudies"
-                    defaultValue={customizeMessage?.isInterestInReligiousStudies || ""}
+                    defaultValue={
+                      customizeMessage?.isInterestInReligiousStudies || ""
+                    }
                     render={({ field }) => (
                       <RadioGroup {...field} row>
                         <FormControlLabel
@@ -686,7 +754,8 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
-                {(watch("isInterestInReligiousStudies") === "true" || watch("isInterestInReligiousStudies") === true) && (
+                {(watch("isInterestInReligiousStudies") === "true" ||
+                  watch("isInterestInReligiousStudies") === true) && (
                   <Grid item xs={12}>
                     <InputLabel className="ai-input-label">
                       If yes, what topics are you most interested in? (e.g.,
@@ -700,7 +769,11 @@ const AiCustomization = () => {
                       render={({ field }) => (
                         <TextField
                           {...field}
-                          value={watch("isInterestInReligiousStudies") === false ? "" : field.value}
+                          value={
+                            watch("isInterestInReligiousStudies") === false
+                              ? ""
+                              : field.value
+                          }
                           fullWidth
                           variant="outlined"
                           placeholder="Enter your interests"
