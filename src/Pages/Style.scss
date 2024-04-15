@@ -32,19 +32,19 @@
     background-color: #72a9de;
 }
 
-.tabStyle span.MuiTabs-indicator.css-1dpyo67-MuiTabs-indicator{
-    background-color : #72a9de !important;
+.tabStyle span.MuiTabs-indicator.css-1dpyo67-MuiTabs-indicator {
+    background-color: #72a9de !important;
 }
 
 .tabStyle .Mui-selected {
-    color: #72a9de !important ;
+    color: #72a9de !important;
 }
 
 .InputFieldColor input {
     color: #13538b !important;
 }
 
-.InputFieldColor .MuiInputBase-root{
+.InputFieldColor .MuiInputBase-root {
     background-color: #eaf5ff;
     border: 1px solid #6fa8dd;
     border-radius: 8px;
@@ -52,22 +52,22 @@
     width: 100%;
 }
 
-.EnterpriseInputFieldColor .MuiInputBase-root{
+.EnterpriseInputFieldColor .MuiInputBase-root {
     color: #72a9de;
     border: 1px solid #72a9de;
     border-radius: 8px;
 }
 
-.EnterpriseError .css-1wc848c-MuiFormHelperText-root{
+.EnterpriseError .css-1wc848c-MuiFormHelperText-root {
     color: red !important;
     line-height: 0 !important;
 }
 
 .privacy-policy .css-qklaqr-MuiListItemIcon-root {
     min-width: 32px;
-}  
+}
 
-::placeholder{
+::placeholder {
     color: #c9ddf0;
 }
 
@@ -75,7 +75,8 @@
     color: #000 !important;
 }
 
-.react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus{
+.react-tel-input .selected-flag:hover,
+.react-tel-input .selected-flag:focus {
     background-color: transparent !important;
 }
 
@@ -89,11 +90,26 @@
     color: #fff !important;
 }
 
-.react-tel-input .flag-dropdown{
-    border:none !important;
+.react-tel-input .flag-dropdown {
+    border: none !important;
     background-color: transparent !important;
 }
 
 .react-tel-input .selected-flag .arrow {
     border-top: 4px solid #fff !important;
+}
+
+.currentSignInPhone-style {
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.ReactPhoneInput-style {
+    border-radius: 8px;
+    margin-bottom: 0px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    height: 55px;
+    color: #fff;
 }

@@ -20,7 +20,6 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
-  console.log("response", response);
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length > 0;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
@@ -92,7 +91,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.isEvent && response?.message &&  (
+      {response?.isSucess && response?.isEvent && response?.message && activeTab===0 &&  (
         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
           <div className="chat-bubble assistant-bubble">
             <EventPublicationForm answer={response} />

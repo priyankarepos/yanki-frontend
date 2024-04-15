@@ -24,42 +24,6 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../App';
 import UploadIcon from '@mui/icons-material/Upload';
 
-const styles = {
-    enterpriseDashboard: {
-        display: 'flex',
-        height: '100vh',
-    },
-    appBar: {
-        backgroundColor: '#fff  ',
-        color: "#2f587c",
-    },
-    menuButton: {
-        marginLeft: 'auto',
-    },
-    title: {
-        flexGrow: 1,
-    },
-    sidebar: {
-        width: '270px',
-        padding: '16px',
-        color: '#fff',
-    },
-    content: {
-        flex: 1,
-        padding: '16px',
-        marginLeft: '0',
-        transition: 'margin-left 0.3s',
-    },
-    logoStyle: {
-        width: '150px',
-    },
-    pagination: {
-        marginTop: '20px',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-};
-
 const EnterpriseDashboard = () => {
     const { setDrawerOpen, drawerOpen } = useContext(Context);
 
@@ -72,11 +36,11 @@ const EnterpriseDashboard = () => {
     };
 
     return (
-        <div style={styles.enterpriseDashboard}>
+        <div className='enterprise-dashboard'>
             <CssBaseline />
-            <AppBar position="fixed" style={styles.appBar} className='appBarSmallScreen'>
-                <Toolbar style={{ justifyContent: 'space-between' }}>
-                    <Box className='titleSmallScreen' sx={{ display: 'flex', alignItems: 'center', width: "100%" }}>
+            <AppBar className='enterprise-dashboard-small-screen-bar'>
+                <Toolbar className='enterprise-dashboard-tool-bar'>
+                    <Box className='enterprise-dashboard-title-small-screen'>
                         {<Typography variant="h6">Networking Interface</Typography>}
                     </Box>
                     <IconButton
@@ -84,61 +48,55 @@ const EnterpriseDashboard = () => {
                         color="inherit"
                         aria-label="menu"
                         onClick={() => toggleDrawer()}
-                        style={styles.menuButton}
+                        className='enterprise-dashboard-menu-button'
                     >
                         <MenuIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
 
-            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterpriseSidebar' >
-                <div style={styles.sidebar}>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
+            <Drawer open={isSmallScreen ? !drawerOpen : drawerOpen} onClose={() => toggleDrawer()} variant="persistent" className='enterprise-dashboard-sidebar' >
+                <div className='enterprise-dashboard-sidebar-container'>
+                    <Link to="/" className='enterprise-dashboard-link'>
                         <img
                             src={DarkYankilogo}
-                            style={{
-                                ...styles.logoStyle,
-                                marginLeft: 'auto',
-                                marginRight: 'auto',
-                                marginBottom: '16px',
-                            }}
-                            className="logo"
+                            className='enterprise-dashboard-yanki-logo'
                             alt="Yanki logo"
                         />
                     </Link>
                     <List>
                         <NavLink
                             to="/enterprise/profile"
-                            style={{ textDecoration: 'none', color: '#fff' }}
+                            className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
+                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
                                 <ListItemIcon>
-                                    <BusinessIcon style={{ color: '#fff', }} />
+                                    <BusinessIcon className='enterprise-white-color'/>
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Profile" />
                             </ListItem>
                         </NavLink>
                         <NavLink
                             to="/enterprise/departments"
-                            style={{ textDecoration: 'none', color: '#fff' }}
+                            className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
+                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
                                 <ListItemIcon>
-                                    <AccountBalanceIcon style={{ color: '#fff', }} />
+                                    <AccountBalanceIcon className='enterprise-white-color' />
                                 </ListItemIcon>
                                 <ListItemText primary="Departments" />
                             </ListItem>
                         </NavLink>
                         <NavLink
                             to="/enterprise/upload-files"
-                            style={{ textDecoration: 'none', color: '#fff' }}
+                            className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem button className='highlightStyle' onClick={() => navigate("/enterprise/upload-files")}>
+                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/upload-files")}>
                                 <ListItemIcon>
-                                    <UploadIcon style={{ color: '#fff', }} />
+                                    <UploadIcon className='enterprise-white-color' />
                                 </ListItemIcon>
                                 <ListItemText primary="Add Files" />
                             </ListItem>

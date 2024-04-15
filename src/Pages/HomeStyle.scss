@@ -29,13 +29,17 @@
   max-width: none !important;
 }
 
-.search-wrapper fieldset{
+.ya-home-search-wrapper fieldset{
   border: none;
 }
 
 /* width */
 ::-webkit-scrollbar {
     width: 0px;
+  }
+
+  ::-webkit-scrollbar {
+    height: 4px;
   }
 
   .home-table-scroll::-webkit-scrollbar {

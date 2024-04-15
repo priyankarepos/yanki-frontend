@@ -13,56 +13,6 @@ import "./EnterpriseStyle.scss"
 import ConfirmDialog from './ConfirmDialog';
 import { emailRegex } from '../Utils/validations/validation';
 
-const styles = {
-  inputField: {
-    backgroundColor: '#eaf5ff',
-    border: '1px solid #6fa8dd',
-    borderRadius: '8px',
-    marginBottom: '6px',
-    color: "#8bbae5",
-    with: "100%"
-  },
-  label: {
-    color: '#8bbae5',
-    marginBottom: '8px',
-  },
-  tagsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-  tag: {
-    backgroundColor: '#6fa8dd',
-    color: '#fff',
-    borderRadius: '4px',
-    padding: '4px 8px',
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  tagText: {
-    marginRight: '8px',
-  },
-  removeTag: {
-    cursor: 'pointer',
-  },
-  content: {
-    flex: 1,
-    padding: '16px',
-    marginLeft: '0',
-    transition: 'margin-left 0.3s',
-  },
-  cell: {
-    padding: '12px',
-    borderBottom: '1px solid #ccc',
-    fontSize: '16px',
-    fontWeight: 'normal',
-    color: '#fff',
-    backgroundColor: "#13538b"
-  },
-};
-
 const Departments = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
@@ -88,13 +38,13 @@ const Departments = () => {
             if (response.status === 200) {
                 const responseData = response.data;
                 setEnterpriseDetails(responseData)
-                console.log('Enterprise Details:', responseData);
-
             } else {
-                console.error('Failed to fetch enterprise details');
+                setSnackbarMessage('Failed to fetch enterprise details');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error fetching enterprise details:', error);
+            setSnackbarMessage('Error fetching enterprise details:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -127,28 +77,33 @@ const Departments = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${enterpriseDetails[0]?.enterpriseId}/${tag}`
       );
-      console.log('Keyword Check Response:', response.data);
       if (response.status === 200) {
         const keywordExists = response.data.exists;
         if (keywordExists !== undefined) {
-          console.log("keywordExists", keywordExists);
+          setSnackbarMessage("keywordExists", keywordExists);
+          setSnackbarOpen(true);
 
           if (keywordExists) {
-            console.log('Keyword already exists:', tag);
+            setSnackbarMessage('Keyword already exists:', tag);
+            setSnackbarOpen(true);
           } else {
-            console.log('Keyword does not exist:', tag);
+            setSnackbarMessage('Keyword does not exist:', tag);
+            setSnackbarOpen(true);
 
             setTags((prevTags) => [...prevTags, tag]);
           }
         } else {
-          console.log('Keyword existence is undefined for:', tag);
+          setSnackbarMessage('Keyword existence is undefined for:', tag);
+          setSnackbarOpen(false);
         }
       } else {
-        console.error('Failed to check enterprise keyword');
+        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarOpen(true);
       }
       return response.data;
     } catch (error) {
-      console.error('Error checking enterprise keyword:', error);
+      setSnackbarMessage('Error checking enterprise keyword:', error);
+      setSnackbarOpen(true);
       return { isSuccess: false };
     }
   };
@@ -191,12 +146,12 @@ const Departments = () => {
           setSnackbarOpen(true);
         }
       } else {
-        console.error('Failed to check enterprise keyword');
         setSnackbarMessage('Failed to check enterprise keyword');
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error handling tag:', error);
+      setSnackbarMessage('Error handling tag:', error);
+      setSnackbarOpen(true);
     }
   };
 
@@ -219,7 +174,6 @@ const Departments = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   const [departmentsData, setDepartmentsData] = useState([]);
-  console.log("departmentsData", departmentsData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -231,10 +185,12 @@ const Departments = () => {
         if (response.status === 200) {
           setDepartmentsData(response.data);
         } else {
-          console.error('Failed to fetch departments:', response.statusText);
+          setSnackbarMessage('Failed to fetch departments:', response.statusText);
+          setSnackbarOpen(true);
         }
       } catch (error) {
-        console.error('Error occurred while fetching departments:', error.message);
+        setSnackbarMessage('Error occurred while fetching departments:', error.message);
+        setSnackbarOpen(false);
       }
     };
 
@@ -277,7 +233,6 @@ const Departments = () => {
       const response = await axios.delete(apiUrl);
 
       if (response.status === 200) {
-        console.log('Department deleted successfully.');
         setSnackbarMessage('Department deleted successfully');
         setSnackbarOpen(true);
 
@@ -286,12 +241,12 @@ const Departments = () => {
         updatedDepartments.splice(selectedDepartmentIndex, 1);
         setDepartmentsData(updatedDepartments);
       } else {
-        console.error('Failed to delete department:', response.statusText);
-        setSnackbarMessage('Failed to delete department:');
+        setSnackbarMessage('Failed to delete department:', response.statusText);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error deleting department:', error.message);
+      setSnackbarMessage('Error deleting department:', error.message);
+      setSnackbarOpen(true);
     }
   };
 
@@ -329,11 +284,9 @@ const Departments = () => {
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
         payload
       );
-      console.log('Update Department Details Response:', response.data);
       setTriggerEffect((prev) => !prev);
 
       if (response.status === 200) {
-        console.log('Department details updated successfully');
         setSnackbarOpen(true);
         setSnackbarMessage('Department details updated successfully');
         reset();
@@ -342,13 +295,13 @@ const Departments = () => {
         setTags([])
         setDepartmentID(null)
       } else {
-        console.error(`Failed to update Department details. Status: ${response.status}`);
         setSnackbarMessage(`Failed to update Department details. Status: ${response.status}`);
         setSnackbarOpen(true);
 
       }
     } catch (error) {
-      console.error('Error updating Department details:', error.message);
+      setSnackbarMessage('Error updating Department details:', error.message);
+      setSnackbarOpen(true);
     }
     setSelectedDepartmentData("");
   };
@@ -395,7 +348,6 @@ const Departments = () => {
         setValue('DepartmentDescription', '');
         setValue('DepartmentIdentificationKeywords', []);
       } else {
-        console.error('API error:', response.statusText);
         setSnackbarMessage('API error:', response.statusTex);
         setSnackbarOpen(true);
       }
@@ -411,18 +363,18 @@ const Departments = () => {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
-    <Box style={{ display: "flex", backgroundColor: '#fff' }}>
+    <Box className='enterprise-box'>
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
-      <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-        <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#6fa8dd' }}>
+      <Box style={{ marginLeft: contentMargin }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+        <Typography variant="h6" className='enterprise-heading'>
           Add Departments
         </Typography>
-        {enterpriseDetails[0]?.isProfileCompleted === false && <Typography style={{marginBottom:"10px", color:"gray"}}>Please complete enterprise profile first to add departments</Typography>}
+        {enterpriseDetails[0]?.isProfileCompleted === false && <Typography className='enterprise-department-info'>Please complete enterprise profile first to add departments</Typography>}
         <Grid container spacing={2} className='enterprise-profile'>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Department<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Department<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="DepartmentName"
@@ -440,7 +392,7 @@ const Departments = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Customer Service"
@@ -448,14 +400,14 @@ const Departments = () => {
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
                   {errors['DepartmentName'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['DepartmentName'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['DepartmentName'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Name of representative<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Name of representative<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="NameOfRepresentative"
@@ -473,7 +425,7 @@ const Departments = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={styles.inputField}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="John Deo"
@@ -481,14 +433,14 @@ const Departments = () => {
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
                   {errors['NameOfRepresentative'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['NameOfRepresentative'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['NameOfRepresentative'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
-            <InputLabel style={styles.label}>Email Address<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <InputLabel className='enterprise-input-lable'>Email Address<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
@@ -505,7 +457,7 @@ const Departments = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                    sx={{ ...styles.inputField }}
+                    className='enterprise-input-field'
                     {...field}
                     type="outlined"
                     placeholder="Type email address here"
@@ -513,27 +465,21 @@ const Departments = () => {
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
                   />
                   {errors['EmailAddress'] && (
-                    <FormHelperText style={{ color: 'red' }}>{errors['EmailAddress'].message}</FormHelperText>
+                    <FormHelperText className='error-handling'>{errors['EmailAddress'].message}</FormHelperText>
                   )}
                 </div>
               )}
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Description</InputLabel>
+            <InputLabel className='enterprise-input-lable'>Description</InputLabel>
             <Controller
               control={control}
               name="DepartmentDescription"
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
-                    style={{
-                      backgroundColor: '#eaf5ff',
-                      border: '1px solid #6fa8dd',
-                      borderRadius: '8px',
-                      marginBottom: '6px',
-                      color: "#8bbae5", width: '100%', minHeight: "15%", padding: "15px", fontSize: "16px",
-                    }}
+                    className='enterprise-text-area'
                     {...field}
                     placeholder="Type description here"
                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -546,7 +492,7 @@ const Departments = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel style={styles.label}>Enterprise identification keywords<sup style={{ color: "red", fontSize: "18px", fontWeight: "600", }}>*</sup></InputLabel>
+            <InputLabel className='enterprise-input-lable'>Enterprise identification keywords<sup className='asterisk'>*</sup></InputLabel>
             <Controller
               control={control}
               name="DepartmentIdentificationKeywords"
@@ -558,17 +504,8 @@ const Departments = () => {
                     addKeys={[13, 9]}
                     placeholder="Type Enterprise identification keywords here"
                     disabled={enterpriseDetails[0]?.isProfileCompleted === false}
+                    className='enterprise-input-field'
                     inputProps={{
-                      style: {
-                        backgroundColor: '#eaf5ff',
-                        border: '1px solid #6fa8dd',
-                        borderRadius: '8px',
-                        marginBottom: '16px',
-                        color: '#8bbae5',
-                        width: '100%',
-                        outline: 'none',
-                        height: "60px",
-                      },
                       ...field,
                       value: tagInput,
                       onChange: (e) => setTagInput(e.target.value),
@@ -583,15 +520,14 @@ const Departments = () => {
                       },
                     }}
                   />
-                  <div style={styles.tagsContainer}>
+                  <div className='enterprise-tags-container'>
                     {tags?.map((tag, index) => (
-                      <div key={`${tag}-${index}`} style={{
-                        ...styles.tag,
+                      <div key={`${tag}-${index}`} className='enterprise-tag' style={{
                         backgroundColor: tag === tagInput ? '#ff7070' : '#6fa8dd',
                       }}>
-                        <span style={styles.tagText}>{tag}</span>
+                        <span className='enterprise-tag-text'>{tag}</span>
                         <span
-                          style={styles.removeTag}
+                          className='enterprise-remove-tag'
                           onClick={() => handleRemoveTag(tag)}
                         >
                           &times;
@@ -600,7 +536,7 @@ const Departments = () => {
                     ))}
                   </div>
                   {isSubmitted && keywords.length === 0 && tags.length === 0 && (
-                    <FormHelperText style={{ color: 'red', fontSize: '12px', margin: 0 }}>
+                    <FormHelperText className='error-handling'>
                       At least one keyword is required
                     </FormHelperText>
                   )}
@@ -611,18 +547,18 @@ const Departments = () => {
           <Grid item xs={3}>
             <Button
               variant="outlined"
-              sx={{ marginY: { xs: "10px" }, width: "150px", }}
+              className='enterprise-department-button'
+              sx={{ marginY: { xs: "10px" } }}
               color="primary"
               onClick={departmentID !== null ? handleSubmit(handleSaveDepartment) : handleSubmit(onSubmit)}
-              style={styles.modalButton}
               disabled={enterpriseDetails[0]?.isProfileCompleted === false}
             >
               {departmentID !== null ? "Save Changes" : "Save"}
             </Button>
           </Grid>
-          <Grid item xs={12}><Divider sx={{ marginY: "20px", background: "#8bbae5", }}></Divider></Grid>
+          <Grid item xs={12}><Divider sx={{ marginY: "20px" }} className='custom-divider'></Divider></Grid>
           <Box className="enterpriseTableBox" sx={{ padding: '16px' }}>
-            <Typography variant="h6" sx={{ paddingBottom: '16px', color: '#13538b' }}>
+            <Typography variant="h6" className='enterprise-department-heading'>
               Add Departments
             </Typography>
           </Box>
@@ -631,30 +567,30 @@ const Departments = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell style={styles.cell}>Department</TableCell>
-                    <TableCell style={styles.cell}>Name of Representative</TableCell>
-                    <TableCell style={styles.cell}>Email Address</TableCell>
-                    <TableCell style={styles.cell}>Description</TableCell>
-                    <TableCell style={styles.cell}>Identification Keywords</TableCell>
-                    <TableCell style={styles.cell}>Actions</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Department</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Name of Representative</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Email Address</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Description</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Identification Keywords</TableCell>
+                    <TableCell className='enterprise-department-table-cell'>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {departmentsData.map((department, index) => (
                     <TableRow key={index}>
-                      <TableCell style={styles.cell}>{department.departmentName}</TableCell>
-                      <TableCell style={styles.cell}>{department.departmentHeadName}</TableCell>
-                      <TableCell style={styles.cell}>{department.departmentEmail}</TableCell>
-                      <TableCell style={styles.cell}>{department.departmentDescription}</TableCell>
-                      <TableCell style={styles.cell}>
+                      <TableCell className='enterprise-department-table-cell'>{department.departmentName}</TableCell>
+                      <TableCell className='enterprise-department-table-cell'>{department.departmentHeadName}</TableCell>
+                      <TableCell className='enterprise-department-table-cell'>{department.departmentEmail}</TableCell>
+                      <TableCell className='enterprise-department-table-cell'>{department.departmentDescription}</TableCell>
+                      <TableCell className='enterprise-department-table-cell'>
                         {department.departmentKeywords}
                       </TableCell>
-                      <TableCell style={styles.cell}>
+                      <TableCell className='enterprise-department-table-cell'>
                         <IconButton onClick={() => handleEditDepartment(index, department.departmentId, department)}>
-                          <EditIcon style={{ color: '#fff', }} />
+                          <EditIcon className='enterprise-white-color' />
                         </IconButton>
                         <IconButton onClick={() => handleDeleteDepartment(index, department.departmentId)}>
-                          <DeleteIcon style={{ color: '#fff', }} />
+                          <DeleteIcon className='enterprise-white-color' />
                         </IconButton>
                       </TableCell>
                     </TableRow>

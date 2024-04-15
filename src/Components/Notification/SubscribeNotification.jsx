@@ -27,14 +27,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    console.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -44,14 +40,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    console.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
-                console.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -61,14 +53,10 @@ const SubscribeNotification = ({ answer }) => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    console.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
-                console.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -88,13 +76,10 @@ const SubscribeNotification = ({ answer }) => {
 
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
 
-                if (response.status === 200) {
-                    setSubscribeNotification(response.data);
-                } else {
-                    console.error('Failed to fetch user subscription');
-                }
+                setSubscribeNotification(response.data);
             } catch (error) {
-                console.error('Error fetching user subscription:', error);
+                setSnackbarMessage('No data available', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -121,11 +106,13 @@ const SubscribeNotification = ({ answer }) => {
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                console.error('Failed to add subscription');
+                setSnackbarMessage('Failed to add subscription');
+                setSnackbarOpen(true);
             }
 
         } catch (error) {
-            console.error('Error adding subscription:', error);
+            setSnackbarMessage('Error adding subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -137,7 +124,7 @@ const SubscribeNotification = ({ answer }) => {
             setValue('publicationArea', subscribeNotification.eventPublicationArea ? subscribeNotification.eventPublicationArea.flatMap(area => area.split(',')).map(area => ({ name: area })) : []);
             setValue('eventTypes', subscribeNotification.eventType ? subscribeNotification.eventType.flatMap(area => area.split(',')).map(area => ({ name: area })) : []);
         }
-    }, [setValue,subscribeNotification]);
+    }, [setValue, subscribeNotification]);
 
     const handleUpdate = async (data) => {
         try {
@@ -157,11 +144,13 @@ const SubscribeNotification = ({ answer }) => {
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                console.error('Failed to update subscription');
+                setSnackbarMessage('Failed to update subscription');
+                setSnackbarOpen(true);
             }
 
         } catch (error) {
-            console.error('Error updating subscription:', error);
+            setSnackbarMessage('Error updating subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -195,13 +184,13 @@ const SubscribeNotification = ({ answer }) => {
     const handleUnsubscribe = async (data) => {
         try {
             setIsLoading(true);
-    
+
             // Define the API URL with the subscriptionId as a query parameter
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-    
+
             // Make the DELETE request
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
-    
+
             // Check if the request was successful
             if (deleteSubscriptionResponse.status === 200) {
                 setSnackbarMessage('Your request has been unsubscribed successfully');
@@ -209,10 +198,12 @@ const SubscribeNotification = ({ answer }) => {
                 reset();
                 window.location.reload();
             } else {
-                console.error('Failed to delete subscription');
+                setSnackbarMessage('Failed to delete subscription');
+                setSnackbarOpen(true);
             }
         } catch (error) {
-            console.error('Error deleting subscription:', error);
+            setSnackbarMessage('Error deleting subscription:', error);
+            setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -220,7 +211,7 @@ const SubscribeNotification = ({ answer }) => {
 
     return (
         <Box>
-            <Paper className={userRoles==="Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
+            <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
                 </Typography>
@@ -247,7 +238,7 @@ const SubscribeNotification = ({ answer }) => {
                                                 onSelectLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}
-                                            onRemoveLocation={(selectedList) => {
+                                            onRemove={(selectedList) => {
                                                 onRemoveLocations(selectedList);
                                                 field.onChange(selectedList);
                                             }}

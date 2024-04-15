@@ -218,7 +218,7 @@ const AdminAddEventPublicationArea = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Box style={{ ...styles.content }} className="enterpriseFormBox">
+      <Box style={{ ...styles.content }}>
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
           <Box className="event-top-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>

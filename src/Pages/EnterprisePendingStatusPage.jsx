@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeModeContext } from "../App";
+import "./PagesStyle.scss";
 
 const EnterprisePendingStatusPage = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -81,8 +82,8 @@ const EnterprisePendingStatusPage = () => {
                 Thank You
               </Typography>
             )}
-            <Box style={{ width: "300px", margin: "auto", }}>
-              <Button variant="contained" onClick={onGoToHome} style={{ width: "300px", margin: "auto" }} >
+            <Box className="enterprise-status">
+              <Button variant="contained" onClick={onGoToHome} >
                 Go to home
               </Button>
             </Box>

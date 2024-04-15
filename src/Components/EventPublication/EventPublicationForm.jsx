@@ -1,4 +1,4 @@
-import {Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, FormControl, FormHelperText, Grid, IconButton, InputLabel, Modal, Paper, TextField, Typography, Snackbar } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -36,6 +36,8 @@ const EventPublicationForm = ({ answer }) => {
     const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
     const [isPublicationAreaDropdownOpen, setIsPublicationAreaDropdownOpen] = useState(false);
     const [isEventTypeDropdownOpen, setIsEventTypeDropdownOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const handleLocationDropdownToggle = () => {
         setIsLocationDropdownOpen(!isLocationDropdownOpen);
@@ -58,14 +60,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventLocations = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
-
-                if (response.status === 200) {
-                    setEventLocations(response.data);
-                } else {
-                    console.error('Failed to fetch event location');
-                }
+                setEventLocations(response.data);
             } catch (error) {
-                console.error('Error fetching event location:', error);
+                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -75,14 +73,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventPublicationArea = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
-
-                if (response.status === 200) {
-                    setPublicationArea(response.data);
-                } else {
-                    console.error('Failed to fetch publication area');
-                }
+                setPublicationArea(response.data);
             } catch (error) {
-                console.error('Error fetching publication area:', error);
+                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -92,14 +86,10 @@ const EventPublicationForm = ({ answer }) => {
         const fetchEventTypes = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
-
-                if (response.status === 200) {
-                    setEventTypes(response.data);
-                } else {
-                    console.error('Failed to fetch event types');
-                }
+                setEventTypes(response.data);
             } catch (error) {
-                console.error('Error fetching event types:', error);
+                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarOpen(true);
             }
         };
 
@@ -129,7 +119,6 @@ const EventPublicationForm = ({ answer }) => {
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
             const addEventResponse = await axios.post(addEventUrl, addEventData);
-            console.log("Event added successfully:", addEventResponse.data);
 
             // Upload files if any
             if (data.uploadedFiles && data.uploadedFiles.length > 0) {
@@ -144,7 +133,8 @@ const EventPublicationForm = ({ answer }) => {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                console.log("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarMessage("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarOpen(true);
             }
 
             // Reset form and state
@@ -154,11 +144,12 @@ const EventPublicationForm = ({ answer }) => {
             setUploadedFiles([]);
             reset();
         } catch (error) {
-            console.error('Error submitting event:', error);
+            setSnackbarMessage('Error submitting event:', error);
+            setSnackbarOpen(true);
             setIsLoading(false);
         }
     };
-    
+
     const onSelectLocations = (selectedList) => {
         setValue("locations", selectedList);
     };
@@ -558,6 +549,12 @@ const EventPublicationForm = ({ answer }) => {
                     )}
                 </div>
             </Modal>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </ >
 
     );
