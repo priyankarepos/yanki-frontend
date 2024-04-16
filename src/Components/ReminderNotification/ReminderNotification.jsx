@@ -39,7 +39,7 @@ const ReminderNotification = ({ answer }) => {
     return (
         <Paper className='ReminderNotificationUser' sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
-                {answer?.message}
+            Below are your upcoming reminders.
             </Typography>
             <TableContainer>
                 <Table>

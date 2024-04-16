@@ -339,9 +339,6 @@ const SubscribeNotification = ({ answer }) => {
 
             </Paper>
             <Box className={userRoles === "Enterprise" ? "notification-wrapper-light reminder-wrapper-light" : "notification-wrapper reminder-wrapper"}>
-                <Typography variant="h6" gutterBottom>
-                    Below are your reminders.
-                </Typography>
                 <div className='ReminderNotification'><ReminderNotification /></div>
             </Box>
             <Snackbar
