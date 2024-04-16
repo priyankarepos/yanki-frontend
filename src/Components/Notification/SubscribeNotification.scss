@@ -1,10 +1,15 @@
+.ReminderNotification .ReminderNotificationUser {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
 .notification-wrapper, .notification-wrapper-light {
     background-color: #08365e !important;
     padding: 20px !important;
     box-shadow: none !important;
     background-image: none !important;
     width: 70%;
-    margin: auto;
+    margin: 0px auto 15px;
     border-radius: 12px !important;
     @media (max-width: 768px) {
         width: 95%;
@@ -18,12 +23,15 @@
     .notification-button {
         margin-top: 15px;
     }
+
     .notification-button-loader {
         color: #0d416f !important;
+    }
+    th, td {
+        border-bottom: 1px solid rgb(74 106 134) !important;
     }
 }
 
 .notification-wrapper-light{
     background-color: #fff !important;
 }
-

@@ -249,6 +249,7 @@ const NewHomePageMui = () => {
                                     isEvent: gptResponse.isEvent,
                                     isPersonalAssistant: gptResponse.isPersonalAssistant,
                                     firstAidVideos: gptResponse.firstAidVideos,
+                                    isViewReminder: gptResponse.isViewReminder,
                                 }
                             }
                         };
