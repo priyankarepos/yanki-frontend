@@ -330,8 +330,13 @@ const SubscribeNotification = ({ answer }) => {
                             </Button>
 
                             <Button sx={{ mx: 1 }} variant="contained" color="error" onClick={handleUnsubscribe} disabled={!subscribeNotification || (subscribeNotification.isSubscribeToEvent === false)}>
-                                Unsubscribe
+                                {isLoading ? (
+                                    <CircularProgress size={24} className='notification-button-loader'/>
+                                ) : (
+                                   "Unsubscribe"
+                                )}
                             </Button>
+                            
                         </div>
                     </div>
                 </form>
