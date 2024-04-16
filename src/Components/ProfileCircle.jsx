@@ -103,15 +103,8 @@ export default function ProfielCircle() {
       <Container maxWidth="xl">
         <Box
           className="user-top-header"
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            textAlign: "center",
-            justifyContent: "space-between",
-            py: 2,
-          }}
-        >
-          <Typography sx={{cursor:"pointer"}} onClick={() => navigate("/")}>
+          sx={{ py: 2 }}>
+          <Typography className="profile-logo" onClick={() => navigate("/")}>
             {location.pathname !== "/" && (
               <img
                 src={
@@ -119,7 +112,7 @@ export default function ProfielCircle() {
                     ? "/auth-logo-dark.svg"
                     : "/auth-logo-light.svg"
                 }
-                style={{ width: "10em" }}
+                className="profile-yanki-logo"
                 alt="logo"
               />
             )}
@@ -177,11 +170,8 @@ export default function ProfielCircle() {
             <ListItemIcon>
               <EmailOutlinedIcon fontSize="small" />
             </ListItemIcon>
-            <span style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap', // This ensures that the text doesn't wrap to the next line
-            }}>{parsedUserObject?.userObject?.userEmail || ""}</span>
+            {/* This ensures that the text doesn't wrap to the next line */}
+            <span className="email-profile">{parsedUserObject?.userObject?.userEmail || ""}</span>
           </MenuItem>
           <MenuItem onClick={onClickChangePassword}>
             <ListItemIcon>

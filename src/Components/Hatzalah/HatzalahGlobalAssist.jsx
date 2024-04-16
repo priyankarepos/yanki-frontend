@@ -199,7 +199,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
           },
         }}
       >
-        <DialogTitle variant="h6" style={{ color: "#012e55" }}>
+        <DialogTitle variant="h6" className="hatzala-disclaimer-title">
           Emergency Instructional Videos Disclaimer
           <IconButton
             aria-label="close"

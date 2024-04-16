@@ -4,7 +4,7 @@ const HatzalahDisclaimer = () => {
   return (
     <>
       <Box>
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer" >
           Please be advised that Hatzalah of Los Angeles and YankiAI
           (hereinafter referred to as "We," "Us," or "Our") strive to provide
           the highest quality emergency medical services and information.
@@ -17,7 +17,7 @@ const HatzalahDisclaimer = () => {
           professional medical care, diagnosis, or treatment.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           This information is designed to support, not replace, the relationship
           that exists between a patient/site visitor and his/her existing
           healthcare provider. We cannot ensure the saving of a life in every
@@ -25,7 +25,7 @@ const HatzalahDisclaimer = () => {
           emergency interventions depend on factors beyond our control.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           The system we have developed to connect individuals with Hatzalah
           centers and responders worldwide is intended to facilitate access to
           emergency services but does not replace professional medical advice,
@@ -36,7 +36,7 @@ const HatzalahDisclaimer = () => {
           the information provided.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           In no event shall we be liable for any direct, indirect, incidental,
           special, consequential, or punitive damages arising out of the use of
           or inability to use the information and services provided. By
@@ -45,7 +45,7 @@ const HatzalahDisclaimer = () => {
           information and services.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           We do not endorse, recommend, or guarantee the accuracy, reliability,
           or quality of any content, information, materials, services, products,
           opinions, or statements available through our service or linked sites.
@@ -54,7 +54,7 @@ const HatzalahDisclaimer = () => {
           correction of defects.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           We are not responsible for the content, accuracy, or quality of
           products or services provided by third parties or advertised on
           third-party services. It is acknowledged that we are not liable for
@@ -63,14 +63,14 @@ const HatzalahDisclaimer = () => {
           user.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           All products and services offered by us are provided "as is" without
           any warranties, including but not limited to warranties of
           merchantability, fitness for a particular purpose, or non-infringement
           of intellectual property, whether express or implied.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           The applicability of these disclaimers and the limitation of liability
           may vary based on jurisdiction. Certain jurisdictions do not allow the
           disclaimer of certain warranties or the limitation or exclusion of
@@ -79,13 +79,13 @@ const HatzalahDisclaimer = () => {
           shall apply to the maximum extent permitted by applicable law.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           This information is provided for legal purposes only and does not
           constitute medical advice. Always consult a qualified medical
           professional for any health-related concerns or emergencies.
         </Typography>
 
-        <Typography component="div" style={{ marginBottom: "15px" }}>
+        <Typography component="div" className="hatzalah-disclaimer">
           Your use of our services indicates your agreement to this disclaimer
           and your understanding that you are using our services and information
           at your own risk.

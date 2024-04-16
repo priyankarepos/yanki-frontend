@@ -14,6 +14,10 @@ const SubscribeNotification = ({ answer }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
+    const [isSelectedLocations, setIsSelectedLocations] = useState(false);
+    const [isSelectedPublicationArea, setIsSelectedPublicationArea] = useState(false);
+    const [isSelectedEventTypes, setIsSelectedEventTypes] = useState(false);
+
     const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
     useEffect(() => {
@@ -236,10 +240,12 @@ const SubscribeNotification = ({ answer }) => {
                                             selectedValues={field.value}
                                             onSelect={(selectedList) => {
                                                 onSelectLocations(selectedList);
+                                                setIsSelectedLocations(true);
                                                 field.onChange(selectedList);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemoveLocations(selectedList);
+                                                setIsSelectedLocations(false)
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -265,9 +271,11 @@ const SubscribeNotification = ({ answer }) => {
                                             onSelect={(selectedList) => {
                                                 onSelectPublicationArea(selectedList);
                                                 field.onChange(selectedList);
+                                                setIsSelectedPublicationArea(true);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemovePublicationArea(selectedList);
+                                                setIsSelectedPublicationArea(false);
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -292,10 +300,12 @@ const SubscribeNotification = ({ answer }) => {
                                             selectedValues={field.value}
                                             onSelect={(selectedList) => {
                                                 onSelectEventTypes(selectedList);
+                                                setIsSelectedEventTypes(true);
                                                 field.onChange(selectedList);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemoveEventTypes(selectedList);
+                                                setIsSelectedEventTypes(false);
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -309,10 +319,10 @@ const SubscribeNotification = ({ answer }) => {
                                 type="submit"
                                 variant="contained"
                                 color="primary"
-                                disabled={isLoading}
+                                disabled={isLoading || !(isSelectedLocations || isSelectedPublicationArea || isSelectedEventTypes) }
                             >
                                 {isLoading ? (
-                                    <CircularProgress size={24} style={{ color: "#0d416f" }} />
+                                    <CircularProgress size={24} className='notification-button-loader'/>
                                 ) : (
                                     subscribeNotification ? "Update" : "Subscribe"
                                 )}

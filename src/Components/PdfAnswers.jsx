@@ -40,15 +40,11 @@ const PdfAnswers = ({ answer }) => {
                 onClose={closePdfModal}
                 aria-labelledby="pdf-modal-title"
                 aria-describedby="pdf-modal-description"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
+                className='enterprise-pdfAnswer-modal'
             >
                 <div className="pdf-modal">
                     <IconButton
-                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px',}}
+                        style={{ position: 'absolute', top: !isLargeScreen ? '40px' : '20px' }}
                         onClick={closePdfModal}
                         aria-label="close"
                     >
