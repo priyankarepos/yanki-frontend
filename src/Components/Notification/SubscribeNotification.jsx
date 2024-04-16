@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -214,17 +214,6 @@ const SubscribeNotification = ({ answer }) => {
         }
     };
 
-    const dummyReminders = [
-        { id: 1, message: "Reminder 1", time: "10:00 AM" },
-        { id: 2, message: "Reminder 2", time: "12:00 PM" },
-        { id: 3, message: "Reminder 3", time: "3:00 PM" }
-    ];
-
-    const handleCancel = (id) => {
-        // Handle cancel action here
-        console.log("Cancel reminder with ID:", id);
-    };
-
     return (
         <Box>
             <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
@@ -341,8 +330,13 @@ const SubscribeNotification = ({ answer }) => {
                             </Button>
 
                             <Button sx={{ mx: 1 }} variant="contained" color="error" onClick={handleUnsubscribe} disabled={!subscribeNotification || (subscribeNotification.isSubscribeToEvent === false)}>
-                                Unsubscribe
+                                {isLoading ? (
+                                    <CircularProgress size={24} className='notification-button-loader'/>
+                                ) : (
+                                   "Unsubscribe"
+                                )}
                             </Button>
+                            
                         </div>
                     </div>
                 </form>
