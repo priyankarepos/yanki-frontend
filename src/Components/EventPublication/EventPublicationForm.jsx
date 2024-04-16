@@ -12,17 +12,6 @@ import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 
-const modalContentStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'auto',
-    padding: '20px',
-    outline: 'none',
-    marginTop: 'auto',
-};
-
 const EventPublicationForm = ({ answer }) => {
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
@@ -218,7 +207,7 @@ const EventPublicationForm = ({ answer }) => {
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
                 </Typography>
-                <Typography className='Custom-Button' onClick={openFormModal} style={{ marginTop: '20px' }}>
+                <Typography className='Custom-Button' onClick={openFormModal}>
                     Open Form
                 </Typography>
                 {responseMessage && <Typography sx={{ mt: 2 }}>{responseMessage}</Typography>}
@@ -228,14 +217,9 @@ const EventPublicationForm = ({ answer }) => {
                 onClose={closeFormModal}
                 aria-labelledby="form-modal-title"
                 aria-describedby="form-modal-description"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'auto',
-                }}
+                className='event-submission-form-modal'
             >
-                <Paper elevation={3} className="event-form-modal" style={modalContentStyle}>
+                <Paper elevation={3} className="event-form-modal modalContentStyle">
                     <div className='event-model-close-btn'>
                         <IconButton onClick={closeFormModal} aria-label="close">
                             <CloseIcon className='color-white' />
@@ -303,7 +287,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 }}
                                                 displayValue="name"
                                                 showArrow
-                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleLocationDropdownToggle} />}
+                                                customArrow={!isLocationDropdownOpen ? <ArrowDropDownCircleIcon className='event-submission-multiselect-icon' onClick={handleLocationDropdownToggle} /> : <CancelIcon className='event-submission-multiselect-icon' onClick={handleLocationDropdownToggle} />}
                                                 closeOnSelect
                                                 showCheckbox
                                                 keepListOpen={isLocationDropdownOpen}
@@ -406,7 +390,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 }}
                                                 displayValue="name"
                                                 showArrow
-                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handlePublicationAreaDropdownToggle} />}
+                                                customArrow={!isPublicationAreaDropdownOpen ? <ArrowDropDownCircleIcon className='event-submission-multiselect-icon' onClick={handlePublicationAreaDropdownToggle} /> : <CancelIcon className='event-submission-multiselect-icon' onClick={handlePublicationAreaDropdownToggle} />}
                                                 closeOnSelect
                                                 showCheckbox
                                                 keepListOpen={isPublicationAreaDropdownOpen}
@@ -442,7 +426,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 }}
                                                 displayValue="name"
                                                 showArrow
-                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} /> : <CancelIcon style={{ cursor: 'pointer' }} onClick={handleEventTypeDropdownToggle} />}
+                                                customArrow={!isEventTypeDropdownOpen ? <ArrowDropDownCircleIcon className='event-submission-multiselect-icon' onClick={handleEventTypeDropdownToggle} /> : <CancelIcon className='event-submission-multiselect-icon' onClick={handleEventTypeDropdownToggle} />}
                                                 closeOnSelect
                                                 showCheckbox
                                                 keepListOpen={isEventTypeDropdownOpen}
@@ -511,7 +495,7 @@ const EventPublicationForm = ({ answer }) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
-                                    {isLoading ? <CircularProgress size={24} style={{ color: "#0d416f" }} /> : "Submit"}
+                                    {isLoading ? <CircularProgress size={24} className='event-submission-button-loader' /> : "Submit"}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -523,11 +507,7 @@ const EventPublicationForm = ({ answer }) => {
                 onClose={closePdfModal}
                 aria-labelledby="pdf-modal-title"
                 aria-describedby="pdf-modal-description"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
+                className='event-submission-pdf-modal'
             >
                 <div className="pdf-modal">
                     <IconButton
@@ -539,7 +519,7 @@ const EventPublicationForm = ({ answer }) => {
                     {selectedPdf && (
                         <>
                             {selectedPdf.type.startsWith('image/') ? (
-                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} style={{ width: '100%', height: '100%', objectFit: 'contain', }} />
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} className='event-submission-image'/>
                             ) : (
                                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />

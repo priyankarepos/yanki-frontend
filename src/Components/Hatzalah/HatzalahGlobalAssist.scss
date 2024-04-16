@@ -147,3 +147,21 @@ td.coordinates-label {
   top: 8px !important;
   color: #012e55 !important;
 }
+
+.hatzalah-disclaimer {
+  margin-bottom: 15px !important;
+}
+
+.hatzala-disclaimer-title {
+  color: #012e55;
+}
+
+.hatzala-video-title {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: left;
+}

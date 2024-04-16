@@ -1,4 +1,4 @@
-import { Box, Typography, List, Button, Paper, Grid, CircularProgress } from '@mui/material';
+import { Box, Typography, List, Button, Paper, Grid, CircularProgress, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
@@ -9,6 +9,8 @@ const DemoEnterpriseChat = ({ answer }) => {
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
     const handleSendEmail = async (enterprise) => {
         try {
             const requestData = {
@@ -28,7 +30,8 @@ const DemoEnterpriseChat = ({ answer }) => {
                 setSelectedEnterpriseMessage("Invalid email. Please provide a valid email address.");
             }
         } catch (error) {
-            console.error('Error sending email:', error);
+            setSnackbarMessage('Error sending email:', error);
+            setSnackbarOpen(true);
         }
     };
 
@@ -42,74 +45,83 @@ const DemoEnterpriseChat = ({ answer }) => {
     };
 
     const handleCall = (phoneNumber) => {
-        console.log("phoneNumber", phoneNumber);
         if (phoneNumber && phoneNumber.trim() !== "") {
             window.location.href = `tel:${phoneNumber}`;
         } else {
-            console.error("Phone number is not valid or empty.", phoneNumber);
+            setSnackbarMessage("Phone number is not valid or empty.", phoneNumber);
+            setSnackbarOpen(true);
         }
     };
     return (
-        <Box className="demo-enterprise-wrapper">
-            <Paper elevation={3}>
-                <div>
-                    <List className='demo-enterprise-List'>
-                        <InsertCommentIcon className='demo-enterprise-InsertCommentIcon' fontSize="small" />
-                        <Typography className='demo-enterprise-Typography'>
-                            {answer.message}
-                        </Typography>
+        <>
+            <Box className="demo-enterprise-wrapper">
+                <Paper elevation={3}>
+                    <div>
+                        <List className='demo-enterprise-List'>
+                            <InsertCommentIcon className='demo-enterprise-InsertCommentIcon' fontSize="small" />
+                            <Typography className='demo-enterprise-Typography'>
+                                {answer.message}
+                            </Typography>
+                        </List>
+                    </div>
+                    <List>
+                        <Grid container spacing={2}>
+                            {answer.enterpriseSelections && answer?.enterpriseSelections.map((enterprise) => (
+                                <Grid item xs={12} sm={6} md={6} key={enterprise.id}>
+                                    <Box className="enterprise-info-box">
+                                        <div>
+                                            {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
+                                            {enterprise.enterpriseEmail && <div>
+                                                Enterprise Email:{" "}
+                                                <span className='email-click'
+                                                    onClick={handleOpenEmailClient}
+                                                >
+                                                    {enterprise.enterpriseEmail}
+                                                </span>
+                                            </div>}
+                                            {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
+                                            {enterprise.website && <div>Website: {enterprise.website}</div>}
+                                            {enterprise.enterprisePhoneNumber && <div>
+                                                Enterprise Phone:{" "}
+                                                <span className='email-click'
+                                                    onClick={() => handleCall(enterprise.enterprisePhoneNumber)}
+                                                >
+                                                    {enterprise.enterprisePhoneNumber}
+                                                </span>
+                                            </div>}
+                                            {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
+                                            {enterprise.departmentEmail && <div>
+                                                Department Email:{" "}
+                                                <span className='email-click'
+                                                    onClick={handleOpenEmailClient}>{enterprise.departmentEmail}</span>
+                                            </div>}
+                                            {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
+                                            {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <Button className="enterprise-info-button" onClick={() => {
+                                                setSelectedEnterprise(enterprise.enterpriseName);
+                                                handleSendEmail(enterprise);
+                                            }}
+                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : <></>}
+                                        </div>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
                     </List>
-                </div>
-                <List>
-                    <Grid container spacing={2}>
-                        {answer.enterpriseSelections && answer?.enterpriseSelections.map((enterprise) => (
-                            <Grid item xs={12} sm={6} md={6} key={enterprise.id}>
-                                <Box className="enterprise-info-box">
-                                    <div>
-                                        {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
-                                        {enterprise.enterpriseEmail && <div>
-                                            Enterprise Email:{" "}
-                                            <span className='email-click'
-                                                onClick={handleOpenEmailClient}
-                                            >
-                                                {enterprise.enterpriseEmail}
-                                            </span>
-                                        </div>}
-                                        {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
-                                        {enterprise.website && <div>Website: {enterprise.website}</div>}
-                                        {enterprise.enterprisePhoneNumber && <div>
-                                            Enterprise Phone:{" "}
-                                            <span className='email-click'
-                                                onClick={() => handleCall(enterprise.enterprisePhoneNumber)}
-                                            >
-                                                {enterprise.enterprisePhoneNumber}
-                                            </span>
-                                        </div>}
-                                        {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
-                                        {enterprise.departmentEmail && <div>
-                                            Department Email:{" "}
-                                            <span className='email-click'
-                                                onClick={handleOpenEmailClient}>{enterprise.departmentEmail}</span>
-                                        </div>}
-                                        {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
-                                        {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <Button className="enterprise-info-button" onClick={() => {
-                                            setSelectedEnterprise(enterprise.enterpriseName);
-                                            handleSendEmail(enterprise);
-                                        }}
-                                            disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : <></>}
-                                    </div>
-                                </Box>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </List>
-                {selectedEnterprise && (
-                    <Typography className="send-email-message">
-                        {selectedEnterpriseMessage === "" ? <CircularProgress size={24} /> : selectedEnterpriseMessage}
-                    </Typography>
-                )}
-            </Paper>
-        </Box>
+                    {selectedEnterprise && (
+                        <Typography className="send-email-message">
+                            {selectedEnterpriseMessage === "" ? <CircularProgress size={24} /> : selectedEnterpriseMessage}
+                        </Typography>
+                    )}
+                </Paper>
+            </Box>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
+        </>
     );
 };
 

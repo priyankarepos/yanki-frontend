@@ -67,7 +67,7 @@ const SentenceAnswer = ({ answer }) => {
 
   const renderContentResponse = () => {
     return processedContentResponse.map((ans, index) => (
-      <Typography variant="h6" component="div" key={index} style={{ fontSize: "16px" }}>
+      <Typography variant="h6" component="div" key={index} className="sentence-answer-container">
         {renderClickableContent(ans)}
       </Typography>
     ));
@@ -161,7 +161,7 @@ const SentenceAnswer = ({ answer }) => {
             />
           )} */}
 
-          <Typography variant="h6" component="div" style={{ fontSize: "16px" }}>
+          <Typography variant="h6" component="div" className="sentence-answer-container">
             {answer?.message}
           </Typography>
           {renderContentResponse()}
@@ -182,11 +182,11 @@ const SentenceAnswer = ({ answer }) => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleUserTypeButtonClick(type, index)}
-                  style={{ marginRight: "8px", marginTop:"8px", }}
+                  className="sentence-answer-button"
                   disabled={loading || loadingButtonIndex === index || !answer?.isMail === true || apiResponseMessage !==""}
                 >
                   {loading && loadingButtonIndex === index ? (
-                    <CircularProgress size={24} style={{ color: "#fff" }} />
+                    <CircularProgress size={24} className="color-white" />
                   ) : (
                     type
                   )}
@@ -196,10 +196,10 @@ const SentenceAnswer = ({ answer }) => {
                 <Typography
                   variant="body1"
                   component="div"
-                  style={{ marginTop: "8px", }}
+                  className="sentence-answer-response"
                 >
                   {!apiResponseMessage && loading ? (
-                    <CircularProgress size={24} style={{ color: "#fff" }} />
+                    <CircularProgress size={24} className="color-white" />
                   ) : (
                     apiResponseMessage
                   )}
@@ -214,7 +214,7 @@ const SentenceAnswer = ({ answer }) => {
           <Typography
             variant="body1"
             component="div"
-            style={{ marginTop: "8px", }}
+            className="sentence-answer-response"
           >{apiContentResponseMessage}</Typography>
         </Paper>}
       </Box>

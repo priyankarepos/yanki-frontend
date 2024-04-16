@@ -211,17 +211,7 @@ const HatzalahVideo = ({ video }) => {
                   <div>
                     <Typography variant="h6" component="div">
                       <Tooltip title={item.title}>
-                        <div
-                          style={{
-                            maxWidth: "100%",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            display: "-webkit-box",
-                            "-webkit-line-clamp": 2,
-                            "-webkit-box-orient": "vertical",
-                            textAlign: "left",
-                          }}
-                        >
+                        <div className="hatzala-video-title">
                           {item.title}
                         </div>
                       </Tooltip>
