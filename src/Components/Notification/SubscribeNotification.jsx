@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, InputLabel, Paper, Snackbar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Multiselect from 'multiselect-react-dropdown';
@@ -15,6 +15,10 @@ const SubscribeNotification = ({ answer }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
+    const [isSelectedLocations, setIsSelectedLocations] = useState(false);
+    const [isSelectedPublicationArea, setIsSelectedPublicationArea] = useState(false);
+    const [isSelectedEventTypes, setIsSelectedEventTypes] = useState(false);
+
     const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
     useEffect(() => {
@@ -210,17 +214,6 @@ const SubscribeNotification = ({ answer }) => {
         }
     };
 
-    const dummyReminders = [
-        { id: 1, message: "Reminder 1", time: "10:00 AM" },
-        { id: 2, message: "Reminder 2", time: "12:00 PM" },
-        { id: 3, message: "Reminder 3", time: "3:00 PM" }
-    ];
-
-    const handleCancel = (id) => {
-        // Handle cancel action here
-        console.log("Cancel reminder with ID:", id);
-    };
-
     return (
         <Box>
             <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
@@ -248,10 +241,12 @@ const SubscribeNotification = ({ answer }) => {
                                             selectedValues={field.value}
                                             onSelect={(selectedList) => {
                                                 onSelectLocations(selectedList);
+                                                setIsSelectedLocations(true);
                                                 field.onChange(selectedList);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemoveLocations(selectedList);
+                                                setIsSelectedLocations(false)
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -277,9 +272,11 @@ const SubscribeNotification = ({ answer }) => {
                                             onSelect={(selectedList) => {
                                                 onSelectPublicationArea(selectedList);
                                                 field.onChange(selectedList);
+                                                setIsSelectedPublicationArea(true);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemovePublicationArea(selectedList);
+                                                setIsSelectedPublicationArea(false);
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -304,10 +301,12 @@ const SubscribeNotification = ({ answer }) => {
                                             selectedValues={field.value}
                                             onSelect={(selectedList) => {
                                                 onSelectEventTypes(selectedList);
+                                                setIsSelectedEventTypes(true);
                                                 field.onChange(selectedList);
                                             }}
                                             onRemove={(selectedList) => {
                                                 onRemoveEventTypes(selectedList);
+                                                setIsSelectedEventTypes(false);
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
@@ -321,18 +320,23 @@ const SubscribeNotification = ({ answer }) => {
                                 type="submit"
                                 variant="contained"
                                 color="primary"
-                                disabled={isLoading}
+                                disabled={isLoading || !(isSelectedLocations || isSelectedPublicationArea || isSelectedEventTypes) }
                             >
                                 {isLoading ? (
-                                    <CircularProgress size={24} style={{ color: "#0d416f" }} />
+                                    <CircularProgress size={24} className='notification-button-loader'/>
                                 ) : (
                                     subscribeNotification ? "Update" : "Subscribe"
                                 )}
                             </Button>
 
                             <Button sx={{ mx: 1 }} variant="contained" color="error" onClick={handleUnsubscribe} disabled={!subscribeNotification || (subscribeNotification.isSubscribeToEvent === false)}>
-                                Unsubscribe
+                                {isLoading ? (
+                                    <CircularProgress size={24} className='notification-button-loader'/>
+                                ) : (
+                                   "Unsubscribe"
+                                )}
                             </Button>
+                            
                         </div>
                     </div>
                 </form>

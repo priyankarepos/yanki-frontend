@@ -38,7 +38,7 @@ const IsItKosher = ({ answer }) => {
               <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
                 <Box>
                   <Typography className="kosher-heading">{product.brand}</Typography>
-                  <Typography sx={{fontSize:15}}>
+                  <Typography className='kosher-product-name'>
                     <strong>{product.name}</strong>
                   </Typography>
                   <Typography className="kosher-heading">{product.source.name}</Typography>

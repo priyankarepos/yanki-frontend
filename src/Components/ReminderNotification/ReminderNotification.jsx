@@ -1,5 +1,5 @@
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Snackbar } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import "./ReminderNotification.scss"
 import axios from 'axios';
 
@@ -9,8 +9,7 @@ const ReminderNotification = ({ answer }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userId = yankiUser?.userObject?.userId || '';
-    console.log("reminders", reminders);
-    const fetchReminders = async () => {
+    const fetchReminders = useCallback(async () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`);
             setReminders(response.data);
@@ -18,10 +17,11 @@ const ReminderNotification = ({ answer }) => {
             setSnackbarMessage('Error fetching reminders:', error);
             setSnackbarOpen(true);
         }
-    };
+    }, [userId]);
+
     useEffect(() => {
         fetchReminders();
-    }, [userId]);
+    }, [fetchReminders]);
 
     const handleCancel = async (id, messageServiceId) => {
         try {
