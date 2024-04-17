@@ -242,7 +242,7 @@ const AdminCreateDepartment = () => {
                 }
             } catch (error) {
                 setSnackbarMessage('Error occurred while fetching departments:', error.message);
-                setSnackbarOpen(true);
+                setSnackbarOpen(false);
             }
         };
 
@@ -405,12 +405,14 @@ const AdminCreateDepartment = () => {
     const contentMargin = drawerOpen ? '0' : '0';
 
     return (
-        <Box style={{ display: "flex" }}>
+        <Box className="admin-faq-wrapper">
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-            <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-                <Typography variant="h6" className='table-heading'>
-                    Add Departments
-                </Typography>
+            <Box style={{ ...styles.content, marginLeft: contentMargin }} sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", padding: '16px' }}>
+                <Box className="admin-faq-heading">
+                    <Typography variant="h6">
+                        Add Departments
+                    </Typography>
+                </Box>
                 <div style={{ marginBottom: '20px' }}>
                     <InputLabel style={styles.label}>Select Enterprise<sup className="required-icon">*</sup></InputLabel>
                     <select
