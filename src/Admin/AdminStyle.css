@@ -248,3 +248,6 @@ span.react-tagsinput-tags,
 .admin-faq-card{
   margin-bottom: 10px;
 }
+.admin-faq-card .admin-faw-ans{
+white-space: pre-wrap;
+}

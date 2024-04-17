@@ -688,7 +688,7 @@ const NewHomePageMui = () => {
                                     name="searchQuery"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Message Yanki.."
+                                    placeholder="What else can you do?"
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">

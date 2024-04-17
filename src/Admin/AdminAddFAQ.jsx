@@ -41,7 +41,7 @@ const AdminAddFaq = () => {
                 setLoadingData(false)
             } catch (error) {
                 setSnackbarMessage('Error fetching FAQs');
-                setSnackbarOpen(false); 
+                setSnackbarOpen(false);
                 setLoadingData(false)
             }
         };
@@ -88,10 +88,13 @@ const AdminAddFaq = () => {
         try {
             setLoading(true);
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/faqManagement/add-faq`;
+            const trimmedQuestion = question.trim();
+            const trimmedAnswer = answer.trim();
+
             const response = await axios.post(apiUrl, {
-                question: question,
-                answer: answer
-            });
+                question: trimmedQuestion,
+                answer: trimmedAnswer
+            });;
             setIsModalOpen(false);
             setAnswer('');
             setQuestion('');
@@ -113,8 +116,12 @@ const AdminAddFaq = () => {
         try {
             setLoading(true);
             const apiUrl = `${process.env.REACT_APP_API_HOST}/api/faqManagement/edit-faq`;
-            const response = await axios.put(apiUrl, { id: editFaqId, question, answer });
+            const trimmedQuestion = question.trim();
+            const trimmedAnswer = answer.trim();
+
+            const response = await axios.put(apiUrl, { id: editFaqId, question: trimmedQuestion, answer: trimmedAnswer });
             const updatedFAQ = response.data;
+
             setAdminFaqData(prevCategories => {
                 const updatedCategories = prevCategories.map(faqs => faqs.id === editFaqId ? { ...faqs, question: updatedFAQ.question, answer: updatedFAQ.answer } : faqs);
                 setIsModalOpen(false);
@@ -155,11 +162,11 @@ const AdminAddFaq = () => {
                                 <Typography variant="h6" gutterBottom>
                                     {row.question}
                                 </Typography>
-                                <Typography variant="body1" color="textSecondary">
+                                <Typography variant="body1" color="textSecondary" className='admin-faw-ans'>
                                     {row.answer}
                                 </Typography>
                                 <div className='admin-faq-card-btn-box'>
-                                    <Button variant="contained" onClick={() => handleEdit(row)} sx={{mr:1}}>
+                                    <Button variant="contained" onClick={() => handleEdit(row)} sx={{ mr: 1 }}>
                                         Edit
                                     </Button>
                                     <Button variant="contained" color="error" onClick={() => handleDeleteFaqs(row.id)}>
@@ -206,12 +213,13 @@ const AdminAddFaq = () => {
                         />
                         <TextField
                             multiline
-                            rowsmax={20}
+                            rows={6}
                             variant="outlined"
                             value={answer}
                             onChange={(e) => setAnswer(e.target.value)}
                             placeholder="Enter Answer"
                             label="Answer"
+                            className="answerInput"
                         />
                         <Button
                             variant="contained"
