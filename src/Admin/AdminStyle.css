@@ -10,7 +10,7 @@
 }
 
 .enterprise-request-table::-webkit-scrollbar {
-  height: 8px;
+  height: 5px;
 }
 
 /* Track */
@@ -53,11 +53,11 @@ span.react-tagsinput-tags,
   text-align: center;
 }
 
-.pdf-Image-modal{
+.pdf-Image-modal {
   display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #062037;
+  align-items: center;
+  justify-content: center;
+  background: #062037;
 }
 
 .pdf-modal .MuiIconButton-root {
@@ -145,7 +145,8 @@ span.react-tagsinput-tags,
   width: 100%;
 }
 
-.TextareaAutosize, .TagsInput {
+.TextareaAutosize,
+.TagsInput {
   background-color: #eaf5ff;
   border: 1px solid #6fa8dd;
   border-radius: 8px;
@@ -159,13 +160,13 @@ span.react-tagsinput-tags,
   height: 60px;
 }
 
-.button-style{
+.button-style {
   background-color: #13538b;
   color: lightblue;
   width: 150px;
 }
 
-.isItKosher-wrapper{
+.isItKosher-wrapper {
   background-color: #0e3557;
   padding: 10px;
 }
@@ -179,12 +180,12 @@ span.react-tagsinput-tags,
   display: none;
 }
 
-.displayBlockShow .optionListContainer.displayNone{
-display: block !important;
+.displayBlockShow .optionListContainer.displayNone {
+  display: block !important;
 }
 
-.displayNoneShow .optionListContainer.displayBlock{
-display: none !important;
+.displayNoneShow .optionListContainer.displayBlock {
+  display: none !important;
 }
 
 .icon_down_dir {
@@ -192,4 +193,58 @@ display: none !important;
   right: 15px !important;
   padding-top: 8px !important;
   color: #8b9eae;
+}
+
+.admin-faq-card-btn-box {
+  margin-top: 10px;
+  border-top: 1px solid #9cc3cd;
+  padding-top: 15px;
+}
+
+.admin-faq-progressbar {
+  text-align: center;
+}
+
+.CircularProgressColor {
+  color: #0e3557 !important;
+}
+
+.admin-faq-wrapper {
+  display: flex;
+  margin-top: 70px;
+  padding: 16px;
+}
+
+.admin-faq-form-model {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-faq-model-style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-faq-model-content {
+  background-color: #063762;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 35px 25px;
+  width: 500px;
+  border-radius: 8px;
+}
+.admin-faq-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.admin-faq-heading button {
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+.admin-faq-card{
+  margin-bottom: 10px;
 }

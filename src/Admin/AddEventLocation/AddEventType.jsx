@@ -217,7 +217,7 @@ const AdminAddEventType = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <Box style={{ ...styles.content }}>
         <Box style={{ ...styles.content, marginLeft: contentMargin }}>
           <Box className="event-top-heading">
