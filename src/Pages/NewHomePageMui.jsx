@@ -101,7 +101,7 @@ const NewHomePageMui = () => {
             setSearchQuery("");
 
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const chatIdToUse = selectedChatId || (searchHistory.length > 0 ? searchHistory[0].chatId : null);
+            const chatIdToUse = (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
             const response = await axios.post(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
                 { prompt: searchQuery },
