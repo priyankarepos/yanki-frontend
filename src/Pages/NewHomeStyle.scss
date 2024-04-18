@@ -1,7 +1,3 @@
-body {
-    overflow: hidden;
-}
-
 .ya-home-sidebar-box {
     display: flex;
     justify-content: space-between;
@@ -179,4 +175,7 @@ body {
 .ya-send-icon {
     margin-left: 16px;
     margin-top: 0px;
+}
+body.overflow-hidden {
+    overflow: hidden;
 }

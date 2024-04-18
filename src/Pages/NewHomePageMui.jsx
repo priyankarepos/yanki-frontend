@@ -88,7 +88,6 @@ const NewHomePageMui = () => {
         setHoverChatId(null);
     };
 
-
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
@@ -419,6 +418,13 @@ const NewHomePageMui = () => {
             observer.disconnect();
         };
     }, []);
+
+    useEffect(() => {
+        document.body.classList.add('overflow-hidden');
+        return () => {
+          document.body.classList.remove('overflow-hidden');
+        };
+      }, []);
 
 
     return (
