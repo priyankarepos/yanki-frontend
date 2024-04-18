@@ -431,12 +431,14 @@ const AdminCreateEnterprise = () => {
     `;
 
     return (
-        <Box style={{ display: "flex" }}>
+        <Box className="admin-faq-wrapper">
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-            <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-                <Typography variant="h6" className='table-heading'>
+            <Box style={{ ...styles.content, marginLeft: contentMargin }} sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", padding: '16px' }}>
+            <Box className="admin-faq-heading">
+                    <Typography variant="h6">
                     My Enterprise Profile
-                </Typography>
+                    </Typography>
+                </Box>
                 <Grid container spacing={2} className='enterprise-profile'>
                     <Grid item xs={12} sm={12} md={6} lg={4} style={styles.gridItem}>
                         <InputLabel style={styles.label}>Enterprise Name<sup className="required-icon">*</sup></InputLabel>

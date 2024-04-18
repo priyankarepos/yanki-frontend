@@ -31,6 +31,7 @@ import { pdfjs } from "react-pdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from '@mui/icons-material/Add';
 
 const styles = {
   tableContainer: {
@@ -343,46 +344,18 @@ const AdminFileUpload = () => {
   const contentMargin = drawerOpen ? "0" : "0";
 
   return (
-    <Box style={{ display: "flex" }}>
+    <div className="admin-faq-wrapper">
       <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
         <AdminDashboard />
       </Box>
-      <Box
-        style={{ ...styles.content, marginLeft: contentMargin }}
-        className="enterpriseFormBox"
-        sx={{
-          width: drawerOpen ? "calc(100% - 270px)" : "100%",
-          marginTop: "50px",
-          padding: "16px",
-        }}
-      >
-        <Box
-          style={{
-            ...styles.content,
-            marginLeft: contentMargin,
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              ...styles.modalTitle,
-              fontWeight: "bold",
-              marginBottom: "0px",
-            }}
-          >
+      <Box style={{ ...styles.content, marginLeft: contentMargin }} sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", padding: '16px' }}>
+        <Box className="admin-faq-heading">
+          <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
             Upload Files
           </Typography>
-          <Button
-            variant="outlined"
-            sx={{ marginY: { xs: "10px" }, width: "150px" }}
-            color="primary"
-            style={styles.modalButton}
-            onClick={() => setIsModalOpen(true)}
-          >
-            Add Files
-          </Button>
+          <IconButton color="secondary" size="small" onClick={() => setIsModalOpen(true)}>
+            <AddIcon /> Add Files
+          </IconButton>
         </Box>
         {tableData.length === 0 ? (
           <Typography
@@ -648,7 +621,7 @@ const AdminFileUpload = () => {
         handleConfirm={() => handleConfirmation()}
         confirmationText={confirmationText}
       />
-    </Box>
+    </div>
   );
 };
 

@@ -6,14 +6,8 @@ const ErrorAnswer = ({ errorMsg }) => {
   return (
     <>
       <Box>
-        <Paper
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            p: 2,
-          }}
-        >
-          <Typography variant="h6" component="div" style={{ fontSize: "16px" }}>
+        <Paper className="error-answer-container" sx={{p: 2}}>
+          <Typography variant="h6" component="div" className="error-answer-message" >
             {errorMsg}
           </Typography>
         </Paper>

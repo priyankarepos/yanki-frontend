@@ -208,7 +208,7 @@ const AdminAddEventLocation = () => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <Box style={{ ...styles.content}}>
           <Box className="event-top-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>

@@ -70,8 +70,8 @@ const NewHomePageMui = () => {
     const [searchHistory, setSearchHistory] = useState([]);
     const [chatSessions, setChatSessions] = useState([]);
     const [selectedChatId, setSelectedChatId] = useState(null);
-    // const [pageNumber, setPageNumber] = useState(0)
-    // const [hasMore, setHasMore] = useState(true);
+    const [pageNumber, setPageNumber] = useState(1)
+    const [hasMore, setHasMore] = useState(true);
     const [initialChatOpen, setInitialChatOpen] = useState(true);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmationText, setConfirmationText] = useState('');
@@ -88,20 +88,20 @@ const NewHomePageMui = () => {
         setHoverChatId(null);
     };
 
-
     const isLargeScreen = useMediaQuery("(min-width: 567px)");
 
     const onSubmit = async () => {
         sessionStorage.setItem('searchQuery', searchQuery);
         try {
             setIsSubmitting(true);
+            setPageNumber(1);
             setIsError(false);
             setErrorMsg("");
             setQueryAnswer(null);
             setSearchQuery("");
 
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const chatIdToUse = selectedChatId || (searchHistory.length > 0 ? searchHistory[0].chatId : null);
+            const chatIdToUse = (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
             const response = await axios.post(
                 `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
                 { prompt: searchQuery },
@@ -186,10 +186,10 @@ const NewHomePageMui = () => {
         }
     }, [queryAnswer]);
 
-    const fetchChatSessions = async () => {
+    const fetchChatSessions = useCallback(async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=1&pageSize=500`
+                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=20`
             );
 
             if (response.status === 200) {
@@ -203,14 +203,22 @@ const NewHomePageMui = () => {
                 // }
 
                 if (response.status === 200) {
-                    setChatSessions(response.data.chatList);
+                    if(response.data.chatList.length > 0) {
+                        if(pageNumber === 1) {
+                            setChatSessions(response.data.chatList);    
+                        } else {
+                            setChatSessions( prevData => [...prevData, ...response.data.chatList]);
+                        }
+                    } else {
+                        setHasMore(!hasMore);
+                    }
                 }
             }
         } catch (error) {
             setSnackbarMessage('Error:', error);
             setSnackbarOpen(false);
         }
-    };
+    }, [pageNumber, hasMore]);
 
     const handleChatSessionClick = useCallback(async (chatId) => {
         sessionStorage.setItem("selectedChatId", chatId);
@@ -249,6 +257,7 @@ const NewHomePageMui = () => {
                                     isEvent: gptResponse.isEvent,
                                     isPersonalAssistant: gptResponse.isPersonalAssistant,
                                     firstAidVideos: gptResponse.firstAidVideos,
+                                    isViewReminder: gptResponse.isViewReminder,
                                 }
                             }
                         };
@@ -301,7 +310,7 @@ const NewHomePageMui = () => {
 
     useEffect(() => {
         fetchChatSessions();
-    }, [isSubmitting])
+    }, [fetchChatSessions, isSubmitting])
 
     useEffect(() => {
         if (selectedChatId) {
@@ -419,6 +428,20 @@ const NewHomePageMui = () => {
         };
     }, []);
 
+    useEffect(() => {
+        document.body.classList.add('overflow-hidden');
+        return () => {
+          document.body.classList.remove('overflow-hidden');
+        };
+      }, []);
+
+      const handleScroll = (e) => {
+        const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+        if (bottom && hasMore) {
+            setPageNumber(pageNumber + 1);
+        }
+    };
+
 
     return (
         <Box>
@@ -499,7 +522,7 @@ const NewHomePageMui = () => {
                         <AddIcon />
                         &nbsp; New Chat
                     </IconButton>
-                    <Box className="ya-new-chat-box">
+                    <Box className="ya-new-chat-box" onScroll={handleScroll}>
                         <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
@@ -687,7 +710,7 @@ const NewHomePageMui = () => {
                                     name="searchQuery"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="Message Yanki.."
+                                    placeholder="What else can you do?"
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">

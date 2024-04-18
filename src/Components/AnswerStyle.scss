@@ -38,7 +38,7 @@
   color: #fff !important;
 }
 
-.color-white{
+.color-white {
   color: #fff !important;
 }
 
@@ -224,19 +224,92 @@ p.kosher-text strong {
   align-items: center;
 }
 
-.enterprise-pdf-name{
+.enterprise-pdf-name {
   font-size: 16px;
   text-align: center;
   color: #fff;
 }
 
-.enterprise-pdf-text{
+.enterprise-pdf-text {
   font-size: 16px !important;
   margin-bottom: 12px !important;
 }
 
-.enterprise-pdf-link{
+.enterprise-pdf-link {
   color: #007bff;
   cursor: pointer;
 }
 
+.enterprise-pdfAnswer-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-answer-container {
+  display: flex;
+  align-items: center;
+}
+
+.error-answer-message,
+.sentence-answer-container {
+  font-size: 16px !important;
+}
+
+.govaden-answer-tooltip {
+  max-width: 350px !important;
+}
+
+.govaden-answer-prayer-table {
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+.kosher-product-name {
+  font-size: 15px !important;
+}
+
+.email-profile {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-yanki-logo {
+  width: 10em;
+}
+
+.user-top-header {
+  display: flex;
+  align-items: flex-start;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.profile-logo {
+  cursor: pointer;
+}
+
+.sentence-answer-button {
+  margin-right: 8px !important;
+  margin-top: 8px !important;
+}
+
+.sentence-answer-response {
+  margin-top: 8px !important;
+}
+
+.torahanytime-source-title {
+  max-width: 300px;
+  max-height: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-align: left;
+}
+
+.torahanytime-source-speakerName {
+  text-align: left;
+}

@@ -84,9 +84,47 @@ padding: 12px;
     box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
     height: 48px;
     border-radius: 12px;
-    margin-top: 8px;
+    margin-top: 20px !important;
     display: inline-block;
     padding: 12px;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.event-submission-form-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto
+}
+
+.modalContentStyle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 20px;
+    outline: none;
+    margin-top: auto;
+}
+
+.event-submission-multiselect-icon {
+    cursor: pointer;
+}
+
+.event-submission-button-loader {
+    color: #0d416f !important;
+}
+
+.event-submission-pdf-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-submission-image {
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain;
 }

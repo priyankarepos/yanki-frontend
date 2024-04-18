@@ -95,8 +95,8 @@ const AdminEnterpriseCategory = () => {
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
-        setSnackbarMessage('Failed to fetch enterprise categories');
-        setSnackbarOpen(true); 
+          setSnackbarMessage('Failed to fetch enterprise categories');
+          setSnackbarOpen(true);
         }
       } catch (error) {
         setSnackbarMessage('Error fetching enterprise categories');
@@ -217,15 +217,14 @@ const AdminEnterpriseCategory = () => {
   const contentMargin = drawerOpen ? '0' : '0';
 
   return (
-    <Box style={{ display: "flex" }}>
+    <Box className="admin-faq-wrapper">
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-      <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-        <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: "15px", }}>
+      <Box style={{ ...styles.content, marginLeft: contentMargin }} sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", padding: '16px' }}>
+          <Box className="admin-faq-heading">
             <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
               Enterprise Categories
             </Typography>
-            <IconButton color="secondary" size="small" style={{ color: "#fff", padding: "5px" }} onClick={handleAddCategory}>
+            <IconButton color="secondary" size="small" onClick={handleAddCategory}>
               <AddIcon /> Add
             </IconButton>
           </Box>
@@ -259,7 +258,6 @@ const AdminEnterpriseCategory = () => {
               No categories available. Please add a category.
             </Typography>
           )}
-        </Box>
       </Box>
       <Modal
         open={isModalOpen}

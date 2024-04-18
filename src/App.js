@@ -50,6 +50,7 @@ import AdminEventRequest from "./Admin/EventRequest";
 import EventLocationPage from "./Admin/EventLocationPage";
 import AiCustomization from "./Pages/AiCustomization/AiCustomization";
 import SubscribeNotification from "./Components/Notification/SubscribeNotification";
+import AdminAddFaq from "./Admin/AdminAddFAQ";
 
 // Exporting context
 export const Context = createContext("");
@@ -580,6 +581,14 @@ function App() {
                         <UserPageLayout>
                           <SubscribeNotification />
                         </UserPageLayout>
+                      </UserPagesProtection>
+                    }
+                  />
+                  <Route
+                    path="/admin/add-faq"
+                    element={
+                      <UserPagesProtection>
+                          <AdminAddFaq />
                       </UserPagesProtection>
                     }
                   />

@@ -28,6 +28,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import UploadIcon from "@mui/icons-material/Upload";
 import EventIcon from '@mui/icons-material/Event';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 
 const styles = {
   enterpriseDashboard: {
@@ -139,7 +140,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/search-query-report")}
               >
@@ -155,7 +155,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/change-role")}
               >
@@ -171,7 +170,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/enterprise-request")}
               >
@@ -187,7 +185,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/enterprise-categories")}
               >
@@ -203,7 +200,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/enterprise-categories")}
               >
@@ -219,7 +215,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/enterprise-department")}
               >
@@ -235,7 +230,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/upload-files")}
               >
@@ -251,7 +245,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/event-request")}
               >
@@ -267,7 +260,6 @@ const AdminDashboard = () => {
               activeClassName="active"
             >
               <ListItem
-                button
                 className="highlightStyle"
                 onClick={() => navigate("/admin/add-event-location")}
               >
@@ -275,6 +267,21 @@ const AdminDashboard = () => {
                   <AddLocationAltIcon />
                 </ListItemIcon>
                 <ListItemText primary="Add Event Location" />
+              </ListItem>
+            </NavLink>
+            <NavLink
+              to="/admin/add-faq"
+              className="admin-dashboard-navlink"
+              activeClassName="active"
+            >
+              <ListItem
+                className="highlightStyle"
+                onClick={() => navigate("/admin/add-faq")}
+              >
+                <ListItemIcon>
+                  <LiveHelpIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add FAQ's" />
               </ListItem>
             </NavLink>
           </List>

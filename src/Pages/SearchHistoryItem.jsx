@@ -17,6 +17,7 @@ import EventPublicationForm from "../Components/EventPublication/EventPublicatio
 import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
+import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 
 const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
@@ -59,7 +60,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && (
+      {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && !response?.isViewReminder && (
           <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
             <div className="chat-bubble assistant-bubble">
               <DemoEnterpriseChat answer={response} />
@@ -100,7 +101,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
-        {response.isSucess === false && (
+        {response.isSucess === false && response?.message && (
           <div className="response">
             <ErrorAnswer errorMsg={response.message} />
           </div>
@@ -133,8 +134,15 @@ const SearchHistoryItem = ({ query, response }) => {
          <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
          <div className="chat-bubble assistant-bubble">
            <PersonalAssistant answer={response} />
-         </div>
-       </Paper>
+          </div>
+        </Paper>
+      )}
+      {response?.isSucess && response?.isViewReminder && response?.message && (
+        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <div className="chat-bubble assistant-bubble">
+            <ReminderNotification answer={response} />
+          </div>
+        </Paper>
       )}
 
 

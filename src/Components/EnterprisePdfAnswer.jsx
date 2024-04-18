@@ -21,11 +21,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
     <Modal
       open={isOpen}
       onClose={closeModal}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className='enterprise-pdfAnswer-modal'
     >
       <div className="pdf-modal">
         <IconButton
