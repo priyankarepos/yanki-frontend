@@ -122,12 +122,17 @@ const EnterprisePdfAnswer = ({ answer }) => {
           content.push(" ");
         }
       } else {
-        const lastChar = word.slice(-1);
         const punctuation = ['.', ',', '-'];
-        const isLastCharPunctuation = punctuation.includes(lastChar);
+        let cleanedWord = word;
+        let lastChar = "";
+        // Check if the word ends with punctuation, and remove only comma and dot
+        if (punctuation.includes(word.slice(-1))) {
+          lastChar = word.slice(-1);
+          cleanedWord = word.slice(0, -1);
+        }
         content.push(
           <span key={index}>
-            {isLastCharPunctuation ? word.slice(0, -1) : word}{" "}
+            {cleanedWord}{lastChar}{" "}
           </span>
         );
       }
