@@ -92,8 +92,8 @@ const NewTitlePage = () => {
                 lineHeight: "28px",
               }}
             >
-              The internet by the Halacha.<br />
-              A smart chatbot for all your Jewish lifestyle and community needs
+              AI to do Mitzvos easier than ever<br />
+              Find useful data and have your AI-powered personal Jewish assistant
             </Typography>
             <Box sx={{ marginTop: isLargeScreen ? "30px" : "20px" }}>
               <Tabs
