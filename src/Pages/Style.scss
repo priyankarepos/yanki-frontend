@@ -113,3 +113,60 @@
     height: 55px;
     color: #fff;
 }
+
+.page-title {
+    margin-bottom: 15px !important;
+    text-align: left;
+    line-height: 1.6 !important;
+    font-weight: 700 !important;
+    font-size: 22px !important;
+}
+
+.page-text {
+    margin-bottom: 10px !important;
+    text-align: left;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    color: #6fa8dd;
+}
+
+.page-sub-title {
+    margin-bottom: 10px !important;
+    text-align: left;
+    font-Size: 18px !important;
+    line-height: 1.6 !important;
+    font-weight: 700 !important;
+}
+
+.home-page-btn-container {
+    width: 300px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.home-page-btn {
+    width: 300px;
+    margin: auto !important;
+}
+
+.page-link {
+    color: #fff;
+    font-size: 15px;
+    text-decoration: none;
+    padding-right: 10px;
+    border-right: none;
+};
+
+.page-image {
+    width: auto;
+}
+
+.page-container {
+    margin-bottom: 25px;
+}
+
+.ya-terms-policy-listitem svg{
+    position: absolute;
+    top: 13px;
+}

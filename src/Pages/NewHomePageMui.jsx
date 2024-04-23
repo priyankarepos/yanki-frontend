@@ -34,7 +34,6 @@ import "./HomeStyle.scss";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SearchHistoryItem from "./SearchHistoryItem";
-// import InfiniteScroll from 'react-infinite-scroll-component';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -187,37 +186,27 @@ const NewHomePageMui = () => {
     }, [queryAnswer]);
 
     const fetchChatSessions = useCallback(async () => {
-        try {
-            const response = await axios.get(
-                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=20`
-            );
-
-            if (response.status === 200) {
-                // const newChatSessions = response.data.chatList;
-
-                // if (newChatSessions.length === 0) {
-                //     setHasMore(false);
-                // } else {
-                //     setChatSessions(newChatSessions);
-                //     setPageNumber((pageNumber) => pageNumber + 1);
-                // }
-
-                if (response.status === 200) {
-                    if(response.data.chatList.length > 0) {
-                        if(pageNumber === 1) {
-                            setChatSessions(response.data.chatList);    
+        if(hasMore) {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=20`
+                );
+                    if (response.status === 200) {
+                        if(response.data.chatList.length > 0) {
+                            if(pageNumber === 1) {
+                                setChatSessions(response.data.chatList);    
+                            } else {
+                                setChatSessions( prevData => [...prevData, ...response.data.chatList]);
+                            }
                         } else {
-                            setChatSessions( prevData => [...prevData, ...response.data.chatList]);
+                            setHasMore(!hasMore);
                         }
-                    } else {
-                        setHasMore(!hasMore);
                     }
-                }
+            } catch (error) {
+                setSnackbarMessage('Error:', error);
+                setSnackbarOpen(false);
             }
-        } catch (error) {
-            setSnackbarMessage('Error:', error);
-            setSnackbarOpen(false);
-        }
+    }
     }, [pageNumber, hasMore]);
 
     const handleChatSessionClick = useCallback(async (chatId) => {
@@ -526,14 +515,6 @@ const NewHomePageMui = () => {
                         <span style={{ color: activeTab === 0 ? "#6fa8dd" : "gray" }}>
                             Recent Chat
                         </span>
-                        {/* <InfiniteScroll
-                            dataLength={chatSessions.length}
-                            next={fetchChatSessions}
-                            hasMore={hasMore}
-                            loader={<Typography><CircularProgress /></Typography>}
-                        >
-                            
-                        </InfiniteScroll> */}
                         {chatSessions.map((chatSession) => (
                             <div key={chatSession.id} style={{ position: "relative" }}>
                                 <IconButton
