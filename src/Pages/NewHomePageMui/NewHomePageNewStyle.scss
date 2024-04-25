@@ -68,7 +68,7 @@
     padding: 20px;
 }
 
-.ya-answer-container-border{
+.ya-answer-container-border {
     border-radius: 20px;
 }
 
@@ -176,6 +176,18 @@
     color: #8bbae5;
 }
 
+.ya-answer {
+    overflow-y: auto;
+    min-height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
+}
+
+.add-body-css {
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
+
 @media (max-width: 600px) {
     .fixed-search-Box {
         right: 20px;
@@ -217,5 +229,13 @@
         max-width: 100%;
         left: 90px;
         right: 90px;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .ya-answer {
+        min-height: calc(100vh - 250px);
+        max-height: calc(100vh - 250px);
     }
 }
