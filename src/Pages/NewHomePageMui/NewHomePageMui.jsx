@@ -421,6 +421,13 @@ const NewHomePageMui = () => {
     setHoverChatId(null);
   };
 
+  useEffect(() => {
+    document.body.classList.add('add-body-css');
+    return () => {
+      document.body.classList.remove('add-body-css');
+    };
+  }, []);
+
   return (
     <Box className="ya-home-wrapper">
       <CssBaseline />
