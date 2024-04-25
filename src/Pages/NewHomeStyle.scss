@@ -181,3 +181,9 @@
 .overflow-hidden {
     overflow: hidden;
 }
+
+.ya-answer {
+    overflow-y: auto;
+    min-height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
+}
