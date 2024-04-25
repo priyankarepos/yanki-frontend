@@ -18,10 +18,13 @@ import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Context } from "../App";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import TuneIcon from '@mui/icons-material/Tune';
+import { Typography } from "@mui/material";
+import { useLocation } from 'react-router-dom';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
+  const location = useLocation();
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
