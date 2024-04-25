@@ -37,7 +37,7 @@ import SearchHistoryItem from "./SearchHistoryItem";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import "./NewHomeStyle.scss";
+
 
 
 const styles = {
@@ -56,7 +56,7 @@ const styles = {
     },
 };
 
-const NewHomePageMui = () => {
+const NewHomePageMuiOld = () => {
     const { activeTab } = React.useContext(Context);
     const [drawerOpen, setDrawerOpen] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -749,4 +749,4 @@ const NewHomePageMui = () => {
     );
 };
 
-export default NewHomePageMui;
+export default NewHomePageMuiOld;

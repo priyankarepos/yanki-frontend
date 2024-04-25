@@ -74,37 +74,36 @@
 }
 @media (min-width: 1100px) {
   .fixedSearchBox{
-    left: 40px;
-    right: 40px;
-  }
-}
-
-@media (min-width: 1300px) {
-  .fixedSearchBox{
     left: 50px;
     right: 50px;
   }
 }
 
+@media (min-width: 1300px) {
+  .fixedSearchBox{
+    left: 60px;
+    right: 60px;
+  }
+}
+
 @media (min-width: 1800px) {
   .fixedSearchBox {
-      max-width: 100%;
-      left: 60px;
-      right: 60px;
+      left: 70px;
+      right: 70px;
   }
 }
 
 @media (min-width: 2300px) {
   .fixedSearchBox {
       max-width: 100%;
-      left: 70px;
-      right: 70px;
+      left: 80px;
+      right: 80px;
   }
 }
 @media (min-width: 2800px) {
   .fixedSearchBox {
       max-width: 100%;
-      left: 80px;
-      right: 80px;
+      left: 90px;
+      right: 90px;
   }
 }

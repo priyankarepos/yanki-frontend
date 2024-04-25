@@ -29,7 +29,7 @@ import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ChangeRole from "./Admin/ChangeRole";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import NewHomePageMui from "./Pages/NewHomePageMui";
+import NewHomePageMuiOld from "./Pages/NewHomePageMuiOld";
 import NewTitlePage from "./Pages/NewTitlePage";
 import EnterpriseSignup from "./Pages/EnterpriseSignup";
 import EnterpriseDashboard from "./EnterpriseCollabration/EnterpriseDashboard";
@@ -51,6 +51,7 @@ import EventLocationPage from "./Admin/EventLocationPage";
 import AiCustomization from "./Pages/AiCustomization/AiCustomization";
 import SubscribeNotification from "./Components/Notification/SubscribeNotification";
 import AdminAddFaq from "./Admin/AdminAddFAQ";
+import NewHomePageMui from "./Pages/NewHomePageMui/NewHomePageMui";
 
 // Exporting context
 export const Context = createContext("");
@@ -409,7 +410,7 @@ function App() {
                       <UserPagesProtection>
                         <UserPageLayout>
                           {/* <HomePageMui /> */}
-                          <NewHomePageMui />
+                          <NewHomePageMuiOld />
                         </UserPageLayout>
                       </UserPagesProtection>
                     }
@@ -591,6 +592,14 @@ function App() {
                           <AdminAddFaq />
                       </UserPagesProtection>
                     }
+                  />
+                  <Route
+                   path="/new-home"
+                   element={
+                    <UserPagesProtection>
+                      <NewHomePageMui />
+                    </UserPagesProtection>
+                   }
                   />
                 </Routes>
               </BrowserRouter>

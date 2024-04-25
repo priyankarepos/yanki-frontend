@@ -104,19 +104,6 @@ export default function ProfielCircle() {
         <Box
           className="user-top-header"
           sx={{ py: 2 }}>
-          <Typography className="profile-logo" onClick={() => navigate("/")}>
-            {location.pathname !== "/" && (
-              <img
-                src={
-                  activeTab === 0
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
-                className="profile-yanki-logo"
-                alt="logo"
-              />
-            )}
-          </Typography>
           <Tooltip title="Account settings">
             <IconButton
               onClick={handleClick}

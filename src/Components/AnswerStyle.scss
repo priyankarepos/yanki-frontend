@@ -281,9 +281,8 @@ p.kosher-text strong {
 
 .user-top-header {
   display: flex;
-  align-items: flex-start;
   text-align: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .profile-logo {
