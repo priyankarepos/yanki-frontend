@@ -312,26 +312,6 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    const chatContainerNode = chatContainerRef.current;
-
-    const scrollToBottom = () => {
-      chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    };
-
-    scrollToBottom();
-
-    chatContainerNode.style.scrollBehavior = "auto";
-
-    const observer = new MutationObserver(scrollToBottom);
-    observer.observe(chatContainerNode, { childList: true, subtree: true });
-
-    return () => {
-      chatContainerNode.style.scrollBehavior = "smooth";
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     if (initialChatOpen && chatSessions.length > 0) {
       const storedChatId = sessionStorage.getItem("selectedChatId");
       const firstChatId = storedChatId;
@@ -413,6 +393,26 @@ const NewHomePageMui = () => {
     return () => {
       document.documentElement.classList.add("custom-html-css");
       document.body.classList.remove("custom-body-css");
+    };
+  }, []);
+
+  useEffect(() => {
+    const chatContainerNode = chatContainerRef.current;
+
+    const scrollToBottom = () => {
+      chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+    };
+
+    scrollToBottom();
+
+    chatContainerNode.style.scrollBehavior = "auto";
+
+    const observer = new MutationObserver(scrollToBottom);
+    observer.observe(chatContainerNode, { childList: true, subtree: true });
+
+    return () => {
+      chatContainerNode.style.scrollBehavior = "smooth";
+      observer.disconnect();
     };
   }, []);
 
@@ -577,9 +577,8 @@ const NewHomePageMui = () => {
             sx={{
               width: { xs: "100%", sm: "96%" },
             }}
-            ref={chatContainerRef}
           >
-            <Box className="ya-answer">
+            <Box className="ya-answer" ref={chatContainerRef}>
               {searchHistory.map((entry, index) => (
                 <SearchHistoryItem
                   key={index}
