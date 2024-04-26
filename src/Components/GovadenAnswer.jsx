@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import "../Pages/HomeStyle.scss";
+import "../Pages/NewHomePageMui/NewHomePageStyle.scss";
 
 const GovadenAnswer = ({ answer }) => {
   const rows = answer.godavenPrayerDetails;
