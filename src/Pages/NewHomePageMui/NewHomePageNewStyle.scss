@@ -182,10 +182,11 @@
     max-height: calc(100vh - 200px);
 }
 
-.add-body-css {
-    overflow: hidden;
+.custom-html-css,
+.custom-body-css {
     height: 100%;
     position: relative;
+    overflow: hidden;
 }
 
 @media (max-width: 600px) {
@@ -235,7 +236,7 @@
 
 @media (max-width: 640px) {
     .ya-answer {
-        min-height: calc(100vh - 250px);
-        max-height: calc(100vh - 250px);
+        min-height: calc(100vh - 270px);
+        max-height: calc(100vh - 270px);
     }
 }
