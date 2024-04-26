@@ -11,25 +11,19 @@ import {
   TextField,
   Button,
   Tooltip,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
   Paper,
   CircularProgress,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Context, ThemeModeContext } from "../../App";
 import { useContext } from "react";
 import ProfielCircle from "../../Components/ProfileCircle";
-import "./NewHomePageNewStyle.scss";
 import { Outlet, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import DeleteIcon from "@mui/icons-material/Delete";
-import "../NewHomeStyle.scss";
 import InputAdornment from "@mui/material/InputAdornment";
 import SendIcon from "@mui/icons-material/Send";
 import SearchIcon from "@mui/icons-material/Search";
@@ -37,6 +31,13 @@ import Carousel from "react-multi-carousel";
 import SearchHistoryItem from "../SearchHistoryItem";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
+import {
+  initialQuestions1,
+  initialQuestions2,
+  initialQuestions3,
+  initialQuestions4,
+} from "../../Utils/promptData/promptData";
+import "./NewHomePageStyle.scss";
 
 const NewHomePageMui = () => {
   const { activeTab } = React.useContext(Context);
@@ -140,11 +141,6 @@ const NewHomePageMui = () => {
           setSelectedChatId(newChatId);
         }
 
-        // setChatSessions((prevSessions) => [
-        //     { id: newChatId, name: `${searchQuery}...` },
-        //     ...prevSessions,
-        // ]);
-
         setSearchHistory((prevHistory) => {
           const updatedHistory = [
             ...prevHistory,
@@ -175,10 +171,10 @@ const NewHomePageMui = () => {
 
   useEffect(() => {
     if (queryAnswer?.isSucess === false) {
-        setIsError(true);
-        setErrorMsg(queryAnswer?.message);
+      setIsError(true);
+      setErrorMsg(queryAnswer?.message);
     }
-}, [queryAnswer]);
+  }, [queryAnswer]);
 
   useEffect(() => {
     handleSidebarState();
@@ -329,7 +325,6 @@ const NewHomePageMui = () => {
     const observer = new MutationObserver(scrollToBottom);
     observer.observe(chatContainerNode, { childList: true, subtree: true });
 
-    // Clean up
     return () => {
       chatContainerNode.style.scrollBehavior = "smooth";
       observer.disconnect();
@@ -404,15 +399,6 @@ const NewHomePageMui = () => {
     }
   };
 
-  const initialQuestions = [
-    { id: 1, text: "What time is candle lighting?" },
-    { id: 2, text: "Where is the next Minyan near me?" },
-    { id: 3, text: "Display mincha in sphard nusach. " },
-    { id: 4, text: "Play a class by Rabbi Paysach Krohn. " },
-    { id: 5, text: "What date is July 18 2010 in Hebrew." },
-    { id: 6, text: "Tell me everything you can do." },
-  ];
-
   const handleMouseEnter = (chatId) => {
     setHoverChatId(chatId);
   };
@@ -422,11 +408,11 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    document.documentElement.classList.add('custom-html-css');
-    document.body.classList.add('custom-body-css');
+    document.documentElement.classList.add("custom-html-css");
+    document.body.classList.add("custom-body-css");
     return () => {
-      document.documentElement.classList.add('custom-html-css');
-      document.body.classList.remove('custom-body-css');
+      document.documentElement.classList.add("custom-html-css");
+      document.body.classList.remove("custom-body-css");
     };
   }, []);
 
@@ -656,65 +642,157 @@ const NewHomePageMui = () => {
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
                   !isSubmitting && (
-                    <Carousel
-                      responsive={responsive}
-                      itemClass="carousel-item"
-                      swipeable={true}
-                      draggable={false}
-                      showDots={false}
-                      arrows={false}
-                      autoPlay={true}
-                      autoPlaySpeed={2000}
-                      infinite={true}
-                      customTransition="transform 500ms ease 0s"
-                    >
-                      {initialQuestions.map((question, index) => (
-                        <div key={question.id} className="carousel-item">
-                          <Button
-                            className={`ya-slider-btn ${
-                              activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                            }`}
-                            onClick={() => handleQuestionClick(question.text)}
-                          >
-                            <Tooltip title={question.text}>
-                              {question.text}
-                            </Tooltip>
-                          </Button>
-                        </div>
-                      ))}
-                    </Carousel>
+                    <>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                      >
+                        {initialQuestions1.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={question.text}>
+                                {question.text}
+                              </Tooltip>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                      >
+                        {initialQuestions2.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={question.text}>
+                                {question.text}
+                              </Tooltip>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                      >
+                        {initialQuestions3.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={question.text}>
+                                {question.text}
+                              </Tooltip>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                      >
+                        {initialQuestions4.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={question.text}>
+                                {question.text}
+                              </Tooltip>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                    </>
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
                   !isSubmitting && (
                     <div className="home-table-scroll">
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            {initialQuestions.map((question) => (
-                              <TableCell>
-                                <Button
-                                  className={`ya-home-table-btn ${
-                                    activeTab === 0
-                                      ? "ya-search-dark-theme"
-                                      : "ya-search-light-theme"
-                                  }`}
-                                  key={question.id}
-                                  onClick={() =>
-                                    handleQuestionClick(question.text)
-                                  }
-                                >
-                                  <Tooltip title={question.text}>
-                                    {question.text}
-                                  </Tooltip>
-                                </Button>
-                              </TableCell>
+                      <>
+                        {[
+                          initialQuestions1,
+                          initialQuestions2,
+                          initialQuestions3,
+                          initialQuestions4,
+                        ].map((questions, index) => (
+                          <Typography className="ya-mobile-prompt" key={index}>
+                            {questions.map((question) => (
+                              <span
+                                key={question.id}
+                                onClick={() =>
+                                  handleQuestionClick(question.text)
+                                }
+                                className={`ya-home-table-btn ${
+                                  activeTab === 0
+                                    ? "ya-search-dark-theme"
+                                    : "ya-search-light-theme"
+                                }`}
+                              >
+                                <Tooltip title={question.text}>
+                                  {question.text}
+                                </Tooltip>
+                              </span>
                             ))}
-                          </TableRow>
-                        </TableHead>
-                      </Table>
+                          </Typography>
+                        ))}
+                      </>
                     </div>
                   )}
 
