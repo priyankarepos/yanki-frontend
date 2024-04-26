@@ -12,7 +12,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
 import LoginPage from "./Pages/LoginPage";
 import SigninPage from "./Pages/SigninPage";
-// import TitlePage from "./Pages/TitlePage";
 import SigninSuccessPage from "./Pages/SigninSuccessPage";
 import ActiveAccountPage from "./Pages/ActiveAccountPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
@@ -20,7 +19,6 @@ import PasswordEmailSentpage from "./Pages/PasswordEmailSentPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import ResetPasswordSuccessPage from "./Pages/ResetPasswordSuccessPage";
 import UserPagesProtection from "./Components/RouteProtection/UserPagesProtection";
-// import HomePageMui from "./Pages/HomePageMui";
 import ChangePasswordPage from "./Pages/ChangePasswordPage";
 import AuthPageLayout from "./Components/Layout/AuthPageLayout";
 import UserPageLayout from "./Components/Layout/UserPageLayout";
@@ -29,7 +27,6 @@ import ChangePasswordSuccessPage from "./Pages/ChangePasswordSuccessPage";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ChangeRole from "./Admin/ChangeRole";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import NewHomePageMui from "./Pages/NewHomePageMui";
 import NewTitlePage from "./Pages/NewTitlePage";
 import EnterpriseSignup from "./Pages/EnterpriseSignup";
 import EnterpriseDashboard from "./EnterpriseCollabration/EnterpriseDashboard";
@@ -51,6 +48,7 @@ import EventLocationPage from "./Admin/EventLocationPage";
 import AiCustomization from "./Pages/AiCustomization/AiCustomization";
 import SubscribeNotification from "./Components/Notification/SubscribeNotification";
 import AdminAddFaq from "./Admin/AdminAddFAQ";
+import NewHomePageMui from "./Pages/NewHomePageMui/NewHomePageMui";
 
 // Exporting context
 export const Context = createContext("");
@@ -144,20 +142,24 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
-  const googleClientId = "1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com";
+  const googleClientId =
+    "1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com";
 
   const [themeMode, setThemeMode] = useState("dark");
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const localStorageTab = sessionStorage.getItem('activeTab');
+  const localStorageTab = sessionStorage.getItem("activeTab");
   const initialTab = localStorageTab ? parseInt(localStorageTab, 10) : 0;
 
   const [activeTab, setActiveTab] = useState(initialTab);
 
-  const options = useMemo(() => ({
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-  }), []);
+  const options = useMemo(
+    () => ({
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    }),
+    []
+  );
   // Success callback function
   const success = async (pos) => {
     const crd = pos.coords;
@@ -175,15 +177,15 @@ function App() {
   useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
-        navigator.permissions.query({ name: 'geolocation' }).then((result) => {
-          if (result.state === 'granted' || result.state === 'prompt') {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "granted" || result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(success, errors, options);
-          } else if (result.state === 'denied') {
-            setIsLocationAllowed('Location denied');
+          } else if (result.state === "denied") {
+            setIsLocationAllowed("Location denied");
           }
         });
       } else {
-        console.log('Geolocation is not supported by this browser.');
+        console.log("Geolocation is not supported by this browser.");
       }
     };
 
@@ -213,7 +215,7 @@ function App() {
 
   const currentTheme = useMemo(() => {
     // Check if userRoles include 'Enterprise'
-    const isEnterpriseUser = userRoles.includes('Enterprise');
+    const isEnterpriseUser = userRoles.includes("Enterprise");
 
     // If user is an enterprise user, apply light theme
     if (isEnterpriseUser) {
@@ -235,10 +237,10 @@ function App() {
       process.env.REACT_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-        window.sessionStorage.getItem(
-          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          window.sessionStorage.getItem(
+            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          )
         )
-      )
       : "";
 
     if (!session) {
@@ -268,7 +270,15 @@ function App() {
           <div className="App">
             {/* Wrapping with context */}
             <Context.Provider
-              value={{ userLatitude, userLongitude, isLocationAllowed, setDrawerOpen, drawerOpen, activeTab, setActiveTab }}
+              value={{
+                userLatitude,
+                userLongitude,
+                isLocationAllowed,
+                setDrawerOpen,
+                drawerOpen,
+                activeTab,
+                setActiveTab,
+              }}
             >
               {/* <Homepage /> */}
               {/* <RouterProvider router={router} /> */}
@@ -300,7 +310,10 @@ function App() {
                       <AuthPagesProtection>
                         <AuthPageLayout>
                           {/* <TitlePage /> */}
-                          <NewTitlePage activeTab={activeTab} setActiveTab={setActiveTab} />
+                          <NewTitlePage
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
+                          />
                         </AuthPageLayout>
                       </AuthPagesProtection>
                     }
@@ -407,10 +420,7 @@ function App() {
                     path="/"
                     element={
                       <UserPagesProtection>
-                        <UserPageLayout>
-                          {/* <HomePageMui /> */}
-                          <NewHomePageMui />
-                        </UserPageLayout>
+                        <NewHomePageMui />
                       </UserPagesProtection>
                     }
                   />
@@ -588,7 +598,7 @@ function App() {
                     path="/admin/add-faq"
                     element={
                       <UserPagesProtection>
-                          <AdminAddFaq />
+                        <AdminAddFaq />
                       </UserPagesProtection>
                     }
                   />
