@@ -422,9 +422,11 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    document.body.classList.add('add-body-css');
+    document.documentElement.classList.add('custom-html-css');
+    document.body.classList.add('custom-body-css');
     return () => {
-      document.body.classList.remove('add-body-css');
+      document.documentElement.classList.add('custom-html-css');
+      document.body.classList.remove('custom-body-css');
     };
   }, []);
 
