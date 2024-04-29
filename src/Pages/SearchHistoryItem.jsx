@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -20,7 +20,14 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 
 const SearchHistoryItem = ({ query, response }) => {
+  const [direction, setDirection] = useState('ltr');
   const { activeTab } = React.useContext(Context);
+
+  React.useEffect(() => {
+    const isHebrew = /[\u0590-\u05FF]/.test(query);
+    const newDirection = isHebrew ? 'rtl' : 'ltr';
+    setDirection(newDirection);
+  }, [query]);
 
   const isTorahAnswer = response?.isSucess && response?.torahAnytimeLectures?.hits?.hits?.length > 0;
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
@@ -29,10 +36,10 @@ const SearchHistoryItem = ({ query, response }) => {
   const isPersonalAssistant = response.isSucess && response.message && response.isPersonalAssistant;
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }}>
+      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }} dir={direction}> 
         <div style={{ padding: "10px" }}>
           <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ChatBubbleOutlineIcon fontSize="small" style={{ marginRight: '8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
+            <ChatBubbleOutlineIcon fontSize="small" style={{ margin: '0 8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
             <Typography style={{ fontSize: "16px", color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{query}</Typography>
           </Box>
         </div>

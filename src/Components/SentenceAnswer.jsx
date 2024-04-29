@@ -1,8 +1,7 @@
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-
-import { useEffect, useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import axios from 'axios';
@@ -16,7 +15,13 @@ const SentenceAnswer = ({ answer }) => {
   const [apiContentResponseMessage, setContentApiResponseMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingButtonIndex, setLoadingButtonIndex] = useState(null);
+  const [direction, setDirection] = useState('ltr');
 
+  React.useEffect(() => {
+    const isHebrew = /[\u0590-\u05FF]/.test(answer.contentResponse);
+    const newDirection = isHebrew ? 'rtl' : 'ltr';
+    setDirection(newDirection);
+  }, [answer.contentResponse]);
 
   // const toggleCandle = () => {
   //   setShowCandle((prev) => !prev);
@@ -51,7 +56,6 @@ const SentenceAnswer = ({ answer }) => {
         }
       );
 
-      console.log("API Response:", response.data);
       setApiResponseMessage(response.data.message);
       setContentApiResponseMessage(response.data.contentResponse)
 
@@ -67,7 +71,7 @@ const SentenceAnswer = ({ answer }) => {
 
   const renderContentResponse = () => {
     return processedContentResponse.map((ans, index) => (
-      <Typography variant="h6" component="div" key={index} className="sentence-answer-container">
+      <Typography variant="h6" component="div" key={index} className="sentence-answer-container" dir={direction}>
         {renderClickableContent(ans)}
       </Typography>
     ));
@@ -143,11 +147,6 @@ const SentenceAnswer = ({ answer }) => {
     
     return content;
   };
-  
-  
-  
-  
-  
 
   return (
     <>
