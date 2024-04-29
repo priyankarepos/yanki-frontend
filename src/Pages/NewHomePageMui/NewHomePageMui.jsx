@@ -58,6 +58,8 @@ const NewHomePageMui = () => {
   const [queryAnswer, setQueryAnswer] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [hoverChatId, setHoverChatId] = useState(null);
+  const [direction, setDirection] = useState('ltr');
+  const [queryDirection, setQueryDirection] = useState('ltr');
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -112,6 +114,7 @@ const NewHomePageMui = () => {
       setErrorMsg("");
       setQueryAnswer(null);
       setSearchQuery("");
+      setDirection("ltr")
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const chatIdToUse =
@@ -416,6 +419,17 @@ const NewHomePageMui = () => {
     };
   }, []);
 
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value);
+
+    const isHebrew = /[\u0590-\u05FF]/.test(e.target.value);
+
+    const direction = isHebrew ? 'rtl' : 'ltr';
+
+    setDirection(direction);
+    setQueryDirection(direction);
+  }
+
   return (
     <Box className="ya-home-wrapper">
       <CssBaseline />
@@ -590,7 +604,7 @@ const NewHomePageMui = () => {
                 />
               ))}
               {storedSearchQuery && (
-                <Paper elevation={3} className="ya-question-box">
+                <Paper elevation={3} className="ya-question-box" dir={queryDirection}>
                   <div sx={{ p: 2 }}>
                     <Box sx={{ p: 2 }} className="ya-question-box-flex">
                       <ChatBubbleOutlineIcon
@@ -807,8 +821,9 @@ const NewHomePageMui = () => {
                       fullWidth
                       name="searchQuery"
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={handleChange}
                       placeholder="What else can you do?"
+                      dir={direction}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
