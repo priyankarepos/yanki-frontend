@@ -21,8 +21,7 @@ const ResetPasswordSuccessPage = () => {
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
             <Box
-              className="w-full object-contain flex items-center justify-center"
-              sx={{ marginBottom: "132px" }}
+              className="w-full object-contain flex items-center justify-center marginBottom-132"
             >
               <img
                 src={
@@ -31,13 +30,13 @@ const ResetPasswordSuccessPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                style={{ width: "60%" }}
+                className="yanki-logo-images"
               />
             </Box>
             <Typography
               variant="h5"
               component="h1"
-              sx={{ marginBottom: "54px", textAlign: "center" }}
+              className="marginBottom-54 text-center"
             >
               Reset password successful
             </Typography>

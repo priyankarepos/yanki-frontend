@@ -20,10 +20,10 @@ const SigninSuccessPage = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box
+            className="text-center"
             sx={{
               maxWidth: "394px",
               width: { sm: "394px" },
-              textAlign: "center",
             }}
           >
             <img
@@ -33,23 +33,17 @@ const SigninSuccessPage = () => {
                   : "/mail-sent-light.svg"
               }
               alt="logo"
-              style={{
-                maxWidth: "185px",
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "block",
-                marginBottom: "30px",
-              }}
+              className="email-sent-logo"
             />
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "16px" }}
+              className="marginBottom-16"
             >
               Verify your email address
             </Typography>
 
-            <Typography variant="body2" sx={{ marginBottom: "50px" }}>
+            <Typography variant="body2" className="marginBottom-50">
               Your account has been successfully registered. To complete the
               process please cheek your email for a validation request.
             </Typography>

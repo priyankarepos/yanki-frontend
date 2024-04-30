@@ -90,7 +90,6 @@ const ChangePasswordPage = () => {
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "34px" }}
               className="text-center marginBottom-34"
             >
               Change password
@@ -144,7 +143,7 @@ const ChangePasswordPage = () => {
                       type: showCurrentPassword ? "text" : "password",
                     }}
                     fullWidth
-                    sx={{ marginBottom: "30px" }}
+                    className="marginBottom-30"
                     error={!!errors["currentPassword"]}
                     helperText={
                       errors["currentPassword"]
@@ -197,7 +196,7 @@ const ChangePasswordPage = () => {
                       type: showNewPassword ? "text" : "password",
                     }}
                     fullWidth
-                    sx={{ marginBottom: "10px" }}
+                    className="marginBottom-10"
                     error={!!errors["newPassword"]}
                     helperText={
                       errors["newPassword"] ? errors["newPassword"].message : ""
@@ -255,7 +254,7 @@ const ChangePasswordPage = () => {
                       type: showConfirmPassword ? "text" : "password",
                     }}
                     fullWidth
-                    sx={{ marginBottom: "20px" }}
+                    className="marginBottom-20"
                     error={!!errors["confirmPassword"]}
                     helperText={
                       errors["confirmPassword"]
@@ -268,7 +267,7 @@ const ChangePasswordPage = () => {
               />
 
               {isSubmitError && (
-                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                <Alert severity="error" className="marginBottom-20">
                   {errorMsg}
                 </Alert>
               )}
@@ -276,7 +275,7 @@ const ChangePasswordPage = () => {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ marginBottom: "21px" }}
+                className="marginBottom-20"
                 type="submit"
               >
                 Confirm
