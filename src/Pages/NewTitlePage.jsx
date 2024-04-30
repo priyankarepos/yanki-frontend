@@ -16,14 +16,6 @@ import partnershipLogoLightFour from "../Assets/images/partnet-logo3.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
 
-const linkStyle = {
-  color: "#457bac",
-  fontSize: "15px",
-  textDecoration: "none",
-  paddingRight: "10px",
-  borderRight: "1px solid #457bac",
-};
-
 const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
   const { setActiveTab, activeTab } = useContext(Context);
@@ -37,7 +29,7 @@ const NewTitlePage = () => {
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const handleChangeTab = (event, newValue) => {
-    sessionStorage.setItem('activeTab', newValue.toString());
+    sessionStorage.setItem("activeTab", newValue.toString());
     setActiveTab(newValue);
   };
 
@@ -63,37 +55,28 @@ const NewTitlePage = () => {
 
   return (
     <>
-      <Container
-        maxWidth="xl"
-      >
+      <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
-          <Box sx={{ maxWidth:"100%" }}>
+          <Box className="new-title-container">
             <img
-              src={activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"}
+              src={
+                activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"
+              }
               alt="logo"
+              className="new-title-yanki-logo"
               style={{
-                width: "100%",
                 maxWidth: isLargeScreen ? "250px" : "200px",
-                marginLeft: "auto",
-                marginRight: "auto",
-                display: "block",
-                marginBottom: "30px",
-                marginTop: "20px",
               }}
             />
             <Typography
               variant="body1"
               component="h1"
-              sx={{
-                textAlign: "center",
-                fontWeight: "600",
-                color: "#72a9de",
-                fontSize:"16px",
-                lineHeight: "28px",
-              }}
+              className="new-title-heading"
             >
-              AI to do Mitzvos easier than ever<br />
-              Find useful data and have your AI-powered personal Jewish assistant
+              AI to do Mitzvos easier than ever
+              <br />
+              Find useful data and have your AI-powered personal Jewish
+              assistant
             </Typography>
             <Box sx={{ marginTop: isLargeScreen ? "30px" : "20px" }}>
               <Tabs
@@ -104,45 +87,16 @@ const NewTitlePage = () => {
                 centered
                 className="tabStyle"
               >
-                <Tab
-                  label="User"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#72a9de",
-                    fontSize:"16px", 
-                    textTransform: "capitalize",
-                  }}
-                />
-                <Tab
-                  label="Enterprise"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#72a9de",
-                    fontSize:"16px", 
-                    textTransform: "capitalize",
-                  }}
-                />
+                <Tab label="User" className="new-title-tab" />
+                <Tab label="Enterprise" className="new-title-tab" />
               </Tabs>
               {activeTab === 0 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    maxWidth: "300px",
-                    marginTop: "30px",
-                    marginX: "auto",
-                  }}
-                >
+                <Box className="new-title-active-tab-container">
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onLoginClick}
-                    style={{
-                      backgroundColor: "#13538b",
-                      color: "#fff",
-                      fontSize: "0.9rem", 
-                      textTransform: "capitalize"// Adjusted font size for smaller screens
-                    }}
+                    className="new-title-dark-theme"
                   >
                     Login
                   </Button>
@@ -150,38 +104,19 @@ const NewTitlePage = () => {
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onSignupClick}
-                    style={{
-                      backgroundColor: "#13538b",
-                      color: "#fff",
-                      fontSize: "0.9rem",
-                      textTransform: "capitalize" // Adjusted font size for smaller screens
-                    }}
+                    className="new-title-dark-theme"
                   >
                     Sign up
                   </Button>
                 </Box>
               )}
               {activeTab === 1 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    maxWidth: "300px",
-                    marginTop: "30px",
-                    marginX: "auto",
-                  }}
-                >
+                <Box className="new-title-active-tab-container">
                   <Button
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onLoginClick}
-                    style={{
-                      backgroundColor: "#13538b",
-                      color: "lightblue",
-                      border: "1px solid lightblue",
-                      fontSize: "0.9rem",
-                      textTransform: "capitalize",
-                    }}
+                    className="new-title-light-theme"
                   >
                     Login
                   </Button>
@@ -189,13 +124,7 @@ const NewTitlePage = () => {
                     variant="outlined"
                     sx={{ marginY: { xs: "10px" } }}
                     onClick={onEnterpriseSignupClick}
-                    style={{
-                      backgroundColor: "#13538b",
-                      color: "lightblue",
-                      border: "1px solid lightblue",
-                      fontSize: "0.9rem", // Adjusted font size for smaller screens
-                      textTransform: "capitalize",
-                    }}
+                    className="new-title-light-theme"
                   >
                     Sign up
                   </Button>
@@ -205,9 +134,8 @@ const NewTitlePage = () => {
             <Box sx={{ marginTop: isLargeScreen ? "50px" : "30px" }}>
               <Typography
                 variant="body1"
+                className="new-title-partnership"
                 sx={{
-                  textAlign: "center",
-                  marginBottom: "30px",
                   color: !themeMode ? "#fff" : "#72a9de",
                   fontSize: isLargeScreen ? "1rem" : "0.9rem", // Adjusted font size for smaller screens
                 }}
@@ -234,21 +162,15 @@ const NewTitlePage = () => {
                   </div>
                 ))}
               </Carousel> */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                }}
-              >
+              <Box className="partnership-logos-container">
                 {partnershipLogos.map((partner) => (
                   <img
                     key={partner.id}
                     src={partner.imageSrc}
                     alt={partner.altText}
+                    className="margin-15"
                     style={{
                       maxWidth: isLargeScreen ? "150px" : "120px",
-                      margin: "15px",
                     }}
                   />
                 ))}
@@ -256,25 +178,26 @@ const NewTitlePage = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
-          <Link to="/terms-of-use" style={linkStyle}>
+        <Box
+          className="text-center"
+          sx={{ marginY: isLargeScreen ? "20px" : "10px" }}
+        >
+          <Link to="/terms-of-use" className="linkStyle">
             Terms of Use
           </Link>
-          <Link
-            to="/privacy-policy"
-            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
-          >
+          <Link to="/privacy-policy" className="linkStyle marginX-10">
             Privacy Policy
           </Link>
           <Typography variant="caption">
-                <a style={{ ...linkStyle, borderRight: "none" }}
-                  href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  hello@yanki.ai
-                </a>
-              </Typography>
+            <a
+              className="linkStyle new-title-email"
+              href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              hello@yanki.ai
+            </a>
+          </Typography>
         </Box>
       </Container>
     </>

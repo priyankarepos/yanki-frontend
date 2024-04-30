@@ -33,10 +33,9 @@ const PrivacyPolicy = () => {
           sx={{ padding: 2 }}
         >
           <Box
+            className="policy-container"
             sx={{
-              maxWidth: "800px",
               width: { xs: "100%", sm: "80%" },
-              margin: "auto",
             }}
           >
             <Box className="w-full object-contain flex items-center justify-center page-container">
@@ -58,10 +57,7 @@ const PrivacyPolicy = () => {
             <Typography
               variant="h4"
               component="div"
-              className="page-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               YankiAI General Private Policy
             </Typography>
@@ -84,10 +80,7 @@ const PrivacyPolicy = () => {
               please see this help center article.
             </Typography>
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               1. Personal information we collect
@@ -99,10 +92,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Personal Information You Provide: We collect Personal
@@ -112,10 +102,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Account Information: When you create an account with us, we
@@ -127,10 +114,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   User Content: When you use our Services, we collect Personal
@@ -140,10 +124,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Communication Information: If you communicate with us, we
@@ -153,10 +134,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Social Media Information: We have pages on social media sites
@@ -171,10 +149,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Other Information You Provide: We collect other information
@@ -186,10 +161,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Personal Information We Receive Automatically From Your Use of
@@ -200,10 +172,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Log Data: Information that your browser or device
@@ -215,10 +184,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Usage Data: We may automatically collect information about
@@ -231,10 +197,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Device Information: Includes the name of the device, operating
@@ -245,10 +208,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Cookies: We use cookies to operate and administer our
@@ -265,10 +225,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Analytics: We may use a variety of online analytics products
@@ -278,11 +235,8 @@ const PrivacyPolicy = () => {
               </List>
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               2. How we use personal information
             </Typography>
@@ -292,10 +246,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To provide, administer, maintain and/or analyze the Services;
@@ -303,10 +254,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To improve our Services and conduct research;
@@ -314,10 +262,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To communicate with you; including to send you information
@@ -326,10 +271,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To develop new programs and services;
@@ -337,10 +279,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To prevent fraud, criminal activity, or misuses of our
@@ -351,10 +290,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To carry out business transfers; and
@@ -363,10 +299,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To comply with legal obligations and legal process and to
@@ -399,11 +332,8 @@ const PrivacyPolicy = () => {
               to train our models.
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               3. Disclosure of personal information
             </Typography>
@@ -415,10 +345,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Vendors and Service Providers: To assist us in meeting
@@ -435,10 +362,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Business Transfers: If we are involved in strategic
@@ -453,10 +377,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Legal Requirements: We may share your Personal Information,
@@ -475,10 +396,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Affiliates: We may disclose Personal Information to our
@@ -490,10 +408,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Business Account Administrators: When you join a YankiAI
@@ -510,10 +425,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Other Users and Third Parties You Share Information With:
@@ -595,11 +507,8 @@ const PrivacyPolicy = () => {
               required by law.
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               4. Your rights
             </Typography>
@@ -611,10 +520,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Access your Personal Information and information relating to
@@ -623,10 +529,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Delete your Personal Information from our records.
@@ -634,10 +537,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Rectify or update your Personal Information.
@@ -645,10 +545,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Transfer your Personal Information to a third party (right to
@@ -657,10 +554,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Transfer your Personal Information to a third party (right to
@@ -670,10 +564,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Withdraw your consent—where we rely on consent as the legal
@@ -683,10 +574,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Object to how we process your Personal Information.
@@ -694,10 +582,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Lodge a complaint with your local data protection authority.
@@ -752,11 +637,8 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               5. Additional U.S. state disclosures
             </Typography>
@@ -820,10 +702,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   The right to know information about our processing of your
@@ -834,10 +713,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   The right to request deletion of your Personal Information;
@@ -846,10 +722,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   The right to correct your Personal Information; and
@@ -858,10 +731,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   The right to be free from discrimination relating to the
@@ -937,10 +807,7 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               6. Children
@@ -969,10 +836,7 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               7. Links to other websites
@@ -990,10 +854,7 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               8. Security and Retention
@@ -1023,10 +884,7 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               9. International users
@@ -1044,10 +902,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Performance of a contract with you when we provide and
@@ -1061,10 +916,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Our legitimate interests in protecting our Services from
@@ -1079,10 +931,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Your consent when we ask for your consent to process your
@@ -1094,10 +943,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Compliance with our legal obligations when we use your
@@ -1130,11 +976,8 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               10. Changes to the privacy policy
             </Typography>
@@ -1145,11 +988,8 @@ const PrivacyPolicy = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               11. How to contact us
             </Typography>
@@ -1161,9 +1001,6 @@ const PrivacyPolicy = () => {
             <Typography
               variant="h4"
               className="page-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               YankiAI Personal Assistant Services Privacy Policy
             </Typography>
@@ -1184,10 +1021,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Directly Provided Information: We collect information you
@@ -1200,10 +1034,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Information from Third Parties: We may receive information
@@ -1215,10 +1046,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Automatically Collected Information: We use cookies, pixel
@@ -1230,10 +1058,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Location Information: We derive your approximate location from
@@ -1243,10 +1068,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Use of Information
             </Typography>
@@ -1257,10 +1079,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Fulfilling service requests and processing transactions.
@@ -1268,10 +1087,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Communicating with you regarding our Service and updates.
@@ -1279,10 +1095,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Ensuring the security and integrity of our Service.
@@ -1291,10 +1104,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Sharing of Information
             </Typography>
@@ -1304,10 +1114,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Third-party service providers and partners who assist in
@@ -1316,10 +1123,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Authorities and third parties for legal reasons and to enforce
@@ -1328,10 +1132,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   In the event of a business transition, such as a merger or
@@ -1342,10 +1143,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Your Choices and Rights
             </Typography>
@@ -1355,10 +1153,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Update or delete your account information.
@@ -1366,10 +1161,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Opt-out of receiving promotional communications.
@@ -1377,10 +1169,7 @@ const PrivacyPolicy = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                      className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Manage cookies and tracking technologies through your browser
@@ -1390,10 +1179,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Data Security and Retention
             </Typography>
@@ -1406,10 +1192,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Children's Privacy
             </Typography>
@@ -1420,10 +1203,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               International Data Transfers
             </Typography>
@@ -1479,10 +1259,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Changes to Our Privacy Policy
             </Typography>
@@ -1493,10 +1270,7 @@ const PrivacyPolicy = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-sub-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Contact Us
             </Typography>
@@ -1523,9 +1297,6 @@ const PrivacyPolicy = () => {
             <Typography
               variant="h4"
               className="page-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               YankiAI Emergency Services Disclaimer
             </Typography>

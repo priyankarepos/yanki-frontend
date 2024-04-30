@@ -9,6 +9,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { ThemeModeContext } from "../App";
+import "./Style.scss";
 
 const ActiveAccountPage = () => {
   const [activating, setActivating] = useState(false);
@@ -81,13 +82,12 @@ const ActiveAccountPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                style={{ width: "60%" }}
+                className="yanki-logo-image"
               />
             </Box>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "34px" }}
               className="text-center marginBottom-34"
             >
               {activating

@@ -6,30 +6,37 @@
     font-size: 16px;
     white-space: normal !important;
 }
- 
+
 h4.Ai-Heading {
     margin-bottom: 25px;
 }
- 
-.section-container, .section-container-light {
+
+.section-container,
+.section-container-light {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     padding: 16px;
     margin-bottom: 16px;
     margin-top: 22px;
-  }
-  .section-container-light{
-    border: 1px solid #202020;
-} .ai-input-label {
-    color: #202020 ;
 }
- 
-  .ai-input-label {
+
+.section-container-light {
+    border: 1px solid #202020;
+}
+
+.ai-input-label {
+    color: #202020;
+}
+
+.ai-input-label {
     font-size: 14px !important;
     margin-top: 20px;
     overflow: visible !important;
     white-space: normal !important;
-    color: #6fa8dd ;
+    color: #6fa8dd;
     margin-bottom: 5px !important;
 }
 
+.ai-customization-button {
+    margin-right: 16px !important;
+}

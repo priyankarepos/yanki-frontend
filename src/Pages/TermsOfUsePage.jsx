@@ -33,10 +33,9 @@ const TermsOfUse = () => {
           sx={{ padding: 2 }}
         >
           <Box
+            className="termsofUse-container"
             sx={{
-              maxWidth: "800px",
               width: { xs: "100%", sm: "80%" },
-              margin: "auto",
             }}
           >
             <Box className="w-full object-contain flex items-center justify-center page-container">
@@ -57,10 +56,7 @@ const TermsOfUse = () => {
             </Box>
             <Typography
               variant="h4"
-              className="page-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               YankiAI General Terms of Use
             </Typography>
@@ -92,10 +88,7 @@ const TermsOfUse = () => {
 
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Who we are
             </Typography>
@@ -109,18 +102,13 @@ const TermsOfUse = () => {
 
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Registration and Access
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Minimum Age:
               </strong>{" "}
@@ -132,9 +120,7 @@ const TermsOfUse = () => {
 
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Registration:
               </strong>{" "}
@@ -149,18 +135,13 @@ const TermsOfUse = () => {
 
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Using Our Services
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 What You Can Do:
               </strong>{" "}
@@ -172,9 +153,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 What You Cannot Do:{" "}
               </strong>{" "}
@@ -184,10 +163,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Use our Services in a way that infringes, misappropriates, or
@@ -196,10 +172,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Modify, copy, lease, sell, or distribute any of our Services.
@@ -207,10 +180,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Attempt to or assist anyone to reverse engineer, decompile or
@@ -222,10 +192,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Automatically or programmatically extract data or Output
@@ -234,10 +201,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Represent that Output was human-generated when it was not.
@@ -245,10 +209,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Interfere with or disrupt our Services, including circumvent
@@ -258,10 +219,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Use Output to develop models that compete with YankiAI.
@@ -270,9 +228,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Software:
               </strong>{" "}
@@ -284,9 +240,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Corporate Domains:
               </strong>{" "}
@@ -304,9 +258,7 @@ const TermsOfUse = () => {
 
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Third Party Services:
               </strong>{" "}
@@ -320,9 +272,7 @@ const TermsOfUse = () => {
 
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Software:{" "}
               </strong>{" "}
@@ -339,18 +289,13 @@ const TermsOfUse = () => {
             <Typography className="page-text"></Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Content
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Your Content:
               </strong>{" "}
@@ -364,9 +309,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Ownership of Content
               </strong>{" "}
@@ -377,9 +320,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Similarity of Content:
               </strong>{" "}
@@ -393,9 +334,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Our Use of Content:
               </strong>{" "}
@@ -405,9 +344,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Opt-Out:
               </strong>{" "}
@@ -419,9 +356,7 @@ const TermsOfUse = () => {
             <Typography className="page-text"></Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Accuracy:
               </strong>{" "}
@@ -439,10 +374,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Output may not always be accurate. You should not rely on
@@ -452,10 +384,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   You must evaluate Output for accuracy and appropriateness for
@@ -465,10 +394,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   You must not use any Output relating to a person for any
@@ -480,10 +406,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Our Services may provide incomplete, incorrect, or offensive
@@ -495,10 +418,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Our IP Rights
             </Typography>
@@ -509,19 +429,14 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Paid Accounts
             </Typography>
             <Typography className="page-text"></Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 {" "}
                 Billing:
@@ -537,9 +452,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Service Credits:
               </strong>{" "}
@@ -549,9 +462,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Cancellation:
               </strong>{" "}
@@ -562,9 +473,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Changes:
               </strong>{" "}
@@ -575,18 +484,13 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Termination and Suspension
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Termination:
               </strong>{" "}
@@ -597,10 +501,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   You breached these Terms or our Usage Policies.{" "}
@@ -608,10 +509,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   We must do so to comply with the law.{" "}
@@ -619,10 +517,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Your use of our Services could cause risk or harm to YankiAI,
@@ -631,10 +526,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   We also may terminate your account if it has been inactive for
@@ -645,9 +537,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Appeals:
               </strong>{" "}
@@ -657,10 +547,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Discontinuation of Services
             </Typography>
@@ -671,10 +558,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Disclaimer of Warranties
             </Typography>
@@ -698,10 +582,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Limitation of Liability
             </Typography>
@@ -730,10 +611,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Indemnity
             </Typography>
@@ -747,10 +625,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Dispute Resolution
             </Typography>
@@ -760,9 +635,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 MANDATORY ARBITRATION:
               </strong>{" "}
@@ -778,9 +651,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Informal Dispute Resolution:
               </strong>{" "}
@@ -798,9 +669,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Arbitration Forum:
               </strong>{" "}
@@ -817,9 +686,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Arbitration Procedures:
               </strong>{" "}
@@ -842,9 +709,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Exceptions:
               </strong>{" "}
@@ -856,9 +721,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 CLASS AND JURY TRIAL WAIVERS:
               </strong>{" "}
@@ -876,9 +739,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Batch Arbitration:
               </strong>{" "}
@@ -897,9 +758,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Severability:
               </strong>{" "}
@@ -912,10 +771,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               Copyright Complaints
             </Typography>
@@ -940,10 +796,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   A physical or electronic signature of the person authorized to
@@ -952,10 +805,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   A description of the copyrighted work that you claim has been
@@ -964,10 +814,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Your address, telephone number, and e-mail address
@@ -975,10 +822,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   A statement by you that you have a good-faith belief that the
@@ -988,10 +832,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   A statement by you that the above information in your notice
@@ -1003,18 +844,13 @@ const TermsOfUse = () => {
             </Typography>
             <Typography
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
             >
               General Terms
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Assignment:
               </strong>{" "}
@@ -1033,10 +869,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Changes to the law or regulatory requirements.{" "}
@@ -1044,10 +877,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Security or safety reasons.{" "}
@@ -1055,10 +885,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Circumstances beyond our reasonable control.{" "}
@@ -1066,10 +893,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   Changes we make in the usual course of developing our
@@ -1078,10 +902,7 @@ const TermsOfUse = () => {
                 <ListItem className="ya-terms-policy-listitem">
                   <ListItemIcon>
                     <FiberManualRecordIcon
-                      style={{
-                        fontSize: "14px",
-                        color: activeTab === 0 ? "#fff" : "#6fa8dd",
-                      }}
+                     className={`text-font-size ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                     />
                   </ListItemIcon>
                   To adapt to new technologies.{" "}
@@ -1106,9 +927,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Trade Controls:
               </strong>{" "}
@@ -1124,9 +943,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Entire Agreement:
               </strong>{" "}
@@ -1137,9 +954,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <strong
-                style={{
-                  color: activeTab === 0 ? "#8fc2f1" : "#6fa8dd",
-                }}
+                className={activeTab === 0 ? "light-color" : "lightBlue-color"}
               >
                 Governing Law:
               </strong>{" "}
@@ -1153,9 +968,6 @@ const TermsOfUse = () => {
             <Typography
               variant="h4"
               className="page-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               YankiAI Personal Assistant Service Terms of Use
             </Typography>
@@ -1184,11 +996,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               1. Use of Our Services
             </Typography>
@@ -1430,11 +1239,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               2. Mobile Software
             </Typography>
@@ -1569,11 +1375,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               3. Our Proprietary Rights
             </Typography>
@@ -1609,11 +1412,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               4. Paid Services
             </Typography>
@@ -1710,7 +1510,7 @@ const TermsOfUse = () => {
             </Typography>
             <Typography className="page-text">
               <Typography
-                className="page-sub-title"
+                className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
                 variant="h5"
                 sx={{
                   color: activeTab === 0 ? "#fff" : "#6fa8dd",
@@ -1729,10 +1529,7 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
             >
               6. Security
@@ -1746,11 +1543,8 @@ const TermsOfUse = () => {
               that you provide your personal information at your own risk.
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               7. Third-Party Links, Recommendations and Information
             </Typography>
@@ -1774,11 +1568,8 @@ const TermsOfUse = () => {
               dealings with such advertisers.
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               8. Purchases Made On Your Behalf
             </Typography>
@@ -1808,11 +1599,8 @@ const TermsOfUse = () => {
               dealings with such advertisers.
             </Typography>
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               9. Indemnity
             </Typography>
@@ -1838,11 +1626,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               10. No Warranty
             </Typography>
@@ -1935,11 +1720,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               11. Limitation of Liability
             </Typography>
@@ -2010,11 +1792,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               12. Governing Law, Arbitration, and Class Action/Jury Trial Waiver
             </Typography>
@@ -2141,11 +1920,8 @@ const TermsOfUse = () => {
             </Typography>
 
             <Typography
-              className="page-sub-title"
+              className={`page-title ${activeTab === 0 ? "white-color" : "lightBlue-color"}`}
               variant="h5"
-              sx={{
-                color: activeTab === 0 ? "#fff" : "#6fa8dd",
-              }}
             >
               13. General
             </Typography>

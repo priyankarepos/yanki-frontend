@@ -59,7 +59,7 @@ const ResetPasswordPage = () => {
       const dataToSend = {
         password: data.newPassword,
         confirmPassword: data.confirmPassword,
-        userId : queryParamsObj.userId,
+        userId: queryParamsObj.userId,
         token: queryParamsObj.token.split(":")[0],
       };
       const response = await axios.post(
@@ -93,10 +93,7 @@ const ResetPasswordPage = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
-            <Box
-              className="w-full object-contain flex items-center justify-center"
-              sx={{ marginBottom: "132px" }}
-            >
+            <Box className="w-full object-contain flex items-center justify-center marginBottom-132">
               <RouterLink
                 to="/auth"
                 className="w-full object-contain flex items-center justify-center"
@@ -108,14 +105,14 @@ const ResetPasswordPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  style={{ width: "60%" }}
+                  className="yanki-logo-image"
                 />
               </RouterLink>
             </Box>
             <Typography
               variant="h5"
               component="h1"
-              sx={{ marginBottom: "54px", textAlign: "center" }}
+              className="marginBottom-54 text-center"
             >
               Reset password
             </Typography>
@@ -161,7 +158,7 @@ const ResetPasswordPage = () => {
                       type: showNewPassword ? "text" : "password",
                     }}
                     fullWidth
-                    sx={{ marginBottom: "10px" }}
+                    className="marginBottom-10"
                     error={!!errors["newPassword"]}
                     helperText={
                       errors["newPassword"] ? errors["newPassword"].message : ""
@@ -218,7 +215,7 @@ const ResetPasswordPage = () => {
                       type: showConfirmPassword ? "text" : "password",
                     }}
                     fullWidth
-                    sx={{ marginBottom: "20px" }}
+                    className="marginBottom-20"
                     error={!!errors["confirmPassword"]}
                     helperText={
                       errors["confirmPassword"]
@@ -230,7 +227,7 @@ const ResetPasswordPage = () => {
                 )}
               />
               {isSubmitError && (
-                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                <Alert severity="error" className="marginBottom-20">
                   {errorMsg}
                 </Alert>
               )}

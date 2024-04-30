@@ -795,7 +795,7 @@ const AiCustomization = () => {
               onClick={handleUpdate}
               variant="contained"
               color="primary"
-              sx={{ marginRight: 2 }}
+              className="ai-customization-button"
               disabled={!customizeMessage?.isSuccess}
             >
               Update
@@ -804,14 +804,14 @@ const AiCustomization = () => {
               onClick={handleDelete}
               variant="contained"
               color="error"
-              sx={{ marginRight: 2 }}
+              className="ai-customization-button"
               disabled={!customizeMessage?.isSuccess}
             >
               Delete
             </Button>
             <Button
               variant="contained"
-              sx={{ marginRight: 2 }}
+              className="ai-customization-button"
               onClick={() => navigate("/")}
             >
               Cancel

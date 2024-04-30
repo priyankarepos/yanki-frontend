@@ -14,7 +14,7 @@ import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import "./Style.scss"
+import "./Style.scss";
 
 import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
@@ -28,25 +28,19 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
-import { useGoogleLogin } from '@react-oauth/google';
-import GoogleIcon from '@mui/icons-material/Google';
-import ReactPhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
-import { FormHelperText } from "@mui/material";
-
-const linkStyle = {
-  color: "#457bac",
-  fontSize: "15px",
-  textDecoration: "none",
-  paddingRight: "20px",
-  borderRight: "1px solid #457bac",
-};
+import { useGoogleLogin } from "@react-oauth/google";
+import GoogleIcon from "@mui/icons-material/Google";
+import ReactPhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { FormHelperText, Snackbar } from "@mui/material";
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [signinLoading, setSigninLoading] = useState(false);
   const [signinError, setSigninError] = useState(false);
   const [signinErrorMsg, setSigninErrorMsg] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
@@ -73,7 +67,7 @@ const SigninPage = () => {
   });
 
   useEffect(() => {
-    setValue('signInPhone', '+44', { shouldValidate: false });
+    setValue("signInPhone", "+44", { shouldValidate: false });
   }, [setValue]);
 
   const onSubmit = async (data) => {
@@ -85,7 +79,7 @@ const SigninPage = () => {
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
         // isTermAndPrivacy: data.signTermsAndCondition
-        userType: "User"
+        userType: "User",
       };
 
       const response = await axios.post(
@@ -129,7 +123,9 @@ const SigninPage = () => {
         setSigninErrorMsg("Authentication failed.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      setSnackbarMessage("Error:", error);
+      setSnackbarOpen(false);
+
       setSigninError(true);
       setSigninErrorMsg("Something went wrong.");
     } finally {
@@ -145,7 +141,10 @@ const SigninPage = () => {
     <>
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
-          <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }} className="user-signup">
+          <Box
+            sx={{ maxWidth: "360px", width: { sm: "360px" } }}
+            className="user-signup"
+          >
             <Box className="w-full object-contain flex items-center justify-center marginY-28">
               <RouterLink
                 to="/auth"
@@ -158,14 +157,13 @@ const SigninPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  style={{ width: "60%" }}
+                  className="yanki-logo-image"
                 />
               </RouterLink>
             </Box>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "34px" }}
               className="text-center marginBottom-34"
             >
               Create your account
@@ -200,7 +198,7 @@ const SigninPage = () => {
                     ),
                   }}
                   fullWidth
-                  sx={{ marginBottom: "10px" }}
+                  className="marginBottom-10"
                   error={!!errors["signInName"]}
                   helperText={
                     errors["signInName"] ? errors["signInName"].message : ""
@@ -223,38 +221,30 @@ const SigninPage = () => {
                 },
               }}
               render={({ field }) => (
-                <div style={{ marginBottom: '16px', position: 'relative' }}>
+                <div className="currentSignInPhone-style">
                   <ReactPhoneInput
                     inputExtraProps={{
                       name: field.name,
                       onBlur: field.onBlur,
                     }}
                     value={field.value}
-                    preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
+                    preferredCountries={["us", "il", "gb", "ca", "mx"]}
                     placeholder="Phone number"
                     onChange={(value, country, event) => {
                       field.onChange(value);
                     }}
                     onBlur={() => field.onBlur()}
                     error={!!errors["signInPhone"]}
+                    className="ReactPhoneInput-style"
                     style={{
-                      border: errors["signInPhone"] ? '1px solid #ffc9c9' : '1px solid rgb(114, 169, 222)',
-                      borderRadius: '8px',
-                      marginBottom: '0px',
-                      padding: '10px',
-                      width: '100%',
-                      outline: 'none',
-                      height: '55px',
-                      color: "#fff",
+                      border: errors["signInPhone"]
+                        ? "1px solid #ffc9c9"
+                        : "1px solid rgb(114, 169, 222)",
                     }}
                   />
-                  {errors['signInPhone'] && (
-                    <FormHelperText
-                      style={{
-                        color: '#ffc9c9',
-                      }}
-                    >
-                      {errors['signInPhone'].message}
+                  {errors["signInPhone"] && (
+                    <FormHelperText className="signinpage-phone-error">
+                      {errors["signInPhone"].message}
                     </FormHelperText>
                   )}
                 </div>
@@ -307,7 +297,7 @@ const SigninPage = () => {
                     ),
                   }}
                   fullWidth
-                  sx={{ marginBottom: "10px" }}
+                  className="marginBottom-10"
                   error={!!errors["signInEmail"]}
                   helperText={
                     errors["signInEmail"] ? errors["signInEmail"].message : ""
@@ -358,7 +348,7 @@ const SigninPage = () => {
                     type: showPassword ? "text" : "password",
                   }}
                   fullWidth
-                  sx={{ marginBottom: "25px" }}
+                  className="marginBottom-25"
                   error={!!errors["signInPassword"]}
                   helperText={
                     errors["signInPassword"]
@@ -370,11 +360,16 @@ const SigninPage = () => {
               )}
             />
             {signinError && (
-              <Alert severity="error" sx={{ marginBottom: "14px" }}>
+              <Alert severity="error" className="marginBottom-14">
                 {signinErrorMsg}
               </Alert>
             )}
-            <Box sx={{ textAlign: "left", marginTop: "0px", marginBottom: "25px", color: !themeMode ? "#fff" : "#72a9de", }}>
+            <Box
+              className="signinpage-text-container"
+              sx={{
+                color: !themeMode ? "#fff" : "#72a9de",
+              }}
+            >
               {/* <Controller
                 control={control}
                 name="signTermsAndCondition"
@@ -398,14 +393,24 @@ const SigninPage = () => {
                   </>
                 )}
               /> */}
-              <Typography style={{ color: "#fff" }}>By signing up, I accept the Yanki <Link to="/terms-of-use" style={{ color: "#fff", fontWeight: "600", }} component={LinkBehavior}>
-                Terms of Use
-              </Link> and acknowledge the <Link
-                to="/privacy-policy"
-                style={{ color: "#fff", fontWeight: "600", }} component={LinkBehavior}
-              >
+              <Typography className="white-color">
+                By signing up, I accept the Yanki{" "}
+                <Link
+                  to="/terms-of-use"
+                  className="signinpage-terms"
+                  component={LinkBehavior}
+                >
+                  Terms of Use
+                </Link>{" "}
+                and acknowledge the{" "}
+                <Link
+                  to="/privacy-policy"
+                  className="signinpage-terms"
+                  component={LinkBehavior}
+                >
                   Privacy Policy
-                </Link></Typography>
+                </Link>
+              </Typography>
             </Box>
             <Button
               variant="contained"
@@ -415,17 +420,18 @@ const SigninPage = () => {
             >
               {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
             </Button>
-            <Divider sx={{ marginY: "28px" }}>or</Divider>
+            <Divider className="marginY-28">or</Divider>
             <Button
               variant="outlined"
               fullWidth
               disabled={signinLoading}
               onClick={() => login()}
-              sx={{ marginBottom: "25px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }}
+              className="google-button"
             >
-              <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
+              <GoogleIcon className="googleIcon" />
+              &nbsp;Google
             </Button>
-            <Box className="text-center" sx={{ marginTop: "25px" }}>
+            <Box className="text-center marginTop-25">
               <Typography variant="subtitle1" display="block" gutterBottom>
                 Already have an account?&nbsp;
                 <Link to="/login" component={LinkBehavior} underline="none">
@@ -435,19 +441,24 @@ const SigninPage = () => {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ textAlign: "center", marginY: "10px" }}>
-          <Link to="/terms-of-use" style={linkStyle} component={LinkBehavior}>
+        <Box className="text-center marginY-10">
+          <Link
+            to="/terms-of-use"
+            className="linkStyle"
+            component={LinkBehavior}
+          >
             Terms of Use
           </Link>
           <Link
             to="/privacy-policy"
-            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
+            className="linkStyle marginX-10"
             component={LinkBehavior}
           >
             Privacy Policy
           </Link>
           <Typography variant="caption">
-            <a style={{ ...linkStyle, borderRight: "none" }}
+            <a
+              className="linkStyle new-title-email"
               href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
               target="_blank"
               rel="noreferrer"
@@ -456,6 +467,13 @@ const SigninPage = () => {
             </a>
           </Typography>
         </Box>
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+          message={snackbarMessage}
+        />
       </Container>
     </>
   );
