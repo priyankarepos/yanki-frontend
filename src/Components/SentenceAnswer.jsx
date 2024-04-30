@@ -6,6 +6,8 @@ import { Button, CircularProgress } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import axios from 'axios';
 import "./AnswerStyle.scss";
+import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown'
 
 const SentenceAnswer = ({ answer }) => {
   // const [showCandle, setShowCandle] = useState(true);
@@ -72,7 +74,9 @@ const SentenceAnswer = ({ answer }) => {
   const renderContentResponse = () => {
     return processedContentResponse.map((ans, index) => (
       <Typography variant="h6" component="div" key={index} className="sentence-answer-container" dir={direction}>
+        <Markdown>
         {renderClickableContent(ans)}
+      </Markdown>
       </Typography>
     ));
   };
@@ -82,71 +86,99 @@ const SentenceAnswer = ({ answer }) => {
     const phoneRegex = /\b\d{10,}\b/g;
     const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
   
-    let content = [];
+    let content = "";
   
     const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
   
     cleanedText.split(/\s+/).forEach((word, index, array) => {
       if (word.match(emailRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.location.href = `mailto:${word}`}
-          >
-            {word}
-          </span>
-        );
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
+        content += `[${word}](mailto:${word})`;
       } else if (word.match(phoneRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.location.href = `tel:${word}`}
-          >
-            {word}
-          </span>
-        );
-        // Add a space after the phone number, except for the last word
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
+        content += `[${word}](tel:${word})`;
       } else if (word.match(urlRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.open(word, '_blank')}
-          >
-            {word}
-          </span>
-        );
-        // Add a space after the URL, except for the last word
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
+        content += `[${word}](${word})`;
       } else {
-        const punctuation = ['.', ',', '-'];
-        let cleanedWord = word;
-        let lastChar = "";
-        // Check if the word ends with punctuation, and remove only comma and dot
-        if (punctuation.includes(word.slice(-1))) {
-          lastChar = word.slice(-1);
-          cleanedWord = word.slice(0, -1);
-        }
-        content.push(
-          <span key={index}>
-            {cleanedWord}{lastChar}{" "}
-          </span>
-        );
+        content += word;
+      }
+      if (index !== array.length - 1) {
+        content += " ";
       }
     });
-    
+    console.log("content", content);
+  
     return content;
   };
+
+  // const renderClickableContent = (text) => {
+  //   const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+  //   const phoneRegex = /\b\d{10,}\b/g;
+  //   const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
+  
+  //   let content = [];
+  
+  //   const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
+  
+  //   cleanedText.split(/\s+/).forEach((word, index, array) => {
+  //     if (word.match(emailRegex)) {
+  //       content.push(
+  //         <span
+  //           key={index}
+  //           className='enterprise-pdf-link'
+  //           onClick={() => window.location.href = `mailto:${word}`}
+  //         >
+  //           {word}
+  //         </span>
+  //       );
+  //       if (index !== array.length - 1) {
+  //         content.push(" ");
+  //       }
+  //     } else if (word.match(phoneRegex)) {
+  //       content.push(
+  //         <span
+  //           key={index}
+  //           className='enterprise-pdf-link'
+  //           onClick={() => window.location.href = `tel:${word}`}
+  //         >
+  //           {word}
+  //         </span>
+  //       );
+  //       // Add a space after the phone number, except for the last word
+  //       if (index !== array.length - 1) {
+  //         content.push(" ");
+  //       }
+  //     } else if (word.match(urlRegex)) {
+  //       content.push(
+  //         <span
+  //           key={index}
+  //           className='enterprise-pdf-link'
+  //           onClick={() => window.open(word, '_blank')}
+  //         >
+  //           {word}
+  //         </span>
+  //       );
+  //       // Add a space after the URL, except for the last word
+  //       if (index !== array.length - 1) {
+  //         content.push(" ");
+  //       }
+  //     } else {
+  //       const punctuation = ['.', ',', '-'];
+  //       let cleanedWord = word;
+  //       let lastChar = "";
+  //       // Check if the word ends with punctuation, and remove only comma and dot
+  //       if (punctuation.includes(word.slice(-1))) {
+  //         lastChar = word.slice(-1);
+  //         cleanedWord = word.slice(0, -1);
+  //       }
+  //       content.push(
+  //         <span key={index}>
+  //           {cleanedWord}{lastChar}{" "}
+  //         </span>
+  //       );
+  //     }
+  //   });
+    
+  //   return content;
+  // };
 
   return (
     <>
