@@ -24,8 +24,18 @@ const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
 
   React.useEffect(() => {
-    const isHebrew = /[\u0590-\u05FF]/.test(query);
-    const newDirection = isHebrew ? 'rtl' : 'ltr';
+    const containsHebrew = /[\u0590-\u05FF]/.test(query);
+    const containsEnglish = /[a-zA-Z]/.test(query);
+    let newDirection;
+
+    if (containsEnglish && containsHebrew) {
+      newDirection = "ltr";
+    } else if (containsHebrew) {
+      newDirection = "rtl";
+    } else {
+      newDirection = "ltr";
+    }
+
     setDirection(newDirection);
   }, [query]);
 
