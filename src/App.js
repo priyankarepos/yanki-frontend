@@ -7,7 +7,7 @@ import {
 } from "react";
 import darkTheme from "./Themes/darkTheme";
 import lightTheme from "./Themes/lightTheme";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
 import LoginPage from "./Pages/LoginPage";
@@ -49,6 +49,7 @@ import AiCustomization from "./Pages/AiCustomization/AiCustomization";
 import SubscribeNotification from "./Components/Notification/SubscribeNotification";
 import AdminAddFaq from "./Admin/AdminAddFAQ";
 import NewHomePageMui from "./Pages/NewHomePageMui/NewHomePageMui";
+import "./style.scss";
 
 // Exporting context
 export const Context = createContext("");
@@ -214,20 +215,32 @@ function App() {
   // }, [activeTab]);
 
   const currentTheme = useMemo(() => {
+    const themeTypography = {
+      fontFamily: "AuthenticSans",
+    };
     // Check if userRoles include 'Enterprise'
     const isEnterpriseUser = userRoles.includes("Enterprise");
 
     // If user is an enterprise user, apply light theme
     if (isEnterpriseUser) {
-      return lightTheme;
+      return createTheme({
+        ...lightTheme,
+        typography: themeTypography,
+      });
     } else {
       // Otherwise, check the activeTab
       if (activeTab === 1) {
         // Apply light theme for activeTab 1
-        return lightTheme;
+        return createTheme({
+          ...lightTheme,
+          typography: themeTypography,
+        });
       } else {
         // Apply dark theme for all other cases
-        return darkTheme;
+        return createTheme({
+          ...darkTheme,
+          typography: themeTypography,
+        });
       }
     }
   }, [activeTab, userRoles]);

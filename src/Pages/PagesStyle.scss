@@ -13,11 +13,69 @@
     color: #457bac !important;
     font-size: 15px !important;
     text-decoration: none !important;
-    padding-right: 20px !important;
+    padding-right: 10px !important;
     border-right: 1px solid #457bac;
 }
 
 .linkStyle-center-space {
     margin-right: 10px;
     margin-left: 10px
+}
+
+.enterprise-yanki-logo-image {
+    width: 40% !important;
+}
+
+.enterprise-pending-message {
+    margin-bottom: 54px !important;
+    text-align: center;
+    font-size: 22px !important;
+    color: #063762;
+}
+
+.enterprise-rejected-message {
+    margin-bottom: 54px !important;
+    margin-top: -55px !important;
+    text-align: center;
+    font-size: 22px !important;
+    color: #063762;
+}
+
+.enterprise-signup-message {
+    color: #72a9de;
+    font-weight: 600 !important;
+}
+
+.inputField {
+    border-radius: 8px;
+    margin-bottom: 10px !important;
+}
+
+.enterprise-phone-error {
+    color: red !important;
+    position: absolute;
+    bottom: -20px;
+}
+
+.enterprise-category-error {
+    color: #d32f2f !important;
+    font-size: 12px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transform: translate(0px, -10px);
+    position: relative;
+}
+
+.enterprice-footer {
+    color: #13538b; 
+    font-weight: 600 !important;
+}
+
+.enterprise-signup-button-container {
+    max-width: 350px; 
+    margin: 25px auto 0 auto;
+}
+
+.enterprise-already-account {
+    color: #72a9de;
 }

@@ -37,10 +37,7 @@ const EnterprisePendingStatusPage = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-screen">
           <Box sx={{ maxWidth: "800px", width: { sm: "800px" } }}>
-            <Box
-              className="w-full object-contain flex items-center justify-center"
-              sx={{ marginBottom: "110px" }}
-            >
+            <Box className="w-full object-contain flex items-center justify-center marginBottom-110 ">
               <img
                 src={
                   themeMode === "dark"
@@ -48,21 +45,18 @@ const EnterprisePendingStatusPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                style={{ width: "40%" }}
+                className="enterprise-yanki-logo-image"
               />
             </Box>
             {userStatus === "Pending" && (
               <Typography
                 variant="h5"
                 component="h1"
-                sx={{
-                  marginBottom: "54px",
-                  textAlign: "center",
-                  fontSize: "22px",
-                  color: "#063762"
-                }}
+                className="enterprise-pending-message"
               >
-                Your request to be authorized as a Yanki enterprise is being reviewed, expect an email shortly. In the meantime, you can use Yanki to explore its features with the same access
+                Your request to be authorized as a Yanki enterprise is being
+                reviewed, expect an email shortly. In the meantime, you can use
+                Yanki to explore its features with the same access
               </Typography>
             )}
 
@@ -70,20 +64,14 @@ const EnterprisePendingStatusPage = () => {
               <Typography
                 variant="h5"
                 component="h1"
-                sx={{
-                  marginBottom: "54px",
-                  marginTop: "-55px",
-                  textAlign: "center",
-                  fontSize: "22px",
-                  color: "#063762"
-                }}
+                className="enterprise-rejected-message"
               >
                 Request not approved <br />
                 Thank You
               </Typography>
             )}
             <Box className="enterprise-status">
-              <Button variant="contained" onClick={onGoToHome} >
+              <Button variant="contained" onClick={onGoToHome}>
                 Go to home
               </Button>
             </Box>

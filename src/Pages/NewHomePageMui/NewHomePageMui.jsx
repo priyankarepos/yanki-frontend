@@ -422,12 +422,20 @@ const NewHomePageMui = () => {
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
 
-    const isHebrew = /[\u0590-\u05FF]/.test(e.target.value);
+    const containsHebrew = /[\u0590-\u05FF]/.test(e.target.value);
+    const containsEnglish = /[a-zA-Z]/.test(e.target.value);
+    let newDirection;
 
-    const direction = isHebrew ? 'rtl' : 'ltr';
+    if (containsEnglish && containsHebrew) {
+      newDirection = "ltr";
+    } else if (containsHebrew) {
+      newDirection = "rtl";
+    } else {
+      newDirection = "ltr";
+    }
 
-    setDirection(direction);
-    setQueryDirection(direction);
+    setDirection(newDirection);
+    setQueryDirection(newDirection);
   }
 
   return (

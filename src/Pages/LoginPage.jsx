@@ -26,16 +26,8 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Context } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
-import GoogleIcon from '@mui/icons-material/Google';
+import GoogleIcon from "@mui/icons-material/Google";
 import { useMediaQuery } from "@mui/material";
-
-const linkStyle = {
-  color: "#457bac",
-  fontSize: "15px",
-  textDecoration: "none",
-  paddingRight: "20px",
-  borderRight: "1px solid #457bac",
-};
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -103,11 +95,15 @@ const LoginPage = () => {
       if (e?.response?.data?.message && activeTab === 0) {
         setLoginErrorMsg(e?.response?.data?.message);
       } else {
-        if (e?.response?.data?.message === "This email isn't registered. Please sign up." && activeTab === 1) {
+        if (
+          e?.response?.data?.message ===
+            "This email isn't registered. Please sign up." &&
+          activeTab === 1
+        ) {
           setLoginErrorMsg(
             <span>
-              This email isn't registered. Please sign up to become a Yanki partner.
-              Contact us at{" "}
+              This email isn't registered. Please sign up to become a Yanki
+              partner. Contact us at{" "}
               <Link href="mailto:hello@yanki.ai" color="inherit">
                 hello@yanki.ai
               </Link>
@@ -134,7 +130,7 @@ const LoginPage = () => {
         window.localStorage.setItem(
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
-        )
+        );
         navigate("/");
       } else {
         setLoginError(true);
@@ -169,17 +165,14 @@ const LoginPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  style={{
-                    width: "60%",
-                  }}
+                  className="yanki-logo-image"
                 />
               </RouterLink>
             </Box>
             <Typography
               component="h1"
               variant="h5"
-              sx={{ marginBottom: "34px", textAlign: "center", fontWeight: "bold", color: "#72a9de", }}
-              className="text-center marginBottom-34"
+              className="text-center marginBottom-34 login-page-title"
             >
               Login your account
             </Typography>
@@ -198,15 +191,21 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
-                  sx={{ marginBottom: "10px" }}
-                  className={activeTab === 1 ? 'InputFieldColor' : ''}
+                  className={`marginBottom-10 ${
+                    activeTab === 1 ? "InputFieldColor" : ""
+                  }`}
                   {...field}
                   type="outlined"
                   placeholder="Email address"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <MailOutlineIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
+                        <MailOutlineIcon
+                          style={{
+                            color:
+                              activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                          }}
+                        />
                       </InputAdornment>
                     ),
                   }}
@@ -235,15 +234,22 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
-                  className={activeTab === 1 ? 'InputFieldColor' : ''}
+                  className={activeTab === 1 ? "InputFieldColor" : ""}
                   {...field}
-                  style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                  style={{
+                    color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                  }}
                   type="outlined"
                   placeholder="Password"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <HttpsOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
+                        <HttpsOutlinedIcon
+                          style={{
+                            color:
+                              activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                          }}
+                        />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -253,9 +259,23 @@ const LoginPage = () => {
                           edge="end"
                         >
                           {showPassword ? (
-                            <VisibilityOffOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
+                            <VisibilityOffOutlinedIcon
+                              style={{
+                                color:
+                                  activeTab === 1
+                                    ? "#8bbae5"
+                                    : "defaultIconColor",
+                              }}
+                            />
                           ) : (
-                            <VisibilityOutlinedIcon style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }} />
+                            <VisibilityOutlinedIcon
+                              style={{
+                                color:
+                                  activeTab === 1
+                                    ? "#8bbae5"
+                                    : "defaultIconColor",
+                              }}
+                            />
                           )}
                         </IconButton>
                       </InputAdornment>
@@ -273,9 +293,11 @@ const LoginPage = () => {
                 />
               )}
             />
-            <Box className="flex justify-between items-center w-full" sx={{ marginY: "15px", }}>
+            <Box className="flex justify-between items-center w-full marginY-15">
               <FormControlLabel
-                style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                style={{
+                  color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                }}
                 control={
                   <Controller
                     control={control}
@@ -290,14 +312,16 @@ const LoginPage = () => {
                 component={LinkBehavior}
                 underline="none"
                 variant="body2"
-                style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}
+                style={{
+                  color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                }}
               >
                 Forgot Password?
               </Link>
             </Box>
 
             {loginError && (
-              <Alert severity="error" sx={{ marginBottom: "10px" }}>
+              <Alert severity="error" className="marginBottom-10">
                 {loginErrorMsg}
               </Alert>
             )}
@@ -307,38 +331,71 @@ const LoginPage = () => {
               fullWidth
               onClick={handleSubmit(onSubmit)}
               disabled={loginLoading}
-              sx={{ textTransform: "capitalize", }}
+              className="login-page-login-button"
             >
               {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
             </Button>
-            <Divider sx={{ marginY: "28px" }}>or</Divider>
-            {activeTab === 0 && <Button onClick={() => login()} variant="outlined" sx={{ marginBottom: "35px", fontSize: "16px", textTransform: "capitalize", color: "#72a9de", }} fullWidth>
-              <GoogleIcon style={{ width: "18px", paddingBottom: "2px", }} /> &nbsp;Google
-            </Button>}
-            <Box className="text-center" sx={{ marginTop: "28px" }}>
-              <Typography variant="subtitle1" display="block" gutterBottom style={{ color: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
+            <Divider className="marginY-28">or</Divider>
+            {activeTab === 0 && (
+              <Button
+                onClick={() => login()}
+                variant="outlined"
+                className="google-button"
+                fullWidth
+              >
+                <GoogleIcon className="googleIcon" />
+                &nbsp;Google
+              </Button>
+            )}
+            <Box className="text-center marginTop-28">
+              <Typography
+                variant="subtitle1"
+                display="block"
+                gutterBottom
+                style={{
+                  color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                }}
+              >
                 Don't have an account?{" "}
-                <Link to={activeTab === 1 ? "/enterprise-signup" : "/signup"} component={LinkBehavior} underline="none">
-                  <span className="font-bold cursor-pointer" style={{ color: activeTab === 1 ? '#13538b' : 'defaultIconColor' }}>SignUp</span>
+                <Link
+                  to={activeTab === 1 ? "/enterprise-signup" : "/signup"}
+                  component={LinkBehavior}
+                  underline="none"
+                >
+                  <span
+                    className="font-bold cursor-pointer"
+                    style={{
+                      color: activeTab === 1 ? "#13538b" : "defaultIconColor",
+                    }}
+                  >
+                    SignUp
+                  </span>
                 </Link>
               </Typography>
             </Box>
           </Box>
-
         </Box>
-        <Box sx={{ textAlign: "center", marginY: isLargeScreen ? "20px" : "10px" }}>
-          <Link to="/terms-of-use" style={linkStyle} component={LinkBehavior}>
+        <Box
+          className="text-center"
+          sx={{ marginY: isLargeScreen ? "20px" : "10px" }}
+        >
+          <Link
+            to="/terms-of-use"
+            className="linkStyle"
+            component={LinkBehavior}
+          >
             Terms of Use
           </Link>
           <Link
             to="/privacy-policy"
-            style={{ ...linkStyle, marginRight: "10px", marginLeft: "10px" }}
+            className="linkStyle marginX-10"
             component={LinkBehavior}
           >
             Privacy Policy
           </Link>
           <Typography variant="caption">
-            <a style={{ ...linkStyle, borderRight: "none" }}
+            <a
+              className="linkStyle new-title-email"
               href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
               target="_blank"
               rel="noreferrer"

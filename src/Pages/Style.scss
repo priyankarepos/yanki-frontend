@@ -156,7 +156,9 @@
     text-decoration: none;
     padding-right: 10px;
     border-right: none;
-};
+}
+
+;
 
 .page-image {
     width: auto;
@@ -166,7 +168,171 @@
     margin-bottom: 25px;
 }
 
-.ya-terms-policy-listitem svg{
+.ya-terms-policy-listitem svg {
     position: absolute;
     top: 13px;
+}
+
+.yanki-logo-image {
+    width: 60%;
+}
+
+.change-password-success {
+    margin-bottom: 54px !important;
+    text-align: center
+}
+
+.phone-number-error {
+    color: #ffc9c9 !important;
+}
+
+.new-title-container {
+    max-width: 100%;
+}
+
+.new-title-yanki-logo {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.new-title-heading {
+    text-align: center;
+    font-weight: 600 !important;
+    color: #72a9de;
+    font-size: 16px !important;
+    line-height: 28px !important;
+}
+
+.new-title-tab {
+    font-weight: bold !important;
+    color: #72a9de !important;
+    font-size: 16px !important;
+    text-transform: capitalize !important;
+}
+
+.new-title-active-tab-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 30px auto;
+}
+
+.new-title-dark-theme {
+    background-color: #13538b !important;
+    color: #fff !important;
+    font-size: 0.9rem !important;
+    text-transform: capitalize !important;
+}
+
+.new-title-light-theme {
+    background-color: #13538b !important;
+    color: lightblue !important;
+    border: 1px solid lightblue !important;
+    font-size: 0.9rem !important;
+    text-transform: capitalize !important;
+}
+
+.new-title-partnership {
+    text-align: center;
+    margin-bottom: 30px !important;
+}
+
+.partnership-logos-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.linkStyle {
+    color: #457bac;
+    font-size: 15px;
+    text-decoration: none;
+    padding-right: 10px;
+    border-right: 1px solid #457bac;
+}
+
+.new-title-email {
+    border-right: none !important;
+}
+
+.login-page-title {
+    font-weight: bold !important;
+    color: #72a9de;
+}
+
+.login-page-login-button {
+    text-transform: capitalize !important;
+}
+
+.google-button {
+    margin-bottom: 35px !important;
+    font-size: 16px !important;
+    text-transform: capitalize !important;
+    color: #72a9de !important;
+}
+
+.googleIcon {
+    width: 18px !important;
+    padding-bottom: 2px;
+}
+
+.email-sent-logo {
+    max-width: 185px;
+    display: block;
+    margin: 0 auto 30px auto;
+}
+
+.policy-container, .termsofUse-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.white-color {
+    color: #fff !important;
+}
+
+.lightBlue-color {
+    color: #6fa8dd !important;
+}
+
+.text-font-size {
+    font-size: 14px !important;
+}
+
+.search-query {
+    margin-bottom: 10px;
+    background-color: #1d4a72 !important;
+    padding: 10px;
+
+    .search-query-container {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.sky-blue-color {
+    color: #8bbae5;
+}
+
+.signinpage-phone-error {
+    color: #ffc9c9;
+}
+
+.signinpage-text-container {
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 25px;
+}
+
+.signinpage-terms {
+    font-weight: 600 !important;
+    color: #fff !important;
+}
+
+.light-color {
+    color: #8fc2f1;
 }

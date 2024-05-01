@@ -43,7 +43,9 @@ const ForgotPasswordPage = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${data.emailAddress}&userType=${activeTab === 0 ? "User" : "Enterprise"}`
+        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${
+          data.emailAddress
+        }&userType=${activeTab === 0 ? "User" : "Enterprise"}`
       );
 
       if (response.status === 200) {
@@ -76,19 +78,19 @@ const ForgotPasswordPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                style={{ width: "60%" }}
+                className="yanki-logo-image"
               />
             </Box>
             <Typography
               variant="h5"
               component="h1"
-              sx={{ marginBottom: "10px", textAlign: "center" }}
+              className="text-center marginBottom-10"
             >
               Forgot password?
             </Typography>
             <Typography
               variant="subtitle2"
-              sx={{ marginBottom: "34px", textAlign: "center" }}
+              className="text-center marginBottom-34"
             >
               No worries, we'll send you reset instructions.
             </Typography>
@@ -119,7 +121,7 @@ const ForgotPasswordPage = () => {
                       ),
                     }}
                     fullWidth
-                    sx={{ marginBottom: "20px" }}
+                    className="marginBottom-20"
                     error={!!errors["emailAddress"]}
                     helperText={
                       errors["emailAddress"]
@@ -132,7 +134,7 @@ const ForgotPasswordPage = () => {
               />
 
               {isSubmitError && (
-                <Alert severity="error" sx={{ marginBottom: "20px" }}>
+                <Alert severity="error" className="marginBottom-20">
                   {errorMsg}
                 </Alert>
               )}
@@ -141,7 +143,7 @@ const ForgotPasswordPage = () => {
                 variant="contained"
                 type="submit"
                 fullWidth
-                sx={{ marginBottom: "21px" }}
+                className="marginBottom-20"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

@@ -235,7 +235,7 @@ p.kosher-text strong {
   margin-bottom: 12px !important;
 }
 
-.enterprise-pdf-link {
+.enterprise-pdf-link, .sentence-answer-container a {
   color: #007bff;
   cursor: pointer;
 }
@@ -311,4 +311,8 @@ p.kosher-text strong {
 
 .torahanytime-source-speakerName {
   text-align: left;
+}
+
+.sentence-answer-container ol {
+  margin-left: 20px;
 }

@@ -24,8 +24,18 @@ const SearchHistoryItem = ({ query, response }) => {
   const { activeTab } = React.useContext(Context);
 
   React.useEffect(() => {
-    const isHebrew = /[\u0590-\u05FF]/.test(query);
-    const newDirection = isHebrew ? 'rtl' : 'ltr';
+    const containsHebrew = /[\u0590-\u05FF]/.test(query);
+    const containsEnglish = /[a-zA-Z]/.test(query);
+    let newDirection;
+
+    if (containsEnglish && containsHebrew) {
+      newDirection = "ltr";
+    } else if (containsHebrew) {
+      newDirection = "rtl";
+    } else {
+      newDirection = "ltr";
+    }
+
     setDirection(newDirection);
   }, [query]);
 
@@ -36,23 +46,21 @@ const SearchHistoryItem = ({ query, response }) => {
   const isPersonalAssistant = response.isSucess && response.message && response.isPersonalAssistant;
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
-      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#1d4a72" }} dir={direction}> 
-        <div style={{ padding: "10px" }}>
-          <Box style={{ display: 'flex', alignItems: 'center' }}>
-            <ChatBubbleOutlineIcon fontSize="small" style={{ margin: '0 8px', color: activeTab === 0 ? "#fff" : "#8bbae5", }} />
-            <Typography style={{ fontSize: "16px", color: activeTab === 0 ? "#fff" : "#8bbae5", }}>{query}</Typography>
-          </Box>
-        </div>
+      <Paper elevation={3} className="search-query" dir={direction}> 
+        <Box className="search-query-container">
+          <ChatBubbleOutlineIcon fontSize="small" className={`marginX-8 ${ activeTab === 0 ? "white-color" : "sky-blue-color" }`} />
+          <Typography className={activeTab === 0 ? "white-color" : "sky-blue-color"} >{query}</Typography>
+        </Box>
       </Paper>
       {isTorahAnswer && !response?.isExclusiveContent && (
-        <Paper id="abcd" elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper id="abcd" elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <TorahanytimeAnswer answer={response} />
           </div>
         </Paper>
       )}
       {isGovadenAnswer && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <GovadenAnswer answer={response} />
           </div>
@@ -60,7 +68,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <SentenceAnswer answer={response} />
           </div>
@@ -68,7 +76,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && !response?.isViewReminder && (
-          <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+          <Paper elevation={3} className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
               <DemoEnterpriseChat answer={response} />
             </div>
@@ -76,7 +84,7 @@ const SearchHistoryItem = ({ query, response }) => {
         )}
 
       {response?.isSucess && response?.pdfNames && response?.pdfNames.length > 0 && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <PdfAnswers answer={response} />
           </div>
@@ -84,7 +92,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && response?.vimeoVideoDetails && response?.vimeoVideoDetails.length > 0 && response?.isExclusiveContent && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <YoutubeContent answer={response} />
           </div>
@@ -92,7 +100,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && response?.contentResponse && response?.enterprisePdfNames && response?.enterprisePdfNames.length > 0 && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <EnterprisePdfAnswer answer={response} />
           </div>
@@ -100,14 +108,14 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && response?.isEvent && response?.message && activeTab===0 &&  (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <EventPublicationForm answer={response} />
           </div>
         </Paper>
       )}
 
-      <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+      <Paper elevation={3} className="marginBottom-10">
         {response.isSucess === false && response?.message && (
           <div className="response">
             <ErrorAnswer errorMsg={response.message} />
@@ -116,7 +124,7 @@ const SearchHistoryItem = ({ query, response }) => {
       </Paper>
 
       {isDataAvailable && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <IsItKosher answer={response} />
           </div>
@@ -124,28 +132,28 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       {response?.isSucess && response?.safetyChecker && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <SafetyChecker answer={response} />
           </div>
         </Paper>
       )}
       {isHatzalah && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
         <div>
           <HatzalahGlobalAssist answer={response} />
         </div>
         </Paper>
       )}
       {isPersonalAssistant && (
-         <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+         <Paper elevation={3} className="marginBottom-10">
          <div className="chat-bubble assistant-bubble">
            <PersonalAssistant answer={response} />
           </div>
         </Paper>
       )}
       {response?.isSucess && response?.isViewReminder && response?.message && (
-        <Paper elevation={3} style={{ marginBottom: "10px", backgroundColor: "#012e55" }}>
+        <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <ReminderNotification answer={response} />
           </div>
