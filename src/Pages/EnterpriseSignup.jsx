@@ -369,10 +369,6 @@ const EnterpriseSignup = () => {
                       value: true,
                       message: "Phone number is required.",
                     },
-                    pattern: {
-                      value: phoneRegex,
-                      message: "Enter valid phone number",
-                    },
                   }}
                   render={({ field }) => (
                     <div className="currentSignInPhone-style">
