@@ -200,10 +200,11 @@ const AiCustomization = () => {
           AI Customization
         </Typography>
         <Typography variant="body1" gutterBottom>
-          <strong>Questions for that section:</strong> Your responses will help
-          us understand the needs and challenges of our users and develop
-          helpful resources and ideas to make your religious life easier. All
-          responses will be kept confidential.
+          <strong>
+            Your information helps us grasp your preferences. This understanding
+            will enable our systems to develop personalized resources and
+            solutions that enhance your experience.
+          </strong>
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmit)}
