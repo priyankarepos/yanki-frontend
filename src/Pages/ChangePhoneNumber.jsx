@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputLabel, Snackbar } from "@mui/material";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
-import { phoneRegex } from "../Utils/validations/validation";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FormHelperText } from "@mui/material";
