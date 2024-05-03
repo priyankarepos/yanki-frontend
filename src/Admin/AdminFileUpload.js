@@ -31,68 +31,7 @@ import { pdfjs } from "react-pdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from '@mui/icons-material/Add';
-
-const styles = {
-  tableContainer: {
-    marginBottom: "0",
-  },
-  label: {
-    color: "#8bbae5",
-    marginBottom: "8px",
-  },
-  headerCell: {
-    fontWeight: "bold",
-    background: "#13538b",
-    color: "white",
-    minWidth: "200px",
-    fontSize: 16,
-  },
-  cell: {
-    fontSize: 16,
-  },
-  approveButton: {
-    backgroundColor: "#063762",
-    color: "#fff",
-    textTransform: "capitalize",
-    borderRadius: "50px",
-    padding: "0 15px",
-    height: "40px",
-    marginLeft: "7px",
-  },
-  content: {
-    flex: 1,
-    marginLeft: "0",
-    transition: "margin-left 0.3s",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalContent: {
-    backgroundColor: "#063762",
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-    padding: "35px 25px",
-    width: "500px",
-    borderRadius: "8px",
-  },
-  modalTitle: {
-    fontWeight: "medium",
-    marginBottom: "16px",
-  },
-  modalButton: {
-    backgroundColor: "#fff",
-    color: "#063762",
-    textTransform: "capitalize",
-    borderRadius: "10px",
-    padding: "20px 15px",
-    fontSize: "16px",
-    marginTop: "20px",
-  },
-};
+import AddIcon from "@mui/icons-material/Add";
 
 const AdminFileUpload = () => {
   const { drawerOpen } = useContext(Context);
@@ -176,7 +115,9 @@ const AdminFileUpload = () => {
       setLoading(true);
       const formData = new FormData();
       formData.append("file", data.file[0]);
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(
+      const apiUrl = `${
+        process.env.REACT_APP_API_HOST
+      }/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(
         data.file[0].name
       )}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
 
@@ -276,7 +217,9 @@ const AdminFileUpload = () => {
     try {
       setLoading(true);
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(
+        `${
+          process.env.REACT_APP_API_HOST
+        }/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(
           pdfId
         )}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`
       );
@@ -315,11 +258,7 @@ const AdminFileUpload = () => {
       <Modal
         open={Boolean(selectedPdf)}
         onClose={closePdfModal}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="event-pdf-modal-open"
       >
         <div className="pdf-modal">
           <IconButton onClick={closePdfModal} aria-label="close">
@@ -341,27 +280,29 @@ const AdminFileUpload = () => {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const contentMargin = drawerOpen ? "0" : "0";
-
   return (
     <div className="admin-faq-wrapper">
       <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
         <AdminDashboard />
       </Box>
-      <Box style={{ ...styles.content, marginLeft: contentMargin }} sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", padding: '16px' }}>
+      <Box
+        className="admin-file-upload-content"
+        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+      >
         <Box className="admin-faq-heading">
-          <Typography variant="h6" sx={{ flex: '1', pb: 2 }}>
+          <Typography variant="h6" sx={{ pb: 2 }}>
             Upload Files
           </Typography>
-          <IconButton color="secondary" size="small" onClick={() => setIsModalOpen(true)}>
+          <IconButton
+            color="secondary"
+            size="small"
+            onClick={() => setIsModalOpen(true)}
+          >
             <AddIcon /> Add Files
           </IconButton>
         </Box>
         {tableData.length === 0 ? (
-          <Typography
-            variant="h6"
-            className="no-data-found"
-          >
+          <Typography variant="h6" className="no-data-found">
             No data available.
           </Typography>
         ) : (
@@ -445,10 +386,13 @@ const AdminFileUpload = () => {
         onClose={() => setIsModalOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={styles.modal}
+        className="event-pdf-modal-open"
       >
-        <Box style={styles.modalContent}>
-          <Typography variant="h5" sx={styles.modalTitle}>
+        <Box className="admin-faq-model-content">
+          <Typography
+            variant="h5"
+            className="enterprise-add-category-modal-title"
+          >
             Upload File
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -517,12 +461,12 @@ const AdminFileUpload = () => {
             <Button
               variant="contained"
               color="primary"
-              style={styles.modalButton}
+              className="enterprise-add-category-save-button"
               type="submit"
               disabled={loading}
             >
               {loading ? (
-                <CircularProgress size={24} style={{ color: "#0d416f" }} />
+                <CircularProgress size={24} className="event-form-submit-button-loader"/>
               ) : (
                 "Upload"
               )}
@@ -535,10 +479,10 @@ const AdminFileUpload = () => {
         onClose={() => setEditIsModalOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={styles.modal}
-      >
-        <Box style={styles.modalContent}>
-          <Typography variant="h5" sx={styles.modalTitle}>
+        className="event-pdf-modal-open"
+      > 
+        <Box className="admin-faq-model-content">
+          <Typography variant="h5" className="enterprise-add-category-modal-title">
             Update Keyword
           </Typography>
           <form className="keyword-update-box">
@@ -595,13 +539,13 @@ const AdminFileUpload = () => {
             <Button
               variant="contained"
               color="primary"
-              style={styles.modalButton}
+              className="enterprise-add-category-save-button"
               type="submit"
               disabled={tags.length === 0 || loading}
               onClick={(e) => updateKeywords(e)}
             >
               {loading ? (
-                <CircularProgress size={24} style={{ color: "#0d416f" }} />
+                <CircularProgress size={24} className="event-form-submit-button-loader" />
               ) : (
                 "Update"
               )}

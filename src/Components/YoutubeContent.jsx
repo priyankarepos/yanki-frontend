@@ -124,7 +124,7 @@ const YoutubeContent = ({ answer }) => {
           answer?.vimeoVideoDetails &&
           answer?.vimeoVideoDetails.length > 0 && (
             <Box className="youtube-container">
-              <Typography sx={{ marginBottom: "10px" }}>
+              <Typography className="marginBottom-10">
                 We have found data on multiple sources. Please select a source
                 to give you the most accurate result
               </Typography>
@@ -154,7 +154,7 @@ const YoutubeContent = ({ answer }) => {
                 <Paper key={item.title}>
                   <StyledCarouselItem
                     key={item._id}
-                    sx={{ marginRight: "5px" }}
+                    className="marginRight-5"
                   >
                     {item.link && (
                       <div>
@@ -195,7 +195,7 @@ const YoutubeContent = ({ answer }) => {
                   !item._source.vimeo_video_links.length) ? null : (
                   <StyledCarouselItem
                     key={item._id}
-                    sx={{ marginRight: "5px" }}
+                    className="marginRight-5"
                   >
                     {showYouTubeVideos === false &&
                       isVideo &&

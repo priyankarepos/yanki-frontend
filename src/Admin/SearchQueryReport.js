@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Grid,
   Typography,
@@ -9,20 +9,10 @@ import {
   TableCell,
   TableBody,
   Paper,
-  Tooltip
-} from '@mui/material';
-
-const cellStyle = {
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  maxWidth: '600px',
-  position: 'relative',
-  width:'100%'
-};
+  Tooltip,
+} from "@mui/material";
 
 const SearchQueryReport = ({ queryAnswer }) => {
-
   return (
     <div>
       {queryAnswer && (
@@ -35,35 +25,31 @@ const SearchQueryReport = ({ queryAnswer }) => {
                 </Typography>
               </Grid>
             </Grid>
-          ) : (
-            queryAnswer && queryAnswer.data && queryAnswer.data.length > 0 ? (
-              <TableContainer sx={{ my: 2 }} component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Sl No</TableCell>
-                      <TableCell>Query</TableCell>
+          ) : queryAnswer && queryAnswer.data && queryAnswer.data.length > 0 ? (
+            <TableContainer sx={{ my: 2 }} component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Sl No</TableCell>
+                    <TableCell>Query</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {queryAnswer.data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>
+                        <Tooltip title={item.query} arrow>
+                          <div className="search-query-cell">{item.query}</div>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {queryAnswer.data.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.id}</TableCell>
-                        <TableCell>
-                          <Tooltip title={item.query} arrow>
-                            <div style={cellStyle}>
-                              {item.query}
-                            </div>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            ) : (
-              <p>{queryAnswer}</p>
-            )
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <p>{queryAnswer}</p>
           )}
         </div>
       )}

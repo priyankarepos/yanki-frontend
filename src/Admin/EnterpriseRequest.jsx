@@ -1,365 +1,418 @@
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputLabel, useMediaQuery } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
-import 'react-tagsinput/react-tagsinput.css';
-import { Context } from '../App';
-import AdminDashboard from './AdminDashboard';
-import { FormControl, Select, MenuItem } from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
-import SnackbarContent from '@mui/material/SnackbarContent';
-import axios from "axios";
 import {
-    Pagination,
-    CircularProgress,
-} from '@mui/material';
-import "./AdminStyle.css"
-import ConfirmDialog from '../EnterpriseCollabration/ConfirmDialog';
-
-const styles = {
-    tableContainer: {
-        marginBottom: '0',
-    },
-    headerCell: {
-        fontWeight: 'bold',
-        background: '#13538b',
-        color: 'white',
-        fontSize: 15,
-    },
-    cell: {
-        fontSize: 15,
-    },
-    approveButton: {
-        backgroundColor: "#063762",
-        color: "#fff",
-        textTransform: "capitalize",
-        borderRadius: "50px",
-        padding: "0 15px",
-        height: "40px",
-        marginLeft: "7px",
-    },
-    content: {
-        flex: 1,
-        padding: '16px',
-        marginLeft: '0',
-        transition: 'margin-left 0.3s',
-    },
-    label: {
-        color: '#8bbae5',
-        marginBottom: '8px',
-    },
-};
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  InputLabel,
+  useMediaQuery,
+} from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import "react-tagsinput/react-tagsinput.css";
+import { Context } from "../App";
+import AdminDashboard from "./AdminDashboard";
+import { FormControl, Select, MenuItem } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import SnackbarContent from "@mui/material/SnackbarContent";
+import axios from "axios";
+import { Pagination, CircularProgress } from "@mui/material";
+import "./AdminStyle.css";
+import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 
 const AdminEnterpriseRequest = () => {
-    const { drawerOpen } = useContext(Context);
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [enterpriseCategories, setEnterpriseCategories] = useState([]);
-    const [enterpriseRequests, setEnterpriseRequests] = useState([]);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-    const [pageNumber, setPageNumber] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [loadingRows, setLoadingRows] = useState([]);
-    const [isApproving, setIsApproving] = useState(false);
-    const [isRejecting, setIsRejecting] = useState(false);
-    const [confirmationText, setConfirmationText] = useState('');
-    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-    const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
-    const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const { drawerOpen } = useContext(Context);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [enterpriseCategories, setEnterpriseCategories] = useState([]);
+  const [enterpriseRequests, setEnterpriseRequests] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loadingRows, setLoadingRows] = useState([]);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
-    const openSnackbar = (message, severity) => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
+  const openSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchEnterpriseCategories = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+        );
+
+        if (response.status === 200) {
+          setEnterpriseCategories(response.data);
+        } else {
+          setSnackbarMessage("Failed to fetch enterprise categories");
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
+      }
     };
 
-    useEffect(() => {
-        const fetchEnterpriseCategories = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-                );
+    const fetchEnterpriseRequests = async () => {
+      try {
+        const categoryIdParam = selectedCategory || null;
 
-                if (response.status === 200) {
-                    setEnterpriseCategories(response.data);
-                } else {
-                    console.error("Failed to fetch enterprise categories");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        };
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
+          {
+            params: {
+              categoryId: categoryIdParam,
+              pageNumber: pageNumber,
+              pageSize: 10,
+            },
+          }
+        );
 
-        const fetchEnterpriseRequests = async () => {
-            try {
-                const categoryIdParam = selectedCategory || null;
-
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
-                    {
-                        params: {
-                            categoryId: categoryIdParam,
-                            pageNumber: pageNumber,
-                            pageSize: 10,
-                        },
-                    }
-                );
-
-                if (response.status === 200) {
-                    setEnterpriseRequests(response.data);
-                    setTotalPages(Math.ceil(response.data.totalCount / 10));
-                } else {
-                    console.error("Failed to fetch enterprise requests");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        };
-
-        fetchEnterpriseCategories();
-        fetchEnterpriseRequests();
-    }, [selectedCategory, pageNumber]);
-
-    const handlePageChange = (event, newPage) => {
-        setPageNumber(newPage);
-    };
-
-    const handleApprove = async (enterpriseId, userId, enterpriseName) => {
-        try {
-            const updatedLoadingRows = [...loadingRows, enterpriseId];
-            setLoadingRows(updatedLoadingRows);
-
-            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
-            const response = await axios.post(url);
-
-            if (response.status === 200) {
-                const updatedRequests = enterpriseRequests.data.map((row) =>
-                    row.enterpriseId === enterpriseId ? { ...row, status: 'Approved' } : row
-                );
-                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
-
-                openSnackbar(`Enterprise ${enterpriseName} approved successfully`, 'success');
-            } else {
-                openSnackbar('Failed to approve enterprise request', 'error');
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            const updatedLoadingRows = loadingRows.filter((rowId) => rowId !== enterpriseId);
-            setLoadingRows(updatedLoadingRows);
+        if (response.status === 200) {
+          setEnterpriseRequests(response.data);
+          setTotalPages(Math.ceil(response.data.totalCount / 10));
+        } else {
+          setSnackbarMessage("Failed to fetch enterprise requests");
+          setSnackbarOpen(true);
         }
+      } catch (error) {
+        setSnackbarMessage("Error:", error);
+        setSnackbarOpen(true);
+      }
     };
 
-    const handleReject = async (enterpriseId, userId, enterpriseName) => {
-        try {
-            const updatedLoadingRows = [...loadingRows, enterpriseId];
-            setLoadingRows(updatedLoadingRows);
+    fetchEnterpriseCategories();
+    fetchEnterpriseRequests();
+  }, [selectedCategory, pageNumber]);
 
-            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
-            const response = await axios.post(url);
+  const handlePageChange = (event, newPage) => {
+    setPageNumber(newPage);
+  };
 
-            if (response.status === 200) {
-                const updatedRequests = enterpriseRequests.data.map((row) =>
-                    row.enterpriseId === enterpriseId ? { ...row, status: 'Rejected' } : row
-                );
-                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+  const handleApprove = async (enterpriseId, userId, enterpriseName) => {
+    try {
+      const updatedLoadingRows = [...loadingRows, enterpriseId];
+      setLoadingRows(updatedLoadingRows);
 
-                openSnackbar(`Enterprise ${enterpriseName} rejected successfully`, 'success');
-            } else {
-                openSnackbar('Failed to reject enterprise request', 'error');
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            const updatedLoadingRows = loadingRows.filter((rowId) => rowId !== enterpriseId);
-            setLoadingRows(updatedLoadingRows);
-        }
-    };
+      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
+      const response = await axios.post(url);
 
-    const handleDeleteClick = (enterpriseId, userId, enterpriseName) => {
-        setConfirmationText(`Are you sure you want to delete this event`);
-        setConfirmDialogOpen(true);
-        setEnterpriseIdToDelete(enterpriseId);
-        setUserIdToDelete(userId);
-    };
+      if (response.status === 200) {
+        const updatedRequests = enterpriseRequests.data.map((row) =>
+          row.enterpriseId === enterpriseId
+            ? { ...row, status: "Approved" }
+            : row
+        );
+        setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
 
-    const handleConfirmDelete = async () => {
-        try {
-            const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
-            const response = await axios.delete(url);
+        openSnackbar(
+          `Enterprise ${enterpriseName} approved successfully`,
+          "success"
+        );
+      } else {
+        openSnackbar("Failed to approve enterprise request", "error");
+      }
+    } catch (error) {
+      setSnackbarMessage("Error:", error);
+      setSnackbarOpen(true);
+    } finally {
+      const updatedLoadingRows = loadingRows.filter(
+        (rowId) => rowId !== enterpriseId
+      );
+      setLoadingRows(updatedLoadingRows);
+    }
+  };
 
-            if (response.status === 200) {
-                const updatedRequests = enterpriseRequests.data.filter((row) => row.enterpriseId !== enterpriseIdToDelete);
-                setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+  const handleReject = async (enterpriseId, userId, enterpriseName) => {
+    try {
+      const updatedLoadingRows = [...loadingRows, enterpriseId];
+      setLoadingRows(updatedLoadingRows);
 
-                openSnackbar(`Request deleted successfully`, 'success');
-            } else {
-                openSnackbar('Failed to delete the request', 'error');
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            setConfirmDialogOpen(false);
-        }
-    };
+      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
+      const response = await axios.post(url);
 
-    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-    const contentMargin = drawerOpen ? '0' : '0';
+      if (response.status === 200) {
+        const updatedRequests = enterpriseRequests.data.map((row) =>
+          row.enterpriseId === enterpriseId
+            ? { ...row, status: "Rejected" }
+            : row
+        );
+        setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
 
-    return (
-        <Box style={{ display: "flex" }}>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={() => setSnackbarOpen(false)}
+        openSnackbar(
+          `Enterprise ${enterpriseName} rejected successfully`,
+          "success"
+        );
+      } else {
+        openSnackbar("Failed to reject enterprise request", "error");
+      }
+    } catch (error) {
+      setSnackbarMessage("Error:", error);
+      setSnackbarOpen(true);
+    } finally {
+      const updatedLoadingRows = loadingRows.filter(
+        (rowId) => rowId !== enterpriseId
+      );
+      setLoadingRows(updatedLoadingRows);
+    }
+  };
+
+  const handleDeleteClick = (enterpriseId, userId, enterpriseName) => {
+    setConfirmationText(`Are you sure you want to delete this event`);
+    setConfirmDialogOpen(true);
+    setEnterpriseIdToDelete(enterpriseId);
+    setUserIdToDelete(userId);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
+      const response = await axios.delete(url);
+
+      if (response.status === 200) {
+        const updatedRequests = enterpriseRequests.data.filter(
+          (row) => row.enterpriseId !== enterpriseIdToDelete
+        );
+        setEnterpriseRequests({ ...enterpriseRequests, data: updatedRequests });
+
+        openSnackbar(`Request deleted successfully`, "success");
+      } else {
+        openSnackbar("Failed to delete the request", "error");
+      }
+    } catch (error) {
+      setSnackbarMessage("Error:", error);
+      setSnackbarOpen(true);
+    } finally {
+      setConfirmDialogOpen(false);
+    }
+  };
+
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  return (
+    <Box className="enterprise-request-container">
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          style={{
+            backgroundColor:
+              snackbarSeverity === "success" ? "#2862953" : "#286295",
+          }}
+        />
+      </Snackbar>
+      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+        <AdminDashboard />
+      </Box>
+      <Box
+        className="enterpriseFormBox"
+        sx={{
+          width: drawerOpen ? "calc(100% - 270px)" : "100%",
+        }}
+      >
+        <Box className="enterprise-content">
+          <Typography variant="h6" sx={{ pb: 2 }}>
+            Enterprise Request
+          </Typography>
+          <Box className="marginBottom-25">
+            <InputLabel className="enterprise-input-lable">Select Category</InputLabel>
+            <FormControl
+              fullWidth
+              sx={{
+                width: { xs: "100%", md: "100%" },
+              }}
             >
-                <SnackbarContent
-                    message={snackbarMessage}
-                    style={{
-                        backgroundColor: snackbarSeverity === 'success' ? '#2862953' : '#286295',
-                    }}
-                />
-            </Snackbar>
-            <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-            <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-                <Box style={{ ...styles.content, marginLeft: contentMargin }}>
-                    <Typography variant="h6" sx={{ pb: 2 }}>Enterprise Request</Typography>
-                    <Box sx={{ marginBottom: "25px", }}>
-                        <InputLabel style={styles.label}>Select Category</InputLabel>
-                        <FormControl fullWidth sx={{
-                            width: { xs: '100%', md: '100%' },
-                        }}>
-                            <Select
-                                value={selectedCategory}
-                                onChange={(event) => setSelectedCategory(event.target.value)}
-                                displayEmpty
-                                sx={{ marginBottom: "10px" }}
-                                className='EnterpriseCategorySelect'
-                            >
-                                <MenuItem value="">
-                                    Select an Enterprise Category
-                                </MenuItem>
-                                {enterpriseCategories.map((category) => (
-                                    <MenuItem key={category.id} value={category.id}>
-                                        {category.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                    <TableContainer component={Paper} style={styles.tableContainer} className='enterprise-request-table'>
-                        <Table style={styles.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell style={styles.headerCell}>Enterprise Name</TableCell>
-                                    <TableCell style={styles.headerCell}>Email</TableCell>
-                                    <TableCell style={styles.headerCell}>Phone Number</TableCell>
-                                    <TableCell style={styles.headerCell}>Contact Person</TableCell>
-                                    <TableCell style={styles.headerCell}>Website</TableCell>
-                                    <TableCell style={styles.headerCell}>Request Date</TableCell>
-                                    <TableCell style={styles.headerCell}>Status</TableCell>
-                                    <TableCell style={{ ...styles.headerCell, textAlign: "center", }}>Action</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {enterpriseRequests && enterpriseRequests.data ? (
-                                    enterpriseRequests.data.map((row) => (
-                                        <TableRow key={row.enterpriseId}>
-                                            <TableCell style={styles.cell}>{row.enterpriseName}</TableCell>
-                                            <TableCell style={styles.cell}>{row.email}</TableCell>
-                                            <TableCell style={styles.cell}>{row.phoneNumber}</TableCell>
-                                            <TableCell style={styles.cell}>{row.contactPersonName}</TableCell>
-                                            <TableCell style={styles.cell}>
-                                                {row.website ? (
-                                                    <a href={row.website} style={{ color: "#fff" }}>
-                                                        {row.website}
-                                                    </a>
-                                                ) : (
-                                                    "NA"
-                                                )}
-                                            </TableCell>
-                                            <TableCell style={styles.cell}>  {new Date(row.requestDate).toLocaleDateString('en-GB')}</TableCell>
-                                            <TableCell style={styles.cell}>{row.status}</TableCell>
-                                            <TableCell>
-                                                <div style={{ display: 'flex', gap: '8px' }}>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        size="small"
-                                                        style={styles.approveButton}
-                                                        disabled={
-                                                            loadingRows.includes(row.enterpriseId) ||
-                                                            row.status === 'Approved'
-                                                        }
-                                                        onClick={() => {
-                                                            setIsApproving(true);
-                                                            handleApprove(row.enterpriseId, row.userId, row.enterpriseName);
-                                                        }}
-                                                    >
-                                                        {(isApproving && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Approve'}
-                                                    </Button>
-                                                    <Button
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        size="small"
-                                                        style={styles.approveButton}
-                                                        disabled={
-                                                            loadingRows.includes(row.enterpriseId) ||
-                                                            row.status === 'Rejected'
-                                                        }
-                                                        onClick={async () => {
-                                                            setIsRejecting(true);
-                                                            await handleReject(row.enterpriseId, row.userId, row.enterpriseName);
-                                                            setIsRejecting(false);
-                                                        }}
-                                                    >
-                                                        {(isRejecting && loadingRows.includes(row.enterpriseId)) ? <CircularProgress size={24} /> : 'Reject'}
-                                                    </Button>
-                                                    {row.status === 'Rejected' && (
-                                                        <Button
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            size="small"
-                                                            style={styles.approveButton}
-                                                            disabled={loadingRows.includes(row.enterpriseId)}
-                                                            onClick={() => handleDeleteClick(row.enterpriseId, row.userId, row.enterpriseName)}
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={8} style={{ textAlign: 'left' }}>
-                                            {selectedCategory ? 'Loading or no data available' : 'Please select a category'}
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-
-                        </Table>
-                        {totalPages > 1 && (
-                            <Pagination
-                                count={totalPages}
-                                page={pageNumber}
-                                onChange={handlePageChange}
-                                color="primary"
-                                style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}
-                            />
+              <Select
+                value={selectedCategory}
+                onChange={(event) => setSelectedCategory(event.target.value)}
+                displayEmpty
+                className="EnterpriseCategorySelect marginBottom-10"
+              >
+                <MenuItem value="">Select an Enterprise Category</MenuItem>
+                {enterpriseCategories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <TableContainer
+            component={Paper}
+            className="enterprise-request-table marginBottom-0"
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="enterprise-headerCell">
+                    Enterprise Name
+                  </TableCell>
+                  <TableCell className="enterprise-headerCell">Email</TableCell>
+                  <TableCell className="enterprise-headerCell">Phone Number</TableCell>
+                  <TableCell className="enterprise-headerCell">
+                    Contact Person
+                  </TableCell>
+                  <TableCell className="enterprise-headerCell">Website</TableCell>
+                  <TableCell className="enterprise-headerCell">Request Date</TableCell>
+                  <TableCell className="enterprise-headerCell">Status</TableCell>
+                  <TableCell
+                    className="enterprise-headerCell text-center"
+                  >
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {enterpriseRequests && enterpriseRequests.data ? (
+                  enterpriseRequests.data.map((row) => (
+                    <TableRow key={row.enterpriseId}>
+                      <TableCell className="enterprise-cell">
+                        {row.enterpriseName}
+                      </TableCell>
+                      <TableCell className="enterprise-cell">{row.email}</TableCell>
+                      <TableCell className="enterprise-cell">
+                        {row.phoneNumber}
+                      </TableCell>
+                      <TableCell className="enterprise-cell">
+                        {row.contactPersonName}
+                      </TableCell>
+                      <TableCell className="enterprise-cell">
+                        {row.website ? (
+                          <a href={row.website} className="white-color">
+                            {row.website}
+                          </a>
+                        ) : (
+                          "NA"
                         )}
-                    </TableContainer>
-                </Box>
-            </Box>
-            <ConfirmDialog
-                open={confirmDialogOpen}
-                handleClose={() => setConfirmDialogOpen(false)}
-                handleConfirm={handleConfirmDelete}
-                confirmationText={confirmationText}
-            />
-        </Box >
-    )
-}
+                      </TableCell>
+                      <TableCell className="enterprise-cell">
+                        {" "}
+                        {new Date(row.requestDate).toLocaleDateString("en-GB")}
+                      </TableCell>
+                      <TableCell className="enterprise-cell">{row.status}</TableCell>
+                      <TableCell>
+                        <div className="enterprise-cell-button-container">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            className="enterprise-cell-button"
+                            disabled={ 
+                              loadingRows.includes(row.enterpriseId) ||
+                              row.status === "Approved"
+                            }
+                            onClick={() => {
+                              setIsApproving(true);
+                              handleApprove(
+                                row.enterpriseId,
+                                row.userId,
+                                row.enterpriseName
+                              );
+                            }}
+                          >
+                            {isApproving &&
+                            loadingRows.includes(row.enterpriseId) ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              "Approve"
+                            )}
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            className="enterprise-cell-button"
+                            disabled={
+                              loadingRows.includes(row.enterpriseId) ||
+                              row.status === "Rejected"
+                            }
+                            onClick={async () => {
+                              setIsRejecting(true);
+                              await handleReject(
+                                row.enterpriseId,
+                                row.userId,
+                                row.enterpriseName
+                              );
+                              setIsRejecting(false);
+                            }}
+                          >
+                            {isRejecting &&
+                            loadingRows.includes(row.enterpriseId) ? (
+                              <CircularProgress size={24} />
+                            ) : (
+                              "Reject"
+                            )}
+                          </Button>
+                          {row.status === "Rejected" && (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="enterprise-cell-button"
+                              disabled={loadingRows.includes(row.enterpriseId)}
+                              onClick={() =>
+                                handleDeleteClick(
+                                  row.enterpriseId,
+                                  row.userId,
+                                  row.enterpriseName
+                                )
+                              }
+                            >
+                              Delete
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      {selectedCategory
+                        ? "Loading or no data available"
+                        : "Please select a category"}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            {totalPages > 1 && (
+              <Pagination
+                count={totalPages}
+                page={pageNumber}
+                onChange={handlePageChange}
+                color="primary"
+                className="enterprise-pagination"
+              />
+            )}
+          </TableContainer>
+        </Box>
+      </Box>
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={handleConfirmDelete}
+        confirmationText={confirmationText}
+      />
+    </Box>
+  );
+};
 
-export default AdminEnterpriseRequest
+export default AdminEnterpriseRequest;

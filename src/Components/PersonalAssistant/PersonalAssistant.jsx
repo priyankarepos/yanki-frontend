@@ -81,7 +81,7 @@ const PersonalAssistant = ({ answer }) => {
           }}
         >
           {loading ? (
-            <CircularProgress size={24} sx={{ color: "#1d4a72" }} />
+            <CircularProgress size={24} className="dark-blur-color" />
           ) : (
             "Submit"
           )}
