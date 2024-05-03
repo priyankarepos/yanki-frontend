@@ -673,7 +673,8 @@ const NewHomePageMui = () => {
                         arrows={false}
                         autoPlay={true}
                         autoPlaySpeed={2000}
-                        infinite={true}
+                        infinite={true} 
+                        className="new-home-initial-questions"
                         customTransition="transform 500ms ease 0s"
                       >
                         {initialQuestions1.map((question, index) => (
@@ -704,6 +705,7 @@ const NewHomePageMui = () => {
                         autoPlaySpeed={2000}
                         infinite={true}
                         customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
                       >
                         {initialQuestions2.map((question, index) => (
                           <div key={question.id} className="carousel-item">
@@ -733,6 +735,7 @@ const NewHomePageMui = () => {
                         autoPlaySpeed={2000}
                         infinite={true}
                         customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
                       >
                         {initialQuestions3.map((question, index) => (
                           <div key={question.id} className="carousel-item">
@@ -762,6 +765,7 @@ const NewHomePageMui = () => {
                         autoPlaySpeed={2000}
                         infinite={true}
                         customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
                       >
                         {initialQuestions4.map((question, index) => (
                           <div key={question.id} className="carousel-item">

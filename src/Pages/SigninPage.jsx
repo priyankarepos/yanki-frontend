@@ -21,7 +21,6 @@ import Link from "@mui/material/Link";
 import {
   emailRegex,
   passwordRegex,
-  phoneRegex,
 } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useEffect, useState } from "react";

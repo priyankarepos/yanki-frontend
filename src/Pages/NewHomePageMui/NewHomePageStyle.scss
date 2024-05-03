@@ -399,12 +399,12 @@
     background-color: #eaf5ff!important;
 }
 
-.react-multi-carousel-item {
+.new-home-initial-questions .react-multi-carousel-item {
     transform-style: preserve-3d;
     backface-visibility: hidden;
     width: auto !important;
     min-width: 240px;
-    /* max-width: 400px; */
+    max-width: 400px; 
     flex: none !important;
 }
 

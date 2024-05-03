@@ -38,7 +38,6 @@ import "./Style.scss";
 import {
   emailRegex,
   passwordRegex,
-  phoneRegex,
 } from "../Utils/validations/validation";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
