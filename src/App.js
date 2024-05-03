@@ -7,7 +7,7 @@ import {
 } from "react";
 import darkTheme from "./Themes/darkTheme";
 import lightTheme from "./Themes/lightTheme";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme, Snackbar } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
 import LoginPage from "./Pages/LoginPage";
@@ -143,6 +143,8 @@ function App() {
   const [userLatitude, setUserLatitude] = useState("");
   const [userLongitude, setUserLongitude] = useState("");
   const [isLocationAllowed, setIsLocationAllowed] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const googleClientId =
     "1080050298294-vnv1knq153gntogjjfmlkfomm0rvasq4.apps.googleusercontent.com";
 
@@ -172,7 +174,8 @@ function App() {
   // Error callback function
   const errors = (err) => {
     setIsLocationAllowed(`Location denied & Error message - ${err.message}`);
-    console.warn(`ERROR(${err.code}): ${err.message}`);
+    setSnackbarMessage(`ERROR(${err.code}): ${err.message}`);
+    setSnackbarOpen(true);
   };
 
   useEffect(() => {
@@ -186,7 +189,8 @@ function App() {
           }
         });
       } else {
-        console.log("Geolocation is not supported by this browser.");
+        setSnackbarMessage("Geolocation is not supported by this browser.");
+        setSnackbarOpen(true);
       }
     };
 
@@ -274,124 +278,125 @@ function App() {
   }, []);
 
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <ThemeModeContext.Provider
-        value={{ themeMode, toggleThemeMode: toggleThemeMode }}
-      >
-        <ThemeProvider theme={currentTheme}>
-          <CssBaseline />
-          <div className="App">
-            {/* Wrapping with context */}
-            <Context.Provider
-              value={{
-                userLatitude,
-                userLongitude,
-                isLocationAllowed,
-                setDrawerOpen,
-                drawerOpen,
-                activeTab,
-                setActiveTab,
-              }}
-            >
-              {/* <Homepage /> */}
-              {/* <RouterProvider router={router} /> */}
-              <BrowserRouter>
-                <Routes>
-                  <Route
-                    path="/login"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <LoginPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/signup"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <SigninPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/auth"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          {/* <TitlePage /> */}
-                          <NewTitlePage
-                            activeTab={activeTab}
-                            setActiveTab={setActiveTab}
-                          />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/signin-success"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <SigninSuccessPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/active-account"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ActiveAccountPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/forgot-password"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ForgotPasswordPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/password-email-sent"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <PasswordEmailSentpage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/reset-password"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ResetPasswordPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/reset-password-success"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ResetPasswordSuccessPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  {/* <Route
+    <>
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <ThemeModeContext.Provider
+          value={{ themeMode, toggleThemeMode: toggleThemeMode }}
+        >
+          <ThemeProvider theme={currentTheme}>
+            <CssBaseline />
+            <div className="App">
+              {/* Wrapping with context */}
+              <Context.Provider
+                value={{
+                  userLatitude,
+                  userLongitude,
+                  isLocationAllowed,
+                  setDrawerOpen,
+                  drawerOpen,
+                  activeTab,
+                  setActiveTab,
+                }}
+              >
+                {/* <Homepage /> */}
+                {/* <RouterProvider router={router} /> */}
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      path="/login"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <LoginPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/signup"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <SigninPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/auth"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            {/* <TitlePage /> */}
+                            <NewTitlePage
+                              activeTab={activeTab}
+                              setActiveTab={setActiveTab}
+                            />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/signin-success"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <SigninSuccessPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/active-account"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <ActiveAccountPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/forgot-password"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <ForgotPasswordPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/password-email-sent"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <PasswordEmailSentpage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/reset-password"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <ResetPasswordPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/reset-password-success"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <ResetPasswordSuccessPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    {/* <Route
                   path="/backup-home"
                   element={
                     <UserPagesProtection>
@@ -399,229 +404,237 @@ function App() {
                     </UserPagesProtection>
                   }
                 /> */}
-                  <Route
-                    path="/change-password"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <ChangePasswordPage />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/change-phone-number"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <ChangePhoneNumber />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/change-password-success"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <ChangePasswordSuccessPage />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/"
-                    element={
-                      <UserPagesProtection>
-                        <NewHomePageMui />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin"
-                    element={
-                      <UserPagesProtection>
-                        <AdminDashboard />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/change-role"
-                    element={
-                      <UserPagesProtection>
-                        <ChangeRole />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise-signup"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <EnterpriseSignup />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise"
-                    element={
-                      <UserPagesProtection>
-                        <EnterpriseDashboard />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise-status"
-                    element={
-                      <UserPagesProtection>
-                        <EnterprisePendingStatusPage />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise/profile"
-                    element={
-                      <UserPagesProtection>
-                        <EnterpriseProfile />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise/departments"
-                    element={
-                      <UserPagesProtection>
-                        <Departments />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/search-query-report"
-                    element={
-                      <UserPagesProtection>
-                        <AdminSearchRepostPage />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/enterprise-request"
-                    element={
-                      <UserPagesProtection>
-                        <AdminEnterpriseRequest />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/enterprise-categories"
-                    element={
-                      <UserPagesProtection>
-                        <AdminEnterpriseCategory />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/terms-of-use"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <TermsOfUse />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/privacy-policy"
-                    element={
-                      <AuthPagesProtection>
-                        <AuthPageLayout>
-                          <PrivacyPolicy />
-                        </AuthPageLayout>
-                      </AuthPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/create-enterprise"
-                    element={
-                      <UserPagesProtection>
-                        <AdminCreateEnterprise />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/create-department"
-                    element={
-                      <UserPagesProtection>
-                        <AdminCreateDepartment />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/upload-files"
-                    element={
-                      <UserPagesProtection>
-                        <AdminFileUpload />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/enterprise/upload-files"
-                    element={
-                      <UserPagesProtection>
-                        <EnterpriseFileUpload />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/event-request"
-                    element={
-                      <UserPagesProtection>
-                        <AdminEventRequest />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/add-event-location"
-                    element={
-                      <UserPagesProtection>
-                        <EventLocationPage />
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/ai-customization"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <AiCustomization />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/notification"
-                    element={
-                      <UserPagesProtection>
-                        <UserPageLayout>
-                          <SubscribeNotification />
-                        </UserPageLayout>
-                      </UserPagesProtection>
-                    }
-                  />
-                  <Route
-                    path="/admin/add-faq"
-                    element={
-                      <UserPagesProtection>
-                        <AdminAddFaq />
-                      </UserPagesProtection>
-                    }
-                  />
-                </Routes>
-              </BrowserRouter>
-            </Context.Provider>
-          </div>
-        </ThemeProvider>
-      </ThemeModeContext.Provider>
-    </GoogleOAuthProvider>
+                    <Route
+                      path="/change-password"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <ChangePasswordPage />
+                          </UserPageLayout>
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/change-phone-number"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <ChangePhoneNumber />
+                          </UserPageLayout>
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/change-password-success"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <ChangePasswordSuccessPage />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/"
+                      element={
+                        <UserPagesProtection>
+                          <NewHomePageMui />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin"
+                      element={
+                        <UserPagesProtection>
+                          <AdminDashboard />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/change-role"
+                      element={
+                        <UserPagesProtection>
+                          <ChangeRole />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise-signup"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <EnterpriseSignup />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise"
+                      element={
+                        <UserPagesProtection>
+                          <EnterpriseDashboard />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise-status"
+                      element={
+                        <UserPagesProtection>
+                          <EnterprisePendingStatusPage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise/profile"
+                      element={
+                        <UserPagesProtection>
+                          <EnterpriseProfile />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise/departments"
+                      element={
+                        <UserPagesProtection>
+                          <Departments />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/search-query-report"
+                      element={
+                        <UserPagesProtection>
+                          <AdminSearchRepostPage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/enterprise-request"
+                      element={
+                        <UserPagesProtection>
+                          <AdminEnterpriseRequest />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/enterprise-categories"
+                      element={
+                        <UserPagesProtection>
+                          <AdminEnterpriseCategory />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/terms-of-use"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <TermsOfUse />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/privacy-policy"
+                      element={
+                        <AuthPagesProtection>
+                          <AuthPageLayout>
+                            <PrivacyPolicy />
+                          </AuthPageLayout>
+                        </AuthPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/create-enterprise"
+                      element={
+                        <UserPagesProtection>
+                          <AdminCreateEnterprise />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/create-department"
+                      element={
+                        <UserPagesProtection>
+                          <AdminCreateDepartment />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/upload-files"
+                      element={
+                        <UserPagesProtection>
+                          <AdminFileUpload />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/enterprise/upload-files"
+                      element={
+                        <UserPagesProtection>
+                          <EnterpriseFileUpload />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/event-request"
+                      element={
+                        <UserPagesProtection>
+                          <AdminEventRequest />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/add-event-location"
+                      element={
+                        <UserPagesProtection>
+                          <EventLocationPage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/ai-customization"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <AiCustomization />
+                          </UserPageLayout>
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/notification"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <SubscribeNotification />
+                          </UserPageLayout>
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/admin/add-faq"
+                      element={
+                        <UserPagesProtection>
+                          <AdminAddFaq />
+                        </UserPagesProtection>
+                      }
+                    />
+                  </Routes>
+                </BrowserRouter>
+              </Context.Provider>
+            </div>
+          </ThemeProvider>
+        </ThemeModeContext.Provider>
+      </GoogleOAuthProvider>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
+    </>
   );
 }
 

@@ -129,7 +129,7 @@ const TorahanytimeAnswer = ({ answer }) => {
               isVideo &&
               (!item._source.vimeo_video_links ||
                 !item._source.vimeo_video_links.length) ? null : (
-                <StyledCarouselItem key={item._id} sx={{ marginRight: "5px" }}>
+                <StyledCarouselItem key={item._id} className="marginRight-5">
                   {isVideo &&
                     !isAudio &&
                     item._source.vimeo_video_links &&

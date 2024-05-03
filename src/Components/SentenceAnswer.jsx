@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Snackbar } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./AnswerStyle.scss";
@@ -18,6 +18,8 @@ const SentenceAnswer = ({ answer }) => {
   const [loading, setLoading] = useState(false);
   const [loadingButtonIndex, setLoadingButtonIndex] = useState(null);
   const [direction, setDirection] = useState("ltr");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   React.useEffect(() => {
     const containsHebrew = /[\u0590-\u05FF]/.test(answer.contentResponse);
@@ -73,7 +75,8 @@ const SentenceAnswer = ({ answer }) => {
 
       setAdditionalMessage("");
     } catch (error) {
-      console.error("API Error:", error);
+      setSnackbarMessage("API Error:", error);
+      setSnackbarOpen(true);
     } finally {
       setLoadingButtonIndex(null);
       setLoading(false);
@@ -214,6 +217,13 @@ const SentenceAnswer = ({ answer }) => {
           </Paper>
         )}
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </>
   );
 };

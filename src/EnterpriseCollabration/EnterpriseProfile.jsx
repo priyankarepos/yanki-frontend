@@ -9,7 +9,7 @@ import { Context } from '../App';
 import { FormControl, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import "./EnterpriseStyle.scss";
-import { emailRegex, phoneRegex } from '../Utils/validations/validation';
+import { emailRegex } from '../Utils/validations/validation';
 import { CircularProgress } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import IconButton from '@mui/material/IconButton';
@@ -438,8 +438,6 @@ const EnterpriseProfile = () => {
     }
   };
 
-  const contentMargin = drawerOpen ? '0' : '0';
-
   const placeholderText = `Product Overview:
 • Could you please provide an overview of the products you offer?
 • What are the key features and benefits of your products?
@@ -496,7 +494,7 @@ Service Offerings:
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
-      <Box style={{ marginLeft: contentMargin }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
         <Typography variant="h6" className='enterprise-heading'>
           My Enterprise Profile
         </Typography>

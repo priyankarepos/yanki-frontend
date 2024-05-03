@@ -67,7 +67,7 @@ const SafetyChecker = ({ answer }) => {
                     onClick={content.length === 0 ? null : handleSafetyCheck}
                     sx={{ mt: "8px", cursor: (content.length === 0 || loading || mailMessage !== "" || !answer?.safetyChecker === true) ? 'text' : 'pointer' }}
                 >
-                    {loading ? <CircularProgress size={24} sx={{ color: "#1d4a72" }} /> : "Submit Safety Check"}
+                    {loading ? <CircularProgress size={24} className='dark-blur-color' /> : "Submit Safety Check"}
                 </Typography>
                 {mailMessage && <Typography sx={{ mt: 2 }}>Your Safety Check submission is now under review by our agents. You can expect to receive the results at the email address registered with us.</Typography>}
             </Paper>

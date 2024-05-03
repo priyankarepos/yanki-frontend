@@ -188,12 +188,10 @@ const EnterpriseFileUpload = () => {
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-    const contentMargin = drawerOpen ? '0' : '0';
-
     return (
         <Box className='enterprise-box'>
             <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><EnterpriseDashboard /></Box>
-            <Box style={{ marginLeft: contentMargin, }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`}>
+            <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`}>
                 <Box className='enterprise-upload-box'>
                     <Typography variant="h6" className='enterprise-upload-modal-title' >Upload Files</Typography >
                     <Button
@@ -211,7 +209,7 @@ const EnterpriseFileUpload = () => {
                         No data available.
                     </Typography>
                 ) : (
-                    <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+                    <TableContainer className='marginTop-20' component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>

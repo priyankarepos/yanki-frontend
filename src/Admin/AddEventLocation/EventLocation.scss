@@ -1,6 +1,14 @@
-.event-top-heading{
+.event-top-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
+}
+
+.event-headerCell {
+    font-weight: bold;
+    background: #13538b;
+    color: white;
+    min-width: 200px;
+    font-size: 16px;
 }
