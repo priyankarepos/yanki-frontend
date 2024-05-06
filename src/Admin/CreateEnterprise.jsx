@@ -786,8 +786,7 @@ const AdminCreateEnterprise = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                  sx={{color: "red"}}
-                    className="enterprise-inputField"
+                    className="enterprise-input-field enterprise-text-color"
                     {...field}
                     type="time"
                     placeholder="Office opening time"
@@ -813,7 +812,7 @@ const AdminCreateEnterprise = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className="enterprise-input-field enterprise-text-color"
                     {...field}
                     type="time"
                     placeholder="Office closing time"
