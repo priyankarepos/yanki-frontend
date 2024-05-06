@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Typography, Tooltip, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Carousel from "react-multi-carousel";
@@ -23,7 +23,7 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
 
 const YoutubeContent = ({ answer }) => {
   const [showYouTubeVideos, setShowYouTubeVideos] = useState(null);
-  const data = answer?.torahAnytimeLectures?.hits?.hits || [];
+  const data = useMemo(() => answer?.torahAnytimeLectures?.hits?.hits || [], [answer]);
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
   const fixedId = 23200;
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
@@ -123,7 +123,7 @@ const YoutubeContent = ({ answer }) => {
       );
       setVideoData(filteredVideoData);
     }
-  }, [data]);
+  }, [data, setVideoData]);
 
   return (
     <Box onClick={(e) => e.stopPropagation()}>
