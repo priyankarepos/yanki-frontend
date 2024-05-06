@@ -279,7 +279,6 @@ const EnterpriseFileUpload = () => {
                             className='enterprise-profile-modal-button'
                             type="submit"
                             disabled={loading}
-                        // onClick={(e) => handleSubmit(e)}
                         >
                             {loading ? <CircularProgress size={24} className='enterprise-profile-modal-button-loader' /> : 'Upload'}
                         </Button>

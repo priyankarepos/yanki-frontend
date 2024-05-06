@@ -54,6 +54,8 @@ import "./style.scss";
 // Exporting context
 export const Context = createContext("");
 
+// It might be used in future
+ 
 export const ThemeModeContext = createContext({
   // themeMode: "",
   // toggleThemeMode: () => {},
@@ -208,6 +210,8 @@ function App() {
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
 
+  //It might be used in future 
+
   // const currentTheme = useMemo(() => {
   //   if (activeTab === 0 ) {
   //     return darkTheme;
@@ -298,8 +302,6 @@ function App() {
                   setActiveTab,
                 }}
               >
-                {/* <Homepage /> */}
-                {/* <RouterProvider router={router} /> */}
                 <BrowserRouter>
                   <Routes>
                     <Route
@@ -327,7 +329,6 @@ function App() {
                       element={
                         <AuthPagesProtection>
                           <AuthPageLayout>
-                            {/* <TitlePage /> */}
                             <NewTitlePage
                               activeTab={activeTab}
                               setActiveTab={setActiveTab}
@@ -396,14 +397,6 @@ function App() {
                         </AuthPagesProtection>
                       }
                     />
-                    {/* <Route
-                  path="/backup-home"
-                  element={
-                    <UserPagesProtection>
-                      <Homepage />
-                    </UserPagesProtection>
-                  }
-                /> */}
                     <Route
                       path="/change-password"
                       element={

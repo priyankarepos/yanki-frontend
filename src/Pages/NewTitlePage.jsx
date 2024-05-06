@@ -7,7 +7,6 @@ import { useContext } from "react";
 import { Context, ThemeModeContext } from "../App";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-// import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import partnershipLogoLightOne from "../Assets/images/partnet-logo4.png";
 import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
@@ -137,31 +136,11 @@ const NewTitlePage = () => {
                 className="new-title-partnership"
                 sx={{
                   color: !themeMode ? "#fff" : "#72a9de",
-                  fontSize: isLargeScreen ? "1rem" : "0.9rem", // Adjusted font size for smaller screens
+                  fontSize: isLargeScreen ? "1rem" : "0.9rem",
                 }}
               >
                 In Partnership With :
               </Typography>
-              {/* <Carousel
-                responsive={responsive}
-                swipeable={true}
-                draggable={false}
-                showDots={false}
-                arrows={false}
-                autoPlay={true}
-                autoPlaySpeed={2000}
-                infinite={true}
-              >
-                {partnershipLogos.map((partner) => (
-                  <div key={partner.id}>
-                    <img
-                      src={partner.imageSrc}
-                      alt={partner.altText}
-                      style={{ maxWidth: "100%", height: "auto" }}
-                    />
-                  </div>
-                ))}
-              </Carousel> */}
               <Box className="partnership-logos-container">
                 {partnershipLogos.map((partner) => (
                   <img

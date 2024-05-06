@@ -1,6 +1,6 @@
 import { Box, Typography, Grid, TextField, Button, Paper, useMediaQuery } from '@mui/material';
 import React, { useContext, useState, useEffect } from 'react';
-import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
+import 'react-tagsinput/react-tagsinput.css'; 
 import axios from 'axios';
 import { Context } from '../App';
 import AdminDashboard from './AdminDashboard';
@@ -24,11 +24,8 @@ const AdminSearchRepostPage = () => {
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [queryAnswer, setQueryAnswer] = useState(null);
-
-  // Pagination and sorting state
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedPageSize, setSelectedPageSize] = useState(10);
-
   const [ascending, setAscending] = useState(true);
 
   const fetchData = async () => {
@@ -208,7 +205,7 @@ const AdminSearchRepostPage = () => {
           {queryAnswer && queryAnswer.totalCount > selectedPageSize && (
             <div className='enterprise-pagination'>
               <Pagination
-                count={Math.ceil(queryAnswer.totalCount / selectedPageSize)} // Use selectedPageSize
+                count={Math.ceil(queryAnswer.totalCount / selectedPageSize)}
                 page={pageNumber}
                 onChange={handlePageChange}
                 color="primary"

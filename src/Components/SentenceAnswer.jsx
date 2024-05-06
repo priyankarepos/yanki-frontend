@@ -9,7 +9,6 @@ import "./AnswerStyle.scss";
 import Markdown from "react-markdown";
 
 const SentenceAnswer = ({ answer }) => {
-  // const [showCandle, setShowCandle] = useState(true);
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
   const [additionalMessage, setAdditionalMessage] = useState("");
   const [apiResponseMessage, setApiResponseMessage] = useState("");
@@ -36,10 +35,6 @@ const SentenceAnswer = ({ answer }) => {
 
     setDirection(newDirection);
   }, [answer.contentResponse]);
-
-  // const toggleCandle = () => {
-  //   setShowCandle((prev) => !prev);
-  // };
 
   useEffect(() => {
     try {
@@ -133,13 +128,6 @@ const SentenceAnswer = ({ answer }) => {
             p: 2,
           }}
         >
-          {/* {answer?.isShabbat && showCandle && (
-            <Lottie
-              animationData={candles}
-              style={{ width: "10rem", height: "10rem" }}
-              // className={`candle ${showCandle}`}
-            />
-          )} */}
 
           <Typography
             variant="h6"

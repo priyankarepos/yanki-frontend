@@ -153,7 +153,6 @@ const TorahanytimeAnswer = ({ answer }) => {
                             showPortrait={false}
                             loop={false}
                             autopause={true}
-                            // paused={false}
                             onPlay={() =>
                               handlePlayMedia(
                                 modifyVimeoVideoLinks(
@@ -254,7 +253,6 @@ const TorahanytimeAnswer = ({ answer }) => {
                                   showPortrait={false}
                                   loop={false}
                                   autopause={true}
-                                  // paused={false}
                                   onPlay={() =>
                                     handlePlayMedia(
                                       modifyVimeoVideoLinks(

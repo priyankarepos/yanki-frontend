@@ -3,6 +3,7 @@
 const AuthPageLayout = ({ children }) => {
   return (
     <>
+      {/* it might be used in future  */}
       {/* <AuthPageHeader /> */}
       {children}
     </>
