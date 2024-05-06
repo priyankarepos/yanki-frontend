@@ -520,3 +520,7 @@ span.react-tagsinput-tags,
   position: relative;
   width: 100%;
 }
+
+.enterprise-text-color input {
+  color: #8bbae5 !important; 
+}
