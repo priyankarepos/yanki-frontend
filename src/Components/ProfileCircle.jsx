@@ -12,16 +12,18 @@ import Logout from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useNavigate } from "react-router-dom";
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import Diversity2Icon from '@mui/icons-material/Diversity2';
+import { useLocation, useNavigate } from "react-router-dom";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import Diversity2Icon from "@mui/icons-material/Diversity2";
 import { Context } from "../App";
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import TuneIcon from '@mui/icons-material/Tune';
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import TuneIcon from "@mui/icons-material/Tune";
+import { Typography } from "@mui/material";
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
+  const location = useLocation();
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -65,17 +67,17 @@ export default function ProfielCircle() {
   const onClickAICustomization = () => {
     handleClose();
     navigate("/ai-customization");
-  }
+  };
 
   const onClickSubscribeNotification = () => {
     handleClose();
     navigate("/notification");
-  }
+  };
 
   const onClickAdmin = () => {
     handleClose();
     navigate("/admin/search-query-report");
-  }
+  };
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
@@ -92,15 +94,25 @@ export default function ProfielCircle() {
     } else if (userStatus === "Approved") {
       navigate("/enterprise/profile");
     }
-  }
-
+  };
 
   return (
     <React.Fragment>
       <Container maxWidth="xl">
-        <Box
-          className="user-top-header"
-          sx={{ py: 2 }}>
+        <Box className="user-top-header" sx={{ py: 2 }}>
+          <Typography className="profile-logo" onClick={() => navigate("/")}>
+            {location.pathname !== "/" && (
+              <img
+                src={
+                  activeTab === 0
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                className="profile-yanki-logo"
+                alt="logo"
+              />
+            )}
+          </Typography>
           <Tooltip title="Account settings">
             <IconButton
               onClick={handleClick}
@@ -110,7 +122,14 @@ export default function ProfielCircle() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32, backgroundColor: activeTab === 1 ? '#8bbae5' : 'defaultIconColor' }}>
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  backgroundColor:
+                    activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                }}
+              >
                 <PersonIcon />
               </Avatar>
             </IconButton>
@@ -139,23 +158,14 @@ export default function ProfielCircle() {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          {/* <MenuItem
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              cursor: "default",
-            }}
-            name="dark-mode-switch"
-          >
-            Dark mode: <ThemeSwitcher />
-          </MenuItem> */}
           <MenuItem>
             <ListItemIcon>
               <EmailOutlinedIcon fontSize="small" />
             </ListItemIcon>
             {/* This ensures that the text doesn't wrap to the next line */}
-            <span className="email-profile">{parsedUserObject?.userObject?.userEmail || ""}</span>
+            <span className="email-profile">
+              {parsedUserObject?.userObject?.userEmail || ""}
+            </span>
           </MenuItem>
           <MenuItem onClick={onClickChangePassword}>
             <ListItemIcon>
@@ -163,36 +173,44 @@ export default function ProfielCircle() {
             </ListItemIcon>
             Change Password
           </MenuItem>
-          {userRoles === "Admin" && activeTab === 0 && <MenuItem onClick={onClickAdmin}>
-            <ListItemIcon>
-              <AdminPanelSettingsIcon fontSize="small" />
-            </ListItemIcon>
-            Go To Admin Panel
-          </MenuItem>}
-          {userRoles === "Enterprise" && activeTab === 1 && <MenuItem onClick={onClickNetworkingInterface}>
-            <ListItemIcon>
-              <Diversity2Icon fontSize="small" />
-            </ListItemIcon>
-            Networking Interface
-          </MenuItem>}
+          {userRoles === "Admin" && activeTab === 0 && (
+            <MenuItem onClick={onClickAdmin}>
+              <ListItemIcon>
+                <AdminPanelSettingsIcon fontSize="small" />
+              </ListItemIcon>
+              Go To Admin Panel
+            </MenuItem>
+          )}
+          {userRoles === "Enterprise" && activeTab === 1 && (
+            <MenuItem onClick={onClickNetworkingInterface}>
+              <ListItemIcon>
+                <Diversity2Icon fontSize="small" />
+              </ListItemIcon>
+              Networking Interface
+            </MenuItem>
+          )}
           <MenuItem onClick={onClickChangeNumber}>
             <ListItemIcon>
               <LockOutlinedIcon fontSize="small" />
             </ListItemIcon>
             Change Phone Number
           </MenuItem>
-          {userRoles !== "Enterprise" && <MenuItem onClick={onClickSubscribeNotification}>
-            <ListItemIcon>
-              <NotificationsNoneIcon />
-            </ListItemIcon>
-            Notifications
-          </MenuItem>}
-          {userRoles !== "Enterprise" && <MenuItem onClick={onClickAICustomization}>
-            <ListItemIcon>
-              <TuneIcon />
-            </ListItemIcon>
-            AI Customization
-          </MenuItem>}
+          {userRoles !== "Enterprise" && (
+            <MenuItem onClick={onClickSubscribeNotification}>
+              <ListItemIcon>
+                <NotificationsNoneIcon />
+              </ListItemIcon>
+              Notifications
+            </MenuItem>
+          )}
+          {userRoles !== "Enterprise" && (
+            <MenuItem onClick={onClickAICustomization}>
+              <ListItemIcon>
+                <TuneIcon />
+              </ListItemIcon>
+              AI Customization
+            </MenuItem>
+          )}
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>

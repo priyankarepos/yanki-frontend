@@ -33,12 +33,9 @@ import {
 } from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
 import "./Style.scss";
-// import Checkbox from "@mui/material/Checkbox";
-// import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   emailRegex,
   passwordRegex,
-  phoneRegex,
 } from "../Utils/validations/validation";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -74,7 +71,6 @@ const EnterpriseSignup = () => {
       PhoneNumber: "",
       Email: "",
       Password: "",
-      // signTermsAndCondition: "",
     },
   });
 
@@ -117,7 +113,6 @@ const EnterpriseSignup = () => {
         contactPersonName: data.PointOfContact,
         website: data.Website ? data.Website : null,
         categoryId: selectedCategory,
-        // isTermAndPrivacy: data.signTermsAndCondition
         userType: "Enterprise",
       };
 
@@ -369,10 +364,6 @@ const EnterpriseSignup = () => {
                       value: true,
                       message: "Phone number is required.",
                     },
-                    pattern: {
-                      value: phoneRegex,
-                      message: "Enter valid phone number",
-                    },
                   }}
                   render={({ field }) => (
                     <div className="currentSignInPhone-style">
@@ -498,9 +489,6 @@ const EnterpriseSignup = () => {
                 <Controller
                   control={control}
                   name="Website"
-                  // rules={{
-                  //     required: "Website URL is required.",
-                  // }}
                   render={({ field }) => (
                     <TextField
                       className={
@@ -526,8 +514,6 @@ const EnterpriseSignup = () => {
                         ),
                       }}
                       fullWidth
-                      //error={!!errors["Website"]}
-                      // helperText={errors["Website"] ? errors["Website"].message : ""}
                       disabled={signinLoading}
                     />
                   )}

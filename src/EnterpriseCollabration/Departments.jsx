@@ -171,8 +171,6 @@ const Departments = () => {
     setTagCount(tags.length);
   }, [tags]);
 
-  const contentMargin = drawerOpen ? '0' : '0';
-
   const [departmentsData, setDepartmentsData] = useState([]);
 
   useEffect(() => {
@@ -353,7 +351,6 @@ const Departments = () => {
       }
       setTriggerEffect((prev) => !prev);
     } catch (error) {
-      console.error('Error occurred while fetching API:', error.message);
       setSnackbarMessage('Error occurred while fetching API:', error.message);
       setSnackbarOpen(true);
     }
@@ -367,7 +364,7 @@ const Departments = () => {
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
-      <Box style={{ marginLeft: contentMargin }} className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
         <Typography variant="h6" className='enterprise-heading'>
           Add Departments
         </Typography>

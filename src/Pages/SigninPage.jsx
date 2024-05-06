@@ -21,7 +21,6 @@ import Link from "@mui/material/Link";
 import {
   emailRegex,
   passwordRegex,
-  phoneRegex,
 } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useEffect, useState } from "react";
@@ -62,7 +61,6 @@ const SigninPage = () => {
       signInEmail: "",
       signInPhone: "",
       signInPassword: "",
-      // signTermsAndCondition: "",
     },
   });
 
@@ -78,7 +76,6 @@ const SigninPage = () => {
         password: data.signInPassword,
         fullName: data.signInName,
         phoneNumber: data.signInPhone,
-        // isTermAndPrivacy: data.signTermsAndCondition
         userType: "User",
       };
 
@@ -215,10 +212,6 @@ const SigninPage = () => {
                   value: true,
                   message: "Phone number is required.",
                 },
-                pattern: {
-                  value: phoneRegex,
-                  message: "Enter valid phone number",
-                },
               }}
               render={({ field }) => (
                 <div className="currentSignInPhone-style">
@@ -250,27 +243,6 @@ const SigninPage = () => {
                 </div>
               )}
             />
-            {/* <Controller
-              control={control}
-              name="signInPhone"
-              rules={{
-                required: "Phone number is required.",
-                validate: (value) => {
-                  if (!value) return "Phone number is required.";
-                  if (!phoneRegex.test(value))
-                    return "Invalid phone number format.";
-                  return true;
-                },
-              }}
-              render={({ field }) => (
-                <PhoneInput
-                  {...field}
-                  placeholder="Phone number"
-                  disabled={signinLoading}
-                  error={!!errors["signInPhone"]}
-                />
-              )}
-            /> */}
             <Controller
               control={control}
               name="signInEmail"
@@ -370,29 +342,6 @@ const SigninPage = () => {
                 color: !themeMode ? "#fff" : "#72a9de",
               }}
             >
-              {/* <Controller
-                control={control}
-                name="signTermsAndCondition"
-                rules={{ required: "You must accept the terms and conditions." }}
-                render={({ field }) => (
-                  <>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...field}
-                          color="primary"
-                        />
-                      }
-                      label="I accept the terms and conditions"
-                    />
-                    {errors.signTermsAndCondition && (
-                      <Typography variant="body2" color="error">
-                        {errors.signTermsAndCondition.message}
-                      </Typography>
-                    )}
-                  </>
-                )}
-              /> */}
               <Typography className="white-color">
                 By signing up, I accept the Yanki{" "}
                 <Link

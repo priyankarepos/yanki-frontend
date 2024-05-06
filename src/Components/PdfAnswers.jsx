@@ -120,7 +120,7 @@ const PdfAnswers = ({ answer }) => {
                                 src={thumbnailUrls[index]}
                                 alt={`${pdfName.replace('.pdf', '')} thumbnail`}
                             />
-                            <Typography className='enterprise-pdf-name' sx={{ marginTop: "10px", }}> {pdfName}</Typography>
+                            <Typography className='enterprise-pdf-name marginTop-10'> {pdfName}</Typography>
                         </div>
                     </Grid>
                 ))}

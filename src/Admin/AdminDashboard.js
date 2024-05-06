@@ -26,45 +26,9 @@ import CategoryIcon from "@mui/icons-material/Category";
 import AddIcon from "@mui/icons-material/Add";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import UploadIcon from "@mui/icons-material/Upload";
-import EventIcon from '@mui/icons-material/Event';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import LiveHelpIcon from '@mui/icons-material/LiveHelp';
-
-const styles = {
-  enterpriseDashboard: {
-    display: "flex",
-    height: "100vh",
-  },
-  appBar: {
-    backgroundColor: "#13538b  ",
-    color: "#fff",
-  },
-  menuButton: {
-    marginLeft: "auto",
-  },
-  title: {
-    flexGrow: 1,
-  },
-  sidebar: {
-    width: "280px",
-    padding: "16px",
-    color: "#fff",
-  },
-  content: {
-    flex: 1,
-    padding: "16px",
-    marginLeft: "0",
-    transition: "margin-left 0.3s",
-  },
-  logoStyle: {
-    width: "150px",
-  },
-  pagination: {
-    marginTop: "20px",
-    display: "flex",
-    justifyContent: "center",
-  },
-};
+import EventIcon from "@mui/icons-material/Event";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 
 const AdminDashboard = () => {
   const { setDrawerOpen, drawerOpen } = useContext(Context);
@@ -78,24 +42,21 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div style={styles.enterpriseDashboard}>
+    <div className="admin-dashboard-container">
       <CssBaseline />
       <AppBar
         position="fixed"
-        style={styles.appBar}
-        className="appBarSmallScreen"
+        className="admin-dashboard-appbar"
       >
         <Toolbar>
-          <Link to="/" style={{ textDecoration: "none", width: "270px" }}>
+          <Link to="/" className="admin-dashboard-logo">
             <img
               src={DarkYankilogo}
-              style={styles.logoStyle}
-              className="logo"
               alt="Yanki logo"
             />
           </Link>
           <Box className="admin-dashbard-topbar">
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box className="additional-components">
               {/* Add your additional components here if needed */}
             </Box>
             <IconButton
@@ -103,10 +64,9 @@ const AdminDashboard = () => {
               color="inherit"
               aria-label="menu"
               onClick={() => toggleDrawer()}
+              className="admin-dashboard-menu-button"
               style={{
-                ...styles.menuButton,
                 marginLeft: drawerOpen ? "-5px" : "-10px",
-                transition: "margin-left 0.3s ease-in-out",
               }}
             >
               <MenuIcon />
@@ -119,17 +79,11 @@ const AdminDashboard = () => {
         onClose={() => toggleDrawer()}
         variant="persistent"
       >
-        <div style={styles.sidebar}>
-          <Link to="/" style={{ textDecoration: "none" }}>
+        <div className="admin-dashboard-sidebar">
+          <Link to="/" >
             <img
               src={DarkYankilogo}
-              style={{
-                ...styles.logoStyle,
-                marginLeft: "auto",
-                marginRight: "auto",
-                marginBottom: "16px",
-              }}
-              className="logo"
+              className="admin-dashboard-image"
               alt="Yanki logo"
             />
           </Link>

@@ -123,7 +123,7 @@ span.react-tagsinput-tags,
 }
 
 .table-devider {
-  margin: 20px 0;
+  margin: 20px 0 !important;
   background-color: #8bbae5;
 }
 
@@ -215,13 +215,15 @@ span.react-tagsinput-tags,
   padding: 16px;
 }
 
-.admin-faq-form-model {
+.admin-faq-form-model,
+.enterprise-add-category-form-model {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.admin-faq-model-style {
+.admin-faq-model-style,
+.event-pdf-modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,20 +236,291 @@ span.react-tagsinput-tags,
   width: 500px;
   border-radius: 8px;
 }
+
 .admin-faq-heading {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   margin-bottom: 15px;
 }
+
 .admin-faq-heading button {
   color: #fff;
   padding: 5px;
   border-radius: 5px;
 }
-.admin-faq-card{
+
+.admin-faq-card {
   margin-bottom: 10px;
 }
-.admin-faq-card .admin-faw-ans{
-white-space: pre-wrap;
+
+.admin-faq-card .admin-faw-ans {
+  white-space: pre-wrap;
+}
+
+.enterprise-request-container,
+.event-request-container {
+  display: flex;
+}
+
+.enterprise-content,
+.event-content {
+  flex: 1 !important;
+  padding: 16px !important;
+  margin-left: 0;
+  transition: margin-left 0.3s;
+}
+
+.enterprise-headerCell,
+.event-headerCell {
+  font-weight: bold !important;
+  background: #13538b;
+  color: white !important;
+  font-size: 15px !important;
+  min-width: 200px;
+
+}
+
+.enterprise-cell {
+  font-size: 15px;
+}
+
+.enterprise-cell-button-container {
+  display: flex;
+  gap: 8px;
+}
+
+.enterprise-cell-button {
+  background-color: #063762 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+  border-radius: 50px !important;
+  padding: 0 15px !important;
+  height: 40px !important;
+  margin-left: 7px !important;
+}
+
+.enterprise-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.event-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.event-add-button {
+  color: #fff !important;
+  padding: 5px !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.event-cell {
+  font-size: 16px !important;
+}
+
+.event-image-url {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.event-cell-button {
+  background-color: #063762 !important;
+  color: #fff !important;
+  text-transform: capitalize !important;
+  border-radius: 50px !important;
+  padding: 0 15px !important;
+  height: 40px !important;
+  margin-left: 7px !important;
+  width: max-content;
+}
+
+.event-pdf-modal-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-select-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.event-add-form-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.event-modal-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: auto !important;
+  padding: 20px !important;
+  outline: none !important;
+  margin-top: auto !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.event-form-submit-button-loader {
+  color: #0d416f !important;
+}
+
+.enterprise-add-category-container {
+  background-color: #063762;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  padding: 35px 25px;
+  width: 500px;
+  border-radius: 8px;
+}
+
+.enterprise-add-category-label,
+.enterprise-label {
+  color: #8bbae5 !important;
+  margin-bottom: 8px;
+}
+
+.enterprise-add-category-save-button {
+  background-color: #fff !important;
+  color: #063762 !important;
+  text-transform: capitalize !important;
+  border-radius: 10px !important;
+  padding: 30px 15px !important;
+  font-size: 16px !important;
+  margin-top: 20px !important;
+}
+
+.enterprise-add-category-modal-title {
+  font-weight: 500 !important;
+  margin-bottom: 16px !important;
+}
+
+.enterprise-inputField input {
+  background-color: #eaf5ff !important;
+  border: 1px solid #6fa8dd !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  color: #8bbae5 !important;
+}
+
+.enterprise-inputField fieldset {
+  border: none !important;
+}
+
+.enterprise-phone-input {
+  background-color: #eaf5ff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  color: #8bbae5;
+  width: 100%;
+  height: 55px;
+  line-height: 52px;
+}
+
+.enterprise-tags {
+  background-color: #6fa8dd;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.admin-search-report-button {
+  width: 100%;
+  max-width: 120px;
+}
+
+.admin-search-report-inputField input {
+  background-color: #eaf5ff;
+  border: 1px solid #6fa8dd;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  color: #8bbae5
+}
+
+.admin-search-report-inputField fieldset {
+  border: none !important;
+}
+
+.create-department-table-cell {
+  padding: 12px !important;
+  border-bottom: 1px solid #ccc !important;
+  font-size: 16px !important;
+  color: #fff !important;
+  background-color: #13538b !important;
+}
+
+.admin-file-upload-content {
+  flex: 1;
+  margin-left: 0;
+  transition: margin-left 0.3s;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+.admin-dashboard-logo {
+  width: 270px;
+
+  img {
+    width: 150px !important;
+  }
+}
+
+.additional-components {
+  display: flex;
+  align-items: center;
+}
+
+.admin-dashboard-menu-button {
+  transition: margin-left 0.3s ease-in-out !important;
+}
+
+.admin-dashboard-sidebar {
+  width: 280px;
+  padding: 16px;
+  color: #fff;
+}
+
+.admin-dashboard-image {
+  width: 150px;
+  margin: 0 auto 16px auto;
+}
+
+.admin-dashboard-appbar {
+  background-color: #13538b !important;
+  color: #fff !important;
+}
+
+.search-query-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 600px;
+  position: relative;
+  width: 100%;
+}
+
+.enterprise-text-color input {
+  color: #8bbae5 !important; 
 }

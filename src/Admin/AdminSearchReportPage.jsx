@@ -1,6 +1,6 @@
 import { Box, Typography, Grid, TextField, Button, Paper, useMediaQuery } from '@mui/material';
 import React, { useContext, useState, useEffect } from 'react';
-import 'react-tagsinput/react-tagsinput.css'; // Import the CSS
+import 'react-tagsinput/react-tagsinput.css'; 
 import axios from 'axios';
 import { Context } from '../App';
 import AdminDashboard from './AdminDashboard';
@@ -10,49 +10,6 @@ import {
   Pagination,
   CircularProgress,
 } from '@mui/material';
-
-
-const styles = {
-  inputField: {
-    backgroundColor: '#eaf5ff',
-    border: '1px solid #6fa8dd',
-    borderRadius: '8px',
-    marginBottom: '16px',
-    color: "#8bbae5",
-    with: "100%"
-  },
-  label: {
-    color: '#8bbae5',
-    marginBottom: '8px',
-  },
-  tagsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-  tag: {
-    backgroundColor: '#6fa8dd',
-    color: '#fff',
-    borderRadius: '4px',
-    padding: '4px 8px',
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  tagText: {
-    marginRight: '8px',
-  },
-  removeTag: {
-    cursor: 'pointer',
-  },
-  content: {
-    flex: 1,
-    padding: '16px',
-    marginLeft: '0',
-    transition: 'margin-left 0.3s',
-  },
-};
 
 const AdminSearchRepostPage = () => {
   const { drawerOpen } = useContext(Context);
@@ -67,11 +24,8 @@ const AdminSearchRepostPage = () => {
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [queryAnswer, setQueryAnswer] = useState(null);
-
-  // Pagination and sorting state
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedPageSize, setSelectedPageSize] = useState(10);
-
   const [ascending, setAscending] = useState(true);
 
   const fetchData = async () => {
@@ -127,8 +81,6 @@ const AdminSearchRepostPage = () => {
     }
   }, [pageNumber, selectedPageSize, ascending]);
 
-  const contentMargin = drawerOpen ? '0' : '0';
-
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
@@ -151,10 +103,10 @@ const AdminSearchRepostPage = () => {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   return (
-    <Box style={{ display: "flex" }}>
+    <Box className="event-request-container">
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-      <Box style={{ ...styles.content, marginLeft: contentMargin }} className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%", marginTop: '70px', padding: '16px' }}>
-        <Box style={{ ...styles.content, marginLeft: contentMargin }}>
+      <Box className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%" }}>
+        <Box className="event-content">
           <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
           <Paper sx={{ p: 2 }}>
             <Grid container spacing={2} alignItems="center">
@@ -228,13 +180,13 @@ const AdminSearchRepostPage = () => {
 
 
               </Grid>
-              <Grid item xs={12} sm={12} md={2} lg={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Grid item xs={12} sm={12} md={2} lg={2} className='event-pdf-modal-open'>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={fetchData}
                   disabled={isSubmitting}
-                  style={{ width: '100%', maxWidth: '120px' }}
+                  className='admin-search-report-button'
                 >
                   {isSubmitting ? <CircularProgress size={24} /> : 'Submit'}
                 </Button>
@@ -251,9 +203,9 @@ const AdminSearchRepostPage = () => {
           </Grid>
           <Outlet />
           {queryAnswer && queryAnswer.totalCount > selectedPageSize && (
-            <div style={styles.pagination}>
+            <div className='enterprise-pagination'>
               <Pagination
-                count={Math.ceil(queryAnswer.totalCount / selectedPageSize)} // Use selectedPageSize
+                count={Math.ceil(queryAnswer.totalCount / selectedPageSize)}
                 page={pageNumber}
                 onChange={handlePageChange}
                 color="primary"

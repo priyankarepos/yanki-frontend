@@ -72,7 +72,6 @@ const LoginPage = () => {
       );
 
       if (response.status === 200) {
-        // setLoginLoading(false);
         if (!data.logInRemeber) {
           window.sessionStorage.setItem(
             process.env.REACT_APP_SESSIONSTORAGE_REFRESH,
@@ -126,7 +125,6 @@ const LoginPage = () => {
         { access_token }
       );
       if (response.status === 200) {
-        // setLoginLoading(false);
         window.localStorage.setItem(
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)

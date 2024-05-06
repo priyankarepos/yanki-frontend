@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Snackbar } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./AnswerStyle.scss";
 import Markdown from "react-markdown";
 
 const SentenceAnswer = ({ answer }) => {
-  // const [showCandle, setShowCandle] = useState(true);
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
   const [additionalMessage, setAdditionalMessage] = useState("");
   const [apiResponseMessage, setApiResponseMessage] = useState("");
@@ -18,6 +17,8 @@ const SentenceAnswer = ({ answer }) => {
   const [loading, setLoading] = useState(false);
   const [loadingButtonIndex, setLoadingButtonIndex] = useState(null);
   const [direction, setDirection] = useState("ltr");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   React.useEffect(() => {
     const containsHebrew = /[\u0590-\u05FF]/.test(answer.contentResponse);
@@ -34,10 +35,6 @@ const SentenceAnswer = ({ answer }) => {
 
     setDirection(newDirection);
   }, [answer.contentResponse]);
-
-  // const toggleCandle = () => {
-  //   setShowCandle((prev) => !prev);
-  // };
 
   useEffect(() => {
     try {
@@ -73,7 +70,8 @@ const SentenceAnswer = ({ answer }) => {
 
       setAdditionalMessage("");
     } catch (error) {
-      console.error("API Error:", error);
+      setSnackbarMessage("API Error:", error);
+      setSnackbarOpen(true);
     } finally {
       setLoadingButtonIndex(null);
       setLoading(false);
@@ -130,13 +128,6 @@ const SentenceAnswer = ({ answer }) => {
             p: 2,
           }}
         >
-          {/* {answer?.isShabbat && showCandle && (
-            <Lottie
-              animationData={candles}
-              style={{ width: "10rem", height: "10rem" }}
-              // className={`candle ${showCandle}`}
-            />
-          )} */}
 
           <Typography
             variant="h6"
@@ -214,6 +205,13 @@ const SentenceAnswer = ({ answer }) => {
           </Paper>
         )}
       </Box>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </>
   );
 };
