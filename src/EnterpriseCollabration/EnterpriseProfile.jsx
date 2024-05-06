@@ -113,7 +113,6 @@ const EnterpriseProfile = () => {
           },
         ]);
         fetchData();
-        //window.location.reload();
       } else {
         setSnackbarMessage('Failed to upload file');
         setSnackbarOpen(true);
@@ -185,7 +184,6 @@ const EnterpriseProfile = () => {
       BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
       BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
       FoundedYear: enterpriseDetails.foundedYear || "",
-      // ReligiousCertifications: enterpriseDetails.religiousCertification || "",
       FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
       EnterpriseIdentificationKeywords: enterpriseDetails.enterpriseKeywords || [],
     },
@@ -211,9 +209,6 @@ const EnterpriseProfile = () => {
   useEffect(() => {
     setValue('PhoneNumber', '44',);
   }, [setValue]);
-
-  // const keywords = useWatch({ control, name: 'EnterpriseIdentificationKeywords', defaultValue: [] });
-
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
@@ -273,7 +268,6 @@ const EnterpriseProfile = () => {
     setValue("BusinessHoursOpeningTime", enterpriseDetails[0]?.officeOpenTime || "");
     setValue("BusinessHoursClosingTime", enterpriseDetails[0]?.officeCloseTime || "");
     setValue("FoundedYear", enterpriseDetails[0]?.foundedYear || "");
-    // setValue("ReligiousCertifications", enterpriseDetails[0]?.religiousCertification || "");
     setValue("FrequentlyAskedQuestions", enterpriseDetails[0]?.faQs || "");
 
     if (enterpriseDetails[0]?.enterpriseKeywords) {
@@ -348,8 +342,6 @@ const EnterpriseProfile = () => {
       if (response && response.isSuccess) {
         setTagCount(tagCount + 1);
 
-        // setIsTagAvailable(response.isAvailable);
-
         if (response.isAvailable) {
           setTags((prevTags) => {
             const uniqueTags = new Set([...prevTags, tag]);
@@ -413,7 +405,6 @@ const EnterpriseProfile = () => {
           officeOpenTime: formData.BusinessHoursOpeningTime,
           officeCloseTime: formData.BusinessHoursClosingTime,
           foundedYear: formData.FoundedYear,
-          // religiousCertification: formData.ReligiousCertifications,
           faQs: formData.FrequentlyAskedQuestions,
           enterpriseKeywords: tagsAsString,
         }
@@ -426,7 +417,6 @@ const EnterpriseProfile = () => {
           setSnackbarMessage('Enterprise details updated successfully');
         }
         setSnackbarOpen(true);
-        // setIsButtonClick(true)
         window.location.reload();
       } else {
         setSnackbarMessage('Failed to update enterprise details');
@@ -555,8 +545,6 @@ Service Offerings:
                     type="outlined"
                     placeholder="Enterprise point of contact name"
                     fullWidth
-                  // error={!!errors['EnterprisePointOfContact']}
-                  // helperText={errors['EnterprisePointOfContact'] ? errors['EnterprisePointOfContact'].message : ''}
                   />
                   {errors['EnterprisePointOfContact'] && (
                     <FormHelperText className='error-handling'>{errors['EnterprisePointOfContact'].message}</FormHelperText>
@@ -611,8 +599,6 @@ Service Offerings:
                     type="outlined"
                     placeholder="Type email address here"
                     fullWidth
-                  // error={!!errors['EmailAddress']}
-                  // helperText={errors['EmailAddress'] ? errors['EmailAddress'].message : ''}
                   />
                   {errors['EmailAddress'] && (
                     <FormHelperText className='error-handling'>{errors['EmailAddress'].message}</FormHelperText>
@@ -800,12 +786,9 @@ Service Offerings:
                   <TextField
                     className='enterprise-input-field'
                     {...field}
-                    // type="outlined"
                     type="time"
                     placeholder="Office opening time"
                     fullWidth
-                  // error={!!errors['BusinessHoursOpeningTime']}
-                  // helperText={errors['BusinessHoursOpeningTime'] ? errors['BusinessHoursOpeningTime'].message : ''}
                   />
                   {errors['BusinessHoursOpeningTime'] && (
                     <FormHelperText className='error-handling'>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
@@ -829,8 +812,6 @@ Service Offerings:
                     type="time"
                     placeholder="Office closing time"
                     fullWidth
-                  // error={!!errors['BusinessHoursClosingTime']}
-                  // helperText={errors['BusinessHoursClosingTime'] ? errors['BusinessHoursClosingTime'].message : ''}
                   />
                   {errors.BusinessHoursClosingTime && (
                     <FormHelperText className='error-handling'>{errors.BusinessHoursClosingTime.message}</FormHelperText>
@@ -855,8 +836,6 @@ Service Offerings:
                     inputProps={{ maxLength: 4 }}
                     placeholder="Type founded year here"
                     fullWidth
-                  // error={!!errors['FoundedYear']}
-                  // helperText={errors['FoundedYear'] ? errors['FoundedYear'].message : ''}
                   />
                   {errors['FoundedYear'] && (
                     <FormHelperText className='error-handling'>{errors['FoundedYear'].message}</FormHelperText>
@@ -868,28 +847,7 @@ Service Offerings:
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
             <InputLabel className='enterprise-input-lable'>Religious Certifications<sup className='asterisk'>*</sup></InputLabel>
-            {/* <Controller
-              control={control}
-              name="ReligiousCertifications"
-              rules={{ required: "Religious Certifications is required" }}
-              render={({ field }) => (
-                <div>
-                  <TextField
-                    className='enterprise-input-field'
-                    {...field}
-                    type="outlined"
-                    placeholder="Kosher or any other"
-                    fullWidth
-                  // error={!!errors['ReligiousCertifications']}
-                  // helperText={errors['ReligiousCertifications'] ? errors['ReligiousCertifications'].message : ''}
-                  />
-                  {errors['ReligiousCertifications'] && (
-                    <FormHelperText className='error-handling'>{errors['ReligiousCertifications'].message}</FormHelperText>
-                  )}
-                </div>
-              )}
-            /> */}
-
+            
             <Button
               variant="contained"
               component="label"

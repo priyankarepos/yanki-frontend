@@ -341,7 +341,8 @@ const AdminFileUpload = () => {
                                   );
                                 }
                               } catch (error) {
-                                // If parsing fails, treat it as a plain string
+                                setSnackbarMessage("Error:", error);
+                                setSnackbarOpen(true);
                               }
                               return (
                                 <span key={index}>

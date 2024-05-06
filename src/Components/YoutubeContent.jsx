@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Typography, Tooltip, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import Carousel from "react-multi-carousel";
@@ -22,11 +22,12 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
 }));
 
 const YoutubeContent = ({ answer }) => {
-  const [showYouTubeVideos, setShowYouTubeVideos] = useState(null); // Set an initial value for showYouTubeVideos
-  const data = answer?.torahAnytimeLectures?.hits?.hits || [];
+  const [showYouTubeVideos, setShowYouTubeVideos] = useState(null);
+  const data = useMemo(() => answer?.torahAnytimeLectures?.hits?.hits || [], [answer]);
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
   const fixedId = 23200;
   const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
+  const [videoData, setVideoData] = useState(null);
   const playerRefs = useRef([]);
   const isVideo = answer?.torahAnytimeLectures?.isVideo || false;
 
@@ -115,6 +116,15 @@ const YoutubeContent = ({ answer }) => {
     setShowYouTubeVideos(false);
   };
 
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const filteredVideoData = data.filter(
+        (item) => item._source.vimeo_video_links !== null
+      );
+      setVideoData(filteredVideoData);
+    }
+  }, [data, setVideoData]);
+
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Paper sx={{ p: 2 }}>
@@ -152,10 +162,7 @@ const YoutubeContent = ({ answer }) => {
           (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess)
             ? answer?.vimeoVideoDetails.map((item, index) => (
                 <Paper key={item.title}>
-                  <StyledCarouselItem
-                    key={item._id}
-                    className="marginRight-5"
-                  >
+                  <StyledCarouselItem key={item._id} className="marginRight-5">
                     {item.link && (
                       <div>
                         <Vimeo
@@ -188,15 +195,12 @@ const YoutubeContent = ({ answer }) => {
                 </Paper>
               ))
             : showYouTubeVideos === false &&
-              data.length &&
-              data?.map((item) =>
+              videoData.length &&
+              videoData?.map((item) =>
                 isVideo &&
                 (!item._source.vimeo_video_links ||
                   !item._source.vimeo_video_links.length) ? null : (
-                  <StyledCarouselItem
-                    key={item._id}
-                    className="marginRight-5"
-                  >
+                  <StyledCarouselItem key={item._id} className="marginRight-5">
                     {showYouTubeVideos === false &&
                       isVideo &&
                       item._source.vimeo_video_links &&
@@ -220,7 +224,6 @@ const YoutubeContent = ({ answer }) => {
                               showPortrait={false}
                               loop={false}
                               autopause={true}
-                              // paused={false}
                               onPlay={() =>
                                 handlePlayMedia(
                                   modifyVimeoVideoLinks(

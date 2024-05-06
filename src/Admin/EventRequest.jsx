@@ -861,9 +861,8 @@ const AdminEventRequest = () => {
                         type="outlined"
                         placeholder="Event name"
                         fullWidth
-                        //defaultValue={editEventData?.eventName}
-                        value={field.value} // Use value prop
-                        onChange={field.onChange} // Use onChange prop
+                        value={field.value} 
+                        onChange={field.onChange}
                       />
                       {errors["EventName"] && (
                         <FormHelperText className="error-message">
@@ -951,9 +950,8 @@ const AdminEventRequest = () => {
                         variant="outlined"
                         placeholder="Event location address"
                         fullWidth
-                        //defaultValue={editEventData?.eventAddress}
-                        value={field.value} // Use value prop
-                        onChange={field.onChange} // Use onChange prop
+                        value={field.value} 
+                        onChange={field.onChange}
                       />
                       {errors["EventLocationAddress"] && (
                         <FormHelperText className="error-message">

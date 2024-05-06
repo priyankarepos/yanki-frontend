@@ -139,17 +139,6 @@ export default function ProfielCircle() {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          {/* <MenuItem
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              cursor: "default",
-            }}
-            name="dark-mode-switch"
-          >
-            Dark mode: <ThemeSwitcher />
-          </MenuItem> */}
           <MenuItem>
             <ListItemIcon>
               <EmailOutlinedIcon fontSize="small" />
