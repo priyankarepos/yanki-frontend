@@ -407,14 +407,6 @@ const NewHomePageMui = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const chatContainerNode = chatContainerRef.current;
-    const scrollToBottom = () => {
-      chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    };
-    scrollToBottom();
-  });
-
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
 
