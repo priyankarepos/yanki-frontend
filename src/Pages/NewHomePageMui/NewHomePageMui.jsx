@@ -273,18 +273,6 @@ const NewHomePageMui = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (initialChatOpen && chatSessions.length > 0) {
-      const storedChatId = sessionStorage.getItem("selectedChatId");
-      const firstChatId = storedChatId;
-      handleChatSessionClick(firstChatId);
-      setInitialChatOpen(false);
-
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [initialChatOpen, chatSessions, handleChatSessionClick]);
-
   const fetchChatHistory = async (chatId) => {
     try {
       const response = await axios.get(
@@ -411,7 +399,7 @@ const NewHomePageMui = () => {
     chatContainerNode.style.scrollBehavior = "auto";
 
     const observer = new MutationObserver(scrollToBottom);
-    observer.observe(chatContainerNode, { childList: true, subtree: true });
+    observer.observe(chatContainerNode, { childList: true});
 
     return () => {
       chatContainerNode.style.scrollBehavior = "smooth";
