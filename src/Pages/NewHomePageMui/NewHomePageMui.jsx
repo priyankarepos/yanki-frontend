@@ -58,8 +58,9 @@ const NewHomePageMui = () => {
   const [queryAnswer, setQueryAnswer] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [hoverChatId, setHoverChatId] = useState(null);
-  const [direction, setDirection] = useState('ltr');
-  const [queryDirection, setQueryDirection] = useState('ltr');
+  const [direction, setDirection] = useState("ltr");
+  const [queryDirection, setQueryDirection] = useState("ltr");
+  const [shouldScroll, setShouldScroll] = useState(true);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -108,13 +109,14 @@ const NewHomePageMui = () => {
   const onSubmit = async () => {
     sessionStorage.setItem("searchQuery", searchQuery);
     try {
+      setShouldScroll(true);
       setIsSubmitting(true);
       setPageNumber(1);
       setIsError(false);
       setErrorMsg("");
       setQueryAnswer(null);
       setSearchQuery("");
-      setDirection("ltr")
+      setDirection("ltr");
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const chatIdToUse =
@@ -135,6 +137,7 @@ const NewHomePageMui = () => {
       );
 
       if (response.status === 200 || response.status >= 300) {
+        setShouldScroll(true);
         setIsSubmitting(false);
         setQueryAnswer(response.data);
         setIsError(false);
@@ -273,18 +276,6 @@ const NewHomePageMui = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (initialChatOpen && chatSessions.length > 0) {
-      const storedChatId = sessionStorage.getItem("selectedChatId");
-      const firstChatId = storedChatId;
-      handleChatSessionClick(firstChatId);
-      setInitialChatOpen(false);
-
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [initialChatOpen, chatSessions, handleChatSessionClick]);
-
   const fetchChatHistory = async (chatId) => {
     try {
       const response = await axios.get(
@@ -292,6 +283,7 @@ const NewHomePageMui = () => {
       );
 
       if (response.status === 200) {
+        setShouldScroll(true);
         sessionStorage.removeItem("searchQuery");
       }
     } catch (error) {
@@ -399,6 +391,28 @@ const NewHomePageMui = () => {
     };
   }, []);
 
+  // It might be used in future
+
+  // useEffect(() => {
+  //   const chatContainerNode = chatContainerRef.current;
+ 
+  //   const scrollToBottom = () => {
+  //     chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+  //   };
+ 
+  //   scrollToBottom();
+ 
+  //   chatContainerNode.style.scrollBehavior = "auto";
+ 
+  //   const observer = new MutationObserver(scrollToBottom);
+  //   observer.observe(chatContainerNode, { childList: true, subtree: true });
+ 
+  //   return () => {
+  //     chatContainerNode.style.scrollBehavior = "smooth";
+  //     observer.disconnect();
+  //   };
+  // }, []);
+
   useEffect(() => {
     const chatContainerNode = chatContainerRef.current;
 
@@ -406,18 +420,30 @@ const NewHomePageMui = () => {
       chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
     };
 
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            if (shouldScroll) {
+              scrollToBottom();
+              chatContainerNode.style.scrollBehavior = "auto";
+              setShouldScroll(false);
+            }
+          }
+        });
+      });
+      
+      observer.observe(chatContainerNode, {
+      childList: true,
+      subtree: true,
+    });
+
     scrollToBottom();
-
     chatContainerNode.style.scrollBehavior = "auto";
-
-    const observer = new MutationObserver(scrollToBottom);
-    observer.observe(chatContainerNode, { childList: true, subtree: true });
-
+    
     return () => {
-      chatContainerNode.style.scrollBehavior = "smooth";
       observer.disconnect();
     };
-  }, []);
+  }, [shouldScroll]);
 
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
@@ -436,7 +462,7 @@ const NewHomePageMui = () => {
 
     setDirection(newDirection);
     setQueryDirection(newDirection);
-  }
+  };
 
   return (
     <Box className="ya-home-wrapper">
@@ -612,7 +638,11 @@ const NewHomePageMui = () => {
                 />
               ))}
               {storedSearchQuery && (
-                <Paper elevation={3} className="ya-question-box" dir={queryDirection}>
+                <Paper
+                  elevation={3}
+                  className="ya-question-box"
+                  dir={queryDirection}
+                >
                   <div sx={{ p: 2 }}>
                     <Box sx={{ p: 2 }} className="ya-question-box-flex">
                       <ChatBubbleOutlineIcon
@@ -673,7 +703,7 @@ const NewHomePageMui = () => {
                         arrows={false}
                         autoPlay={true}
                         autoPlaySpeed={2000}
-                        infinite={true} 
+                        infinite={true}
                         className="new-home-initial-questions"
                         customTransition="transform 500ms ease 0s"
                       >
