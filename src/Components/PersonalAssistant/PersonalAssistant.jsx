@@ -4,7 +4,7 @@ import {
   Typography,
   CircularProgress,
   FormHelperText,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
@@ -15,9 +15,12 @@ const PersonalAssistant = ({ answer }) => {
   const [loading, setLoading] = useState(false);
   const [mailMessage, setMailMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
-  const userRoles = yankiUser?.userObject?.userRoles || '';
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const yankiUser = JSON.parse(
+    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+      "{}"
+  );
+  const userRoles = yankiUser?.userObject?.userRoles || "";
 
   const handlePersonalAssistant = async () => {
     try {
@@ -30,11 +33,11 @@ const PersonalAssistant = ({ answer }) => {
         setContent("");
         setTouched(false);
       } else {
-        setSnackbarMessage('Failed to send personal assistant email');
+        setSnackbarMessage("Failed to send personal assistant email");
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage('Error sending personal assistant email:', error);
+      setSnackbarMessage("Error sending personal assistant email:", error);
       setSnackbarOpen(true);
     }
   };
@@ -46,10 +49,21 @@ const PersonalAssistant = ({ answer }) => {
   return (
     <>
       <Paper sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Personal Assistant
-        </Typography>
-        <Typography>{answer?.message}</Typography>
+        {answer.isPersonalAssistant ? (
+          <>
+            <Typography variant="h6" gutterBottom>
+              Personal Assistant
+            </Typography>
+            <Typography>{answer?.message}</Typography>
+          </>
+        ) : (
+          <>
+            <Typography variant="h6" gutterBottom>
+              Help Agent
+            </Typography>
+            <Typography>{answer?.contentResponse}</Typography>
+          </>
+        )}
         <TextField
           multiline
           rows={4}
@@ -67,7 +81,9 @@ const PersonalAssistant = ({ answer }) => {
           {touched && !content.trim() && "This field is required."}
         </FormHelperText>
         <Typography
-          className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
+          className={`${
+            content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
+          } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
           onClick={content.length === 0 ? null : handlePersonalAssistant}
           sx={{
             mt: "8px",
@@ -95,14 +111,13 @@ const PersonalAssistant = ({ answer }) => {
           </Typography>
         )}
       </Paper>
-    
-    <Snackbar
-      open={snackbarOpen}
-      autoHideDuration={6000}
-      onClose={() => setSnackbarOpen(false)}
-      message={snackbarMessage}
-    />
 
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </>
   );
 };
