@@ -42,7 +42,7 @@ const SearchHistoryItem = ({ query, response }) => {
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
-  const isPersonalAssistant = (response.isSucess && response.message && response.isPersonalAssistant) || (response.isSucess || response.contentResponse || response.isHelpAgent);
+  const isPersonalAssistant = (response.isSucess && response.message && response.isPersonalAssistant) || (response.isSucess && response.contentResponse && response.isHelpAgent);
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} className="search-query" dir={direction}> 
