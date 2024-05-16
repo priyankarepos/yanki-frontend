@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
-const PersonalAssistant = ({ answer }) => {
+const HelpAgent = ({ answer }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,9 +50,9 @@ const PersonalAssistant = ({ answer }) => {
     <>
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Personal Assistant
+          Help Agent
         </Typography>
-        <Typography>{answer?.message}</Typography>
+        <Typography>{answer?.contentResponse}</Typography>
         <TextField
           multiline
           rows={4}
@@ -64,7 +64,7 @@ const PersonalAssistant = ({ answer }) => {
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
           error={touched && !content.trim()}
-          disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true}
+          disabled={mailMessage !== "" || !answer?.isHelpAgent === true}
         />
         <FormHelperText className="error-message">
           {touched && !content.trim() && "This field is required."}
@@ -80,7 +80,7 @@ const PersonalAssistant = ({ answer }) => {
               content.length === 0 ||
               loading ||
               mailMessage !== "" ||
-              !answer?.isPersonalAssistant === true
+              !answer?.isHelpAgent === true
                 ? "text"
                 : "pointer",
           }}
@@ -93,10 +93,10 @@ const PersonalAssistant = ({ answer }) => {
         </Typography>
         {mailMessage && (
           <Typography sx={{ mt: 2 }}>
-            Your personal assistance request has been received and is currently
-            being reviewed by our YankiAI agents. Depending on your subscription
-            you can expect to receive a response via the email address or SMS
-            number registered with us
+            Your request has been received and is currently being reviewed by
+            our YankiAl agents. Depending on your subscription you can expect to
+            receive a response via the email address or SMS nurnber registered
+            with us
           </Typography>
         )}
       </Paper>
@@ -111,4 +111,4 @@ const PersonalAssistant = ({ answer }) => {
   );
 };
 
-export default PersonalAssistant;
+export default HelpAgent;
