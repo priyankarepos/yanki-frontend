@@ -255,6 +255,7 @@ const NewHomePageMui = () => {
                   isPersonalAssistant: gptResponse.isPersonalAssistant,
                   firstAidVideos: gptResponse.firstAidVideos,
                   isViewReminder: gptResponse.isViewReminder,
+                  isHelpAgent: gptResponse.isHelpAgent
                 },
               },
             };
