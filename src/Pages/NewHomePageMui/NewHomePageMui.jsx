@@ -38,6 +38,7 @@ import {
   initialQuestions4,
 } from "../../Utils/promptData/promptData";
 import "./NewHomePageStyle.scss";
+import { useNavigate } from "react-router-dom";
 
 const NewHomePageMui = () => {
   const { activeTab } = React.useContext(Context);
@@ -61,6 +62,7 @@ const NewHomePageMui = () => {
   const [direction, setDirection] = useState("ltr");
   const [queryDirection, setQueryDirection] = useState("ltr");
   const [shouldScroll, setShouldScroll] = useState(true);
+  const [remainingMsgData, setRemainingMsgData] = useState([]);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -68,6 +70,33 @@ const NewHomePageMui = () => {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const fontSize = isSmallScreen ? "14px" : "16px";
+  const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+  const userRoles = yankiUser?.userObject?.userRoles || '';
+  const navigate = useNavigate();
+  const onClickMembershipPortal = () => {
+    navigate("/membership");
+  }
+
+  const fetchRemainingMessage = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_HOST}/api/stripe/get-remaining-message-task`
+      );
+
+      if (response.status === 200) {
+        setRemainingMsgData(response.data);
+      } else {
+        throw new Error("Failed to fetch remaining data");
+      }
+    } catch (error) {
+      setSnackbarMessage("Error fetching data: " + error.message);
+      setSnackbarOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchRemainingMessage();
+  }, []);
 
   const responsive = {
     superLargeDesktop: {
@@ -155,6 +184,7 @@ const NewHomePageMui = () => {
           sessionStorage.removeItem("searchQuery");
           return updatedHistory;
         });
+        fetchRemainingMessage();
       }
     } catch (error) {
       setIsSubmitting(false);
@@ -255,6 +285,8 @@ const NewHomePageMui = () => {
                   isPersonalAssistant: gptResponse.isPersonalAssistant,
                   firstAidVideos: gptResponse.firstAidVideos,
                   isViewReminder: gptResponse.isViewReminder,
+                  totalMessageLeft: gptResponse.totalMessageLeft,
+                  totalTaskLeft: gptResponse.totalTaskLeft,
                 },
               },
             };
@@ -395,18 +427,18 @@ const NewHomePageMui = () => {
 
   // useEffect(() => {
   //   const chatContainerNode = chatContainerRef.current;
- 
+
   //   const scrollToBottom = () => {
   //     chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
   //   };
- 
+
   //   scrollToBottom();
- 
+
   //   chatContainerNode.style.scrollBehavior = "auto";
- 
+
   //   const observer = new MutationObserver(scrollToBottom);
   //   observer.observe(chatContainerNode, { childList: true, subtree: true });
- 
+
   //   return () => {
   //     chatContainerNode.style.scrollBehavior = "smooth";
   //     observer.disconnect();
@@ -421,25 +453,25 @@ const NewHomePageMui = () => {
     };
 
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList') {
-            if (shouldScroll) {
-              scrollToBottom();
-              chatContainerNode.style.scrollBehavior = "auto";
-              setShouldScroll(false);
-            }
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          if (shouldScroll) {
+            scrollToBottom();
+            chatContainerNode.style.scrollBehavior = "auto";
+            setShouldScroll(false);
           }
-        });
+        }
       });
-      
-      observer.observe(chatContainerNode, {
+    });
+
+    observer.observe(chatContainerNode, {
       childList: true,
       subtree: true,
     });
 
     scrollToBottom();
     chatContainerNode.style.scrollBehavior = "auto";
-    
+
     return () => {
       observer.disconnect();
     };
@@ -468,11 +500,10 @@ const NewHomePageMui = () => {
     <Box className="ya-home-wrapper">
       <CssBaseline />
       <AppBar
-        className={`ya-home-header ${
-          activeTab === 0
-            ? "ya-home-darkblue-background"
-            : "ya-home-white-background"
-        } `}
+        className={`ya-home-header ${activeTab === 0
+          ? "ya-home-darkblue-background"
+          : "ya-home-white-background"
+          } `}
       >
         <Toolbar>
           {!drawerOpen && (
@@ -491,11 +522,10 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${
-                  activeTab === 1
-                    ? "ya-home-lightblue-color"
-                    : "ya-home-white-color"
-                }`}
+                className={`${activeTab === 1
+                  ? "ya-home-lightblue-color"
+                  : "ya-home-white-color"
+                  }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -531,11 +561,10 @@ const NewHomePageMui = () => {
                   color="inherit"
                   aria-label="menu"
                   onClick={toggleDrawer}
-                  className={`${
-                    activeTab === 1
-                      ? "ya-home-lightblue-color"
-                      : "ya-home-white-color"
-                  }`}
+                  className={`${activeTab === 1
+                    ? "ya-home-lightblue-color"
+                    : "ya-home-white-color"
+                    }`}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -543,11 +572,10 @@ const NewHomePageMui = () => {
             )}
             <IconButton
               color="primary"
-              className={`ya-new-chat-btn ${
-                activeTab === 0
-                  ? "ya-home-new-chat-dark-theme"
-                  : "ya-home-new-chat-light-theme"
-              }`}
+              className={`ya-new-chat-btn ${activeTab === 0
+                ? "ya-home-new-chat-dark-theme"
+                : "ya-home-new-chat-light-theme"
+                }`}
               onClick={resetPage}
             >
               <AddIcon />
@@ -555,22 +583,20 @@ const NewHomePageMui = () => {
             </IconButton>
             <Box className="ya-new-chat-box" onScroll={handleScroll}>
               <span
-                className={`${
-                  activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-                }`}
+                className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                  }`}
               >
                 Recent Chat
               </span>
               {chatSessions.map((chatSession) => (
                 <div key={chatSession.id}>
                   <IconButton
-                    className={`ya-chat-session-btn ${
-                      chatSession.id === selectedChatId
-                        ? "ya-home-active-session-btn"
-                        : activeTab === 0
+                    className={`ya-chat-session-btn ${chatSession.id === selectedChatId
+                      ? "ya-home-active-session-btn"
+                      : activeTab === 0
                         ? "ya-home-new-chat-dark-theme"
                         : "ya-home-new-chat-light-theme"
-                    }`}
+                      }`}
                     color="primary"
                     onClick={() => handleChatSessionClick(chatSession.id)}
                     onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -582,13 +608,12 @@ const NewHomePageMui = () => {
                     </Typography>
                     {chatSession.id === hoverChatId && (
                       <IconButton
-                        className={`ya-home-delete-btn ${
-                          chatSession.id === selectedChatId
-                            ? "ya-home-active-session-btn"
-                            : activeTab === 0
+                        className={`ya-home-delete-btn ${chatSession.id === selectedChatId
+                          ? "ya-home-active-session-btn"
+                          : activeTab === 0
                             ? "ya-home-new-chat-dark-theme"
                             : "ya-home-new-chat-light-theme"
-                        }`}
+                          }`}
                         onClick={() => handleDeleteClick(chatSession.id)}
                       >
                         <DeleteIcon />
@@ -602,26 +627,22 @@ const NewHomePageMui = () => {
         </Drawer>
 
         <Box
-          className={`ya-answer-wrapper ${
-            activeTab === 0
-              ? "ya-answer-wrapper-dark-theme"
-              : "ya-answer-wrapper-light-theme"
-          } ${
-            drawerOpen && !isSmallScreen
+          className={`ya-answer-wrapper ${activeTab === 0
+            ? "ya-answer-wrapper-dark-theme"
+            : "ya-answer-wrapper-light-theme"
+            } ${drawerOpen && !isSmallScreen
               ? "ya-answer-drawn-close"
               : "ya-answer-drawn-open"
-          }`}
+            }`}
         >
           <Box
-            className={`ya-answer-container ${
-              activeTab === 0
-                ? "ya-answer-container-dark-theme"
-                : "ya-answer-container-light-theme"
-            } ${
-              isSmallScreen
+            className={`ya-answer-container ${activeTab === 0
+              ? "ya-answer-container-dark-theme"
+              : "ya-answer-container-light-theme"
+              } ${isSmallScreen
                 ? "ya-answer-container-smallScreen-border"
                 : "ya-answer-container-border"
-            } `}
+              } `}
             sx={{
               width: { xs: "100%", sm: "96%" },
             }}
@@ -647,18 +668,16 @@ const NewHomePageMui = () => {
                     <Box sx={{ p: 2 }} className="ya-question-box-flex">
                       <ChatBubbleOutlineIcon
                         fontSize="small"
-                        className={`ya-ChatBubbleOutlineIcon ${
-                          activeTab === 0
-                            ? "ya-home-white-color"
-                            : "ya-home-lightblue-color"
-                        }`}
+                        className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                          }`}
                       />
                       <Typography
-                        className={`ya-question-box-text ${
-                          activeTab === 0
-                            ? "ya-home-white-color"
-                            : "ya-home-lightblue-color"
-                        }`}
+                        className={`ya-question-box-text ${activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                          }`}
                       >
                         {storedSearchQuery}
                       </Typography>
@@ -684,11 +703,10 @@ const NewHomePageMui = () => {
 
             <Box className="ya-search-container">
               <Box
-                className={`fixed-search-Box ${
-                  drawerOpen && !isSmallScreen
-                    ? "ya-answer-drawn-close"
-                    : "ya-answer-container-question"
-                }`}
+                className={`fixed-search-Box ${drawerOpen && !isSmallScreen
+                  ? "ya-answer-drawn-close"
+                  : "ya-answer-container-question"
+                  }`}
               >
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
@@ -710,11 +728,10 @@ const NewHomePageMui = () => {
                         {initialQuestions1.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${
-                                activeTab === 0
-                                  ? "ya-search-dark-theme"
-                                  : "ya-search-light-theme"
-                              }`}
+                              className={`ya-slider-btn ${activeTab === 0
+                                ? "ya-search-dark-theme"
+                                : "ya-search-light-theme"
+                                }`}
                               onClick={() => handleQuestionClick(question.text)}
                             >
                               <Tooltip title={question.text}>
@@ -740,11 +757,10 @@ const NewHomePageMui = () => {
                         {initialQuestions2.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${
-                                activeTab === 0
-                                  ? "ya-search-dark-theme"
-                                  : "ya-search-light-theme"
-                              }`}
+                              className={`ya-slider-btn ${activeTab === 0
+                                ? "ya-search-dark-theme"
+                                : "ya-search-light-theme"
+                                }`}
                               onClick={() => handleQuestionClick(question.text)}
                             >
                               <Tooltip title={question.text}>
@@ -770,11 +786,10 @@ const NewHomePageMui = () => {
                         {initialQuestions3.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${
-                                activeTab === 0
-                                  ? "ya-search-dark-theme"
-                                  : "ya-search-light-theme"
-                              }`}
+                              className={`ya-slider-btn ${activeTab === 0
+                                ? "ya-search-dark-theme"
+                                : "ya-search-light-theme"
+                                }`}
                               onClick={() => handleQuestionClick(question.text)}
                             >
                               <Tooltip title={question.text}>
@@ -800,11 +815,10 @@ const NewHomePageMui = () => {
                         {initialQuestions4.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${
-                                activeTab === 0
-                                  ? "ya-search-dark-theme"
-                                  : "ya-search-light-theme"
-                              }`}
+                              className={`ya-slider-btn ${activeTab === 0
+                                ? "ya-search-dark-theme"
+                                : "ya-search-light-theme"
+                                }`}
                               onClick={() => handleQuestionClick(question.text)}
                             >
                               <Tooltip title={question.text}>
@@ -834,11 +848,10 @@ const NewHomePageMui = () => {
                                 onClick={() =>
                                   handleQuestionClick(question.text)
                                 }
-                                className={`ya-home-table-btn ${
-                                  activeTab === 0
-                                    ? "ya-search-dark-theme"
-                                    : "ya-search-light-theme"
-                                }`}
+                                className={`ya-home-table-btn ${activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                                  }`}
                               >
                                 <Tooltip title={question.text}>
                                   {question.text}
@@ -852,6 +865,10 @@ const NewHomePageMui = () => {
                   )}
 
                 <form>
+                  {userRoles !== "Admin" && <Box className="ya-task-msg-text">
+                    <Typography>Remaining messages: {remainingMsgData?.totalMessageLeft} and tasks: {remainingMsgData?.totalTaskLeft}</Typography>
+                    <Typography><span onClick={onClickMembershipPortal}>Subscribe to Pro</span></Typography>
+                  </Box>}
                   <Box
                     className={
                       activeTab === 0
@@ -870,20 +887,18 @@ const NewHomePageMui = () => {
                         startAdornment: (
                           <InputAdornment position="start">
                             <SearchIcon
-                              className={`${
-                                activeTab === 1
-                                  ? "ya-home-lightblue-color"
-                                  : "ya-home-white-color"
-                              }`}
+                              className={`${activeTab === 1
+                                ? "ya-home-lightblue-color"
+                                : "ya-home-white-color"
+                                }`}
                             />
                           </InputAdornment>
                         ),
                       }}
-                      className={`ya-search-query-container ${
-                        activeTab === 0
-                          ? "ya-search-query-container-dark-theme"
-                          : "ya-search-query-container-light-theme"
-                      }`}
+                      className={`ya-search-query-container ${activeTab === 0
+                        ? "ya-search-query-container-dark-theme"
+                        : "ya-search-query-container-light-theme"
+                        }`}
                       sx={{
                         fontSize,
                       }}

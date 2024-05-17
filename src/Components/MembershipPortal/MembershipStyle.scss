@@ -1,0 +1,56 @@
+.membership-data-loader {
+  text-align: center;
+  width: 100%;
+}
+
+.membership-dashboard-title {
+  padding: 15px 15px 0 15px;
+}
+
+.taskPurchaseContainer {
+  border: 1px solid #57738a;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 15px auto 0;
+}
+
+.taskPurchaseHeader {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.taskPurchaseText {
+  display: inline-block;
+}
+
+.quantityInput {
+  width: 100px;
+
+  input {
+    text-align: center;
+  }
+}
+
+.IncDecProductTaskBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid #57738a;
+  border-radius: 8px;
+  max-width: 170px;
+}
+
+.IncDecProductTaskBox fieldset {
+  border: none !important;
+}
+
+.totalText {
+  margin-left: 20px;
+}
+
+.purchase-task-btn {
+  margin-top: 15px !important;
+}
+
+.taskPurchaseHeader {
+  margin-bottom: 15px !important;
+}
