@@ -44,7 +44,7 @@ const SearchHistoryItem = ({ query, response }) => {
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
   const isPersonalAssistant = (response.isSucess && response.message && response.isPersonalAssistant);
-  const isHelpAgent = (response.isSucess && response.contentResponse && response.isHelpAgent)
+  const isHelpAgent = (response.contentResponse && response.isHelpAgent)
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} className="search-query" dir={direction}> 
@@ -117,7 +117,7 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       <Paper elevation={3} className="marginBottom-10">
-        {response.isSucess === false && (response?.message || response?.contentResponse) && ( 
+        {response.isSucess === false && !response.isHelpAgent  && (response?.message || response?.contentResponse) && ( 
           <div className="response">
             <ErrorAnswer errorMsg={response} />
           </div>
