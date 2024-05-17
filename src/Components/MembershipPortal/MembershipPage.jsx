@@ -125,8 +125,8 @@ const MembershipPage = () => {
       if (response.status === 200) {
         const taskPaymentUrl = response.data;
         window.location.href = taskPaymentUrl;
-        setSnackbarMessage("Payment successful!");
-        setSnackbarOpen(true);
+        setSnackbarMessage("Process your payment");
+        setSnackbarOpen(false);
       } else {
         setSnackbarMessage("Payment failed. Please try again.");
         setSnackbarOpen(true);
@@ -194,7 +194,12 @@ const MembershipPage = () => {
                 </div>
               </Grid>
               <Grid item xs={12} sm="auto">
-                <Typography className="totalText">Total = ${5 * quantity}</Typography>
+                <Typography className="totalText">Total = ${reversedProducts
+                    .filter(item => item.name !== "Additional Task" && item.isActive === true)
+                    .map(product => {
+                      const price = product.thirdDescription.match(/\d+(\.\d+)?/);
+                      return price ? price[0] : null;
+                    }) * quantity}</Typography>
               </Grid>
             </Grid>
             <Button variant="contained" className="purchase-task-btn" onClick={handleBuyTask}>
