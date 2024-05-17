@@ -17,6 +17,7 @@ import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
+import HelpAgent from "../Components/HelpAgent/HelpAgent";
 
 const SearchHistoryItem = ({ query, response }) => {
   const [direction, setDirection] = useState('ltr');
@@ -42,7 +43,8 @@ const SearchHistoryItem = ({ query, response }) => {
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
-  const isPersonalAssistant = response.isSucess && response.message && response.isPersonalAssistant;
+  const isPersonalAssistant = (response.isSucess && response.message && response.isPersonalAssistant);
+  const isHelpAgent = (response.isSucess && response.contentResponse && response.isHelpAgent)
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} className="search-query" dir={direction}> 
@@ -66,7 +68,7 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
+      {response?.isSucess && response?.contentResponse && !response.isHelpAgent && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
         <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <SentenceAnswer answer={response} />
@@ -158,7 +160,13 @@ const SearchHistoryItem = ({ query, response }) => {
           </div>
         </Paper>
       )}
-
+      {isHelpAgent && (
+         <Paper elevation={3} className="marginBottom-10">
+         <div className="chat-bubble assistant-bubble">
+           <HelpAgent answer={response} />
+          </div>
+        </Paper>
+      )}
 
     </div>
   );
