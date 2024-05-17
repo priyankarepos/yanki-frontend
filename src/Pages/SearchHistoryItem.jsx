@@ -117,9 +117,9 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       <Paper elevation={3} className="marginBottom-10">
-        {response.isSucess === false && response?.message && (
+        {response.isSucess === false && (response?.message || response?.contentResponse) && ( 
           <div className="response">
-            <ErrorAnswer errorMsg={response.message} />
+            <ErrorAnswer errorMsg={response} />
           </div>
         )}
       </Paper>

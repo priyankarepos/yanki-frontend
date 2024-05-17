@@ -1,0 +1,76 @@
+.subscription-card {
+  background-color: aliceblue;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: none;
+  text-align: center;
+  color: #0f3658;
+
+  .tier-name {
+    background-color: #13416a;
+    margin: -20px -20px 15px;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 5px 5px 0px 0px;
+    font-weight: bold;
+  }
+
+  .info {
+    margin: 5px 0;
+  }
+}
+
+.subscribe-btn {
+  width: 100%;
+  color: #ffffff;
+  background-color: #0f3658;
+  margin-top: 15px !important;
+}
+
+.subscribe-btn.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.subscription-card-light {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 10px 10px rgb(161 161 161);
+  text-align: center;
+
+  .tier-name {
+    margin: -20px -20px 15px;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 5px 5px 0px 0px;
+    background-color: #13538b;
+    font-weight: bold;
+  }
+
+  .subscribe-btn {
+    border: none !important;
+  }
+}
+
+.description-list {
+  padding: 10px 15px 0px;
+}
+
+.description-item {
+  margin-bottom: 3px;
+  list-style-type: disc;
+  text-align: left;
+  padding: 5px;
+}
+
+.additional-text {
+  margin: 15px 0 5px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: normal;
+}
+.tier-price {
+  font-size: 32px !important;
+  margin: -35px -20px 0px !important;
+}
