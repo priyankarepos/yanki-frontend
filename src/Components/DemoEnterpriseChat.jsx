@@ -4,7 +4,7 @@ import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 import "./AnswerStyle.scss";
 
-const DemoEnterpriseChat = ({ answer }) => {
+const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
 
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
@@ -26,6 +26,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
                 setChatMessages([...chatMessages, message]);
                 setSelectedEnterpriseMessage(response.data.message);
+                fetchRemainingMessage();
             } else if (response.data && response.data.isSuccess === false) {
                 setSelectedEnterpriseMessage("Invalid email. Please provide a valid email address.");
             }

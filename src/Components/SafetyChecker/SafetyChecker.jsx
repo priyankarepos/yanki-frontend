@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import "./SafetyChecker.scss"
 
-const SafetyChecker = ({ answer }) => {
+const SafetyChecker = ({ answer, fetchRemainingMessage }) => {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
@@ -23,6 +23,7 @@ const SafetyChecker = ({ answer }) => {
                 setLoading(false);
                 setContent("");
                 setTouched(false)
+                fetchRemainingMessage();
             } else {
                 setSnackbarMessage('Failed to send safety check email');
                 setSnackbarOpen(true);

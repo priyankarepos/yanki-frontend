@@ -63,6 +63,7 @@ const NewHomePageMui = () => {
   const [queryDirection, setQueryDirection] = useState("ltr");
   const [shouldScroll, setShouldScroll] = useState(true);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
+  const [updateCustomerId, setUpdateCustomerId] = useState('');
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -97,6 +98,20 @@ const NewHomePageMui = () => {
       setSnackbarOpen(true);
     }
   };
+
+  useEffect(() => {
+    const fetchUpdateCustomerId = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`);
+        setUpdateCustomerId(response.data);
+      } catch (error) {
+        setSnackbarMessage('Error fetching data:', error);
+        setSnackbarOpen(true);
+      }
+    };
+
+    fetchUpdateCustomerId();
+  }, []);
 
   useEffect(() => {
     fetchRemainingMessage();
@@ -170,27 +185,46 @@ const NewHomePageMui = () => {
       );
 
       if (response.status === 200 || response.status >= 300) {
-        setShouldScroll(true);
-        setIsSubmitting(false);
-        setQueryAnswer(response.data);
-        setIsError(false);
-        setErrorMsg("");
-        const newChatId = response.data.chatId;
-        if (!selectedChatId && !searchHistory.length) {
-          setSelectedChatId(newChatId);
-        }
+        if (
+          remainingMsgData?.totalMessageLeft <= 0 &&
+          remainingMsgData?.totalTaskLeft <= 0 &&
+          updateCustomerId?.isPlanSubscribed
+        ) {
+          navigate("/membership");
+          return;
 
-        setSearchHistory((prevHistory) => {
-          const updatedHistory = [
-            ...prevHistory,
-            { query: searchQuery, response: response.data },
-          ];
-          sessionStorage.removeItem("searchQuery");
-          return updatedHistory;
-        });
-        fetchRemainingMessage();
+        } else {
+          setShouldScroll(true);
+          setIsSubmitting(false);
+          setQueryAnswer(response.data);
+          setIsError(false);
+          setErrorMsg("");
+          const newChatId = response.data.chatId;
+          if (!selectedChatId && !searchHistory.length) {
+            setSelectedChatId(newChatId);
+          }
+
+          setSearchHistory((prevHistory) => {
+            const updatedHistory = [
+              ...prevHistory,
+              { query: searchQuery, response: response.data },
+            ];
+            sessionStorage.removeItem("searchQuery");
+            return updatedHistory;
+          });
+          fetchRemainingMessage();
+        }
       }
     } catch (error) {
+      if (
+        remainingMsgData?.totalMessageLeft <= 0 &&
+        remainingMsgData?.totalTaskLeft <= 0 &&
+        !updateCustomerId?.isPlanSubscribed
+      ) {
+        navigate("/membership");
+        return;
+
+      }
       setIsSubmitting(false);
       setIsError(true);
       setQueryAnswer(null);
@@ -660,35 +694,35 @@ const NewHomePageMui = () => {
                   ? "ya-answer-container-smallScreen-border"
                   : "ya-answer-container-border"
               } `}
-              sx={{
-                width: { xs: "100%", sm: "96%" },
-              }}
-            >
-              <Box className="ya-answer" ref={chatContainerRef}>
-                {searchHistory.map((entry, index) => (
-                  <SearchHistoryItem
-                    key={index}
-                    query={entry.query}
-                    response={entry?.response?.response}
-                    errorMsg={errorMsg}
-                    isError={isError}
-                    searchQuery={searchQuery}
-                  />
-                ))}
-                {storedSearchQuery && (
-                  <Paper
-                    elevation={3}
-                    className="ya-question-box"
-                    dir={queryDirection}
-                  >
-                    <div sx={{ p: 2 }}>
-                      <Box sx={{ p: 2 }} className="ya-question-box-flex">
-                        <ChatBubbleOutlineIcon
-                          fontSize="small"
-                          className={`ya-ChatBubbleOutlineIcon ${
-                            activeTab === 0
-                              ? "ya-home-white-color"
-                              : "ya-home-lightblue-color"
+            sx={{
+              width: { xs: "100%", sm: "96%" },
+            }}
+          >
+            <Box className="ya-answer" ref={chatContainerRef}>
+              {searchHistory.map((entry, index) => (
+                <SearchHistoryItem
+                  key={index}
+                  query={entry.query}
+                  response={entry?.response?.response}
+                  errorMsg={errorMsg}
+                  isError={isError}
+                  searchQuery={searchQuery}
+                  fetchRemainingMessage={fetchRemainingMessage}
+                />
+              ))}
+              {storedSearchQuery && (
+                <Paper
+                  elevation={3}
+                  className="ya-question-box"
+                  dir={queryDirection}
+                >
+                  <div sx={{ p: 2 }}>
+                    <Box sx={{ p: 2 }} className="ya-question-box-flex">
+                      <ChatBubbleOutlineIcon
+                        fontSize="small"
+                        className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
                           }`}
                         />
                         <Typography

@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
-const HelpAgent = ({ answer }) => {
+const HelpAgent = ({ answer, fetchRemainingMessage }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,6 +32,7 @@ const HelpAgent = ({ answer }) => {
         setLoading(false);
         setContent("");
         setTouched(false);
+        fetchRemainingMessage();
       } else {
         setSnackbarMessage("Failed to send personal assistant email");
         setSnackbarOpen(true);
