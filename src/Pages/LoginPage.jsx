@@ -131,14 +131,6 @@ const LoginPage = () => {
     }
   };
 
-  // useEffect(() => {
-  //     if (updateCustomerId?.isPlanSubscribed) {
-  //       navigate("/");
-  //     } else {
-  //       navigate("/membership");
-  //     }
-  // }, [updateCustomerId, navigate]);
-
   const onSuccess = async (codeResponse) => {
     try {
       setLoginLoading(true);

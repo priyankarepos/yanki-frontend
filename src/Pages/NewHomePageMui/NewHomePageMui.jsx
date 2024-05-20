@@ -19,7 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Context, ThemeModeContext } from "../../App";
 import { useContext } from "react";
 import ProfielCircle from "../../Components/ProfileCircle";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -80,7 +80,6 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
-  const location = useLocation();
 
   const fetchRemainingMessage = async () => {
     try {
@@ -576,7 +575,7 @@ const NewHomePageMui = () => {
         </Toolbar>
       </AppBar>
 
-      <Box className="ya-answer-wrapper-position">
+      <Box>
         <Drawer
           open={drawerOpen}
           onClose={toggleDrawer}
@@ -672,341 +671,344 @@ const NewHomePageMui = () => {
           </div>
         </Drawer>
 
-        <Box
-          className={`ya-answer-wrapper ${
-            activeTab === 0
-              ? "ya-answer-wrapper-dark-theme"
-              : "ya-answer-wrapper-light-theme"
-          } ${
-            drawerOpen && !isSmallScreen
-              ? "ya-answer-drawn-close"
-              : "ya-answer-drawn-open"
-          }`}
-        >
-          <Box>
-            <Box
-              className={`ya-answer-container ${
-                activeTab === 0
-                  ? "ya-answer-container-dark-theme"
-                  : "ya-answer-container-light-theme"
-              } ${
-                isSmallScreen
-                  ? "ya-answer-container-smallScreen-border"
-                  : "ya-answer-container-border"
-              } `}
-            sx={{
-              width: { xs: "100%", sm: "96%" },
-            }}
+        <Box className="ya-answer-wrapper-position">
+          <Box
+            className={`ya-answer-wrapper ${
+              activeTab === 0
+                ? "ya-answer-wrapper-dark-theme"
+                : "ya-answer-wrapper-light-theme"
+            } ${
+              drawerOpen && !isSmallScreen
+                ? "ya-answer-drawn-close"
+                : "ya-answer-drawn-open"
+            }`}
           >
-            <Box className="ya-answer" ref={chatContainerRef}>
-              {searchHistory.map((entry, index) => (
-                <SearchHistoryItem
-                  key={index}
-                  query={entry.query}
-                  response={entry?.response?.response}
-                  errorMsg={errorMsg}
-                  isError={isError}
-                  searchQuery={searchQuery}
-                  fetchRemainingMessage={fetchRemainingMessage}
-                />
-              ))}
-              {storedSearchQuery && (
-                <Paper
-                  elevation={3}
-                  className="ya-question-box"
-                  dir={queryDirection}
-                >
-                  <div sx={{ p: 2 }}>
-                    <Box sx={{ p: 2 }} className="ya-question-box-flex">
-                      <ChatBubbleOutlineIcon
-                        fontSize="small"
-                        className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
-                          ? "ya-home-white-color"
-                          : "ya-home-lightblue-color"
-                          }`}
-                        />
-                        <Typography
-                          className={`ya-question-box-text ${
-                            activeTab === 0
-                              ? "ya-home-white-color"
-                              : "ya-home-lightblue-color"
-                          }`}
-                        >
-                          {storedSearchQuery}
-                        </Typography>
-                      </Box>
-                    </div>
-                  </Paper>
-                )}
-                {isSubmitting && (
-                  <Box className="ya-progress-bar-box">
-                    <Typography className="text-center">
-                      <CircularProgress />
-                    </Typography>
-                  </Box>
-                )}
-                {searchHistory.length <= 0 && !isSubmitting && (
-                  <Box className="ya-answer-container-response">
-                    <Typography className="ya-main-text-heading">
-                      What mitzvah can AI help you with?
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
+            <Box>
+              <Box
+                className={`ya-answer-container ${
+                  activeTab === 0
+                    ? "ya-answer-container-dark-theme"
+                    : "ya-answer-container-light-theme"
+                } ${
+                  isSmallScreen
+                    ? "ya-answer-container-smallScreen-border"
+                    : "ya-answer-container-border"
+                } `}
+                sx={{
+                  width: { xs: "100%", sm: "96%" },
+                }}
+              >
+                <Box className="ya-answer" ref={chatContainerRef}>
+                  {searchHistory.map((entry, index) => (
+                    <SearchHistoryItem
+                      key={index}
+                      query={entry.query}
+                      response={entry?.response?.response}
+                      errorMsg={errorMsg}
+                      isError={isError}
+                      searchQuery={searchQuery}
+                      fetchRemainingMessage={fetchRemainingMessage}
+                    />
+                  ))}
+                  {storedSearchQuery && (
+                    <Paper
+                      elevation={3}
+                      className="ya-question-box"
+                      dir={queryDirection}
+                    >
+                      <div sx={{ p: 2 }}>
+                        <Box sx={{ p: 2 }} className="ya-question-box-flex">
+                          <ChatBubbleOutlineIcon
+                            fontSize="small"
+                            className={`ya-ChatBubbleOutlineIcon ${
+                              activeTab === 0
+                                ? "ya-home-white-color"
+                                : "ya-home-lightblue-color"
+                            }`}
+                          />
+                          <Typography
+                            className={`ya-question-box-text ${
+                              activeTab === 0
+                                ? "ya-home-white-color"
+                                : "ya-home-lightblue-color"
+                            }`}
+                          >
+                            {storedSearchQuery}
+                          </Typography>
+                        </Box>
+                      </div>
+                    </Paper>
+                  )}
+                  {isSubmitting && (
+                    <Box className="ya-progress-bar-box">
+                      <Typography className="text-center">
+                        <CircularProgress />
+                      </Typography>
+                    </Box>
+                  )}
+                  {searchHistory.length <= 0 && !isSubmitting && (
+                    <Box className="ya-answer-container-response">
+                      <Typography className="ya-main-text-heading">
+                        What mitzvah can AI help you with?
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
 
-              <Box className="ya-search-container">
-                <Box
-                  className={`fixed-search-Box ${
-                    drawerOpen && !isSmallScreen
-                      ? "ya-answer-drawn-close"
-                      : "ya-answer-container-question"
-                  }`}
-                >
-                  {isLargeScreen &&
-                    searchHistory.length <= 0 &&
-                    !isSubmitting && (
-                      <>
-                        <Carousel
-                          responsive={responsive}
-                          itemClass="carousel-item"
-                          swipeable={true}
-                          draggable={false}
-                          showDots={false}
-                          arrows={false}
-                          autoPlay={true}
-                          autoPlaySpeed={2000}
-                          infinite={true}
-                          className="new-home-initial-questions"
-                          customTransition="transform 500ms ease 0s"
-                        >
-                          {initialQuestions1.map((question, index) => (
-                            <div key={question.id} className="carousel-item">
-                              <Button
-                                className={`ya-slider-btn ${
-                                  activeTab === 0
-                                    ? "ya-search-dark-theme"
-                                    : "ya-search-light-theme"
-                                }`}
-                                onClick={() =>
-                                  handleQuestionClick(question.text)
-                                }
-                              >
-                                <Tooltip title={question.text}>
-                                  {question.text}
-                                </Tooltip>
-                              </Button>
-                            </div>
-                          ))}
-                        </Carousel>
-                        <Carousel
-                          responsive={responsive}
-                          itemClass="carousel-item"
-                          swipeable={true}
-                          draggable={false}
-                          showDots={false}
-                          arrows={false}
-                          autoPlay={true}
-                          autoPlaySpeed={2000}
-                          infinite={true}
-                          customTransition="transform 500ms ease 0s"
-                          className="new-home-initial-questions"
-                        >
-                          {initialQuestions2.map((question, index) => (
-                            <div key={question.id} className="carousel-item">
-                              <Button
-                                className={`ya-slider-btn ${
-                                  activeTab === 0
-                                    ? "ya-search-dark-theme"
-                                    : "ya-search-light-theme"
-                                }`}
-                                onClick={() =>
-                                  handleQuestionClick(question.text)
-                                }
-                              >
-                                <Tooltip title={question.text}>
-                                  {question.text}
-                                </Tooltip>
-                              </Button>
-                            </div>
-                          ))}
-                        </Carousel>
-                        <Carousel
-                          responsive={responsive}
-                          itemClass="carousel-item"
-                          swipeable={true}
-                          draggable={false}
-                          showDots={false}
-                          arrows={false}
-                          autoPlay={true}
-                          autoPlaySpeed={2000}
-                          infinite={true}
-                          customTransition="transform 500ms ease 0s"
-                          className="new-home-initial-questions"
-                        >
-                          {initialQuestions3.map((question, index) => (
-                            <div key={question.id} className="carousel-item">
-                              <Button
-                                className={`ya-slider-btn ${
-                                  activeTab === 0
-                                    ? "ya-search-dark-theme"
-                                    : "ya-search-light-theme"
-                                }`}
-                                onClick={() =>
-                                  handleQuestionClick(question.text)
-                                }
-                              >
-                                <Tooltip title={question.text}>
-                                  {question.text}
-                                </Tooltip>
-                              </Button>
-                            </div>
-                          ))}
-                        </Carousel>
-                        <Carousel
-                          responsive={responsive}
-                          itemClass="carousel-item"
-                          swipeable={true}
-                          draggable={false}
-                          showDots={false}
-                          arrows={false}
-                          autoPlay={true}
-                          autoPlaySpeed={2000}
-                          infinite={true}
-                          customTransition="transform 500ms ease 0s"
-                          className="new-home-initial-questions"
-                        >
-                          {initialQuestions4.map((question, index) => (
-                            <div key={question.id} className="carousel-item">
-                              <Button
-                                className={`ya-slider-btn ${
-                                  activeTab === 0
-                                    ? "ya-search-dark-theme"
-                                    : "ya-search-light-theme"
-                                }`}
-                                onClick={() =>
-                                  handleQuestionClick(question.text)
-                                }
-                              >
-                                <Tooltip title={question.text}>
-                                  {question.text}
-                                </Tooltip>
-                              </Button>
-                            </div>
-                          ))}
-                        </Carousel>
-                      </>
-                    )}
-                  {!isLargeScreen &&
-                    searchHistory.length <= 0 &&
-                    !isSubmitting && (
-                      <div className="home-table-scroll">
+                <Box className="ya-search-container">
+                  <Box
+                    className={`fixed-search-Box ${
+                      drawerOpen && !isSmallScreen
+                        ? "ya-answer-drawn-close"
+                        : "ya-answer-container-question"
+                    }`}
+                  >
+                    {isLargeScreen &&
+                      searchHistory.length <= 0 &&
+                      !isSubmitting && (
                         <>
-                          {[
-                            initialQuestions1,
-                            initialQuestions2,
-                            initialQuestions3,
-                            initialQuestions4,
-                          ].map((questions, index) => (
-                            <Typography
-                              className="ya-mobile-prompt"
-                              key={index}
-                            >
-                              {questions.map((question) => (
-                                <span
-                                  key={question.id}
-                                  onClick={() =>
-                                    handleQuestionClick(question.text)
-                                  }
-                                  className={`ya-home-table-btn ${
+                          <Carousel
+                            responsive={responsive}
+                            itemClass="carousel-item"
+                            swipeable={true}
+                            draggable={false}
+                            showDots={false}
+                            arrows={false}
+                            autoPlay={true}
+                            autoPlaySpeed={2000}
+                            infinite={true}
+                            className="new-home-initial-questions"
+                            customTransition="transform 500ms ease 0s"
+                          >
+                            {initialQuestions1.map((question, index) => (
+                              <div key={question.id} className="carousel-item">
+                                <Button
+                                  className={`ya-slider-btn ${
                                     activeTab === 0
                                       ? "ya-search-dark-theme"
                                       : "ya-search-light-theme"
                                   }`}
+                                  onClick={() =>
+                                    handleQuestionClick(question.text)
+                                  }
                                 >
                                   <Tooltip title={question.text}>
                                     {question.text}
                                   </Tooltip>
-                                </span>
-                              ))}
-                            </Typography>
-                          ))}
+                                </Button>
+                              </div>
+                            ))}
+                          </Carousel>
+                          <Carousel
+                            responsive={responsive}
+                            itemClass="carousel-item"
+                            swipeable={true}
+                            draggable={false}
+                            showDots={false}
+                            arrows={false}
+                            autoPlay={true}
+                            autoPlaySpeed={2000}
+                            infinite={true}
+                            customTransition="transform 500ms ease 0s"
+                            className="new-home-initial-questions"
+                          >
+                            {initialQuestions2.map((question, index) => (
+                              <div key={question.id} className="carousel-item">
+                                <Button
+                                  className={`ya-slider-btn ${
+                                    activeTab === 0
+                                      ? "ya-search-dark-theme"
+                                      : "ya-search-light-theme"
+                                  }`}
+                                  onClick={() =>
+                                    handleQuestionClick(question.text)
+                                  }
+                                >
+                                  <Tooltip title={question.text}>
+                                    {question.text}
+                                  </Tooltip>
+                                </Button>
+                              </div>
+                            ))}
+                          </Carousel>
+                          <Carousel
+                            responsive={responsive}
+                            itemClass="carousel-item"
+                            swipeable={true}
+                            draggable={false}
+                            showDots={false}
+                            arrows={false}
+                            autoPlay={true}
+                            autoPlaySpeed={2000}
+                            infinite={true}
+                            customTransition="transform 500ms ease 0s"
+                            className="new-home-initial-questions"
+                          >
+                            {initialQuestions3.map((question, index) => (
+                              <div key={question.id} className="carousel-item">
+                                <Button
+                                  className={`ya-slider-btn ${
+                                    activeTab === 0
+                                      ? "ya-search-dark-theme"
+                                      : "ya-search-light-theme"
+                                  }`}
+                                  onClick={() =>
+                                    handleQuestionClick(question.text)
+                                  }
+                                >
+                                  <Tooltip title={question.text}>
+                                    {question.text}
+                                  </Tooltip>
+                                </Button>
+                              </div>
+                            ))}
+                          </Carousel>
+                          <Carousel
+                            responsive={responsive}
+                            itemClass="carousel-item"
+                            swipeable={true}
+                            draggable={false}
+                            showDots={false}
+                            arrows={false}
+                            autoPlay={true}
+                            autoPlaySpeed={2000}
+                            infinite={true}
+                            customTransition="transform 500ms ease 0s"
+                            className="new-home-initial-questions"
+                          >
+                            {initialQuestions4.map((question, index) => (
+                              <div key={question.id} className="carousel-item">
+                                <Button
+                                  className={`ya-slider-btn ${
+                                    activeTab === 0
+                                      ? "ya-search-dark-theme"
+                                      : "ya-search-light-theme"
+                                  }`}
+                                  onClick={() =>
+                                    handleQuestionClick(question.text)
+                                  }
+                                >
+                                  <Tooltip title={question.text}>
+                                    {question.text}
+                                  </Tooltip>
+                                </Button>
+                              </div>
+                            ))}
+                          </Carousel>
                         </>
-                      </div>
-                    )}
+                      )}
+                    {!isLargeScreen &&
+                      searchHistory.length <= 0 &&
+                      !isSubmitting && (
+                        <div className="home-table-scroll">
+                          <>
+                            {[
+                              initialQuestions1,
+                              initialQuestions2,
+                              initialQuestions3,
+                              initialQuestions4,
+                            ].map((questions, index) => (
+                              <Typography
+                                className="ya-mobile-prompt"
+                                key={index}
+                              >
+                                {questions.map((question) => (
+                                  <span
+                                    key={question.id}
+                                    onClick={() =>
+                                      handleQuestionClick(question.text)
+                                    }
+                                    className={`ya-home-table-btn ${
+                                      activeTab === 0
+                                        ? "ya-search-dark-theme"
+                                        : "ya-search-light-theme"
+                                    }`}
+                                  >
+                                    <Tooltip title={question.text}>
+                                      {question.text}
+                                    </Tooltip>
+                                  </span>
+                                ))}
+                              </Typography>
+                            ))}
+                          </>
+                        </div>
+                      )}
 
-                  <form>
-                    {userRoles !== "Admin" && (
-                      <Box className="ya-task-msg-text">
-                        <Typography>
-                          Remaining messages:{" "}
-                          {remainingMsgData?.totalMessageLeft} and tasks:{" "}
-                          {remainingMsgData?.totalTaskLeft}
-                        </Typography>
-                        <Typography>
-                          <span onClick={onClickMembershipPortal}>
-                            Subscribe to Pro
-                          </span>
-                        </Typography>
-                      </Box>
-                    )}
-                    <Box
-                      className={
-                        activeTab === 0
-                          ? "ya-home-search-wrapper"
-                          : "ya-home-search-wrapper ya-home-search-wrapper-light"
-                      }
-                    >
-                      <TextField
-                        fullWidth
-                        name="searchQuery"
-                        value={searchQuery}
-                        onChange={handleChange}
-                        placeholder="What else can you do?"
-                        dir={direction}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <SearchIcon
-                                className={`${
-                                  activeTab === 1
-                                    ? "ya-home-lightblue-color"
-                                    : "ya-home-white-color"
-                                }`}
-                              />
-                            </InputAdornment>
-                          ),
-                        }}
-                        className={`ya-search-query-container ${
+                    <form>
+                      {userRoles !== "Admin" && (
+                        <Box className="ya-task-msg-text">
+                          <Typography>
+                            Remaining messages:{" "}
+                            {remainingMsgData?.totalMessageLeft} and tasks:{" "}
+                            {remainingMsgData?.totalTaskLeft}
+                          </Typography>
+                          <Typography>
+                            <span onClick={onClickMembershipPortal}>
+                              Subscribe to Pro
+                            </span>
+                          </Typography>
+                        </Box>
+                      )}
+                      <Box
+                        className={
                           activeTab === 0
-                            ? "ya-search-query-container-dark-theme"
-                            : "ya-search-query-container-light-theme"
-                        }`}
-                        sx={{
-                          fontSize,
-                        }}
-                        error={isError}
-                      />
-                      <Box className="ya-send-btn-box">
-                        <IconButton
-                          variant="contained"
-                          type="submit"
-                          disabled={!searchQuery || isSubmitting}
-                          onClick={onSubmit}
-                          className="ya-send-icon"
-                          sx={{
-                            backgroundColor:
-                              themeMode === "dark" ? "#6fa8dd" : "#fff",
-                            color: themeMode === "dark" ? "#fff" : "#2a2b35",
-                            "&:hover": {
-                              backgroundColor: "primary.dark",
-                            },
+                            ? "ya-home-search-wrapper"
+                            : "ya-home-search-wrapper ya-home-search-wrapper-light"
+                        }
+                      >
+                        <TextField
+                          fullWidth
+                          name="searchQuery"
+                          value={searchQuery}
+                          onChange={handleChange}
+                          placeholder="What else can you do?"
+                          dir={direction}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon
+                                  className={`${
+                                    activeTab === 1
+                                      ? "ya-home-lightblue-color"
+                                      : "ya-home-white-color"
+                                  }`}
+                                />
+                              </InputAdornment>
+                            ),
                           }}
-                        >
-                          <SendIcon />
-                        </IconButton>
+                          className={`ya-search-query-container ${
+                            activeTab === 0
+                              ? "ya-search-query-container-dark-theme"
+                              : "ya-search-query-container-light-theme"
+                          }`}
+                          sx={{
+                            fontSize,
+                          }}
+                          error={isError}
+                        />
+                        <Box className="ya-send-btn-box">
+                          <IconButton
+                            variant="contained"
+                            type="submit"
+                            disabled={!searchQuery || isSubmitting}
+                            onClick={onSubmit}
+                            className="ya-send-icon"
+                            sx={{
+                              backgroundColor:
+                                themeMode === "dark" ? "#6fa8dd" : "#fff",
+                              color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                              "&:hover": {
+                                backgroundColor: "primary.dark",
+                              },
+                            }}
+                          >
+                            <SendIcon />
+                          </IconButton>
+                        </Box>
                       </Box>
-                    </Box>
-                  </form>
+                    </form>
+                  </Box>
                 </Box>
               </Box>
             </Box>
