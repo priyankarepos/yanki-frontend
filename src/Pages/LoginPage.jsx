@@ -86,7 +86,22 @@ const LoginPage = () => {
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
-        navigate("/");
+        const token = response.data.contentResponse.token;
+        const responseSubscribe = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const updateCustomerId = responseSubscribe.data;
+        if (updateCustomerId?.isPlanSubscribed) {
+          navigate("/");
+        } else {
+          navigate("/membership");
+        }
       }
     } catch (e) {
       setLoginLoading(false);
@@ -96,7 +111,7 @@ const LoginPage = () => {
       } else {
         if (
           e?.response?.data?.message ===
-            "This email isn't registered. Please sign up." &&
+          "This email isn't registered. Please sign up." &&
           activeTab === 1
         ) {
           setLoginErrorMsg(
@@ -189,9 +204,8 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
-                  className={`marginBottom-10 ${
-                    activeTab === 1 ? "InputFieldColor" : ""
-                  }`}
+                  className={`marginBottom-10 ${activeTab === 1 ? "InputFieldColor" : ""
+                    }`}
                   {...field}
                   type="outlined"
                   placeholder="Email address"

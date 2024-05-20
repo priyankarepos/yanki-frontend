@@ -63,6 +63,7 @@ const NewHomePageMui = () => {
   const [queryDirection, setQueryDirection] = useState("ltr");
   const [shouldScroll, setShouldScroll] = useState(true);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
+  const [updateCustomerId, setUpdateCustomerId] = useState('');
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -96,6 +97,20 @@ const NewHomePageMui = () => {
       setSnackbarOpen(true);
     }
   };
+
+  useEffect(() => {
+    const fetchUpdateCustomerId = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`);
+        setUpdateCustomerId(response.data);
+      } catch (error) {
+        setSnackbarMessage('Error fetching data:', error);
+        setSnackbarOpen(true);
+      }
+    };
+
+    fetchUpdateCustomerId();
+  }, []);
 
   useEffect(() => {
     fetchRemainingMessage();
@@ -169,27 +184,46 @@ const NewHomePageMui = () => {
       );
 
       if (response.status === 200 || response.status >= 300) {
-        setShouldScroll(true);
-        setIsSubmitting(false);
-        setQueryAnswer(response.data);
-        setIsError(false);
-        setErrorMsg("");
-        const newChatId = response.data.chatId;
-        if (!selectedChatId && !searchHistory.length) {
-          setSelectedChatId(newChatId);
-        }
+        if (
+          remainingMsgData?.totalMessageLeft <= 0 &&
+          remainingMsgData?.totalTaskLeft <= 0 &&
+          updateCustomerId?.isPlanSubscribed
+        ) {
+          navigate("/membership");
+          return;
 
-        setSearchHistory((prevHistory) => {
-          const updatedHistory = [
-            ...prevHistory,
-            { query: searchQuery, response: response.data },
-          ];
-          sessionStorage.removeItem("searchQuery");
-          return updatedHistory;
-        });
-        fetchRemainingMessage();
+        } else {
+          setShouldScroll(true);
+          setIsSubmitting(false);
+          setQueryAnswer(response.data);
+          setIsError(false);
+          setErrorMsg("");
+          const newChatId = response.data.chatId;
+          if (!selectedChatId && !searchHistory.length) {
+            setSelectedChatId(newChatId);
+          }
+
+          setSearchHistory((prevHistory) => {
+            const updatedHistory = [
+              ...prevHistory,
+              { query: searchQuery, response: response.data },
+            ];
+            sessionStorage.removeItem("searchQuery");
+            return updatedHistory;
+          });
+          fetchRemainingMessage();
+        }
       }
     } catch (error) {
+      if (
+        remainingMsgData?.totalMessageLeft <= 0 &&
+        remainingMsgData?.totalTaskLeft <= 0 &&
+        !updateCustomerId?.isPlanSubscribed
+      ) {
+        navigate("/membership");
+        return;
+
+      }
       setIsSubmitting(false);
       setIsError(true);
       setQueryAnswer(null);
@@ -673,6 +707,7 @@ const NewHomePageMui = () => {
                       errorMsg={errorMsg}
                       isError={isError}
                       searchQuery={searchQuery}
+                      fetchRemainingMessage={fetchRemainingMessage}
                     />
                   ))}
                   {storedSearchQuery && (

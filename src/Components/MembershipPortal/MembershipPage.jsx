@@ -18,6 +18,28 @@ const MembershipPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [quantity, setQuantity] = useState(0);
+  const [remainingMsgData, setRemainingMsgData] = useState([]);
+
+  const fetchRemainingMessage = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_HOST}/api/stripe/get-remaining-message-task`
+      );
+
+      if (response.status === 200) {
+        setRemainingMsgData(response.data);
+      } else {
+        throw new Error("Failed to fetch remaining data");
+      }
+    } catch (error) {
+      setSnackbarMessage("Error fetching data: " + error.message);
+      setSnackbarOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchRemainingMessage();
+  }, []);
 
   useEffect(() => {
     const yankiUser = window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
@@ -142,6 +164,10 @@ const MembershipPage = () => {
       <Paper sx={{ p: 2 }}>
         <Box className="subscription-page">
           <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
+          {!updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>}
+
+          {(remainingMsgData?.totalMessageLeft <= 0 ||remainingMsgData?.totalTaskLeft <= 0 ) &&
+          updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your message or task limits have been exhausted. To continue using Yanki, please upgrade your plan.</Typography>}
           <Grid container spacing={2} alignItems="center">
             {loading ? (
               <Typography className='membership-data-loader'><CircularProgress /></Typography>
