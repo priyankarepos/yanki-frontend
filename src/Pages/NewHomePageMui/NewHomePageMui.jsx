@@ -217,7 +217,7 @@ const NewHomePageMui = () => {
     } catch (error) {
       if (
         remainingMsgData?.totalMessageLeft <= 0 &&
-        remainingMsgData?.totalTaskLeft <= 0 &&
+        remainingMsgData?.totalTaskLeft <= 0 ||
         !updateCustomerId?.isPlanSubscribed
       ) {
         navigate("/membership");
@@ -940,7 +940,7 @@ const NewHomePageMui = () => {
                         <Box className="ya-task-msg-text">
                           <Typography>
                             Remaining messages:{" "}
-                            {remainingMsgData?.totalMessageLeft} and tasks:{" "}
+                            {remainingMsgData?.totalMessageLeft > 1200 ? "Unlimited" : remainingMsgData?.totalMessageLeft} and tasks:{" "}
                             {remainingMsgData?.totalTaskLeft}
                           </Typography>
                           <Typography>
