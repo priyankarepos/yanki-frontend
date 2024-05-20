@@ -66,6 +66,7 @@
     border-radius: 20px;
     margin: 0 auto;
     padding: 20px;
+    // position: fixed;
 }
 
 .ya-answer-container-border {
@@ -470,7 +471,15 @@
 
 @media (max-width: 640px) {
     .ya-answer {
-        min-height: calc(100vh - 270px);
-        max-height: calc(100vh - 270px);
+        min-height: calc(100vh - 290px);
+        max-height: calc(100vh - 290px);
+    }
+    
+    .ya-answer-wrapper-position {
+        position: fixed !important;
+    }
+
+    .ya-task-msg-text {
+        margin: 3px 0;
     }
 }
