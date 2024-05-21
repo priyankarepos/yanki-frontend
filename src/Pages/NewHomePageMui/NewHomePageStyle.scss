@@ -1,6 +1,6 @@
 .ya-home-wrapper {
-    height: 100vh !important;
-    width: 100vw !important;
+    height: 100vh;
+    width: 100vw;
 }
 
 .ya-home-header {
@@ -60,58 +60,59 @@
 }
 
 .ya-answer-container {
-    height: calc(100vh - 74px) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    border-radius: 20px !important;
-    margin: 0 auto !important;
-    padding: 20px !important;
+    height: calc(100vh - 74px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 20px;
+    // position: fixed;
 }
 
 .ya-answer-container-border {
-    border-radius: 20px !important;
+    border-radius: 20px;
 }
 
 .ya-answer-container-smallScreen-border {
-    border-radius: 20px 20px 0px 0px !important;
+    border-radius: 20px 20px 0px 0px;
 }
 
 .ya-answer-container-response {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex: 1 !important;
-    max-height: calc(100% - 100px) !important;
-    overflow-y: scroll !important;
-    min-height: calc(100% - 100px) !important; 
-    padding: 30px 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    max-height: calc(100% - 100px);
+    overflow-y: scroll;
+    min-height: calc(100% - 100px);
+    padding: 30px 0;
 }
 
 .ya-answer-container-search {
-    height: 100px !important;
+    height: 100px;
 }
 
 .ya-main-text-heading {
     font-size: 33px !important;
-    text-align: center !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: 600 !important;
 }
 
 .ya-answer-wrapper {
-    margin-left: 0px !important;
-    transition: margin-left 0.3s !important;
-    position: relative !important;
+    margin-left: 0px;
+    transition: margin-left 0.3s;
+    position: relative;
 }
 
 .ya-answer-wrapper-dark-theme {
-    background-color: #022b4f !important;
+    background-color: #022b4f;
 }
 
 .ya-answer-wrapper-light-theme {
-    background-color: #fff !important;
+    background-color: #fff;
 }
 
 .ya-answer-drawn-open {
@@ -127,23 +128,23 @@
 }
 
 .fixed-search-Box {
-    position: fixed !important;
-    bottom: 10px !important;
-    left: 40px !important;
-    right: 40px !important;
-    max-width: 100% !important;
+    position: fixed;
+    bottom: 10px;
+    left: 40px;
+    right: 40px;
+    max-width: 100%;
 }
 
 .ya-answer-container-question {
-    margin-left: auto !important;
+    margin-left: auto;
 }
 
 .ya-answer-container-search-dark-theme {
-    background: transparent !important;
+    background: transparent;
 }
 
 .ya-answer-container-search-light-theme {
-    background: #eaf5ff !important;
+    background: #eaf5ff;
 }
 
 .ya-search-dark-theme {
@@ -167,7 +168,7 @@
 }
 
 .ya-search-container {
-    padding-top: 20px !important;
+    padding-top: 20px;
 }
 
 .ya-search-query-container {
@@ -186,9 +187,9 @@
 }
 
 .ya-answer {
-    overflow-y: auto !important;
-    min-height: calc(100vh - 200px) !important;
-    max-height: calc(100vh - 200px) !important;
+    overflow-y: auto;
+    min-height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
 }
 
 .custom-html-css,
@@ -472,6 +473,10 @@
     .ya-answer {
         min-height: calc(100vh - 290px);
         max-height: calc(100vh - 290px);
+    }
+    
+    .ya-answer-wrapper-position {
+        position: fixed !important;
     }
 
     .ya-task-msg-text {
