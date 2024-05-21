@@ -193,6 +193,11 @@ const AiCustomization = () => {
     }
   };
 
+  const handleCancelClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/");
+  };
+
   return (
     <Container>
       <Box my={4}>
@@ -813,7 +818,7 @@ const AiCustomization = () => {
             <Button
               variant="contained"
               className="ai-customization-button"
-              onClick={() => navigate("/")}
+              onClick={handleCancelClick}
             >
               Cancel
             </Button>
