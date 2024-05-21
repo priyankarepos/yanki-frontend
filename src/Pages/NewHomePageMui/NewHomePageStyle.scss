@@ -66,6 +66,7 @@
     border-radius: 20px !important;
     margin: 0 auto !important;
     padding: 20px !important;
+    position: fixed;
 }
 
 .ya-answer-container-border {
@@ -186,9 +187,9 @@
 }
 
 .ya-answer {
-    overflow-y: auto !important;
-    min-height: calc(100vh - 200px) !important;
-    max-height: calc(100vh - 200px) !important;
+    overflow-y: auto;
+    min-height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
 }
 
 .custom-html-css,
