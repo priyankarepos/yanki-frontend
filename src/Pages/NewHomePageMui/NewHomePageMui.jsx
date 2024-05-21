@@ -683,7 +683,6 @@ const NewHomePageMui = () => {
               : "ya-answer-drawn-open"
           }`}
         >
-          <Box className="ya-answer-wrapper-position">
             <Box
               className={`ya-answer-container ${
                 activeTab === 0
@@ -1012,7 +1011,6 @@ const NewHomePageMui = () => {
                   </form>
                 </Box>
               </Box>
-            </Box>
           </Box>
         </Box>
       </Box>
