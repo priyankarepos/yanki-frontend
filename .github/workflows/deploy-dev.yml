@@ -25,11 +25,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14
-
+      
       - name: Install dependencies
         run: npm i
 
       - name: Build
+        env: 
+          REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_S3_BASE_URL }}
+          REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
         run: npm run build:dev
 
       - name: Deploy to S3
