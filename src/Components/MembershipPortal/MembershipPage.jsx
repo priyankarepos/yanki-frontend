@@ -17,7 +17,7 @@ const MembershipPage = () => {
   const [loading, setLoading] = useState(true);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
   const [loadingProductId, setLoadingProductId] = useState(null);
 
