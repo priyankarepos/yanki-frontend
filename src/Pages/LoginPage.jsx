@@ -97,7 +97,12 @@ const LoginPage = () => {
         );
 
         const updateCustomerId = responseSubscribe.data;
-        if (updateCustomerId?.isPlanSubscribed) {
+        const yankiUser = JSON.parse(
+          window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+          "{}"
+        );
+        const userRoles = yankiUser?.userObject?.userRoles || "";
+        if (updateCustomerId?.isPlanSubscribed || userRoles === "Admin") {
           navigate("/");
         } else {
           navigate("/membership");
@@ -144,7 +149,22 @@ const LoginPage = () => {
           process.env.REACT_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
-        navigate("/");
+        const token = response.data.contentResponse.token;
+        const responseSubscribe = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const updateCustomerId = responseSubscribe.data;
+        if (updateCustomerId?.isPlanSubscribed) {
+          navigate("/");
+        } else {
+          navigate("/membership");
+        }
       } else {
         setLoginError(true);
         setLoginErrorMsg("Authentication failed.");

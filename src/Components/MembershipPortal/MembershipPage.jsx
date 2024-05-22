@@ -19,6 +19,7 @@ const MembershipPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
+  const [loadingProductId, setLoadingProductId] = useState(null);
 
   const fetchRemainingMessage = async () => {
     try {
@@ -81,13 +82,14 @@ const MembershipPage = () => {
 
   const handleCreateCustomer = async (priceId) => {
     try {
+      setLoadingProductId(priceId);
       const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer?userId=${userId}`, { priceId });
       const customerId = response.data;
       const paymentResponse = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/subscribe-product-plan`, { priceId, customerId });
       const paymentUrl = paymentResponse.data;
       window.location.href = paymentUrl;
     } catch (error) {
-
+      setLoadingProductId(null);
     }
   };
 
@@ -105,8 +107,9 @@ const MembershipPage = () => {
     fetchUpdateCustomerId();
   }, []);
 
-  const handleUpdateSubscriptionPlan = async () => {
+  const handleUpdateSubscriptionPlan = async (priceId) => {
     try {
+      setLoadingProductId(priceId);
       const queryString = `?customerId=${updateCustomerId.customerId}`;
       const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
       const paymentUrl = response.data;
@@ -116,6 +119,7 @@ const MembershipPage = () => {
     } catch (error) {
       setSnackbarMessage('Error updating subscription plan:', error);
       setSnackbarOpen(true);
+      setLoadingProductId(null);
     }
   };
 
@@ -166,7 +170,7 @@ const MembershipPage = () => {
           <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
           {!updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>}
 
-          {(remainingMsgData?.totalMessageLeft <= 0 ||remainingMsgData?.totalTaskLeft <= 0 ) &&
+          {(remainingMsgData?.totalMessageLeft <= 0 || remainingMsgData?.totalTaskLeft <= 0 ) &&
           updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your message or task limits have been exhausted. To continue using Yanki, please upgrade your plan.</Typography>}
           <Grid container spacing={2} alignItems="center">
             {loading ? (
@@ -182,7 +186,8 @@ const MembershipPage = () => {
                   price={product.price}
                   isSubscribed={product.isActive}
                   isPlanSubscribed={updateCustomerId?.isPlanSubscribed}
-                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan() : handleCreateCustomer(product.defaultPriceId)}
+                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  upgradeLoading={loadingProductId === product.defaultPriceId}
                 />
               ))
             )}
