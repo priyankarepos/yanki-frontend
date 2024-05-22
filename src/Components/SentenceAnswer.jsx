@@ -8,7 +8,7 @@ import axios from "axios";
 import "./AnswerStyle.scss";
 import Markdown from "react-markdown";
 
-const SentenceAnswer = ({ answer }) => {
+const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
   const [additionalMessage, setAdditionalMessage] = useState("");
   const [apiResponseMessage, setApiResponseMessage] = useState("");
@@ -69,6 +69,7 @@ const SentenceAnswer = ({ answer }) => {
       setContentApiResponseMessage(response.data.contentResponse);
 
       setAdditionalMessage("");
+      fetchRemainingMessage();
     } catch (error) {
       setSnackbarMessage("API Error:", error);
       setSnackbarOpen(true);

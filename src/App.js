@@ -50,12 +50,15 @@ import SubscribeNotification from "./Components/Notification/SubscribeNotificati
 import AdminAddFaq from "./Admin/AdminAddFAQ";
 import NewHomePageMui from "./Pages/NewHomePageMui/NewHomePageMui";
 import "./style.scss";
+import MembershipPage from "./Components/MembershipPortal/MembershipPage";
+import PaymentSuccessPage from "./Components/MembershipPortal/PaymentSuccessPage";
+import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage";
 
 // Exporting context
 export const Context = createContext("");
 
 // It might be used in future
- 
+
 export const ThemeModeContext = createContext({
   // themeMode: "",
   // toggleThemeMode: () => {},
@@ -258,10 +261,10 @@ function App() {
       process.env.REACT_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-          window.sessionStorage.getItem(
-            process.env.REACT_APP_SESSIONSTORAGE_REFRESH
-          )
+        window.sessionStorage.getItem(
+          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
         )
+      )
       : "";
 
     if (!session) {
@@ -610,6 +613,32 @@ function App() {
                       element={
                         <UserPagesProtection>
                           <AdminAddFaq />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/membership"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <MembershipPage />
+                          </UserPageLayout>
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/payment-success"
+                      element={
+                        <UserPagesProtection>
+                          <PaymentSuccessPage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/payment-fail"
+                      element={
+                        <UserPagesProtection>
+                          <PaymentFailurePage />
                         </UserPagesProtection>
                       }
                     />
