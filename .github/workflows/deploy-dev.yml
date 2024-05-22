@@ -33,6 +33,12 @@ jobs:
         env: 
           REACT_APP_S3_BASE_URL: ${{ secrets.REACT_APP_S3_BASE_URL }}
           REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+          REACT_APP_API_URL: ${{secrets.DEV_REACT_APP_API_URL }}
+          REACT_APP_NOMINATIM_API: ${{secrets.DEV_REACT_APP_NOMINATIM_API }}
+          REACT_APP_LOCALSTORAGE_TOKEN: ${{secrets.DEV_REACT_APP_LOCALSTORAGE_TOKEN }}
+          REACT_APP_LOCALSTORAGE_REMEMBER: ${{secrets.DEV_REACT_APP_LOCALSTORAGE_REMEMBER }}
+          REACT_APP_SESSIONSTORAGE_REFRESH: ${{secrets.DEV_REACT_APP_SESSIONSTORAGE_REFRESH }}
+          CI: ${{secrets.DEV_CI }}
         run: npm run build:dev
 
       - name: Deploy to S3
