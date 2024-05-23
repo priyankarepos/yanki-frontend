@@ -9,16 +9,17 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
-const HelpAgent = ({ answer, fetchRemainingMessage }) => {
+const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mailMessage, setMailMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [showMsg, setShowMsg] = useState(false);
   const yankiUser = JSON.parse(
     window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
-      "{}"
+    "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
 
@@ -35,11 +36,14 @@ const HelpAgent = ({ answer, fetchRemainingMessage }) => {
         fetchRemainingMessage();
       } else {
         setSnackbarMessage("Failed to send personal assistant email");
-        setSnackbarOpen(true);
+        setSnackbarOpen(false);
+        setLoading(false);
       }
     } catch (error) {
+      setShowMsg(true)
       setSnackbarMessage("Error sending personal assistant email:", error);
       setSnackbarOpen(true);
+      setLoading(false);
     }
   };
 
@@ -71,17 +75,16 @@ const HelpAgent = ({ answer, fetchRemainingMessage }) => {
           {touched && !content.trim() && "This field is required."}
         </FormHelperText>
         <Typography
-          className={`${
-            content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
-          } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
+          className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
+            } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
           onClick={content.length === 0 ? null : handlePersonalAssistant}
           sx={{
             mt: "8px",
             cursor:
               content.length === 0 ||
-              loading ||
-              mailMessage !== "" ||
-              !answer?.isHelpAgent === true
+                loading ||
+                mailMessage !== "" ||
+                !answer?.isHelpAgent === true
                 ? "text"
                 : "pointer",
           }}
@@ -96,10 +99,13 @@ const HelpAgent = ({ answer, fetchRemainingMessage }) => {
           <Typography sx={{ mt: 2 }}>
             Your request has been received and is currently being reviewed by
             our YankiAl agents. Depending on your subscription you can expect to
-            receive a response via the email address or SMS nurnber registered
+            receive a response via the email address or SMS number registered
             with us
           </Typography>
         )}
+        {showMsg && remainingMsgData?.totalTaskLeft === 0 && <Typography sx={{ mt: 2 }}>
+          You have no task left. Please upgrade your plan to continue perform task
+        </Typography>}
       </Paper>
 
       <Snackbar

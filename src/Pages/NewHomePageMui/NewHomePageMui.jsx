@@ -706,6 +706,7 @@ const NewHomePageMui = () => {
                 isError={isError}
                 searchQuery={searchQuery}
                 fetchRemainingMessage={fetchRemainingMessage}
+                remainingMsgData={remainingMsgData}
               />
             ))}
             {storedSearchQuery && (

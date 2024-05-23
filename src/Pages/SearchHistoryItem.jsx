@@ -19,7 +19,7 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 
-const SearchHistoryItem = ({ query, response,fetchRemainingMessage }) => {
+const SearchHistoryItem = ({ query, response,fetchRemainingMessage, remainingMsgData }) => {
   const [direction, setDirection] = useState('ltr');
   const { activeTab } = React.useContext(Context);
 
@@ -163,7 +163,7 @@ const SearchHistoryItem = ({ query, response,fetchRemainingMessage }) => {
       {isHelpAgent && (
          <Paper elevation={3} className="marginBottom-10">
          <div className="chat-bubble assistant-bubble">
-           <HelpAgent fetchRemainingMessage={fetchRemainingMessage} answer={response} />
+           <HelpAgent fetchRemainingMessage={fetchRemainingMessage} answer={response} remainingMsgData={remainingMsgData} />
           </div>
         </Paper>
       )}
