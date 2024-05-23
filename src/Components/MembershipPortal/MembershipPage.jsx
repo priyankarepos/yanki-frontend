@@ -170,8 +170,8 @@ const MembershipPage = () => {
           <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
           {!updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>}
 
-          {(remainingMsgData?.totalMessageLeft <= 0 || remainingMsgData?.totalTaskLeft <= 0 ) &&
-          updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your message or task limits have been exhausted. To continue using Yanki, please upgrade your plan.</Typography>}
+          {(remainingMsgData?.totalMessageLeft <= 0 || remainingMsgData?.totalTaskLeft <= 0) &&
+            updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your message or task limits have been exhausted. To continue using Yanki, please upgrade your plan.</Typography>}
           <Grid container spacing={2} alignItems="center">
             {loading ? (
               <Typography className='membership-data-loader'><CircularProgress /></Typography>
@@ -225,12 +225,17 @@ const MembershipPage = () => {
                 </div>
               </Grid>
               <Grid item xs={12} sm="auto">
-                <Typography className="totalText">Total = ${reversedProducts
-                    .filter(item => item.name !== "Additional Task" && item.isActive === true)
-                    .map(product => {
-                      const price = product.thirdDescription.match(/\d+(\.\d+)?/);
-                      return price ? price[0] : null;
-                    }) * quantity}</Typography>
+                <Typography className="totalText">
+                  Total = ${(
+                    reversedProducts
+                      .filter(item => item.name !== "Additional Task" && item.isActive === true)
+                      .map(product => {
+                        const priceMatch = product.thirdDescription.match(/\d+(\.\d+)?/);
+                        return priceMatch ? parseFloat(priceMatch[0]) : 0;
+                      })
+                      .reduce((acc, price) => acc + price, 0) * quantity
+                  ).toFixed(2)}
+                </Typography>
               </Grid>
             </Grid>
             <Button variant="contained" className="purchase-task-btn" onClick={handleBuyTask}>
