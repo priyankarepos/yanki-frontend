@@ -36,14 +36,16 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
         fetchRemainingMessage();
       } else {
         setSnackbarMessage("Failed to send personal assistant email");
-        setSnackbarOpen(false);
+        setSnackbarOpen(true);
         setLoading(false);
+        setContent("");
       }
     } catch (error) {
       setShowMsg(true)
       setSnackbarMessage("Error sending personal assistant email:", error);
       setSnackbarOpen(true);
       setLoading(false);
+      setContent("");
     }
   };
 
