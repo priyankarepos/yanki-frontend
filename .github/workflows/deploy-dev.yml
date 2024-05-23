@@ -39,7 +39,7 @@ jobs:
           REACT_APP_LOCALSTORAGE_REMEMBER: ${{secrets.DEV_REACT_APP_LOCALSTORAGE_REMEMBER }}
           REACT_APP_SESSIONSTORAGE_REFRESH: ${{secrets.DEV_REACT_APP_SESSIONSTORAGE_REFRESH }}
           REACT_APP_STRIPE_PUBLIC_KEY: ${{secrets.REACT_APP_STRIPE_PUBLIC_KEY }}
-          CI: ${{secrets.DEV_CI }}
+          CI: ${{secrets.CI }}
         run: npm run build:dev
 
       - name: Deploy to S3
