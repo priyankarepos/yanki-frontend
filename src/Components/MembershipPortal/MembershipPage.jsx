@@ -112,6 +112,8 @@ const MembershipPage = () => {
     fetchUpdateCustomerId();
   }, []);
 
+  // This is going to be used in future for upgrade subscribtion
+
   // const handleUpdateSubscriptionPlan = async (priceId) => {
   //   try {
   //     setLoadingProductId(priceId);
@@ -223,6 +225,7 @@ const MembershipPage = () => {
                   price={product.price}
                   isSubscribed={product.isActive}
                   isPlanSubscribed={updateCustomerId?.isPlanSubscribed}
+                  // This is going to be used in future for upgrade subscribtion
                   // onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
                   onClick={() => updateCustomerId?.isPlanSubscribed ? handleCancelClick(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
                   upgradeLoading={loadingProductId === product.defaultPriceId}
