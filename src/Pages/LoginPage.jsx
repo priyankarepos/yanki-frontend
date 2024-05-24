@@ -160,7 +160,12 @@ const LoginPage = () => {
         );
 
         const updateCustomerId = responseSubscribe.data;
-        if (updateCustomerId?.isPlanSubscribed) {
+        const yankiUser = JSON.parse(
+          window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+          "{}"
+        );
+        const userRoles = yankiUser?.userObject?.userRoles || "";
+        if (updateCustomerId?.isPlanSubscribed || userRoles === "Admin") {
           navigate("/");
         } else {
           navigate("/membership");
