@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Tooltip, Typography } from "@mui/material";
 import './SubscriptionCard.scss';
 import { Context } from '../../App';
 
 const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed, price, isPlanSubscribed, upgradeLoading }) => {
   const { activeTab } = React.useContext(Context);
+  const upgradeTooltipText = "To upgrade your plan, you need to cancel your current plan first, and then subscribe again to the desired plan.";
   const getClassNames = () => {
     let className = activeTab === 0 ? 'subscription-card' : 'subscription-card-light';
     if (isSubscribed) {
@@ -24,9 +25,16 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
           <li className="description-item">{task}</li>
           <li className="description-item">{taskCost}</li>
         </ul>
-        <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={isSubscribed || upgradeLoading}>
-          {upgradeLoading ? <CircularProgress size={24} /> : (isPlanSubscribed ? (isSubscribed ? "Current Plan" : "Upgrade Plan") : "Subscribe")}
-        </Button>
+        {!isPlanSubscribed ? <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={isSubscribed || upgradeLoading}>
+          {upgradeLoading ? <CircularProgress size={24} /> : "Subscribe"}
+        </Button> :
+          <Tooltip title={!isSubscribed ? upgradeTooltipText : ''} disableHoverListener={isSubscribed || upgradeLoading}>
+            <span>
+              <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={!isSubscribed || upgradeLoading}>
+                {upgradeLoading ? <CircularProgress size={24} /> : (isSubscribed ? "Cancel Plan" : "Upgrade Plan")}
+              </Button>
+            </span>
+          </Tooltip>}
       </Box>
     </Grid>
   );

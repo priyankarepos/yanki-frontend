@@ -7,6 +7,7 @@ import './MembershipStyle.scss';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
 
 const MembershipPage = () => {
   const [products, setProducts] = useState([]);
@@ -20,6 +21,10 @@ const MembershipPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
   const [loadingProductId, setLoadingProductId] = useState(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+  const [confirmationTitle, setConfirmationTitle] = useState("");
+  const[deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchRemainingMessage = async () => {
     try {
@@ -107,21 +112,55 @@ const MembershipPage = () => {
     fetchUpdateCustomerId();
   }, []);
 
-  const handleUpdateSubscriptionPlan = async (priceId) => {
+  // This is going to be used in future for upgrade subscribtion
+
+  // const handleUpdateSubscriptionPlan = async (priceId) => {
+  //   try {
+  //     setLoadingProductId(priceId);
+  //     const queryString = `?customerId=${updateCustomerId.customerId}`;
+  //     const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
+  //     const paymentUrl = response.data;
+  //     window.location.href = paymentUrl;
+  //     setSnackbarMessage('Subscription plan updated successfully:');
+  //     setSnackbarOpen(false);
+  //   } catch (error) {
+  //     setSnackbarMessage('Error updating subscription plan:', error);
+  //     setSnackbarOpen(true);
+  //     setLoadingProductId(null);
+  //   }
+  // };
+
+  const handleCancelClick = () => {
+    setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
+    setConfirmationTitle("Confirm Cancellation")
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      setLoadingProductId(priceId);
-      const queryString = `?customerId=${updateCustomerId.customerId}`;
-      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
-      const paymentUrl = response.data;
-      window.location.href = paymentUrl;
-      setSnackbarMessage('Subscription plan updated successfully:');
-      setSnackbarOpen(false);
+      setDeleteLoading(true);
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
+
+      if (response.status === 200) {
+        setSnackbarMessage("Subscription cancelled successfully");
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        setSnackbarMessage("Failed to cancel subscription");
+        setSnackbarOpen(true);
+        setDeleteLoading(false);
+      }
     } catch (error) {
-      setSnackbarMessage('Error updating subscription plan:', error);
+      setSnackbarMessage(`An error occurred: ${error.message}`);
       setSnackbarOpen(true);
-      setLoadingProductId(null);
+      setDeleteLoading(false);
+    } finally {
+      setSnackbarOpen(true);
     }
   };
+
 
   const handleDecrement = () => {
     setQuantity(prevQuantity => Math.max(prevQuantity - 1, 1));
@@ -186,7 +225,9 @@ const MembershipPage = () => {
                   price={product.price}
                   isSubscribed={product.isActive}
                   isPlanSubscribed={updateCustomerId?.isPlanSubscribed}
-                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  // This is going to be used in future for upgrade subscribtion
+                  // onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleCancelClick(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
                   upgradeLoading={loadingProductId === product.defaultPriceId}
                 />
               ))
@@ -248,6 +289,14 @@ const MembershipPage = () => {
           autoHideDuration={6000}
           onClose={() => setSnackbarOpen(false)}
           message={snackbarMessage}
+        />
+        <ConfirmDialog
+          open={confirmDialogOpen}
+          handleClose={() => setConfirmDialogOpen(false)}
+          handleConfirm={handleConfirmDelete}
+          confirmationText={confirmationText}
+          confirmationTitle={confirmationTitle}
+          loading={deleteLoading}
         />
       </Paper>
     </Elements>
