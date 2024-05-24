@@ -24,7 +24,7 @@ const MembershipPage = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
   const [confirmationTitle, setConfirmationTitle] = useState("");
-  const [subscribeIdToDelete, setSubscribeIdToDelete] = useState(null);
+  const[deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchRemainingMessage = async () => {
     try {
@@ -112,31 +112,31 @@ const MembershipPage = () => {
     fetchUpdateCustomerId();
   }, []);
 
-  const handleUpdateSubscriptionPlan = async (priceId) => {
-    try {
-      setLoadingProductId(priceId);
-      const queryString = `?customerId=${updateCustomerId.customerId}`;
-      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
-      const paymentUrl = response.data;
-      window.location.href = paymentUrl;
-      setSnackbarMessage('Subscription plan updated successfully:');
-      setSnackbarOpen(false);
-    } catch (error) {
-      setSnackbarMessage('Error updating subscription plan:', error);
-      setSnackbarOpen(true);
-      setLoadingProductId(null);
-    }
-  };
+  // const handleUpdateSubscriptionPlan = async (priceId) => {
+  //   try {
+  //     setLoadingProductId(priceId);
+  //     const queryString = `?customerId=${updateCustomerId.customerId}`;
+  //     const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
+  //     const paymentUrl = response.data;
+  //     window.location.href = paymentUrl;
+  //     setSnackbarMessage('Subscription plan updated successfully:');
+  //     setSnackbarOpen(false);
+  //   } catch (error) {
+  //     setSnackbarMessage('Error updating subscription plan:', error);
+  //     setSnackbarOpen(true);
+  //     setLoadingProductId(null);
+  //   }
+  // };
 
-  const handleCancelClick = (priceId) => {
+  const handleCancelClick = () => {
     setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
     setConfirmationTitle("Confirm Cancellation")
     setConfirmDialogOpen(true);
-    setSubscribeIdToDelete(priceId);
   };
 
   const handleConfirmDelete = async () => {
     try {
+      setDeleteLoading(true);
       const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
 
       if (response.status === 200) {
@@ -148,10 +148,12 @@ const MembershipPage = () => {
       } else {
         setSnackbarMessage("Failed to cancel subscription");
         setSnackbarOpen(true);
+        setDeleteLoading(false);
       }
     } catch (error) {
       setSnackbarMessage(`An error occurred: ${error.message}`);
       setSnackbarOpen(true);
+      setDeleteLoading(false);
     } finally {
       setSnackbarOpen(true);
     }
@@ -291,6 +293,7 @@ const MembershipPage = () => {
           handleConfirm={handleConfirmDelete}
           confirmationText={confirmationText}
           confirmationTitle={confirmationTitle}
+          loading={deleteLoading}
         />
       </Paper>
     </Elements>

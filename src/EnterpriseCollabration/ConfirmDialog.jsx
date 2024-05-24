@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { CircularProgress } from '@mui/material';
 
-const ConfirmDialog = ({ open, handleClose, handleConfirm, confirmationText,loading,  confirmationTitle}) => {
+const ConfirmDialog = ({ open, handleClose, handleConfirm, confirmationText, loading, confirmationTitle}) => {
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{!confirmationTitle ? "Confirm Deletion" : confirmationTitle}</DialogTitle>
