@@ -7,6 +7,7 @@ import './MembershipStyle.scss';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ConfirmDialog from '../../EnterpriseCollabration/ConfirmDialog';
 
 const MembershipPage = () => {
   const [products, setProducts] = useState([]);
@@ -20,6 +21,10 @@ const MembershipPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
   const [loadingProductId, setLoadingProductId] = useState(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+  const [confirmationTitle, setConfirmationTitle] = useState("");
+  const [subscribeIdToDelete, setSubscribeIdToDelete] = useState(null);
 
   const fetchRemainingMessage = async () => {
     try {
@@ -123,6 +128,36 @@ const MembershipPage = () => {
     }
   };
 
+  const handleCancelClick = (priceId) => {
+    setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
+    setConfirmationTitle("Confirm Cancellation")
+    setConfirmDialogOpen(true);
+    setSubscribeIdToDelete(priceId);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
+
+      if (response.status === 200) {
+        setSnackbarMessage("Subscription cancelled successfully");
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        setSnackbarMessage("Failed to cancel subscription");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage(`An error occurred: ${error.message}`);
+      setSnackbarOpen(true);
+    } finally {
+      setSnackbarOpen(true);
+    }
+  };
+
+
   const handleDecrement = () => {
     setQuantity(prevQuantity => Math.max(prevQuantity - 1, 1));
   };
@@ -186,7 +221,8 @@ const MembershipPage = () => {
                   price={product.price}
                   isSubscribed={product.isActive}
                   isPlanSubscribed={updateCustomerId?.isPlanSubscribed}
-                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  // onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleCancelClick(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
                   upgradeLoading={loadingProductId === product.defaultPriceId}
                 />
               ))
@@ -248,6 +284,13 @@ const MembershipPage = () => {
           autoHideDuration={6000}
           onClose={() => setSnackbarOpen(false)}
           message={snackbarMessage}
+        />
+        <ConfirmDialog
+          open={confirmDialogOpen}
+          handleClose={() => setConfirmDialogOpen(false)}
+          handleConfirm={handleConfirmDelete}
+          confirmationText={confirmationText}
+          confirmationTitle={confirmationTitle}
         />
       </Paper>
     </Elements>
