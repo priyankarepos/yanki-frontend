@@ -29,7 +29,7 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
           {upgradeLoading ? <CircularProgress size={24} /> : "Subscribe"}
         </Button> :
           <Tooltip title={!isSubscribed ? upgradeTooltipText : ''} disableHoverListener={isSubscribed || upgradeLoading}>
-            <span>
+            <span className='subscribe-btn-tooltip'>
               <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={!isSubscribed || upgradeLoading}>
                 {upgradeLoading ? <CircularProgress size={24} /> : (isSubscribed ? "Cancel Plan" : "Upgrade Plan")}
               </Button>
