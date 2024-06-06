@@ -300,11 +300,11 @@ const MembershipPage = () => {
             <Typography variant="h5" sx={{ my: 2 }}>
               Choose a Subscription Plan
             </Typography>
-            <Typography className="subscribe-link">
+            {updateCustomerId?.isPlanSubscribed && <Typography className="subscribe-link">
               <span onClick={handleUpdateSubscriptionPlan}>
                 View Additional Info
               </span>
-            </Typography>
+            </Typography>}
           </Box>
           {/* It might be use in future */}
           {/* {!updateCustomerId?.isPlanSubscribed && !updateCustomerId?.isPaymentDecline &&  <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>} */}
