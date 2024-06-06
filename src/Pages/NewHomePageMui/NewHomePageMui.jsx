@@ -929,7 +929,7 @@ const NewHomePageMui = () => {
                     </Typography>
                     <Typography>
                       <span onClick={onClickMembershipPortal}>
-                        Subscribe to Pro
+                        {updateCustomerId?.isPlanSubscribed? "Update Plan" : "Subscribe to Pro"}
                       </span>
                     </Typography>
                   </Box>
