@@ -5,6 +5,10 @@
     min-height: 70vh;
 }
 
+.subscribe-success-container{
+  min-height: 100vh;
+}
+
 .payment-success-box {
     max-width: 360px;
     width: 100%;
@@ -35,4 +39,38 @@
     margin-bottom: 30px !important;
     text-align: center;
     color: #ccc; 
+}
+
+.subscribe-model-question {
+  margin-top: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px !important;
+}
+  
+  .subscribe-model-ans {
+    margin-bottom: 2rem !important;
+    font-size: 1rem !important;
+}
+  
+  .button {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+  
+    &:hover {
+      background-color: var(--button-hover-background-color);
+    }
+  }
+
+  .subscribe-link {
+    margin-top: -5px !important;
+    margin-bottom: 15px !important;
+    padding: 0 !important;
+    color: #6fa8dd;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
 }

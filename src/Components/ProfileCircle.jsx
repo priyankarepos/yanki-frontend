@@ -206,7 +206,7 @@ export default function ProfielCircle() {
               <ListItemIcon>
                 <NotificationsNoneIcon />
               </ListItemIcon>
-              Notifications
+              Notification Settings
             </MenuItem>
           )}
           {userRoles !== "Enterprise" && (
@@ -222,7 +222,7 @@ export default function ProfielCircle() {
             <ListItemIcon>
               <SubscriptionsIcon fontSize="small" />
             </ListItemIcon>
-            Membership Portal
+            Subscription Plan
           </MenuItem>
           }
           <Divider />
