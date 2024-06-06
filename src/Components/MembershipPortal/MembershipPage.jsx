@@ -256,13 +256,14 @@ const MembershipPage = () => {
       <Paper sx={{ p: 2 }}>
         <Box className="subscription-page">
           <Box className="membership-heading-wrapper">
-          <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
-          <Typography className="subscribe-link">
-            <span onClick={handleUpdateSubscriptionPlan}>
-              View Additional Info
-            </span>
-          </Typography>
+            <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
+            <Typography className="subscribe-link">
+              <span onClick={handleUpdateSubscriptionPlan}>
+                View Additional Info
+              </span>
+            </Typography>
           </Box>
+          {/* It might be use in future */}
           {/* {!updateCustomerId?.isPlanSubscribed && !updateCustomerId?.isPaymentDecline &&  <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>} */}
 
           {(remainingMsgData?.totalMessageLeft <= 0 || remainingMsgData?.totalTaskLeft <= 0) &&
@@ -292,7 +293,7 @@ const MembershipPage = () => {
                     ? handleUpgradePlan(product.defaultPriceId)
                     : product?.isDowngrade
                       ? handleDowngradePlan(product.defaultPriceId)
-                      : product?.isActive && !product?.isDowngrade && !product?.isUpgrade || updateCustomerId?.isSubscriptionCanceled 
+                      : product?.isActive && !product?.isDowngrade && !product?.isUpgrade || updateCustomerId?.isSubscriptionCanceled
                         ? handleUpdateSubscriptionPlan(product.defaultPriceId)
                         : null
                   }
