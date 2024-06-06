@@ -24,7 +24,8 @@ const MembershipPage = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
   const [confirmationTitle, setConfirmationTitle] = useState("");
-  const[deleteLoading, setDeleteLoading] = useState(false);
+  const [confirmationCancelText, setconfirmationCancelText] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchRemainingMessage = async () => {
     try {
@@ -114,53 +115,101 @@ const MembershipPage = () => {
 
   // This is going to be used in future for upgrade subscribtion
 
-  // const handleUpdateSubscriptionPlan = async (priceId) => {
-  //   try {
-  //     setLoadingProductId(priceId);
-  //     const queryString = `?customerId=${updateCustomerId.customerId}`;
-  //     const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
-  //     const paymentUrl = response.data;
-  //     window.location.href = paymentUrl;
-  //     setSnackbarMessage('Subscription plan updated successfully:');
-  //     setSnackbarOpen(false);
-  //   } catch (error) {
-  //     setSnackbarMessage('Error updating subscription plan:', error);
-  //     setSnackbarOpen(true);
-  //     setLoadingProductId(null);
-  //   }
-  // };
-
-  const handleCancelClick = () => {
-    setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
-    setConfirmationTitle("Confirm Cancellation")
-    setConfirmDialogOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
+  const handleUpdateSubscriptionPlan = async (priceId) => {
     try {
-      setDeleteLoading(true);
-      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
-
-      if (response.status === 200) {
-        setSnackbarMessage("Subscription cancelled successfully");
-        setSnackbarOpen(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        setSnackbarMessage("Failed to cancel subscription");
-        setSnackbarOpen(true);
-        setDeleteLoading(false);
-      }
+      setLoadingProductId(priceId);
+      const queryString = `?customerId=${updateCustomerId.customerId}`;
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
+      const paymentUrl = response.data;
+      window.location.href = paymentUrl;
+      setSnackbarMessage('Subscription plan updated successfully:');
+      setSnackbarOpen(false);
     } catch (error) {
-      setSnackbarMessage(`An error occurred: ${error.message}`);
+      setSnackbarMessage('Error updating subscription plan:', error);
       setSnackbarOpen(true);
-      setDeleteLoading(false);
-    } finally {
-      setSnackbarOpen(true);
+      setLoadingProductId(null);
     }
   };
 
+  // It might be use in future
+
+  // const handleCancelClick = () => {
+  //   setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
+  //   setconfirmationCancelText("Are you sure you want to cancel this plan?")
+  //   setConfirmationTitle("Confirm Cancellation")
+  //   setConfirmDialogOpen(true);
+  // };
+
+  // const handleConfirmDelete = async () => {
+  //   try {
+  //     setDeleteLoading(true);
+  //     const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
+
+  //     if (response.status === 200) {
+  //       setSnackbarMessage("Subscription cancelled successfully");
+  //       setSnackbarOpen(true);
+  //       setTimeout(() => {
+  //         window.location.reload();
+  //       }, 1000);
+  //     } else {
+  //       setSnackbarMessage("Failed to cancel subscription");
+  //       setSnackbarOpen(true);
+  //       setDeleteLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setSnackbarMessage(`An error occurred: ${error.message}`);
+  //     setSnackbarOpen(true);
+  //     setDeleteLoading(false);
+  //   } finally {
+  //     setSnackbarOpen(true);
+  //   }
+  // };
+
+  const handleDeclinedPayment = async (priceId) => {
+    try {
+      setLoadingProductId(priceId);
+      const queryString = `?customerId=${updateCustomerId.customerId}`;
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`);
+      const paymentUrl = response.data;
+      window.location.href = paymentUrl;
+      setSnackbarMessage('Payment done successfuly');
+      setSnackbarOpen(false);
+    } catch (error) {
+      setSnackbarMessage('Error:', error);
+      setSnackbarOpen(true);
+      setLoadingProductId(null);
+    }
+  };
+
+  const handleUpgradePlan = async (priceId) => {
+    try {
+      setLoadingProductId(priceId);
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/upgrade-subscription?newPriceId=${priceId}`);
+      const paymentUrl = response.data;
+      setSnackbarMessage(paymentUrl);
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage('Error upgrading subscription plan:', error);
+      setSnackbarOpen(true);
+      setLoadingProductId(null);
+    }
+    setLoadingProductId(null);
+  };
+
+  const handleDowngradePlan = async (priceId) => {
+    try {
+      setLoadingProductId(priceId);
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/downgrade-subscription?newPriceId=${priceId}`);
+      const paymentUrl = response.data;
+      setSnackbarMessage(paymentUrl);
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage('Error downgrade subscription plan:', error);
+      setSnackbarOpen(true);
+      setLoadingProductId(null);
+    }
+    setLoadingProductId(null);
+  };
 
   const handleDecrement = () => {
     setQuantity(prevQuantity => Math.max(prevQuantity - 1, 1));
@@ -206,8 +255,16 @@ const MembershipPage = () => {
     <Elements stripe={stripePromise}>
       <Paper sx={{ p: 2 }}>
         <Box className="subscription-page">
-          <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
-          {!updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>}
+          <Box className="membership-heading-wrapper">
+            <Typography variant='h5' sx={{ my: 2 }}>Choose a Subscription Plan</Typography>
+            <Typography className="subscribe-link">
+              <span onClick={handleUpdateSubscriptionPlan}>
+                View Additional Info
+              </span>
+            </Typography>
+          </Box>
+          {/* It might be use in future */}
+          {/* {!updateCustomerId?.isPlanSubscribed && !updateCustomerId?.isPaymentDecline &&  <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>} */}
 
           {(remainingMsgData?.totalMessageLeft <= 0 || remainingMsgData?.totalTaskLeft <= 0) &&
             updateCustomerId?.isPlanSubscribed && <Typography sx={{ my: 2 }}>Your message or task limits have been exhausted. To continue using Yanki, please upgrade your plan.</Typography>}
@@ -225,16 +282,30 @@ const MembershipPage = () => {
                   price={product.price}
                   isSubscribed={product.isActive}
                   isPlanSubscribed={updateCustomerId?.isPlanSubscribed}
-                  // This is going to be used in future for upgrade subscribtion
-                  // onClick={() => updateCustomerId?.isPlanSubscribed ? handleUpdateSubscriptionPlan(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
-                  onClick={() => updateCustomerId?.isPlanSubscribed ? handleCancelClick(product.defaultPriceId) : handleCreateCustomer(product.defaultPriceId)}
+                  onClick={() => handleCreateCustomer(product.defaultPriceId)}
+                  handleDeclinedPayment={() =>
+                    !updateCustomerId?.isPlanSubscribed && updateCustomerId?.isPaymentDecline && product.isActive
+                      ? handleDeclinedPayment(product.defaultPriceId)
+                      : handleCreateCustomer(product.defaultPriceId)}
                   upgradeLoading={loadingProductId === product.defaultPriceId}
+                  isPaymentDecline={updateCustomerId?.isPaymentDecline}
+                  handleUpgradeCancelPlan={() => product?.isUpgrade
+                    ? handleUpgradePlan(product.defaultPriceId)
+                    : product?.isDowngrade
+                      ? handleDowngradePlan(product.defaultPriceId)
+                      : product?.isActive && !product?.isDowngrade && !product?.isUpgrade || updateCustomerId?.isSubscriptionCanceled
+                        ? handleUpdateSubscriptionPlan(product.defaultPriceId)
+                        : null
+                  }
+                  isDowngrade={product?.isDowngrade}
+                  isUpgrade={product?.isUpgrade}
+                  isSubscriptionCanceled={updateCustomerId?.isSubscriptionCanceled}
                 />
               ))
             )}
           </Grid>
           {updateCustomerId?.isPlanSubscribed && <Box className="taskPurchaseContainer">
-            <Typography variant='h5' className="taskPurchaseHeader">Task Purchase</Typography>
+            <Typography variant='h5' className="taskPurchaseHeader">Purchase additional personal tasks</Typography>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} sm="auto">
                 <Typography className="taskPurchaseText">
@@ -293,10 +364,11 @@ const MembershipPage = () => {
         <ConfirmDialog
           open={confirmDialogOpen}
           handleClose={() => setConfirmDialogOpen(false)}
-          handleConfirm={handleConfirmDelete}
+          handleCancelConfirm={handleConfirmDelete}
           confirmationText={confirmationText}
           confirmationTitle={confirmationTitle}
           loading={deleteLoading}
+          confirmationCancelText={confirmationCancelText}
         />
       </Paper>
     </Elements>

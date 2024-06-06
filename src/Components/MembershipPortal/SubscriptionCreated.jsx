@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { ThemeModeContext } from "../../App";
 import "./PaymentSuccessPage.scss";
 
-const PaymentSuccessPage = () => {
+const SubscriptionCreatedPage = () => {
     const { themeMode } = useContext(ThemeModeContext);
     const navigate = useNavigate();
 
@@ -15,9 +15,13 @@ const PaymentSuccessPage = () => {
         navigate("/", { replace: true });
     };
 
+    const onClickAICustomization = () => {
+        navigate("/ai-customization");
+    };
+
     return (
         <Container maxWidth="xl">
-            <Box className="payment-success-container">
+            <Box className="payment-success-container subscribe-success-container">
                 <Box className="payment-success-box">
                     <Box className="logo-container">
                         <img
@@ -35,13 +39,42 @@ const PaymentSuccessPage = () => {
                         component="h1"
                         className="title"
                     >
-                        You are now upgraded!
+                        Welcome to Yanki!
                     </Typography>
                     <Typography
                         variant="body1"
                         className="message"
                     >
-                        Start enjoying all Yanki’s premium features.
+                        Your account has been successfully created.
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        className="subscribe-model-question"
+                    >
+                        What's Next?
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        className="subscribe-model-ans"
+                    >
+                        To tailor your Yanki experience to your needs, please complete our optional AI questionnaire. Your answers will help us provide you with highly accurate and personalized services.
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        className="subscribe-model-question"
+                    >
+                        Get Started with AI Customization
+                    </Typography>
+                    <Typography className="subscribe-link">
+                        <span onClick={onClickAICustomization}>
+                            AI Customization
+                        </span>
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        className="subscribe-model-question"
+                    >
+                        Not Now, Continue to Home
                     </Typography>
                     <Button
                         variant="contained"
@@ -57,4 +90,4 @@ const PaymentSuccessPage = () => {
     );
 };
 
-export default PaymentSuccessPage;
+export default SubscriptionCreatedPage;

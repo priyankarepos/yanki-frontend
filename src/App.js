@@ -53,6 +53,7 @@ import "./style.scss";
 import MembershipPage from "./Components/MembershipPortal/MembershipPage";
 import PaymentSuccessPage from "./Components/MembershipPortal/PaymentSuccessPage";
 import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage";
+import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionCreated";
 
 // Exporting context
 export const Context = createContext("");
@@ -631,6 +632,14 @@ function App() {
                       element={
                         <UserPagesProtection>
                           <PaymentSuccessPage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/subscription-created"
+                      element={
+                        <UserPagesProtection>
+                          <SubscriptionCreatedPage />
                         </UserPagesProtection>
                       }
                     />

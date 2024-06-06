@@ -921,11 +921,11 @@ const NewHomePageMui = () => {
                 {userRoles !== "Admin" && (
                   <Box className="ya-task-msg-text">
                     <Typography>
-                      Remaining messages:{" "}
+                      Messages Left:{" "}
                       {remainingMsgData?.totalMessageLeft > 1200
                         ? "Unlimited"
                         : remainingMsgData?.totalMessageLeft}{" "}
-                      and tasks: {remainingMsgData?.totalTaskLeft}
+                      and Task Left: {remainingMsgData?.totalTaskLeft}
                     </Typography>
                     <Typography>
                       <span onClick={onClickMembershipPortal}>
