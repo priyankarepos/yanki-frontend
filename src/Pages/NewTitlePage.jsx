@@ -12,6 +12,7 @@ import partnershipLogoLightOne from "../Assets/images/partnet-logo4.png";
 import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
 import partnershipLogoLightThree from "../Assets/images/partnet-logo2.png";
 import partnershipLogoLightFour from "../Assets/images/partnet-logo3.png";
+import partnershipLogoLightFive from "../Assets/images/partnet-logo5.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
 
@@ -49,6 +50,7 @@ const NewTitlePage = () => {
     { id: 2, imageSrc: partnershipLogoLightTwo, altText: "Partner 2" },
     { id: 3, imageSrc: partnershipLogoLightThree, altText: "Partner 3" },
     { id: 4, imageSrc: partnershipLogoLightFour, altText: "Partner 4" },
+    { id: 4, imageSrc: partnershipLogoLightFive, altText: "Partner 5" },
     // Add more partnership logos as needed
   ];
 
