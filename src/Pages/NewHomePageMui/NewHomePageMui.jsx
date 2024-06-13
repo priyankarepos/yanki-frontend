@@ -171,7 +171,7 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers??chatId=${chatIdToUse}`,
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
         { prompt: searchQuery },
         {
           headers: {
