@@ -151,7 +151,7 @@ const NewTitlePage = () => {
                     alt={partner.altText}
                     className="margin-15"
                     style={{
-                      maxWidth: isLargeScreen ? "150px" : "120px",
+                      maxWidth: isLargeScreen ? "150px" : "130px",
                     }}
                   />
                 ))}
