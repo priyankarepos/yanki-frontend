@@ -298,7 +298,7 @@ const MembershipPage = () => {
         <Box className="subscription-page">
           <Box className="membership-heading-wrapper">
             <Typography variant="h5" sx={{ my: 2 }}>
-              Choose a Subscription Plan
+            Choose a subscription plan that best supports your empowerment
             </Typography>
             {updateCustomerId?.isPlanSubscribed && <Typography className="subscribe-link">
               <span onClick={handleUpdateSubscriptionPlan}>
