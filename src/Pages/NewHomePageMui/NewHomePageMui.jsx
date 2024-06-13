@@ -46,7 +46,8 @@ const NewHomePageMui = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [chatSessions, setChatSessions] = useState([]);
-  const [initialChatOpen, setInitialChatOpen] = useState(true);
+  // It might be used in future
+  // const [initialChatOpen, setInitialChatOpen] = useState(true);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [searchHistory, setSearchHistory] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -379,17 +380,18 @@ const NewHomePageMui = () => {
     setSearchQuery(question);
   };
 
-  useEffect(() => {
-    if (initialChatOpen && chatSessions.length > 0) {
-      const storedChatId = sessionStorage.getItem("selectedChatId");
-      const firstChatId = storedChatId;
-      handleChatSessionClick(firstChatId);
-      setInitialChatOpen(false);
+  // It might be used in future
+  // useEffect(() => {
+  //   if (initialChatOpen && chatSessions.length > 0) {
+  //     const storedChatId = sessionStorage.getItem("selectedChatId");
+  //     const firstChatId = storedChatId;
+  //     handleChatSessionClick(firstChatId);
+  //     setInitialChatOpen(false);
 
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+  //     chatContainerRef.current.scrollTop =
+  //       chatContainerRef.current.scrollHeight;
+  //   }
+  // }, [initialChatOpen, chatSessions, handleChatSessionClick]);
 
   const handleDeleteClick = (id) => {
     setConfirmDialogOpen(true);
