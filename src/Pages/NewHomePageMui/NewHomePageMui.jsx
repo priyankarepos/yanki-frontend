@@ -925,12 +925,10 @@ const NewHomePageMui = () => {
                       {remainingMsgData?.totalMessageLeft > 1200
                         ? "Unlimited"
                         : remainingMsgData?.totalMessageLeft}{" "}
-                      and Task Left: {remainingMsgData?.totalTaskLeft}
+                       Task Left: {remainingMsgData?.totalTaskLeft}
                     </Typography>
                     <Typography>
-                      <span onClick={onClickMembershipPortal}>
-                        {updateCustomerId?.isPlanSubscribed? "Update Plan" : "Subscribe to Pro"}
-                      </span>
+                      <span onClick={onClickMembershipPortal}>Upgrade Plan</span>
                     </Typography>
                   </Box>
                 )}
