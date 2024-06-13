@@ -171,7 +171,7 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers`,
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers??chatId=${chatIdToUse}`,
         { prompt: searchQuery },
         {
           headers: {
@@ -180,12 +180,14 @@ const NewHomePageMui = () => {
             TimeZone: timezone,
             "User-Lat": userLatitude,
             "User-Long": userLongitude,
-            "Chat-Id": chatIdToUse,
+            // It might be used in future
+            // "Chat-Id": chatIdToUse,
           },
         }
       );
 
       if (response.status === 200 || response.status >= 300) {
+        setHasMore(true);
         if (
           remainingMsgData?.totalMessageLeft <= 0 &&
           remainingMsgData?.totalTaskLeft <= 0 &&
@@ -298,7 +300,7 @@ const NewHomePageMui = () => {
 
         try {
           const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
-            const gptResponse = JSON.parse(chatEntry.gptResponse);
+            const gptResponse = chatEntry.gptResponse;
 
             return {
               query: chatEntry.userQuery,
