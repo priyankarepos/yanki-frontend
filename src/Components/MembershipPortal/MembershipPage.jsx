@@ -215,11 +215,7 @@ const MembershipPage = () => {
         `${process.env.REACT_APP_API_HOST}/api/stripe/upgrade-subscription?newPriceId=${priceId}`
       );
       const paymentUrl = response.data;
-      setSnackbarMessage(paymentUrl);
-      setSnackbarOpen(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      window.location.href = paymentUrl;
     } catch (error) {
       setSnackbarMessage("Error upgrading subscription plan:", error);
       setSnackbarOpen(true);
