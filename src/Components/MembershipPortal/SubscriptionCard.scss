@@ -79,8 +79,19 @@
 
 .Subscribed-Active-Card {
   border: 4px solid;
+  border-image-slice: 1 !important;
+}
+
+.subscription-card-wrapper:nth-child(1) .Subscribed-Active-Card {
   border-image: linear-gradient(to bottom, #f0f8ff, #6fa8dd);
-  border-image-slice: 1;
+}
+
+.subscription-card-wrapper:nth-child(2) .Subscribed-Active-Card {
+  border-image: linear-gradient(to bottom, #f0f8ff, #002746);
+}
+
+.subscription-card-wrapper:nth-child(3) .Subscribed-Active-Card {
+  border-image: linear-gradient(to bottom, #f0f8ff, #c99700);
 }
 
 .subscribe-btn-tooltip {
