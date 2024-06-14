@@ -294,11 +294,11 @@ const MembershipPage = () => {
         <Box className="subscription-page">
           <Box className="membership-heading-wrapper">
             <Typography variant="h5" sx={{ my: 2 }}>
-            Choose a subscription plan that best supports your empowerment
+              Choose a subscription plan that best supports your empowerment
             </Typography>
             {updateCustomerId?.isPlanSubscribed && <Typography className="subscribe-link">
               <span onClick={handleUpdateSubscriptionPlan}>
-                View Additional Info
+                View Plan Details
               </span>
             </Typography>}
           </Box>
@@ -334,8 +334,8 @@ const MembershipPage = () => {
                     onClick={() => handleCreateCustomer(product.defaultPriceId)}
                     handleDeclinedPayment={() =>
                       !updateCustomerId?.isPlanSubscribed &&
-                      updateCustomerId?.isPaymentDecline &&
-                      product.isActive
+                        updateCustomerId?.isPaymentDecline &&
+                        product.isActive
                         ? handleDeclinedPayment(product.defaultPriceId)
                         : handleCreateCustomer(product.defaultPriceId)
                     }
@@ -345,13 +345,13 @@ const MembershipPage = () => {
                       product?.isUpgrade
                         ? handleUpgradePlan(product.defaultPriceId)
                         : product?.isDowngrade
-                        ? handleDowngradePlan(product.defaultPriceId)
-                        : (product?.isActive ||
+                          ? handleDowngradePlan(product.defaultPriceId)
+                          : (product?.isActive ||
                             updateCustomerId?.isSubscriptionCanceled) &&
-                          !product?.isDowngrade &&
-                          !product?.isUpgrade
-                        ? handleUpdateSubscriptionPlan(product.defaultPriceId)
-                        : null
+                            !product?.isDowngrade &&
+                            !product?.isUpgrade
+                            ? handleUpdateSubscriptionPlan(product.defaultPriceId)
+                            : null
                     }
                     isDowngrade={product?.isDowngrade}
                     isUpgrade={product?.isUpgrade}
