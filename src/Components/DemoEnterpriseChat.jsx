@@ -1,6 +1,5 @@
 import { Box, Typography, List, Button, Paper, Grid, CircularProgress, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 import "./AnswerStyle.scss";
 
@@ -59,7 +58,6 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                 <Paper elevation={3}>
                     <div>
                         <List className='demo-enterprise-List'>
-                            <InsertCommentIcon className='demo-enterprise-InsertCommentIcon' fontSize="small" />
                             <Typography className='demo-enterprise-Typography'>
                                 {answer.message}
                             </Typography>
@@ -81,7 +79,6 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                                                 </span>
                                             </div>}
                                             {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
-                                            {enterprise.website && <div>Website: {enterprise.website}</div>}
                                             {enterprise.enterprisePhoneNumber && <div>
                                                 Enterprise Phone:{" "}
                                                 <span className='email-click'
@@ -108,6 +105,9 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                             ))}
                         </Grid>
                     </List>
+                    {answer.enterpriseSelections && <Typography className='demo-enterprise-Typography enterprise-prompt-msg'>
+                        Use the prompt: “Connect” to engage contact with this enterprise
+                    </Typography>}
                     {selectedEnterprise && (
                         <Typography className="send-email-message">
                             {selectedEnterpriseMessage === "" ? <CircularProgress size={24} /> : selectedEnterpriseMessage}
