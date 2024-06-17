@@ -105,7 +105,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                             ))}
                         </Grid>
                     </List>
-                    {answer.enterpriseSelections && <Typography className='demo-enterprise-Typography enterprise-prompt-msg'>
+                    {answer.enterpriseSelections && answer.enterpriseSelections.length >=1 && <Typography className='demo-enterprise-Typography enterprise-prompt-msg'>
                         Use the prompt: “Connect” to engage contact with this enterprise
                     </Typography>}
                     {selectedEnterprise && (
