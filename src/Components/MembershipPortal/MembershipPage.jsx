@@ -309,8 +309,7 @@ const MembershipPage = () => {
             remainingMsgData?.totalTaskLeft <= 0) &&
             updateCustomerId?.isPlanSubscribed && (
               <Typography sx={{ my: 2 }}>
-                Your message or task limits have been exhausted. To continue
-                using Yanki, please upgrade your plan.
+                Your current limit of messages has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset.
               </Typography>
             )}
           <Grid container spacing={2} alignItems="center">
