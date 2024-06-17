@@ -13,6 +13,11 @@ import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
 import partnershipLogoLightThree from "../Assets/images/partnet-logo2.png";
 import partnershipLogoLightFour from "../Assets/images/partnet-logo3.png";
 import partnershipLogoLightFive from "../Assets/images/partnet-logo5.png";
+import partnershipLogoLightSix from "../Assets/images/partnet-logo6.png";
+import partnershipLogoLightSeven from "../Assets/images/partnet-logo7.png";
+import partnershipLogoLightEight from "../Assets/images/partnet-logo8.png";
+import partnershipLogoLightNine from "../Assets/images/partnet-logo9.png";
+import partnershipLogoLightTen from "../Assets/images/partnet-logo10.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
 
@@ -46,11 +51,16 @@ const NewTitlePage = () => {
   };
 
   const partnershipLogos = [
-    { id: 1, imageSrc: partnershipLogoLightOne, altText: "Partner 1" },
-    { id: 2, imageSrc: partnershipLogoLightTwo, altText: "Partner 2" },
-    { id: 3, imageSrc: partnershipLogoLightThree, altText: "Partner 3" },
-    { id: 4, imageSrc: partnershipLogoLightFour, altText: "Partner 4" },
-    { id: 4, imageSrc: partnershipLogoLightFive, altText: "Partner 5" },
+    { id: 1, imageSrc: partnershipLogoLightOne, altText: "Partner" },
+    { id: 2, imageSrc: partnershipLogoLightTwo, altText: "Partner" },
+    { id: 3, imageSrc: partnershipLogoLightThree, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightFour, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightFive, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightSix, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightSeven, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightEight, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightNine, altText: "Partner" },
+    { id: 4, imageSrc: partnershipLogoLightTen, altText: "Partner" },
     // Add more partnership logos as needed
   ];
 
@@ -149,9 +159,9 @@ const NewTitlePage = () => {
                     key={partner.id}
                     src={partner.imageSrc}
                     alt={partner.altText}
-                    className="margin-15"
+                    className="margin-10"
                     style={{
-                      maxWidth: isLargeScreen ? "150px" : "130px",
+                      maxWidth: isLargeScreen ? "70px" : "60px",
                     }}
                   />
                 ))}
