@@ -348,7 +348,7 @@ const AdminEventRequest = () => {
           "success"
         );
         setSnackbarOpen(true);
-        fetchEventRequest();
+        fetchEventRequest(pageNumber);
       } else {
         setSnackbarMessage("Failed to approve event request", "error");
         setSnackbarOpen(true);
@@ -378,7 +378,7 @@ const AdminEventRequest = () => {
           "success"
         );
         setSnackbarOpen(true);
-        fetchEventRequest();
+        fetchEventRequest(pageNumber);
       } else {
         setSnackbarMessage("Failed to reject event request", "error");
         setSnackbarOpen(true);
@@ -407,7 +407,7 @@ const AdminEventRequest = () => {
           `The request for more information has been sent successfully`
         );
         setSnackbarOpen(true);
-        fetchEventRequest();
+        fetchEventRequest(pageNumber);
       } else {
         setSnackbarMessage("Failed to reject Event request", "error");
         setSnackbarOpen(true);
@@ -435,7 +435,7 @@ const AdminEventRequest = () => {
       const response = await axios.delete(url);
 
       if (response.status === 200) {
-        fetchEventRequest();
+        fetchEventRequest(pageNumber);
         setSnackbarMessage(`Request deleted successfully`, "success");
         setSnackbarOpen(true);
       } else {
