@@ -55,12 +55,12 @@ const NewTitlePage = () => {
     { id: 2, imageSrc: partnershipLogoLightTwo, altText: "Partner" },
     { id: 3, imageSrc: partnershipLogoLightThree, altText: "Partner" },
     { id: 4, imageSrc: partnershipLogoLightFour, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightFive, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightSix, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightSeven, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightEight, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightNine, altText: "Partner" },
-    { id: 4, imageSrc: partnershipLogoLightTen, altText: "Partner" },
+    { id: 5, imageSrc: partnershipLogoLightFive, altText: "Partner" },
+    { id: 6, imageSrc: partnershipLogoLightSix, altText: "Partner" },
+    { id: 7, imageSrc: partnershipLogoLightSeven, altText: "Partner" },
+    { id: 8, imageSrc: partnershipLogoLightEight, altText: "Partner" },
+    { id: 9, imageSrc: partnershipLogoLightNine, altText: "Partner" },
+    { id: 10, imageSrc: partnershipLogoLightTen, altText: "Partner" },
     // Add more partnership logos as needed
   ];
 
