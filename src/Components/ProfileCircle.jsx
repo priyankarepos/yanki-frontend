@@ -20,6 +20,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
 import { Typography } from "@mui/material";
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -100,6 +101,15 @@ export default function ProfielCircle() {
     } else if (userStatus === "Approved") {
       navigate("/enterprise/profile");
     }
+  };
+
+  const onDeleteAccount = () => {
+    console.log("delete account");
+    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+    handleClose();
+    navigate("/auth");
+    sessionStorage.removeItem("selectedChatId");
   };
 
   return (
@@ -225,6 +235,13 @@ export default function ProfielCircle() {
             Subscription Plan
           </MenuItem>
           }
+          <Divider />
+          <MenuItem onClick={onDeleteAccount}>
+            <ListItemIcon>
+              <DeleteOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            Delete Your Account
+          </MenuItem>
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
