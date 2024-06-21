@@ -122,7 +122,8 @@ const AdminCreateEnterprise = () => {
       BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
       BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
       FoundedYear: enterpriseDetails.foundedYear || "",
-      ReligiousCertifications: enterpriseDetails.religiousCertification || "",
+      // It might be used in future
+      // ReligiousCertifications: enterpriseDetails.religiousCertification || "",
       FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
       EnterpriseIdentificationKeywords:
         enterpriseDetails.enterpriseKeywords || [],
@@ -266,7 +267,8 @@ const AdminCreateEnterprise = () => {
           officeOpenTime: formData.BusinessHoursOpeningTime,
           officeCloseTime: formData.BusinessHoursClosingTime,
           foundedYear: formData.FoundedYear,
-          religiousCertification: formData.ReligiousCertifications,
+          // It might be used in future
+          // religiousCertification: formData.ReligiousCertifications,
           faQs: formData.FrequentlyAskedQuestions,
           enterpriseKeywords: tagsAsString,
           isProfileCompleted: false,
@@ -314,10 +316,11 @@ const AdminCreateEnterprise = () => {
     setValue("BusinessHoursOpeningTime", enterprise.officeOpenTime || "");
     setValue("BusinessHoursClosingTime", enterprise.officeCloseTime || "");
     setValue("FoundedYear", enterprise.foundedYear || "");
-    setValue(
-      "ReligiousCertifications",
-      enterprise.religiousCertification || ""
-    );
+    // It might be used in future
+    // setValue(
+    //   "ReligiousCertifications",
+    //   enterprise.religiousCertification || ""
+    // );
     setValue("FrequentlyAskedQuestions", enterprise.faQs || "");
 
     if (enterprise.enterpriseKeywords) {
@@ -374,7 +377,8 @@ const AdminCreateEnterprise = () => {
         officeOpenTime: formData.BusinessHoursOpeningTime,
         officeCloseTime: formData.BusinessHoursClosingTime,
         foundedYear: formData.FoundedYear,
-        religiousCertification: formData.ReligiousCertifications,
+        // It might be used in future
+        // religiousCertification: formData.ReligiousCertifications,
         faQs: formData.FrequentlyAskedQuestions,
         enterpriseKeywords: tagsAsString,
       };
@@ -854,7 +858,9 @@ const AdminCreateEnterprise = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4}>
+          
+          {/* It might be used in future */}
+          {/* <Grid item xs={12} sm={12} md={6} lg={4}>
             <InputLabel className="enterprise-label">
               Religious Certifications<sup className="required-icon">*</sup>
             </InputLabel>
@@ -879,7 +885,8 @@ const AdminCreateEnterprise = () => {
                 </div>
               )}
             />
-          </Grid>
+          </Grid> */}
+
           <Grid item xs={12}>
             <Divider className="table-devider"></Divider>
           </Grid>

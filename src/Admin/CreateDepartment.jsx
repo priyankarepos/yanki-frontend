@@ -340,7 +340,8 @@ const AdminCreateDepartment = () => {
         await deleteCertificate();
       }
     } catch (error) {
-      console.error("Error during deletion:", error);
+      setSnackbarMessage("Error during deletion:", error);
+      setSnackbarOpen(true);
     } finally {
       setLoading(false);
     }
@@ -1110,12 +1111,12 @@ const AdminCreateDepartment = () => {
             <Divider className="table-devider"></Divider>
           </Grid>
 
-          <Box className="enterprise-upload-box add-eventpadding">
-            <Typography variant="h6">Upload Files</Typography>
+          <Box className="enterprise-upload-box enterprise-file-upload-container">
+            <Typography variant="h6" className="table-heading">Upload Files</Typography>
             <Button
               variant="outlined"
               sx={{ marginY: { xs: "10px" } }}
-              className="enterprise-add-file-button enterprise-upload-button"
+              className="enterprise-add-file-button enterprise-file-upload-button"
               color="primary"
               onClick={() => setIsModalOpen(true)}
               disabled={!selectedEnterpriseId}
@@ -1180,12 +1181,12 @@ const AdminCreateDepartment = () => {
             <Divider className="table-devider"></Divider>
           </Grid>
 
-          <Box className="enterprise-upload-box add-eventpadding">
-            <Typography variant="h6">Religious Certifications</Typography>
+          <Box className="enterprise-upload-box enterprise-file-upload-container">
+            <Typography variant="h6" className="table-heading">Religious Certifications</Typography>
             <Button
               variant="outlined"
               sx={{ marginY: { xs: "10px" } }}
-              className="enterprise-add-file-button enterprise-upload-button"
+              className="enterprise-add-file-button enterprise-file-upload-button"
               color="primary"
               onClick={() => setIsUploadCertificateModalOpen(true)}
               disabled={!selectedEnterpriseId}
@@ -1261,7 +1262,7 @@ const AdminCreateDepartment = () => {
       >
         <Box className="enterprise-upload-modal-content">
           <Typography variant="h5" className="enterprise-modal-title">
-            "Upload File"
+            Upload File
           </Typography>
           <form onSubmit={handleUploadSubmit(onSubmitFile)}>
             <Controller
@@ -1316,7 +1317,7 @@ const AdminCreateDepartment = () => {
       >
         <Box className="enterprise-upload-modal-content">
           <Typography variant="h5" className="enterprise-modal-title">
-            "Upload Religious Certifications"
+            Upload Religious Certifications
           </Typography>
           <form onSubmit={handleCertificateSubmit(onSubmitCertificate)}>
             {/* File Upload */}
