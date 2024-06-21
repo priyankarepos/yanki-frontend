@@ -46,8 +46,7 @@ const NewHomePageMui = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [chatSessions, setChatSessions] = useState([]);
-  // It might be used in future
-  // const [initialChatOpen, setInitialChatOpen] = useState(true);
+  const [initialChatOpen, setInitialChatOpen] = useState(true);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [searchHistory, setSearchHistory] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -380,18 +379,19 @@ const NewHomePageMui = () => {
     setSearchQuery(question);
   };
 
-  // It might be used in future
-  // useEffect(() => {
-  //   if (initialChatOpen && chatSessions.length > 0) {
-  //     const storedChatId = sessionStorage.getItem("selectedChatId");
-  //     const firstChatId = storedChatId;
-  //     handleChatSessionClick(firstChatId);
-  //     setInitialChatOpen(false);
+  useEffect(() => {
+    if (initialChatOpen && chatSessions.length > 0) {
+      const storedChatId = sessionStorage.getItem("selectedChatId");
+      if (storedChatId) {
+        const firstChatId = storedChatId;
+        handleChatSessionClick(firstChatId);
+        setInitialChatOpen(false);
 
-  //     chatContainerRef.current.scrollTop =
-  //       chatContainerRef.current.scrollHeight;
-  //   }
-  // }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
+      }
+    }
+  }, [initialChatOpen, chatSessions, handleChatSessionClick]);
 
   const handleDeleteClick = (id) => {
     setConfirmDialogOpen(true);
@@ -929,10 +929,12 @@ const NewHomePageMui = () => {
                       {remainingMsgData?.totalMessageLeft > 1200
                         ? "Unlimited"
                         : remainingMsgData?.totalMessageLeft}{" "}
-                       Task Left: {remainingMsgData?.totalTaskLeft}
+                      Task Left: {remainingMsgData?.totalTaskLeft}
                     </Typography>
                     <Typography>
-                      <span onClick={onClickMembershipPortal}>Upgrade Plan</span>
+                      <span onClick={onClickMembershipPortal}>
+                        Upgrade Plan
+                      </span>
                     </Typography>
                   </Box>
                 )}
