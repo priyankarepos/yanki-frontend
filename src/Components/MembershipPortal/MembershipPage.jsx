@@ -31,13 +31,6 @@ const MembershipPage = () => {
   const [remainingMsgData, setRemainingMsgData] = useState([]);
   const [loadingProductId, setLoadingProductId] = useState(null);
 
-  // It might be use in future
-  // const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  // const [confirmationText, setConfirmationText] = useState("");
-  // const [confirmationTitle, setConfirmationTitle] = useState("");
-  // const [confirmationCancelText, setconfirmationCancelText] = useState("");
-  // const [deleteLoading, setDeleteLoading] = useState(false);
-
   const fetchRemainingMessage = async () => {
     try {
       const response = await axios.get(
@@ -156,40 +149,6 @@ const MembershipPage = () => {
     }
   };
 
-  // It might be use in future
-
-  // const handleCancelClick = () => {
-  //   setConfirmationText(`If you cancel this plan, it will no longer be available to you.`);
-  //   setconfirmationCancelText("Are you sure you want to cancel this plan?")
-  //   setConfirmationTitle("Confirm Cancellation")
-  //   setConfirmDialogOpen(true);
-  // };
-
-  // const handleConfirmDelete = async () => {
-  //   try {
-  //     setDeleteLoading(true);
-  //     const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/stripe/cancel-subscription`);
-
-  //     if (response.status === 200) {
-  //       setSnackbarMessage("Subscription cancelled successfully");
-  //       setSnackbarOpen(true);
-  //       setTimeout(() => {
-  //         window.location.reload();
-  //       }, 1000);
-  //     } else {
-  //       setSnackbarMessage("Failed to cancel subscription");
-  //       setSnackbarOpen(true);
-  //       setDeleteLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setSnackbarMessage(`An error occurred: ${error.message}`);
-  //     setSnackbarOpen(true);
-  //     setDeleteLoading(false);
-  //   } finally {
-  //     setSnackbarOpen(true);
-  //   }
-  // };
-
   const handleDeclinedPayment = async (priceId) => {
     try {
       setLoadingProductId(priceId);
@@ -302,9 +261,6 @@ const MembershipPage = () => {
               </span>
             </Typography>}
           </Box>
-          {/* It might be use in future */}
-          {/* {!updateCustomerId?.isPlanSubscribed && !updateCustomerId?.isPaymentDecline &&  <Typography sx={{ my: 2 }}>Your Yanki subscription is inactive. To access messages and tasks, please subscribe first.</Typography>} */}
-
           {(remainingMsgData?.totalMessageLeft <= 0 ||
             remainingMsgData?.totalTaskLeft <= 0) &&
             updateCustomerId?.isPlanSubscribed && (
@@ -437,15 +393,6 @@ const MembershipPage = () => {
           onClose={() => setSnackbarOpen(false)}
           message={snackbarMessage}
         />
-        {/* <ConfirmDialog
-          open={confirmDialogOpen}
-          handleClose={() => setConfirmDialogOpen(false)}
-          handleCancelConfirm={handleConfirmDelete}
-          confirmationText={confirmationText}
-          confirmationTitle={confirmationTitle}
-          loading={deleteLoading}
-          confirmationCancelText={confirmationCancelText}
-        /> */}
       </Paper>
     </Elements>
   );
