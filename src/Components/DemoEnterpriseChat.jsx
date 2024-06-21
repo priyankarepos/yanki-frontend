@@ -1,10 +1,9 @@
 import { Box, Typography, List, Button, Paper, Grid, CircularProgress, Snackbar } from '@mui/material';
 import React, { useState } from 'react';
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import axios from 'axios';
 import "./AnswerStyle.scss";
 
-const DemoEnterpriseChat = ({ answer }) => {
+const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
 
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
@@ -26,6 +25,7 @@ const DemoEnterpriseChat = ({ answer }) => {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
                 setChatMessages([...chatMessages, message]);
                 setSelectedEnterpriseMessage(response.data.message);
+                fetchRemainingMessage();
             } else if (response.data && response.data.isSuccess === false) {
                 setSelectedEnterpriseMessage("Invalid email. Please provide a valid email address.");
             }
@@ -58,7 +58,6 @@ const DemoEnterpriseChat = ({ answer }) => {
                 <Paper elevation={3}>
                     <div>
                         <List className='demo-enterprise-List'>
-                            <InsertCommentIcon className='demo-enterprise-InsertCommentIcon' fontSize="small" />
                             <Typography className='demo-enterprise-Typography'>
                                 {answer.message}
                             </Typography>
@@ -80,7 +79,6 @@ const DemoEnterpriseChat = ({ answer }) => {
                                                 </span>
                                             </div>}
                                             {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
-                                            {enterprise.website && <div>Website: {enterprise.website}</div>}
                                             {enterprise.enterprisePhoneNumber && <div>
                                                 Enterprise Phone:{" "}
                                                 <span className='email-click'
@@ -107,6 +105,9 @@ const DemoEnterpriseChat = ({ answer }) => {
                             ))}
                         </Grid>
                     </List>
+                    {answer.enterpriseSelections && answer.enterpriseSelections.length >=1 && <Typography className='demo-enterprise-Typography enterprise-prompt-msg'>
+                        Use the prompt: “Connect” to engage contact with this enterprise
+                    </Typography>}
                     {selectedEnterprise && (
                         <Typography className="send-email-message">
                             {selectedEnterpriseMessage === "" ? <CircularProgress size={24} /> : selectedEnterpriseMessage}

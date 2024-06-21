@@ -17,6 +17,8 @@ import {
   IconButton,
   FormHelperText,
   useMediaQuery,
+  Modal,
+  CircularProgress,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
@@ -32,6 +34,10 @@ import { emailRegex } from "../Utils/validations/validation";
 import AdminDashboard from "./AdminDashboard";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import "../EnterpriseCollabration/EnterpriseStyle.scss";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import CloseIcon from "@mui/icons-material/Close";
+import { pdfjs } from "react-pdf";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
 
 const AdminCreateDepartment = () => {
   const { drawerOpen } = useContext(Context);
@@ -48,6 +54,16 @@ const AdminCreateDepartment = () => {
   const [confirmationText, setConfirmationText] = useState("");
   const [enterpriseList, setEnterpriseList] = useState({});
   const [selectedEnterpriseId, setSelectedEnterpriseId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploadCertificateModalOpen, setIsUploadCertificateModalOpen] =
+    useState(false);
+  const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [certificateDetails, setCertificateDetails] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
+  const [pdfName, setPdfName] = useState("");
+  const [actionType, setActionType] = useState("");
 
   const handleSelectChange = (event) => {
     setSelectedEnterpriseId(event.target.value);
@@ -77,12 +93,12 @@ const AdminCreateDepartment = () => {
   }, []);
 
   const {
-    control,
-    handleSubmit,
-    setValue,
-    getValues,
-    reset,
-    formState: { errors, isSubmitted },
+    control: departmentControl,
+    handleSubmit: handleDepartmentSubmit,
+    setValue: setDepartmentValue,
+    getValues: getDepartmentValues,
+    reset: resetDepartmentForm,
+    formState: { errors: departmentErrors, isSubmitted: isDepartmentSubmitted },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -97,8 +113,38 @@ const AdminCreateDepartment = () => {
     criteriaMode: "all",
   });
 
+  const {
+    control: uploadControl,
+    handleSubmit: handleUploadSubmit,
+    setValue: setUploadValue,
+    trigger: triggerUpload,
+    reset: resetUploadForm,
+    formState: { errors: uploadErrors },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      file: null,
+      keywords: "",
+    },
+  });
+
+  const {
+    control: certificateControl,
+    handleSubmit: handleCertificateSubmit,
+    setValue: setCertificateValue,
+    trigger: triggerCertificate,
+    reset: resetCertificateForm,
+    formState: { errors: certificateErrors },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      file: null,
+      keywords: "",
+    },
+  });
+
   const keywords = useWatch({
-    control,
+    control: departmentControl,
     name: "DepartmentIdentificationKeywords",
     defaultValue: [],
   });
@@ -240,17 +286,27 @@ const AdminCreateDepartment = () => {
     setSelectedDepartmentData(department);
 
     if (selectedDepartmentData) {
-      setValue("DepartmentName", department.departmentName || "");
-      setValue("NameOfRepresentative", department.departmentHeadName || "");
-      setValue("EmailAddress", department.departmentEmail || "");
-      setValue("DepartmentDescription", department.departmentDescription || "");
+      setDepartmentValue("DepartmentName", department.departmentName || "");
+      setDepartmentValue(
+        "NameOfRepresentative",
+        department.departmentHeadName || ""
+      );
+      setDepartmentValue("EmailAddress", department.departmentEmail || "");
+      setDepartmentValue(
+        "DepartmentDescription",
+        department.departmentDescription || ""
+      );
       const keywordsArray = department.departmentKeywords.split(",");
       setTags(keywordsArray);
-      setValue("DepartmentIdentificationKeywords", keywordsArray || []);
+      setDepartmentValue(
+        "DepartmentIdentificationKeywords",
+        keywordsArray || []
+      );
     }
   };
 
   const handleDeleteDepartment = (index, departmentId) => {
+    setActionType("deleteDepartment");
     setConfirmDialogOpen(true);
     setSelectedDepartmentIndex(index);
     setConfirmationText(
@@ -258,8 +314,40 @@ const AdminCreateDepartment = () => {
     );
   };
 
-  const handleConfirmDelete = async () => {
-    setConfirmDialogOpen(false);
+  const handleDelete = (pdfName) => {
+    setActionType("deleteFile");
+    setPdfName(pdfName);
+    setConfirmDialogOpen(true);
+    setConfirmationText(`Are you sure you want to delete this file?`);
+  };
+
+  const handleCertificateDelete = (pdfName) => {
+    setActionType("deleteCertificate");
+    setPdfName(pdfName);
+    setConfirmDialogOpen(true);
+    setConfirmationText(`Are you sure you want to delete this Certificate?`);
+  };
+
+  const handleConfirmation = async () => {
+    setLoading(true);
+    try {
+      setConfirmDialogOpen(false);
+      if (actionType === "deleteDepartment") {
+        await deleteDepartment();
+      } else if (actionType === "deleteFile") {
+        await deleteFile();
+      } else if (actionType === "deleteCertificate") {
+        await deleteCertificate();
+      }
+    } catch (error) {
+      setSnackbarMessage("Error during deletion:", error);
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteDepartment = async () => {
     const { departmentId } = departmentsData[selectedDepartmentIndex];
     try {
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
@@ -281,8 +369,88 @@ const AdminCreateDepartment = () => {
     }
   };
 
+  const deleteFile = async () => {
+    const rowIndex = tableData.findIndex(
+      (row) => row.pdfUrl.split("/").pop() === pdfName
+    );
+
+    if (rowIndex !== -1) {
+      try {
+        setLoading(true);
+        const response = await axios.delete(
+          `${
+            process.env.REACT_APP_API_HOST
+          }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
+            pdfName
+          )}`
+        );
+
+        if (response.status === 200) {
+          const updatedTableData = [...tableData];
+          updatedTableData.splice(rowIndex, 1);
+          setTableData(updatedTableData);
+          setConfirmDialogOpen(false);
+          setSnackbarMessage(
+            `Document with Name ${pdfName} deleted successfully`
+          );
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarMessage(
+            `Failed to delete document: ${response.status}, ${response.data.message}`
+          );
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage(`Error deleting document: ${error.message}`);
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const deleteCertificate = async () => {
+    const rowIndex = certificateDetails.findIndex(
+      (row) => row.pdfUrl.split("/").pop() === pdfName
+    );
+
+    if (rowIndex !== -1) {
+      try {
+        setLoading(true);
+        const response = await axios.delete(
+          `${
+            process.env.REACT_APP_API_HOST
+          }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
+            pdfName
+          )}`
+        );
+
+        if (response.status === 200) {
+          const updatedTableData = [...certificateDetails];
+          updatedTableData.splice(rowIndex, 1);
+          setCertificateDetails(updatedTableData);
+          setConfirmDialogOpen(false);
+          setSnackbarMessage(
+            `Document with Name ${pdfName} deleted successfully`
+          );
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarMessage(
+            `Failed to delete document: ${response.status}, ${response.data.message}`
+          );
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage(`Error deleting document: ${error.message}`);
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const handleSaveDepartment = async (data) => {
-    const formData = getValues();
+    const formData = getDepartmentValues();
     if (tags.length === 0) {
       setSnackbarMessage("At least one tag is required.");
       setSnackbarOpen(true);
@@ -319,7 +487,7 @@ const AdminCreateDepartment = () => {
       if (response.status === 200) {
         setSnackbarOpen(true);
         setSnackbarMessage("Department details updated successfully");
-        reset();
+        resetDepartmentForm();
         setSelectedDepartmentData({});
         setDepartmentsData([]);
         setTags([]);
@@ -371,12 +539,12 @@ const AdminCreateDepartment = () => {
         setTags([]);
         setSnackbarMessage("Department added successfully,");
         setSnackbarOpen(true);
-        reset();
-        setValue("DepartmentName", "");
-        setValue("NameOfRepresentative", "");
-        setValue("EmailAddress", "");
-        setValue("DepartmentDescription", "");
-        setValue("DepartmentIdentificationKeywords", []);
+        resetDepartmentForm();
+        setDepartmentValue("DepartmentName", "");
+        setDepartmentValue("NameOfRepresentative", "");
+        setDepartmentValue("EmailAddress", "");
+        setDepartmentValue("DepartmentDescription", "");
+        setDepartmentValue("DepartmentIdentificationKeywords", []);
       } else {
         setSnackbarMessage("API error: " + response.statusText);
         setSnackbarOpen(true);
@@ -386,6 +554,216 @@ const AdminCreateDepartment = () => {
       setSnackbarMessage("Error occurred while fetching API:", error.message);
       setSnackbarOpen(true);
     }
+  };
+
+  const validateFile = (value) => {
+    if (!value || value.length === 0) {
+      return "File is required";
+    }
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
+    if (!allowedTypes.includes(value[0].type)) {
+      return "Please select a valid file (PDF, JPG, or PNG)";
+    }
+
+    return true;
+  };
+
+  const onSubmitFile = async (data) => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", data.file[0]);
+
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=false&EnterpriseId=${selectedEnterpriseId}`;
+
+      const response = await axios.post(apiUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        setSnackbarMessage(
+          `Document with Name ${data.file[0].name} added successfully`
+        );
+        setSnackbarOpen(true);
+        setIsModalOpen(false);
+        resetUploadForm();
+        setTableData((prevTableData) => [
+          ...prevTableData,
+          {
+            id: prevTableData.length + 1,
+            pdfUrl: response.data.data,
+          },
+        ]);
+      } else {
+        setSnackbarMessage("Failed to upload the file");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage("An error occurred while uploading the file.");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmitCertificate = async (data) => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", data.file[0]);
+
+      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=true&EnterpriseId=${selectedEnterpriseId}`;
+
+      const response = await axios.post(apiUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        setSnackbarMessage(
+          `Document with Name ${data.file[0].name} added successfully`
+        );
+        setSnackbarOpen(true);
+        setIsUploadCertificateModalOpen(false);
+        resetCertificateForm();
+        setCertificateDetails((prevTableData) => [
+          ...prevTableData,
+          {
+            id: prevTableData.length + 1,
+            pdfUrl: response.data.data,
+          },
+        ]);
+      } else {
+        setSnackbarMessage("Failed to upload the file");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage("An error occurred while uploading the file.");
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const isLargeScreen = useMediaQuery("(min-width: 600px)");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setTableData([]);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-document?EnterpriseId=${selectedEnterpriseId}`
+        );
+
+        if (response.status === 200) {
+          setTableData(
+            response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl }))
+          );
+        } else {
+          setSnackbarMessage("Failed to fetch files:", response.statusText);
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage(
+          "Error occurred while fetching files:",
+          error.message
+        );
+        setSnackbarOpen(false);
+      }
+    };
+
+    fetchData();
+  }, [triggerEffect, selectedEnterpriseId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setCertificateDetails([]);
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-certificate?EnterpriseId=${selectedEnterpriseId}`
+        );
+
+        if (response.status === 200) {
+          setCertificateDetails(
+            response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl }))
+          );
+        } else {
+          setSnackbarMessage(
+            "Failed to fetch certificates:",
+            response.statusText
+          );
+          setSnackbarOpen(true);
+        }
+      } catch (error) {
+        setSnackbarMessage(
+          "Error occurred while fetching certificates:",
+          error.message
+        );
+        setSnackbarOpen(false);
+      }
+    };
+
+    fetchData();
+  }, [triggerEffect, selectedEnterpriseId]);
+
+  const openPdfModal = (index) => {
+    const selectedPdfData = tableData[index];
+    setSelectedPdf(selectedPdfData);
+    setPdfLoadError(false);
+  };
+
+  const openCertificateModal = (index) => {
+    const selectedPdfData = certificateDetails[index];
+    setSelectedPdf(selectedPdfData);
+    setPdfLoadError(false);
+  };
+
+  const closePdfModal = () => {
+    setSelectedPdf(null);
+  };
+
+  const renderPdfModal = () => {
+    return (
+      <Modal
+        open={Boolean(selectedPdf)}
+        onClose={closePdfModal}
+        className="enterprise-profile-modal"
+      >
+        <div className="enterprise-profile-pdf-modal">
+          <IconButton
+            className="enterprise-profile-pdf-modal-icon-button"
+            style={{ top: !isLargeScreen ? "40px" : "20px" }}
+            onClick={closePdfModal}
+            aria-label="close"
+          >
+            <CloseIcon className="enterprise-white-color" />
+          </IconButton>
+          {!pdfLoadError ? (
+            selectedPdf?.pdfUrl.toLowerCase().endsWith(".pdf") ? (
+              <Worker
+                workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}
+              >
+                <Viewer fileUrl={selectedPdf?.pdfUrl} />
+              </Worker>
+            ) : (
+              <img
+                src={selectedPdf?.pdfUrl}
+                alt=""
+                className="enterprise-profile-image"
+                onError={() => setPdfLoadError(true)}
+              />
+            )
+          ) : (
+            <div>Error loading content. Please try again.</div>
+          )}
+        </div>
+      </Modal>
+    );
   };
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -402,6 +780,7 @@ const AdminCreateDepartment = () => {
         <Box className="admin-faq-heading">
           <Typography variant="h6">Add Departments</Typography>
         </Box>
+
         <div className="marginBottom-20">
           <InputLabel className="enterprise-label">
             Select Enterprise<sup className="required-icon">*</sup>
@@ -429,7 +808,7 @@ const AdminCreateDepartment = () => {
               Department<sup className="required-icon">*</sup>
             </InputLabel>
             <Controller
-              control={control}
+              control={departmentControl}
               name="DepartmentName"
               rules={{
                 required: "Department name is required.",
@@ -453,9 +832,9 @@ const AdminCreateDepartment = () => {
                     fullWidth
                     disabled={!selectedEnterpriseId}
                   />
-                  {errors["DepartmentName"] && (
+                  {departmentErrors["DepartmentName"] && (
                     <FormHelperText className="error-message">
-                      {errors["DepartmentName"].message}
+                      {departmentErrors["DepartmentName"].message}
                     </FormHelperText>
                   )}
                 </div>
@@ -467,7 +846,7 @@ const AdminCreateDepartment = () => {
               Name of representative<sup className="required-icon">*</sup>
             </InputLabel>
             <Controller
-              control={control}
+              control={departmentControl}
               name="NameOfRepresentative"
               rules={{
                 required: "Name of representative is required.",
@@ -492,9 +871,9 @@ const AdminCreateDepartment = () => {
                     fullWidth
                     disabled={!selectedEnterpriseId}
                   />
-                  {errors["NameOfRepresentative"] && (
+                  {departmentErrors["NameOfRepresentative"] && (
                     <FormHelperText className="error-message">
-                      {errors["NameOfRepresentative"].message}
+                      {departmentErrors["NameOfRepresentative"].message}
                     </FormHelperText>
                   )}
                 </div>
@@ -506,7 +885,7 @@ const AdminCreateDepartment = () => {
               Email Address<sup className="required-icon">*</sup>
             </InputLabel>
             <Controller
-              control={control}
+              control={departmentControl}
               name="EmailAddress"
               rules={{
                 required: {
@@ -528,9 +907,9 @@ const AdminCreateDepartment = () => {
                     fullWidth
                     disabled={!selectedEnterpriseId}
                   />
-                  {errors["EmailAddress"] && (
+                  {departmentErrors["EmailAddress"] && (
                     <FormHelperText className="error-message">
-                      {errors["EmailAddress"].message}
+                      {departmentErrors["EmailAddress"].message}
                     </FormHelperText>
                   )}
                 </div>
@@ -540,7 +919,7 @@ const AdminCreateDepartment = () => {
           <Grid item xs={12}>
             <InputLabel className="enterprise-label">Description</InputLabel>
             <Controller
-              control={control}
+              control={departmentControl}
               name="DepartmentDescription"
               render={({ field }) => (
                 <div>
@@ -567,7 +946,7 @@ const AdminCreateDepartment = () => {
               <sup className="required-icon">*</sup>
             </InputLabel>
             <Controller
-              control={control}
+              control={departmentControl}
               name="DepartmentIdentificationKeywords"
               render={({ field }) => (
                 <div>
@@ -613,7 +992,7 @@ const AdminCreateDepartment = () => {
                       </div>
                     ))}
                   </div>
-                  {isSubmitted &&
+                  {isDepartmentSubmitted &&
                     keywords.length === 0 &&
                     tags.length === 0 && (
                       <FormHelperText className="error-message">
@@ -631,16 +1010,18 @@ const AdminCreateDepartment = () => {
               color="primary"
               onClick={
                 departmentID !== null
-                  ? handleSubmit(handleSaveDepartment)
-                  : handleSubmit(onSubmit)
+                  ? handleDepartmentSubmit(handleSaveDepartment)
+                  : handleDepartmentSubmit(onSubmit)
               }
             >
               {departmentID !== null ? "Save Changes" : "Save"}
             </Button>
           </Grid>
+
           <Grid item xs={12}>
             <Divider className="table-devider"></Divider>
           </Grid>
+
           <Box className="add-eventpadding">
             <Typography variant="h6" className="table-heading">
               Departments
@@ -726,12 +1107,271 @@ const AdminCreateDepartment = () => {
               </Table>
             </TableContainer>
           </Grid>
+
+          <Grid item xs={12}>
+            <Divider className="table-devider"></Divider>
+          </Grid>
+
+          <Box className="enterprise-upload-box enterprise-file-upload-container">
+            <Typography variant="h6" className="table-heading">
+              Upload Files
+            </Typography>
+            <Button
+              variant="outlined"
+              sx={{ marginY: { xs: "10px" } }}
+              className="enterprise-add-file-button enterprise-file-upload-button"
+              color="primary"
+              onClick={() => setIsModalOpen(true)}
+              disabled={!selectedEnterpriseId}
+            >
+              Add Files
+            </Button>
+          </Box>
+
+          <Grid item xs={12}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="create-department-table-cell">
+                      Sr No.
+                    </TableCell>
+                    <TableCell className="create-department-table-cell">
+                      PDF Name
+                    </TableCell>
+                    <TableCell className="create-department-table-cell">
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tableData.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center">
+                        No data available
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    tableData.map((row, index) => (
+                      <TableRow key={index + 1}>
+                        <TableCell className="create-department-table-cell">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell className="create-department-table-cell">
+                          {row.pdfUrl ? row.pdfUrl.split("/").pop() : ""}
+                        </TableCell>
+                        <TableCell className="create-department-table-cell">
+                          <IconButton onClick={() => openPdfModal(index)}>
+                            <VisibilityIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() =>
+                              handleDelete(row.pdfUrl.split("/").pop())
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider className="table-devider"></Divider>
+          </Grid>
+
+          <Box className="enterprise-upload-box enterprise-file-upload-container">
+            <Typography variant="h6" className="table-heading">
+              Religious Certifications
+            </Typography>
+            <Button
+              variant="outlined"
+              sx={{ marginY: { xs: "10px" } }}
+              className="enterprise-add-file-button enterprise-file-upload-button"
+              color="primary"
+              onClick={() => setIsUploadCertificateModalOpen(true)}
+              disabled={!selectedEnterpriseId}
+            >
+              Add Files
+            </Button>
+          </Box>
+
+          <Grid item xs={12}>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="create-department-table-cell">
+                      Sr No.
+                    </TableCell>
+                    <TableCell className="create-department-table-cell">
+                      PDF Name
+                    </TableCell>
+                    <TableCell className="create-department-table-cell">
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {certificateDetails.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center">
+                        No data available
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    certificateDetails.map((row, index) => (
+                      <TableRow key={index + 1}>
+                        <TableCell className="create-department-table-cell">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell className="create-department-table-cell">
+                          {row.pdfUrl ? row.pdfUrl.split("/").pop() : ""}
+                        </TableCell>
+                        <TableCell className="create-department-table-cell">
+                          <IconButton
+                            onClick={() => openCertificateModal(index)}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() =>
+                              handleCertificateDelete(
+                                row.pdfUrl.split("/").pop()
+                              )
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
         </Grid>
       </Box>
+      {renderPdfModal()}
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="enterprise-profile-modal"
+      >
+        <Box className="enterprise-upload-modal-content">
+          <Typography variant="h5" className="enterprise-modal-title">
+            Upload File
+          </Typography>
+          <form onSubmit={handleUploadSubmit(onSubmitFile)}>
+            <Controller
+              control={uploadControl}
+              name="file"
+              render={({ field }) => (
+                <div>
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      const selectedFile = e.target.files[0];
+                      setUploadValue("file", [selectedFile]);
+                      triggerCertificate("file");
+                    }}
+                    className="enterprise-input-field enterprise-profile-modal-input-field"
+                  />
+                  {uploadErrors.file && (
+                    <span className="error-handling">
+                      {uploadErrors.file.message}
+                    </span>
+                  )}
+                </div>
+              )}
+              rules={{ validate: validateFile }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              className="enterprise-profile-modal-button"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress
+                  size={24}
+                  className="enterprise-profile-modal-button-loader"
+                />
+              ) : (
+                "Upload"
+              )}
+            </Button>
+          </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isUploadCertificateModalOpen}
+        onClose={() => setIsUploadCertificateModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="enterprise-profile-modal"
+      >
+        <Box className="enterprise-upload-modal-content">
+          <Typography variant="h5" className="enterprise-modal-title">
+            Upload Religious Certifications
+          </Typography>
+          <form onSubmit={handleCertificateSubmit(onSubmitCertificate)}>
+            {/* File Upload */}
+            <Controller
+              control={certificateControl}
+              name="file"
+              render={({ field }) => (
+                <div>
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      const selectedFile = e.target.files[0];
+                      setCertificateValue("file", [selectedFile]);
+                      triggerUpload("file");
+                    }}
+                    className="enterprise-input-field enterprise-profile-modal-input-field"
+                  />
+                  {certificateErrors.file && (
+                    <span className="error-handling">
+                      {certificateErrors.file.message}
+                    </span>
+                  )}
+                </div>
+              )}
+              rules={{ validate: validateFile }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              className="enterprise-profile-modal-button"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress
+                  size={24}
+                  className="enterprise-profile-modal-button-loader"
+                />
+              ) : (
+                "Upload"
+              )}
+            </Button>
+          </form>
+        </Box>
+      </Modal>
       <ConfirmDialog
         open={confirmDialogOpen}
         handleClose={() => setConfirmDialogOpen(false)}
-        handleConfirm={handleConfirmDelete}
+        handleConfirm={handleConfirmation}
         confirmationText={confirmationText}
       />
       <Snackbar

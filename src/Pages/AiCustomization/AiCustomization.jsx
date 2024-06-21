@@ -192,7 +192,7 @@ const AiCustomization = () => {
       setSnackbarOpen(true);
     }
   };
-
+  
   return (
     <Container>
       <Box my={4}>

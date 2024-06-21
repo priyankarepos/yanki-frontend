@@ -247,7 +247,7 @@ const EnterpriseFileUpload = () => {
                 className='enterprise-profile-modal'
             >
                 <Box className='enterprise-upload-modal-content'>
-                    <Typography variant="h5" className='enterprise-modal-title'>"Upload File"</Typography>
+                    <Typography variant="h5" className='enterprise-modal-title'>Upload File</Typography>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* File Upload */}
                         <Controller

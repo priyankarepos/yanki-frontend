@@ -9,16 +9,17 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
-const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
+const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mailMessage, setMailMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [showMsg, setShowMsg] = useState(false);
   const yankiUser = JSON.parse(
     window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
-      "{}"
+    "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
 
@@ -36,10 +37,15 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
       } else {
         setSnackbarMessage("Failed to send personal assistant email");
         setSnackbarOpen(true);
+        setLoading(false);
+        setContent("");
       }
     } catch (error) {
+      setShowMsg(true)
       setSnackbarMessage("Error sending personal assistant email:", error);
       setSnackbarOpen(true);
+      setLoading(false);
+      setContent("");
     }
   };
 
@@ -51,9 +57,9 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
     <>
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Personal Assistant
+          Help Agent
         </Typography>
-        <Typography>{answer?.message}</Typography>
+        <Typography>{answer?.contentResponse}</Typography>
         <TextField
           multiline
           rows={4}
@@ -65,23 +71,22 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
           error={touched && !content.trim()}
-          disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true}
+          disabled={mailMessage !== "" || !answer?.isHelpAgent === true}
         />
         <FormHelperText className="error-message">
           {touched && !content.trim() && "This field is required."}
         </FormHelperText>
         <Typography
-          className={`${
-            content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
-          } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
+          className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
+            } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
           onClick={content.length === 0 ? null : handlePersonalAssistant}
           sx={{
             mt: "8px",
             cursor:
               content.length === 0 ||
-              loading ||
-              mailMessage !== "" ||
-              !answer?.isPersonalAssistant === true
+                loading ||
+                mailMessage !== "" ||
+                !answer?.isHelpAgent === true
                 ? "text"
                 : "pointer",
           }}
@@ -94,12 +99,15 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
         </Typography>
         {mailMessage && (
           <Typography sx={{ mt: 2 }}>
-            Your personal assistance request has been received and is currently
-            being reviewed by our YankiAI agents. Depending on your subscription
-            you can expect to receive a response via the email address or SMS
-            number registered with us
+            Your request has been received and is currently being reviewed by
+            our YankiAl agents. Depending on your subscription you can expect to
+            receive a response via the email address or SMS number registered
+            with us
           </Typography>
         )}
+        {showMsg && remainingMsgData?.totalTaskLeft === 0 && <Typography sx={{ mt: 2 }}>
+          You have no task left. Please upgrade your plan to continue perform task
+        </Typography>}
       </Paper>
 
       <Snackbar
@@ -112,4 +120,4 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   );
 };
 
-export default PersonalAssistant;
+export default HelpAgent;

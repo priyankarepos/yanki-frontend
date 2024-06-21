@@ -8,7 +8,7 @@ const ErrorAnswer = ({ errorMsg }) => {
       <Box>
         <Paper className="error-answer-container" sx={{p: 2}}>
           <Typography variant="h6" component="div" className="error-answer-message" >
-            {errorMsg}
+            {errorMsg.message || errorMsg.contentResponse}
           </Typography>
         </Paper>
       </Box>

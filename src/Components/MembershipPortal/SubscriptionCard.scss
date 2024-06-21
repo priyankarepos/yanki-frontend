@@ -1,0 +1,113 @@
+.subscription-card {
+  background-color: aliceblue;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: none;
+  text-align: center;
+  color: #0f3658;
+
+  .tier-name {
+    margin: -20px -20px 15px;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 5px 5px 0px 0px;
+    font-weight: bold;
+  }
+
+  .info {
+    margin: 5px 0;
+  }
+}
+
+.subscribe-btn {
+  width: 100%;
+  color: #ffffff;
+  background-color: #0f3658;
+  margin-top: 15px !important;
+}
+
+.subscribe-btn.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.subscription-card-light {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 10px 10px rgb(161 161 161);
+  text-align: center;
+
+  .tier-name {
+    margin: -20px -20px 15px;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 5px 5px 0px 0px;
+    font-weight: bold;
+  }
+
+  .subscribe-btn {
+    border: none !important;
+  }
+}
+
+.description-list {
+  padding: 10px 15px 0px;
+}
+
+.description-item {
+  margin-bottom: 3px;
+  list-style-type: disc;
+  text-align: left;
+  padding: 5px;
+}
+
+.additional-text {
+  margin: 15px 0 5px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.tier-price {
+  font-size: 32px !important;
+  margin: -35px -20px 0px !important;
+  span {
+    font-size: 16px;
+}
+}
+
+.Subscribed-Active-Card {
+  border: 4px solid;
+  border-image-slice: 1 !important;
+}
+
+.subscription-card-wrapper:nth-child(1) .Subscribed-Active-Card {
+  border-image: linear-gradient(to bottom, #f0f8ff, #6fa8dd);
+}
+
+.subscription-card-wrapper:nth-child(2) .Subscribed-Active-Card {
+  border-image: linear-gradient(to bottom, #f0f8ff, #002746);
+}
+
+.subscription-card-wrapper:nth-child(3) .Subscribed-Active-Card {
+  border-image: linear-gradient(to bottom, #f0f8ff, #c99700);
+}
+
+.subscribe-btn-tooltip {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.subscription-card-wrapper:nth-child(1) .subscription-card .tier-name, .subscription-card-wrapper:nth-child(1) .subscription-card-light .tier-name {
+  background-color: #70a8db; 
+}
+
+.subscription-card-wrapper:nth-child(2) .subscription-card .tier-name, .subscription-card-wrapper:nth-child(2) .subscription-card-light .tier-name {
+  background-color: #002746; 
+}
+
+.subscription-card-wrapper:nth-child(3) .subscription-card .tier-name, .subscription-card-wrapper:nth-child(3) .subscription-card-light .tier-name {
+  background-color: #c99700; 
+}

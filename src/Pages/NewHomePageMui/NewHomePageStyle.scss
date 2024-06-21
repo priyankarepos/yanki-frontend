@@ -1,5 +1,5 @@
 .ya-home-wrapper {
-    height: 100vh;
+    height: 100%;
     width: 100vw;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .ya-answer-container {
-    height: calc(100vh - 74px);
+    height: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 20px;
@@ -101,6 +101,7 @@
 }
 
 .ya-answer-wrapper {
+    height: calc(100% - 74px);
     margin-left: 0px;
     transition: margin-left 0.3s;
     position: relative;
@@ -387,16 +388,16 @@
 }
 
 .ya-home-search-wrapper {
-    bottom: 0!important;
-    background-color: #13416a!important;
-    box-shadow: none!important;
-    z-index: 1000!important;
-    display: flex!important;
-    align-items: center!important;
+    bottom: 0 !important;
+    background-color: #13416a !important;
+    box-shadow: none !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-.ya-home-search-wrapper-light{
-    background-color: #eaf5ff!important;
+.ya-home-search-wrapper-light {
+    background-color: #eaf5ff !important;
 }
 
 .new-home-initial-questions .react-multi-carousel-item {
@@ -405,6 +406,22 @@
     width: auto !important;
     min-width: 240px;
     flex: none !important;
+}
+
+.ya-task-msg-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+        font-size: 15px;
+        color: #8bbae5;
+    }
+
+    span {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
 
 @media (max-width: 600px) {
@@ -454,7 +471,16 @@
 
 @media (max-width: 640px) {
     .ya-answer {
-        min-height: calc(100vh - 270px);
-        max-height: calc(100vh - 270px);
+        min-height: calc(100vh - 290px);
+        max-height: calc(100vh - 290px);
+    }
+
+    .ya-new-chat-box {
+        min-height: calc(100vh - 250px);
+        max-height: calc(100vh - 250px);
+    }
+
+    .ya-task-msg-text {
+        margin: 3px 0;
     }
 }

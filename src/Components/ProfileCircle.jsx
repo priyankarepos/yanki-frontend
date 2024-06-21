@@ -19,6 +19,7 @@ import { Context } from "../App";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
 import { Typography } from "@mui/material";
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -78,6 +79,11 @@ export default function ProfielCircle() {
     handleClose();
     navigate("/admin/search-query-report");
   };
+
+  const onClickMembershipPortal = () => {
+    handleClose();
+    navigate("/membership");
+  }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
@@ -200,7 +206,7 @@ export default function ProfielCircle() {
               <ListItemIcon>
                 <NotificationsNoneIcon />
               </ListItemIcon>
-              Notifications
+              Notification Settings
             </MenuItem>
           )}
           {userRoles !== "Enterprise" && (
@@ -211,6 +217,14 @@ export default function ProfielCircle() {
               AI Customization
             </MenuItem>
           )}
+          {userRoles !== "Admin" && 
+          <MenuItem onClick={onClickMembershipPortal}>
+            <ListItemIcon>
+              <SubscriptionsIcon fontSize="small" />
+            </ListItemIcon>
+            Subscription Plan
+          </MenuItem>
+          }
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>

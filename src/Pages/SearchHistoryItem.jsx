@@ -17,8 +17,9 @@ import SafetyChecker from "../Components/SafetyChecker/SafetyChecker";
 import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
+import HelpAgent from "../Components/HelpAgent/HelpAgent";
 
-const SearchHistoryItem = ({ query, response }) => {
+const SearchHistoryItem = ({ query, response,fetchRemainingMessage, remainingMsgData }) => {
   const [direction, setDirection] = useState('ltr');
   const { activeTab } = React.useContext(Context);
 
@@ -42,7 +43,8 @@ const SearchHistoryItem = ({ query, response }) => {
   const isGovadenAnswer = response?.isSucess && response?.godavenPrayerDetails?.length;
   const isDataAvailable = response?.isItKosher?.isSuccess && response?.isItKosher?.products?.data.length > 0;
   const isHatzalah = response.isSucess && response.message && response?.globalAssist?.isSuccess;
-  const isPersonalAssistant = response.isSucess && response.message && response.isPersonalAssistant;
+  const isPersonalAssistant = (response.isSucess && response.message && response.isPersonalAssistant);
+  const isHelpAgent = (response.contentResponse && response.isHelpAgent)
   return (
     <div className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? 'with-response' : ''}`}>
       <Paper elevation={3} className="search-query" dir={direction}> 
@@ -66,10 +68,10 @@ const SearchHistoryItem = ({ query, response }) => {
         </Paper>
       )}
 
-      {response?.isSucess && response?.contentResponse && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
+      {response?.isSucess && response?.contentResponse && !response.isHelpAgent && (response.enterprisePdfNames === null || (Array.isArray(response.enterprisePdfNames) && response.enterprisePdfNames.length === 0)) && (
         <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
-            <SentenceAnswer answer={response} />
+            <SentenceAnswer fetchRemainingMessage={fetchRemainingMessage} answer={response} />
           </div>
         </Paper>
       )}
@@ -77,7 +79,7 @@ const SearchHistoryItem = ({ query, response }) => {
       {response?.isSucess && !response?.contentResponse && response?.message && !response?.globalAssist && !response?.globalAssist?.isSuccess && !response?.safetyChecker && !response?.isEvent && !response?.isPersonalAssistant && !response?.isViewReminder && (
           <Paper elevation={3} className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
-              <DemoEnterpriseChat answer={response} />
+              <DemoEnterpriseChat fetchRemainingMessage={fetchRemainingMessage} answer={response} />
             </div>
           </Paper>
         )}
@@ -115,9 +117,9 @@ const SearchHistoryItem = ({ query, response }) => {
       )}
 
       <Paper elevation={3} className="marginBottom-10">
-        {response.isSucess === false && response?.message && (
+        {response.isSucess === false && !response.isHelpAgent  && (response?.message || response?.contentResponse) && ( 
           <div className="response">
-            <ErrorAnswer errorMsg={response.message} />
+            <ErrorAnswer errorMsg={response} />
           </div>
         )}
       </Paper>
@@ -133,7 +135,7 @@ const SearchHistoryItem = ({ query, response }) => {
       {response?.isSucess && response?.safetyChecker && (
         <Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
-            <SafetyChecker answer={response} />
+            <SafetyChecker fetchRemainingMessage={fetchRemainingMessage} answer={response} />
           </div>
         </Paper>
       )}
@@ -147,7 +149,7 @@ const SearchHistoryItem = ({ query, response }) => {
       {isPersonalAssistant && (
          <Paper elevation={3} className="marginBottom-10">
          <div className="chat-bubble assistant-bubble">
-           <PersonalAssistant answer={response} />
+           <PersonalAssistant fetchRemainingMessage={fetchRemainingMessage} answer={response} />
           </div>
         </Paper>
       )}
@@ -158,7 +160,13 @@ const SearchHistoryItem = ({ query, response }) => {
           </div>
         </Paper>
       )}
-
+      {isHelpAgent && (
+         <Paper elevation={3} className="marginBottom-10">
+         <div className="chat-bubble assistant-bubble">
+           <HelpAgent fetchRemainingMessage={fetchRemainingMessage} answer={response} remainingMsgData={remainingMsgData} />
+          </div>
+        </Paper>
+      )}
 
     </div>
   );
