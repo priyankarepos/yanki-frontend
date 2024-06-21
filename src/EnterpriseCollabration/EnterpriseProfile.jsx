@@ -985,7 +985,7 @@ Service Offerings:
         className='enterprise-profile-modal'
       >
         <Box className='enterprise-profile-modal-content' >
-          <Typography variant="h5" className='enterprise-modal-title'>"Upload File"</Typography>
+          <Typography variant="h5" className='enterprise-modal-title'>Upload File</Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* File Upload */}
             <div>
