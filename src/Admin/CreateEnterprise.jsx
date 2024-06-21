@@ -122,8 +122,6 @@ const AdminCreateEnterprise = () => {
       BusinessHoursOpeningTime: enterpriseDetails.officeOpenTime || "",
       BusinessHoursClosingTime: enterpriseDetails.officeCloseTime || "",
       FoundedYear: enterpriseDetails.foundedYear || "",
-      // It might be used in future
-      // ReligiousCertifications: enterpriseDetails.religiousCertification || "",
       FrequentlyAskedQuestions: enterpriseDetails.faQs || "",
       EnterpriseIdentificationKeywords:
         enterpriseDetails.enterpriseKeywords || [],
@@ -267,8 +265,6 @@ const AdminCreateEnterprise = () => {
           officeOpenTime: formData.BusinessHoursOpeningTime,
           officeCloseTime: formData.BusinessHoursClosingTime,
           foundedYear: formData.FoundedYear,
-          // It might be used in future
-          // religiousCertification: formData.ReligiousCertifications,
           faQs: formData.FrequentlyAskedQuestions,
           enterpriseKeywords: tagsAsString,
           isProfileCompleted: false,
@@ -316,11 +312,6 @@ const AdminCreateEnterprise = () => {
     setValue("BusinessHoursOpeningTime", enterprise.officeOpenTime || "");
     setValue("BusinessHoursClosingTime", enterprise.officeCloseTime || "");
     setValue("FoundedYear", enterprise.foundedYear || "");
-    // It might be used in future
-    // setValue(
-    //   "ReligiousCertifications",
-    //   enterprise.religiousCertification || ""
-    // );
     setValue("FrequentlyAskedQuestions", enterprise.faQs || "");
 
     if (enterprise.enterpriseKeywords) {
@@ -377,8 +368,6 @@ const AdminCreateEnterprise = () => {
         officeOpenTime: formData.BusinessHoursOpeningTime,
         officeCloseTime: formData.BusinessHoursClosingTime,
         foundedYear: formData.FoundedYear,
-        // It might be used in future
-        // religiousCertification: formData.ReligiousCertifications,
         faQs: formData.FrequentlyAskedQuestions,
         enterpriseKeywords: tagsAsString,
       };
@@ -858,34 +847,6 @@ const AdminCreateEnterprise = () => {
               )}
             />
           </Grid>
-          
-          {/* It might be used in future */}
-          {/* <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Religious Certifications<sup className="required-icon">*</sup>
-            </InputLabel>
-            <Controller
-              control={control}
-              name="ReligiousCertifications"
-              rules={{ required: "Religious Certifications is required" }}
-              render={({ field }) => (
-                <div>
-                  <TextField
-                    className="enterprise-inputField"
-                    {...field}
-                    type="outlined"
-                    placeholder="Kosher or any other"
-                    fullWidth
-                  />
-                  {errors["ReligiousCertifications"] && (
-                    <FormHelperText className="error-message">
-                      {errors["ReligiousCertifications"].message}
-                    </FormHelperText>
-                  )}
-                </div>
-              )}
-            />
-          </Grid> */}
 
           <Grid item xs={12}>
             <Divider className="table-devider"></Divider>
