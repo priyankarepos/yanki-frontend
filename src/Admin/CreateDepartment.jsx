@@ -654,6 +654,7 @@ const AdminCreateDepartment = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setTableData([]);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-document?EnterpriseId=${selectedEnterpriseId}`
@@ -681,6 +682,7 @@ const AdminCreateDepartment = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setCertificateDetails([]);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-certificate?EnterpriseId=${selectedEnterpriseId}`
@@ -763,7 +765,6 @@ const AdminCreateDepartment = () => {
       </Modal>
     );
   };
-
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
@@ -1112,7 +1113,9 @@ const AdminCreateDepartment = () => {
           </Grid>
 
           <Box className="enterprise-upload-box enterprise-file-upload-container">
-            <Typography variant="h6" className="table-heading">Upload Files</Typography>
+            <Typography variant="h6" className="table-heading">
+              Upload Files
+            </Typography>
             <Button
               variant="outlined"
               sx={{ marginY: { xs: "10px" } }}
@@ -1182,7 +1185,9 @@ const AdminCreateDepartment = () => {
           </Grid>
 
           <Box className="enterprise-upload-box enterprise-file-upload-container">
-            <Typography variant="h6" className="table-heading">Religious Certifications</Typography>
+            <Typography variant="h6" className="table-heading">
+              Religious Certifications
+            </Typography>
             <Button
               variant="outlined"
               sx={{ marginY: { xs: "10px" } }}
