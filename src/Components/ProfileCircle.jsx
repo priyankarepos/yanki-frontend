@@ -33,7 +33,7 @@ export default function ProfielCircle() {
   const [confirmationText, setConfirmationText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [timer, setTimer] = useState(3);
+  const [timer, setTimer] = useState(5);
   let timerInterval;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -128,7 +128,7 @@ export default function ProfielCircle() {
       const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/auth/delete-account`);
       if (response.status === 200) {
         setIsModalOpen(true)
-        setTimer(3);
+        setTimer(5);
         timerInterval = setInterval(() => {
           setTimer((prevTimer) => prevTimer - 1);
         }, 1000);
@@ -139,7 +139,7 @@ export default function ProfielCircle() {
           setIsModalOpen(false);
           navigate("/auth");
           sessionStorage.removeItem("selectedChatId");
-        }, 3000);
+        }, 5000);
       } else {
         setSnackbarMessage("Failed to delete account");
         setSnackbarOpen(true);
