@@ -116,7 +116,9 @@ const NewHomePageMui = () => {
   }, []);
 
   useEffect(() => {
-    fetchRemainingMessage();
+    setTimeout(() => {
+      fetchRemainingMessage();
+    }, 1500);
   }, []);
 
   const responsive = {
