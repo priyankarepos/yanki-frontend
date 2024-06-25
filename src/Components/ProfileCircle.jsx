@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -18,13 +18,20 @@ import Diversity2Icon from "@mui/icons-material/Diversity2";
 import { Context } from "../App";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
-import { Typography } from "@mui/material";
+import { Snackbar, Typography } from "@mui/material";
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import axios from "axios";
+import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const location = useLocation();
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -99,6 +106,32 @@ export default function ProfielCircle() {
       navigate("/enterprise-status");
     } else if (userStatus === "Approved") {
       navigate("/enterprise/profile");
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    setConfirmDialogOpen(true);
+    setConfirmationText(`Are you sure you want to delete your account?`);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/auth/delete-account`);
+      if (response.status === 200) {
+        setSnackbarMessage("Account deleted successfully");
+        setSnackbarOpen(true);
+        window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+        window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+        handleClose();
+        navigate("/auth");
+        sessionStorage.removeItem("selectedChatId");
+      } else {
+        setSnackbarMessage("Failed to delete account");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage("Error deleting account:", error);
+      setSnackbarOpen(true);
     }
   };
 
@@ -217,14 +250,21 @@ export default function ProfielCircle() {
               AI Customization
             </MenuItem>
           )}
-          {userRoles !== "Admin" && 
-          <MenuItem onClick={onClickMembershipPortal}>
-            <ListItemIcon>
-              <SubscriptionsIcon fontSize="small" />
-            </ListItemIcon>
-            Subscription Plan
-          </MenuItem>
+          {userRoles !== "Admin" &&
+            <MenuItem onClick={onClickMembershipPortal}>
+              <ListItemIcon>
+                <SubscriptionsIcon fontSize="small" />
+              </ListItemIcon>
+              Subscription Plan
+            </MenuItem>
           }
+          <Divider />
+          <MenuItem onClick={handleDeleteAccount}>
+            <ListItemIcon>
+              <DeleteOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            Delete Your Account
+          </MenuItem>
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
@@ -234,6 +274,18 @@ export default function ProfielCircle() {
           </MenuItem>
         </Menu>
       </Container>
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={handleConfirmDelete}
+        confirmationText={confirmationText}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </React.Fragment>
   );
 }
