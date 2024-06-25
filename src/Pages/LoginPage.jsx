@@ -87,28 +87,6 @@ const LoginPage = () => {
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
-        // It might be used in future
-        //   const token = response.data.contentResponse.token;
-        //   const responseSubscribe = await axios.get(
-        //     `${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`,
-        //     {
-        //       headers: {
-        //         Authorization: `Bearer ${token}`,
-        //       },
-        //     }
-        //   );
-
-        //   const updateCustomerId = responseSubscribe.data;
-        //   const yankiUser = JSON.parse(
-        //     window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
-        //     "{}"
-        //   );
-        //   const userRoles = yankiUser?.userObject?.userRoles || "";
-        //   if (updateCustomerId?.isPlanSubscribed || userRoles === "Admin") {
-        //     navigate("/");
-        //   } else {
-        //     navigate("/membership");
-        //   }
       }
     } catch (e) {
       setLoginLoading(false);
@@ -152,28 +130,6 @@ const LoginPage = () => {
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
-        // It might be used in future
-        // const token = response.data.contentResponse.token;
-        // const responseSubscribe = await axios.get(
-        //   `${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   }
-        // );
-
-        // const updateCustomerId = responseSubscribe.data;
-        // const yankiUser = JSON.parse(
-        //   window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
-        //   "{}"
-        // );
-        // const userRoles = yankiUser?.userObject?.userRoles || "";
-        // if (updateCustomerId?.isPlanSubscribed || userRoles === "Admin") {
-        //   navigate("/");
-        // } else {
-        //   navigate("/membership");
-        // }
       } else {
         setLoginError(true);
         setLoginErrorMsg("Authentication failed.");

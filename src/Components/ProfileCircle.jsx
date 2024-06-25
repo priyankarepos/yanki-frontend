@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -18,13 +18,28 @@ import Diversity2Icon from "@mui/icons-material/Diversity2";
 import { Context } from "../App";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
-import { Typography } from "@mui/material";
+import { Modal, Typography, Snackbar } from "@mui/material";
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import axios from "axios";
+import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
+import "../Components/AnswerStyle.scss";
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const location = useLocation();
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [timer, setTimer] = useState(5);
+  let timerInterval;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const recipientEmail = "hello@yanki.ai";
+  const emailSubject = "Email subject";
+  const emailBody = "Email body";
 
   const yankiUser = window.localStorage.getItem(
     process.env.REACT_APP_LOCALSTORAGE_TOKEN
@@ -100,6 +115,40 @@ export default function ProfielCircle() {
     } else if (userStatus === "Approved") {
       navigate("/enterprise/profile");
     }
+  };
+
+  const handleDeleteAccount = () => {
+    setConfirmDialogOpen(true);
+    setConfirmationText(`Are you sure you want to delete your account?`);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/auth/delete-account`);
+      if (response.status === 200) {
+        setIsModalOpen(true)
+        setTimer(5);
+        timerInterval = setInterval(() => {
+          setTimer((prevTimer) => prevTimer - 1);
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(timerInterval);
+          window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+          window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+          setIsModalOpen(false);
+          navigate("/auth");
+          sessionStorage.removeItem("selectedChatId");
+        }, 5000);
+      } else {
+        setSnackbarMessage("Failed to delete account");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarMessage("Error deleting account:", error);
+      setSnackbarOpen(true);
+    }
+    setLoading(false);
   };
 
   return (
@@ -217,14 +266,21 @@ export default function ProfielCircle() {
               AI Customization
             </MenuItem>
           )}
-          {userRoles !== "Admin" && 
-          <MenuItem onClick={onClickMembershipPortal}>
-            <ListItemIcon>
-              <SubscriptionsIcon fontSize="small" />
-            </ListItemIcon>
-            Subscription Plan
-          </MenuItem>
+          {userRoles !== "Admin" &&
+            <MenuItem onClick={onClickMembershipPortal}>
+              <ListItemIcon>
+                <SubscriptionsIcon fontSize="small" />
+              </ListItemIcon>
+              Subscription Plan
+            </MenuItem>
           }
+          <Divider />
+          <MenuItem onClick={handleDeleteAccount}>
+            <ListItemIcon>
+              <DeleteOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            Delete Your Account
+          </MenuItem>
           <Divider />
           <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
@@ -234,6 +290,49 @@ export default function ProfielCircle() {
           </MenuItem>
         </Menu>
       </Container>
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={handleConfirmDelete}
+        confirmationText={confirmationText}
+        loading={loading}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="admin-faq-model-style"
+      >
+        <Box className="admin-faq-model-content delete-account-content">
+          <Typography sx={{ mb: 1 }}>
+            Your account has been successfully deleted.
+          </Typography>
+          <Typography sx={{ mb: 1 }}>
+            You will be redirected to the homepage in <strong>{timer}</strong>
+          </Typography>
+          <Typography sx={{ mb: 3 }}>
+            If you have any questions or need further assistance, please contact our support team at&nbsp;
+            <a
+              className="linkStyle new-title-email"
+              href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              hello@yanki.ai
+            </a>
+          </Typography>
+          <Typography>
+            Thank you for using Yanki.
+          </Typography>
+        </Box>
+      </Modal>
     </React.Fragment>
   );
 }
