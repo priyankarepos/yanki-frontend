@@ -238,8 +238,8 @@ const EnterpriseProfile = () => {
         const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`);
 
         if (response.status === 200) {
-          setEnterpriseDetails(response.data);
-          sessionStorage.setItem('enterpriseId', response.data.enterpriseId);
+          setEnterpriseDetails(response.data.data);
+          sessionStorage.setItem('enterpriseId', response.data.data[0].enterpriseId);
         } else {
           setSnackbarMessage('Failed to fetch enterprise details');
           setSnackbarOpen(true);

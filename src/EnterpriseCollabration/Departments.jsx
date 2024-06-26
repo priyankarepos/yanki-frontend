@@ -37,7 +37,7 @@ const Departments = () => {
 
             if (response.status === 200) {
                 const responseData = response.data;
-                setEnterpriseDetails(responseData)
+                setEnterpriseDetails(responseData.data)
             } else {
                 setSnackbarMessage('Failed to fetch enterprise details');
                 setSnackbarOpen(true);
