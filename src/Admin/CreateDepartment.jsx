@@ -73,7 +73,7 @@ const AdminCreateDepartment = () => {
     const getEnterpriseDetails = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-all-enterprise-details`
         );
 
         if (response.status === 200) {
