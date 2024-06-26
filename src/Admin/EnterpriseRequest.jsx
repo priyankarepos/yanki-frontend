@@ -11,6 +11,7 @@ import {
   TableRow,
   InputLabel,
   useMediaQuery,
+  TextField,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import "react-tagsinput/react-tagsinput.css";
@@ -23,6 +24,8 @@ import axios from "axios";
 import { Pagination, CircularProgress } from "@mui/material";
 import "./AdminStyle.css";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 
 const AdminEnterpriseRequest = () => {
   const { drawerOpen } = useContext(Context);
@@ -41,6 +44,7 @@ const AdminEnterpriseRequest = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [query, setQuery] = useState("");
 
   const openSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -76,6 +80,7 @@ const AdminEnterpriseRequest = () => {
           {
             params: {
               categoryId: categoryIdParam,
+              enterpriseName: query,
               pageNumber: pageNumber,
               pageSize: 10,
             },
@@ -97,7 +102,7 @@ const AdminEnterpriseRequest = () => {
 
     fetchEnterpriseCategories();
     fetchEnterpriseRequests();
-  }, [selectedCategory, pageNumber]);
+  }, [selectedCategory, pageNumber, query]);
 
   const handlePageChange = (event, newPage) => {
     setPageNumber(newPage);
@@ -201,6 +206,10 @@ const AdminEnterpriseRequest = () => {
     }
   };
 
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+  };
+
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
@@ -228,11 +237,31 @@ const AdminEnterpriseRequest = () => {
         }}
       >
         <Box className="enterprise-content">
-          <Typography variant="h6" sx={{ pb: 2 }}>
-            Enterprise Request
-          </Typography>
+          <Box className="enterprise-request-header">
+
+            <Typography variant="h6" sx={{ pb: 2 }}>
+              Enterprise Request
+            </Typography>
+
+            <TextField
+              variant="outlined"
+              placeholder="Search Enterprise"
+              value={query}
+              onChange={handleInputChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+
           <Box className="marginBottom-25">
-            <InputLabel className="enterprise-input-lable">Select Category</InputLabel>
+            <InputLabel className="enterprise-input-lable">
+              Select Category
+            </InputLabel>
             <FormControl
               fullWidth
               sx={{
@@ -265,16 +294,22 @@ const AdminEnterpriseRequest = () => {
                     Enterprise Name
                   </TableCell>
                   <TableCell className="enterprise-headerCell">Email</TableCell>
-                  <TableCell className="enterprise-headerCell">Phone Number</TableCell>
+                  <TableCell className="enterprise-headerCell">
+                    Phone Number
+                  </TableCell>
                   <TableCell className="enterprise-headerCell">
                     Contact Person
                   </TableCell>
-                  <TableCell className="enterprise-headerCell">Website</TableCell>
-                  <TableCell className="enterprise-headerCell">Request Date</TableCell>
-                  <TableCell className="enterprise-headerCell">Status</TableCell>
-                  <TableCell
-                    className="enterprise-headerCell text-center"
-                  >
+                  <TableCell className="enterprise-headerCell">
+                    Website
+                  </TableCell>
+                  <TableCell className="enterprise-headerCell">
+                    Request Date
+                  </TableCell>
+                  <TableCell className="enterprise-headerCell">
+                    Status
+                  </TableCell>
+                  <TableCell className="enterprise-headerCell text-center">
                     Action
                   </TableCell>
                 </TableRow>
@@ -286,7 +321,9 @@ const AdminEnterpriseRequest = () => {
                       <TableCell className="enterprise-cell">
                         {row.enterpriseName}
                       </TableCell>
-                      <TableCell className="enterprise-cell">{row.email}</TableCell>
+                      <TableCell className="enterprise-cell">
+                        {row.email}
+                      </TableCell>
                       <TableCell className="enterprise-cell">
                         {row.phoneNumber}
                       </TableCell>
@@ -306,7 +343,9 @@ const AdminEnterpriseRequest = () => {
                         {" "}
                         {new Date(row.requestDate).toLocaleDateString("en-GB")}
                       </TableCell>
-                      <TableCell className="enterprise-cell">{row.status}</TableCell>
+                      <TableCell className="enterprise-cell">
+                        {row.status}
+                      </TableCell>
                       <TableCell>
                         <div className="enterprise-cell-button-container">
                           <Button
@@ -314,7 +353,7 @@ const AdminEnterpriseRequest = () => {
                             color="primary"
                             size="small"
                             className="enterprise-cell-button"
-                            disabled={ 
+                            disabled={
                               loadingRows.includes(row.enterpriseId) ||
                               row.status === "Approved"
                             }

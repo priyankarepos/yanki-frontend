@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -18,6 +18,7 @@ import {
   FormHelperText,
   TextareaAutosize,
   Divider,
+  Pagination,
 } from "@mui/material";
 import AdminDashboard from "./AdminDashboard";
 import IconButton from "@mui/material/IconButton";
@@ -33,15 +34,16 @@ import { emailRegex, phoneRegex } from "../Utils/validations/validation";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import "../EnterpriseCollabration/EnterpriseStyle.scss";
 import ReactPhoneInput from "react-phone-input-2";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 
 const AdminCreateEnterprise = () => {
   const { drawerOpen } = useContext(Context);
   const [isLoading, setIsLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [enterpriseDetails, setEnterpriseDetails] = useState({});
-  const [enterpriseList, setEnterpriseList] = useState({});
+  const [enterpriseList, setEnterpriseList] = useState([]);
   const [enterpriseCategories, setEnterpriseCategories] = useState([]);
   const [tagCount, setTagCount] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -49,19 +51,28 @@ const AdminCreateEnterprise = () => {
   const [enterpriseId, setEnterpriseId] = useState(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [query, setQuery] = useState("");
 
-  const getEnterpriseDetails = async () => {
+  const getEnterpriseDetails = useCallback(async () => {
     try {
       setIsLoading(true);
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details?enterpriseName=${query}&pageNumber=${pageNumber}&pageSize=10`
       );
 
       if (response.status === 200) {
         const responseData = response.data;
-        setEnterpriseDetails(responseData);
-        setEnterpriseList(responseData);
+        if (response.data.totalCount) {
+          setEnterpriseDetails(responseData.data);
+          setEnterpriseList(responseData.data);
+        } else {
+          setEnterpriseDetails({});
+          setEnterpriseList([]);
+        }
+        setTotalPages(Math.ceil(response.data.totalCount / 10));
       } else {
         setSnackbarMessage("Failed to fetch enterprise details");
         setSnackbarOpen(true);
@@ -72,10 +83,18 @@ const AdminCreateEnterprise = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [pageNumber, query]);
   useEffect(() => {
     getEnterpriseDetails();
-  }, []);
+  }, [getEnterpriseDetails, pageNumber, query]);
+
+  const handlePageChange = (event, newPage) => {
+    setPageNumber(newPage);
+  };
+
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+  };
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
@@ -252,7 +271,7 @@ const AdminCreateEnterprise = () => {
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
         {
           enterpriseName: formData.EnterpriseName,
-          categoryId: selectedCategory || formData.EnterpriseCategories,
+          categoryId: formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
           enterpriseAddress: formData.EnterpriseAddress,
@@ -355,7 +374,7 @@ const AdminCreateEnterprise = () => {
       const requestBody = {
         enterpriseId: enterpriseId,
         enterpriseName: formData.EnterpriseName,
-        categoryId: selectedCategory || formData.EnterpriseCategories,
+        categoryId: formData.EnterpriseCategories,
         contactPersonName: formData.EnterprisePointOfContact,
         website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
         enterpriseAddress: formData.EnterpriseAddress,
@@ -751,21 +770,27 @@ const AdminCreateEnterprise = () => {
               error={!!errors["EnterpriseCategories"]}
               required
             >
-              <Select
-                value={selectedCategory}
-                onChange={(event) => setSelectedCategory(event.target.value)}
-                displayEmpty
-                className="EnterpriseCategorySelect marginBottom-10"
-              >
-                <MenuItem value="" disabled>
-                  Select an Enterprise Category
-                </MenuItem>
-                {enterpriseCategories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
+              <Controller
+                name="EnterpriseCategories"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    displayEmpty
+                    className="EnterpriseCategorySelect marginBottom-10"
+                  >
+                    <MenuItem value="" disabled>
+                      Select an Enterprise Category
+                    </MenuItem>
+                    {enterpriseCategories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
@@ -952,20 +977,58 @@ const AdminCreateEnterprise = () => {
               {enterpriseId !== null ? "Save Changes" : "Save"}
             </Button>
           </Grid>
+
+          <Grid item xs={12}>
+            <Divider className="table-devider"></Divider>
+          </Grid>
+
+          <Box className="add-eventpadding">
+            <Typography variant="h6" className="table-heading">
+              Enterprise List
+            </Typography>
+          </Box>
+
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              placeholder="Search Enterprise"
+              value={query}
+              onChange={handleInputChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              fullWidth
+            />
+          </Grid>
+
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Enterprise Name</TableCell>
-                    <TableCell>Enterprise point of contact</TableCell>
-                    <TableCell>Website URL</TableCell>
-                    <TableCell>Enterprise Categories</TableCell>
-                    <TableCell>Actions</TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Enterprise Name
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Enterprise point of contact
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Website URL
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Enterprise Categories
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Actions
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enterpriseList &&
+                  {enterpriseList.length !== 0 ? (
                     Object.keys(enterpriseList).map((key) => {
                       const enterprise = enterpriseList[key];
                       return (
@@ -1002,9 +1065,23 @@ const AdminCreateEnterprise = () => {
                           </TableCell>
                         </TableRow>
                       );
-                    })}
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8}>No enterprise avilable</TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
+              {totalPages > 1 && (
+                <Pagination
+                  count={totalPages}
+                  page={pageNumber}
+                  onChange={handlePageChange}
+                  color="primary"
+                  className="enterprise-pagination"
+                />
+              )}
             </TableContainer>
           </Grid>
         </Grid>
