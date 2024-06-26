@@ -3,6 +3,11 @@
   background-color: rgba(255, 255, 255, 0.08);
 }
 
+.enterprise-request-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 
 /* width */
 ::-webkit-scrollbar {

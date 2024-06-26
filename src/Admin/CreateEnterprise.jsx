@@ -42,7 +42,6 @@ const AdminCreateEnterprise = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [enterpriseDetails, setEnterpriseDetails] = useState({});
   const [enterpriseList, setEnterpriseList] = useState([]);
   const [enterpriseCategories, setEnterpriseCategories] = useState([]);
@@ -272,7 +271,7 @@ const AdminCreateEnterprise = () => {
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
         {
           enterpriseName: formData.EnterpriseName,
-          categoryId: selectedCategory || formData.EnterpriseCategories,
+          categoryId: formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
           enterpriseAddress: formData.EnterpriseAddress,
@@ -375,7 +374,7 @@ const AdminCreateEnterprise = () => {
       const requestBody = {
         enterpriseId: enterpriseId,
         enterpriseName: formData.EnterpriseName,
-        categoryId: selectedCategory || formData.EnterpriseCategories,
+        categoryId: formData.EnterpriseCategories,
         contactPersonName: formData.EnterprisePointOfContact,
         website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
         enterpriseAddress: formData.EnterpriseAddress,
@@ -771,21 +770,27 @@ const AdminCreateEnterprise = () => {
               error={!!errors["EnterpriseCategories"]}
               required
             >
-              <Select
-                value={selectedCategory}
-                onChange={(event) => setSelectedCategory(event.target.value)}
-                displayEmpty
-                className="EnterpriseCategorySelect marginBottom-10"
-              >
-                <MenuItem value="" disabled>
-                  Select an Enterprise Category
-                </MenuItem>
-                {enterpriseCategories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
+              <Controller
+                name="EnterpriseCategories"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    displayEmpty
+                    className="EnterpriseCategorySelect marginBottom-10"
+                  >
+                    <MenuItem value="" disabled>
+                      Select an Enterprise Category
+                    </MenuItem>
+                    {enterpriseCategories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
@@ -986,7 +991,7 @@ const AdminCreateEnterprise = () => {
           <Grid item xs={12}>
             <TextField
               variant="outlined"
-              placeholder="Search Enterprise By Name"
+              placeholder="Search Enterprise"
               value={query}
               onChange={handleInputChange}
               InputProps={{
