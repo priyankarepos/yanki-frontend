@@ -22,15 +22,14 @@ import { Modal, Typography, Snackbar } from "@mui/material";
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import axios from "axios";
-import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import "../Components/AnswerStyle.scss";
+import DeleteAccountConfirmDialog from "./DeleteAccountDialog/DeleteAccountDialog";
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const location = useLocation();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [confirmationText, setConfirmationText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [timer, setTimer] = useState(5);
@@ -119,7 +118,6 @@ export default function ProfielCircle() {
 
   const handleDeleteAccount = () => {
     setConfirmDialogOpen(true);
-    setConfirmationText(`Are you sure you want to delete your account?`);
   };
 
   const handleConfirmDelete = async () => {
@@ -127,6 +125,7 @@ export default function ProfielCircle() {
       setLoading(true);
       const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/auth/delete-account`);
       if (response.status === 200) {
+        setConfirmDialogOpen(false);
         setIsModalOpen(true)
         setTimer(5);
         timerInterval = setInterval(() => {
@@ -290,11 +289,10 @@ export default function ProfielCircle() {
           </MenuItem>
         </Menu>
       </Container>
-      <ConfirmDialog
+      <DeleteAccountConfirmDialog
         open={confirmDialogOpen}
         handleClose={() => setConfirmDialogOpen(false)}
         handleConfirm={handleConfirmDelete}
-        confirmationText={confirmationText}
         loading={loading}
       />
       <Snackbar
@@ -315,7 +313,7 @@ export default function ProfielCircle() {
             Your account has been successfully deleted.
           </Typography>
           <Typography sx={{ mb: 1 }}>
-            You will be redirected to the homepage in <strong>{timer}</strong>
+            You will be redirected to the homepage. <strong>{timer}</strong>
           </Typography>
           <Typography sx={{ mb: 3 }}>
             If you have any questions or need further assistance, please contact our support team at&nbsp;
@@ -329,7 +327,7 @@ export default function ProfielCircle() {
             </a>
           </Typography>
           <Typography>
-            Thank you for using Yanki.
+            Thank you for being part of Yanki. We hope to serve you again in the future.
           </Typography>
         </Box>
       </Modal>
