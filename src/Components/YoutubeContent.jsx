@@ -79,8 +79,16 @@ const YoutubeContent = ({ answer }) => {
     }
   };
 
+  const isDirectVideoLink = (link) => {
+    const pattern = /https:\/\/dl\.torahanytime\.com\/.*\.MPG\.mp4$/;
+    return pattern.test(link);
+  };
+
   const modifyVimeoVideoLinks = (links) => {
     return links.map((link) => {
+      if (isDirectVideoLink(link)) {
+        return link;
+      }
       const videoIdMatch = link.match(/(\d+)/);
       if (videoIdMatch) {
         const videoId = videoIdMatch[0];
@@ -89,7 +97,6 @@ const YoutubeContent = ({ answer }) => {
       return "";
     });
   };
-
   const handleVideoPlay = (index) => {
     if (currentVideoIndex !== null && playerRefs.current[currentVideoIndex]) {
       const currentVideoPlayer = playerRefs.current[currentVideoIndex];
@@ -140,17 +147,15 @@ const YoutubeContent = ({ answer }) => {
               </Typography>
               <Typography
                 onClick={handleExclusiveContentClick}
-                className={`switch-button ${
-                  showYouTubeVideos ? "selected" : ""
-                }`}
+                className={`switch-button ${showYouTubeVideos ? "selected" : ""
+                  }`}
               >
                 Exclusive Content
               </Typography>
               <Typography
                 onClick={handleTorahanytimeClick}
-                className={`switch-button ${
-                  showYouTubeVideos === false ? "selected" : ""
-                }`}
+                className={`switch-button ${showYouTubeVideos === false ? "selected" : ""
+                  }`}
               >
                 TorahAnytime
               </Typography>
@@ -159,82 +164,55 @@ const YoutubeContent = ({ answer }) => {
 
         <Carousel responsive={responsive}>
           {showYouTubeVideos ||
-          (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess)
+            (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess)
             ? answer?.vimeoVideoDetails.map((item, index) => (
-                <Paper key={item.title}>
-                  <StyledCarouselItem key={item._id} className="marginRight-5">
-                    {item.link && (
-                      <div>
-                        <Vimeo
-                          id={item.link.split("v=")[1]}
-                          onReady={(event) => onReady(event, index)}
-                          onPlay={() => handleVideoPlay(index)}
-                          video={item.link}
-                          width="100%"
-                          height="150px"
-                          autoplay={false}
-                          controls={true}
-                          showByline={false}
-                          showTitle={false}
-                          showPortrait={false}
-                          loop={false}
-                          autopause={true}
-                        />
-                      </div>
-                    )}
+              <Paper key={item.title}>
+                <StyledCarouselItem key={item._id} className="marginRight-5">
+                  {item.link && (
                     <div>
-                      <Typography variant="h6" component="div">
-                        <Tooltip title={item.title}>
-                          <div className="torahanytime-source-title">
-                            {item.title}
-                          </div>
-                        </Tooltip>
-                      </Typography>
+                      <Vimeo
+                        id={item.link.split("v=")[1]}
+                        onReady={(event) => onReady(event, index)}
+                        onPlay={() => handleVideoPlay(index)}
+                        video={item.link}
+                        width="100%"
+                        height="150px"
+                        autoplay={false}
+                        controls={true}
+                        showByline={false}
+                        showTitle={false}
+                        showPortrait={false}
+                        loop={false}
+                        autopause={true}
+                      />
                     </div>
-                  </StyledCarouselItem>
-                </Paper>
-              ))
+                  )}
+                  <div>
+                    <Typography variant="h6" component="div">
+                      <Tooltip title={item.title}>
+                        <div className="torahanytime-source-title">
+                          {item.title}
+                        </div>
+                      </Tooltip>
+                    </Typography>
+                  </div>
+                </StyledCarouselItem>
+              </Paper>
+            ))
             : showYouTubeVideos === false &&
-              videoData.length &&
-              videoData?.map((item) =>
-                isVideo &&
+            videoData.length &&
+            videoData?.map((item) =>
+              isVideo &&
                 (!item._source.vimeo_video_links ||
                   !item._source.vimeo_video_links.length) ? null : (
-                  <StyledCarouselItem key={item._id} className="marginRight-5">
-                    {showYouTubeVideos === false &&
-                      isVideo &&
-                      item._source.vimeo_video_links &&
-                      item._source.vimeo_video_links?.length && (
-                        <div key={item._id}>
-                          {item?._id <= fixedId ? (
-                            <Vimeo
-                              id={item._id}
-                              ref={(ref) => (vimeoRefs.current[item._id] = ref)}
-                              video={
-                                modifyVimeoVideoLinks(
-                                  item._source.vimeo_video_links
-                                )[0]
-                              }
-                              width="100%"
-                              height="150px"
-                              autoplay={false}
-                              controls={true}
-                              showByline={false}
-                              showTitle={false}
-                              showPortrait={false}
-                              loop={false}
-                              autopause={true}
-                              onPlay={() =>
-                                handlePlayMedia(
-                                  modifyVimeoVideoLinks(
-                                    item._source.vimeo_video_links
-                                  )[0],
-                                  "vimeo",
-                                  item._id
-                                )
-                              }
-                            />
-                          ) : (
+                <StyledCarouselItem key={item._id} className="marginRight-5">
+                  {showYouTubeVideos === false &&
+                    isVideo &&
+                    item._source.vimeo_video_links &&
+                    item._source.vimeo_video_links?.length && (
+                      <div key={item._id}>
+                        {item?._id <= fixedId ? (
+                          isDirectVideoLink(item._source.vimeo_video_links[0]) ? (
                             <video
                               key={item._id}
                               ref={(ref) => (videoRefs.current[item._id] = ref)}
@@ -250,26 +228,65 @@ const YoutubeContent = ({ answer }) => {
                                 )
                               }
                             />
-                          )}
-                        </div>
-                      )}
-                    {
-                      <div>
-                        <Typography sx={{ pt: 2 }} variant="h6" component="div">
-                          <Tooltip title={item._source.title}>
-                            <div className="video-title">
-                              {item._source.title}
-                            </div>
-                          </Tooltip>
-                        </Typography>
-                        <Typography className="torahanytime-source-speakerName">
-                          Speaker: {item._source.speaker_name}
-                        </Typography>
+                          ) : (
+                            <Vimeo
+                              id={item._id}
+                              ref={(ref) => (vimeoRefs.current[item._id] = ref)}
+                              video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
+                              width="100%"
+                              height="150px"
+                              autoplay={false}
+                              controls={true}
+                              showByline={false}
+                              showTitle={false}
+                              showPortrait={false}
+                              loop={false}
+                              autopause={true}
+                              onPlay={() =>
+                                handlePlayMedia(
+                                  modifyVimeoVideoLinks(item._source.vimeo_video_links)[0],
+                                  "vimeo",
+                                  item._id
+                                )
+                              }
+                            />
+                          )
+                        ) : (
+                          <video
+                            key={item._id}
+                            ref={(ref) => (videoRefs.current[item._id] = ref)}
+                            src={item._source.vimeo_video_links[0]}
+                            controls
+                            width="100%"
+                            height="150px"
+                            onPlay={() =>
+                              handlePlayMedia(
+                                item._source.vimeo_video_links[0],
+                                "video",
+                                item._id
+                              )
+                            }
+                          />
+                        )}
                       </div>
-                    }
-                  </StyledCarouselItem>
-                )
-              )}
+                    )}
+                  {
+                    <div>
+                      <Typography sx={{ pt: 2 }} variant="h6" component="div">
+                        <Tooltip title={item._source.title}>
+                          <div className="video-title">
+                            {item._source.title}
+                          </div>
+                        </Tooltip>
+                      </Typography>
+                      <Typography className="torahanytime-source-speakerName">
+                        Speaker: {item._source.speaker_name}
+                      </Typography>
+                    </div>
+                  }
+                </StyledCarouselItem>
+              )
+            )}
         </Carousel>
       </Paper>
     </Box>

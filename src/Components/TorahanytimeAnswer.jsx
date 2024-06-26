@@ -84,8 +84,16 @@ const TorahanytimeAnswer = ({ answer }) => {
     }
   };
 
+  const isDirectVideoLink = (link) => {
+    const pattern = /https:\/\/dl\.torahanytime\.com\/.*\.MPG\.mp4$/;
+    return pattern.test(link);
+  };
+
   const modifyVimeoVideoLinks = (links) => {
     return links.map((link) => {
+      if (isDirectVideoLink(link)) {
+        return link;
+      }
       const videoIdMatch = link.match(/(\d+)/);
       if (videoIdMatch) {
         const videoId = videoIdMatch[0];
@@ -116,9 +124,8 @@ const TorahanytimeAnswer = ({ answer }) => {
                   disabled={switchDisabled}
                 />
               }
-              label={`Choose Your Experience: ${
-                !showAudioAndVideo ? "Audio Available" : "Video Available"
-              }`}
+              label={`Choose Your Experience: ${!showAudioAndVideo ? "Audio Available" : "Video Available"
+                }`}
             />
           </div>
         )}
@@ -126,9 +133,9 @@ const TorahanytimeAnswer = ({ answer }) => {
           {data?.length &&
             data?.map((item) =>
               isAudio &&
-              isVideo &&
-              (!item._source.vimeo_video_links ||
-                !item._source.vimeo_video_links.length) ? null : (
+                isVideo &&
+                (!item._source.vimeo_video_links ||
+                  !item._source.vimeo_video_links.length) ? null : (
                 <StyledCarouselItem key={item._id} className="marginRight-5">
                   {isVideo &&
                     !isAudio &&
@@ -136,33 +143,45 @@ const TorahanytimeAnswer = ({ answer }) => {
                     item._source.vimeo_video_links?.length && (
                       <div key={item._id}>
                         {item?._id <= fixedId ? (
-                          <Vimeo
-                            id={item._id}
-                            ref={(ref) => (vimeoRefs.current[item._id] = ref)}
-                            video={
-                              modifyVimeoVideoLinks(
-                                item._source.vimeo_video_links
-                              )[0]
-                            }
-                            width="100%"
-                            height="150px"
-                            autoplay={false}
-                            controls={true}
-                            showByline={false}
-                            showTitle={false}
-                            showPortrait={false}
-                            loop={false}
-                            autopause={true}
-                            onPlay={() =>
-                              handlePlayMedia(
-                                modifyVimeoVideoLinks(
-                                  item._source.vimeo_video_links
-                                )[0],
-                                "vimeo",
-                                item._id
-                              )
-                            }
-                          />
+                          isDirectVideoLink(item._source.vimeo_video_links[0]) ? (
+                            <video
+                              key={item._id}
+                              ref={(ref) => (videoRefs.current[item._id] = ref)}
+                              src={item._source.vimeo_video_links[0]}
+                              controls
+                              width="100%"
+                              height="150px"
+                              onPlay={() =>
+                                handlePlayMedia(
+                                  item._source.vimeo_video_links[0],
+                                  "video",
+                                  item._id
+                                )
+                              }
+                            />
+                          ) : (
+                            <Vimeo
+                              id={item._id}
+                              ref={(ref) => (vimeoRefs.current[item._id] = ref)}
+                              video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
+                              width="100%"
+                              height="150px"
+                              autoplay={false}
+                              controls={true}
+                              showByline={false}
+                              showTitle={false}
+                              showPortrait={false}
+                              loop={false}
+                              autopause={true}
+                              onPlay={() =>
+                                handlePlayMedia(
+                                  modifyVimeoVideoLinks(item._source.vimeo_video_links)[0],
+                                  "vimeo",
+                                  item._id
+                                )
+                              }
+                            />
+                          )
                         ) : (
                           <video
                             key={item._id}
@@ -234,40 +253,49 @@ const TorahanytimeAnswer = ({ answer }) => {
                           <Tooltip title="Click to switch to video">
                             <div key={item._id}>
                               {item?._id <= fixedId ? (
-                                <Vimeo
-                                  id={item._id}
-                                  ref={(ref) =>
-                                    (vimeoRefs.current[item._id] = ref)
-                                  }
-                                  video={
-                                    modifyVimeoVideoLinks(
-                                      item._source.vimeo_video_links
-                                    )[0]
-                                  }
-                                  width="100%"
-                                  height="150px"
-                                  autoplay={false}
-                                  controls={true}
-                                  showByline={false}
-                                  showTitle={false}
-                                  showPortrait={false}
-                                  loop={false}
-                                  autopause={true}
-                                  onPlay={() =>
-                                    handlePlayMedia(
-                                      modifyVimeoVideoLinks(
-                                        item._source.vimeo_video_links
-                                      )[0],
-                                      "vimeo",
-                                      item._id
-                                    )
-                                  }
-                                />
+                                isDirectVideoLink(item._source.vimeo_video_links[0]) ? (
+                                  <video
+                                    key={item._id}
+                                    ref={(ref) => (videoRefs.current[item._id] = ref)}
+                                    src={item._source.vimeo_video_links[0]}
+                                    controls
+                                    width="100%"
+                                    height="150px"
+                                    onPlay={() =>
+                                      handlePlayMedia(
+                                        item._source.vimeo_video_links[0],
+                                        "video",
+                                        item._id
+                                      )
+                                    }
+                                  />
+                                ) : (
+                                  <Vimeo
+                                    id={item._id}
+                                    ref={(ref) => (vimeoRefs.current[item._id] = ref)}
+                                    video={modifyVimeoVideoLinks(item._source.vimeo_video_links)[0]}
+                                    width="100%"
+                                    height="150px"
+                                    autoplay={false}
+                                    controls={true}
+                                    showByline={false}
+                                    showTitle={false}
+                                    showPortrait={false}
+                                    loop={false}
+                                    autopause={true}
+                                    onPlay={() =>
+                                      handlePlayMedia(
+                                        modifyVimeoVideoLinks(item._source.vimeo_video_links)[0],
+                                        "vimeo",
+                                        item._id
+                                      )
+                                    }
+                                  />
+                                )
                               ) : (
                                 <video
-                                  ref={(ref) =>
-                                    (videoRefs.current[item._id] = ref)
-                                  }
+                                  key={item._id}
+                                  ref={(ref) => (videoRefs.current[item._id] = ref)}
                                   src={item._source.vimeo_video_links[0]}
                                   controls
                                   width="100%"
