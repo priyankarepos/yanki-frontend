@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import {
   AppBar,
   Box,
@@ -64,10 +70,15 @@ const NewHomePageMui = () => {
   const [shouldScroll, setShouldScroll] = useState(true);
   const [remainingMsgData, setRemainingMsgData] = useState([]);
   const [updateCustomerId, setUpdateCustomerId] = useState("");
+  const [chatHistoryPageNumber, setChatHistoryPageNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [scrollToKey, setScrollToKey] = useState();
+  const [remainingSearchHistory, setRemainingSearchHistory] = useState([]);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
   const chatContainerRef = useRef(null);
+  const itemRefs = useRef({});
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const fontSize = isSmallScreen ? "14px" : "16px";
@@ -80,6 +91,8 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
+
+  const defulatSizePageSize = 20;
 
   const fetchRemainingMessage = async () => {
     try {
@@ -187,7 +200,7 @@ const NewHomePageMui = () => {
           },
         }
       );
-      
+
       if (response.status === 200 || response.status >= 300) {
         setHasMore(true);
         sessionStorage.setItem("selectedChatId", response.data.chatId);
@@ -267,7 +280,7 @@ const NewHomePageMui = () => {
     if (hasMore) {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=60`
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
         );
         if (response.status === 200) {
           if (response.data.chatList.length > 0) {
@@ -290,67 +303,96 @@ const NewHomePageMui = () => {
     }
   }, [pageNumber, hasMore]);
 
+  const handleChatSessionScroll = useCallback(
+    async (chatId) => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
+        );
+        if (response.status === 200) {
+          const chatHistoryArray = response.data.chatHistory;
+
+          const allResponses = parseChatHistory(chatHistoryArray).flat();
+          setRemainingSearchHistory(allResponses);
+
+          setSearchHistory((prevData) => {
+            const updatedData = [...allResponses.reverse(), ...prevData];
+            setScrollToKey(prevData[0].response.response.id);
+
+            return updatedData;
+          });
+        }
+      } catch (error) {
+        setSnackbarMessage("Error:", error);
+        setSnackbarOpen(true);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [chatHistoryPageNumber]
+  );
+
   const handleChatSessionClick = useCallback(async (chatId) => {
+    // setSearchHistory([]);
+    setIsLoading(false);
     sessionStorage.setItem("selectedChatId", chatId);
     setSelectedChatId(chatId);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
+        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
       );
 
       if (response.status === 200) {
         const chatHistoryArray = response.data.chatHistory;
 
-        try {
-          const parsedChatHistory = chatHistoryArray.map((chatEntry) => {
-            const gptResponse = chatEntry.gptResponse;
-
-            return {
-              query: chatEntry.userQuery,
-              response: {
-                chatId: chatEntry.chatId,
-                response: {
-                  contentResponse: gptResponse.contentResponse,
-                  godavenPrayerDetails: gptResponse.godavenPrayerDetails,
-                  isSucess: gptResponse.isSucess,
-                  message: gptResponse.message,
-                  torahAnytimeLectures: gptResponse.torahAnytimeLectures,
-                  vimeoVideoDetails: gptResponse.vimeoVideoDetails,
-                  enterpriseSelections: gptResponse.enterpriseSelections,
-                  pdfNames: gptResponse.pdfNames,
-                  userType: gptResponse.userType,
-                  isExclusiveContent: gptResponse.isExclusiveContent,
-                  isItKosher: gptResponse.isItKosher,
-                  enterprisePdfNames: gptResponse.enterprisePdfNames,
-                  safetyChecker: gptResponse.safetyChecker,
-                  globalAssist: gptResponse.globalAssist,
-                  isEvent: gptResponse.isEvent,
-                  isPersonalAssistant: gptResponse.isPersonalAssistant,
-                  firstAidVideos: gptResponse.firstAidVideos,
-                  isViewReminder: gptResponse.isViewReminder,
-                  isHelpAgent: gptResponse.isHelpAgent,
-                  totalMessageLeft: gptResponse.totalMessageLeft,
-                  totalTaskLeft: gptResponse.totalTaskLeft,
-                },
-              },
-            };
-          });
-
-          setSearchHistory([...parsedChatHistory].reverse());
-
-          const allResponses = parsedChatHistory.flat();
-
-          setSearchHistory([...allResponses].reverse());
-        } catch (parseError) {
-          setSnackbarMessage("Error:", parseError);
-          setSnackbarOpen(false);
-        }
+        const allResponses = parseChatHistory(chatHistoryArray).flat();
+        setRemainingSearchHistory(allResponses);
+        setScrollToKey();
+        setChatHistoryPageNumber(1);
+        setSearchHistory([...allResponses].reverse());
       }
     } catch (error) {
       setSnackbarMessage("Error:", error);
       setSnackbarOpen(true);
     }
   }, []);
+
+  const parseChatHistory = (chatHistoryArray) => {
+    return chatHistoryArray.map((chatEntry) => {
+      const gptResponse = chatEntry.gptResponse;
+
+      return {
+        query: chatEntry.userQuery,
+        response: {
+          chatId: chatEntry.chatId,
+          response: {
+            id: chatEntry.id,
+            contentResponse: gptResponse.contentResponse,
+            godavenPrayerDetails: gptResponse.godavenPrayerDetails,
+            isSucess: gptResponse.isSucess,
+            message: gptResponse.message,
+            torahAnytimeLectures: gptResponse.torahAnytimeLectures,
+            vimeoVideoDetails: gptResponse.vimeoVideoDetails,
+            enterpriseSelections: gptResponse.enterpriseSelections,
+            pdfNames: gptResponse.pdfNames,
+            userType: gptResponse.userType,
+            isExclusiveContent: gptResponse.isExclusiveContent,
+            isItKosher: gptResponse.isItKosher,
+            enterprisePdfNames: gptResponse.enterprisePdfNames,
+            safetyChecker: gptResponse.safetyChecker,
+            globalAssist: gptResponse.globalAssist,
+            isEvent: gptResponse.isEvent,
+            isPersonalAssistant: gptResponse.isPersonalAssistant,
+            firstAidVideos: gptResponse.firstAidVideos,
+            isViewReminder: gptResponse.isViewReminder,
+            isHelpAgent: gptResponse.isHelpAgent,
+            totalMessageLeft: gptResponse.totalMessageLeft,
+            totalTaskLeft: gptResponse.totalTaskLeft,
+          },
+        },
+      };
+    });
+  };
 
   const fetchChatHistory = async (chatId) => {
     try {
@@ -395,6 +437,32 @@ const NewHomePageMui = () => {
       }
     }
   }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+
+  const handleScrollTop = (e) => {
+    if (
+      e.target.scrollTop === 0 &&
+      remainingSearchHistory.length === defulatSizePageSize &&
+      !isLoading
+    ) {
+      setIsLoading(true);
+      setChatHistoryPageNumber(chatHistoryPageNumber + 1);
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (scrollToKey === undefined)
+      return;
+
+    itemRefs.current[scrollToKey].scrollIntoView();
+  }, [scrollToKey]);
+
+  useEffect(() => {
+    const storedChatId = sessionStorage.getItem("selectedChatId");
+    if (chatHistoryPageNumber !== 1)
+      if (storedChatId) {
+        handleChatSessionScroll(storedChatId);
+      }
+  }, [handleChatSessionScroll, chatHistoryPageNumber]);
 
   const handleDeleteClick = (id) => {
     setConfirmDialogOpen(true);
@@ -444,6 +512,8 @@ const NewHomePageMui = () => {
     setSearchQuery("");
     setSearchHistory([]);
     setSelectedChatId(null);
+    setIsLoading(false);
+    setRemainingSearchHistory([]);
     sessionStorage.removeItem("selectedChatId");
     if (!isLargeScreen) {
       setDrawerOpen(false);
@@ -703,10 +773,22 @@ const NewHomePageMui = () => {
             width: { xs: "100%", sm: "96%" },
           }}
         >
-          <Box className="ya-answer" ref={chatContainerRef}>
+          <Box
+            className="ya-answer"
+            ref={chatContainerRef}
+            onScroll={handleScrollTop}
+          >
+            {isLoading && (
+              <Typography className="admin-faq-progressbar">
+                <CircularProgress />
+              </Typography>
+            )}
             {searchHistory.map((entry, index) => (
               <SearchHistoryItem
                 key={index}
+                ref={(el) =>
+                  (itemRefs.current[entry.response.response.id] = el)
+                }
                 query={entry.query}
                 response={entry?.response?.response}
                 errorMsg={errorMsg}

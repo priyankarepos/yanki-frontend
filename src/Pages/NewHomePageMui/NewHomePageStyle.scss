@@ -236,6 +236,20 @@
     border: none;
 }
 
+.ya-answer::-webkit-scrollbar {
+    width: 3px;
+    background: transparent;
+}
+
+.ya-answer::-webkit-scrollbar-thumb {
+    background-color: #022b4f;
+    border-radius: 50px;
+}
+
+.ya-answer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 0px;
