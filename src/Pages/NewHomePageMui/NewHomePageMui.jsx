@@ -204,6 +204,7 @@ const NewHomePageMui = () => {
       if (response.status === 200 || response.status >= 300) {
         setHasMore(true);
         sessionStorage.setItem("selectedChatId", response.data.chatId);
+        setInitialChatOpen(false);
         if (
           remainingMsgData?.totalMessageLeft <= 0 &&
           remainingMsgData?.totalTaskLeft <= 0 &&
