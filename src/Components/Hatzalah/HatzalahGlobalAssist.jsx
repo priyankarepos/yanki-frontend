@@ -81,15 +81,17 @@ const HatzalahGlobalAssist = ({ answer }) => {
     if (allPhoneNumbers.length > 0) {
       content.push(
         <div>
-          {allPhoneNumbers.map((phoneNumber, index) => (
-            <p
-              key={`phone-button-${index}`}
-              className={index === 0 ? "tap-to-call-button": ''}
-              onClick={() => (window.location.href = `tel:${phoneNumber}`)}
-            >
-              {index === 0 ? "TAP TO CALL": null }
-            </p>
-          ))}
+          <p
+            key= "phone-button"
+            className="tap-to-call-button"
+            onClick={() =>
+              allPhoneNumbers.map((phoneNumber) => {
+                window.location.href = `tel:${phoneNumber}`;
+              })
+            }
+          >
+            TAP TO CALL
+          </p>
         </div>
       );
     }
