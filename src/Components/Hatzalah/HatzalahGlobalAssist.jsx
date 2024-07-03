@@ -37,57 +37,62 @@ const HatzalahGlobalAssist = ({ answer }) => {
     }, 3000);
   };
 
-  const renderClickableContent = (text) => {
-    const phoneRegex = /\b\d{10,}\b/g;
-
+  const renderClickableContent = (texts) => {
+    const phoneRegex = /\b\d{3,}\b/g;
     let content = [];
 
-    const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
-      match.replace(/[-.]/g, "")
-    );
+    // Create an array to hold all phone numbers found across all texts
+    let allPhoneNumbers = [];
 
-    cleanedText.split(/\s+/).forEach((word, index, array) => {
-      if (word.match(phoneRegex)) {
-        if (answer.globalAssist.phoneNumber) {
-          content.push(
-            <p
-              key={index}
-              className="tap-to-call-button"
-              onClick={() => (window.location.href = `tel:${word}`)}
-            >
-              TAP TO CALL
-            </p>
-          );
+    // Process each text
+    texts.forEach((text, textIndex) => {
+      const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
+        match.replace(/[-.]/g, "")
+      );
+
+      cleanedText.split(/\s+/).forEach((word, index, array) => {
+        if (word.match(phoneRegex)) {
+          allPhoneNumbers.push(word);
         } else {
+          const punctuation = [".", ",", "-"];
+          let cleanedWord = word;
+          let lastChar = "";
+
+          if (punctuation.includes(word.slice(-1))) {
+            lastChar = word.slice(-1);
+            cleanedWord = word.slice(0, -1);
+          }
+
           content.push(
-            <span
-              key={index}
-              className="phonenumber-link"
-              onClick={() => (window.location.href = `tel:${word}`)}
-            >
-              {word}
+            <span key={`${textIndex}-${index}`}>
+              {cleanedWord}
+              {lastChar}{" "}
             </span>
           );
+
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
         }
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
-      } else {
-        const punctuation = ['.', ',', '-'];
-        let cleanedWord = word;
-        let lastChar = "";
-        // Check if the word ends with punctuation, and remove only comma and dot
-        if (punctuation.includes(word.slice(-1))) {
-          lastChar = word.slice(-1);
-          cleanedWord = word.slice(0, -1);
-        }
-        content.push(
-          <span key={index}>
-            {cleanedWord}{lastChar}{" "}
-          </span>
-        );
-      }
+      });
     });
+
+    // If there are phone numbers, create a single "TAP TO CALL" button
+    if (allPhoneNumbers.length > 0) {
+      content.push(
+        <div>
+          {allPhoneNumbers.map((phoneNumber, index) => (
+            <p
+              key={`phone-button-${index}`}
+              className={index === 0 ? "tap-to-call-button": ''}
+              onClick={() => (window.location.href = `tel:${phoneNumber}`)}
+            >
+              {index === 0 ? "TAP TO CALL": null }
+            </p>
+          ))}
+        </div>
+      );
+    }
 
     return content;
   };
@@ -189,7 +194,9 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </Typography>
           </Box>
         )}
-        {answer.firstAidVideos && openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
+        {answer.firstAidVideos && openVideo && (
+          <HatzalahVideo video={answer.firstAidVideos} />
+        )}
       </Paper>
 
       <Dialog
