@@ -1,0 +1,27 @@
+.Interactive-Questionnaire{
+ .MuiTextField-root {
+    width: 100%;
+}
+p.Interactive-Questionnaire-B {
+    color: #bfbfbf;
+    margin-bottom: 25px;
+}
+}
+
+.Interactive-Questionnaire-Btns {
+    margin: 15px 0;
+    button {
+        margin-right: 8px;
+    }
+}
+
+p.Interactive-Questionnaire-margin, .Interactive-Questionnaire-Msg {
+    font-size: 15px!important;
+    border-radius: 8px;
+    padding-bottom: 5px !important;
+}
+
+.Interactive-Questionnaire-Msg{
+    margin-top: 0px;
+    margin-bottom: 10px !important;
+}
