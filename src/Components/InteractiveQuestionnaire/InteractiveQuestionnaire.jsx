@@ -24,7 +24,7 @@ const InteractiveQuestionnaire = () => {
 
     return (
         <Paper sx={{ p: 2 }} className='Interactive-Questionnaire-Wrapper'>
-            <Typography variant='h6' sx={{ pb: 2 }}>Interactive Questionnaire</Typography>
+            <Typography variant='h6' sx={{ pb: 2 }}>Lashon Hara Awareness Questionnaire</Typography>
             {currentQuestionIndex === 0 && (
                 <Typography sx={{ pb: 2 }} className='Interactive-Questionnaire-Msg'>
                     This questionnaire is designed to help you gain a better understanding of your situation and take the best decision. Your responses have no impact on the context, and are not stored.
@@ -38,6 +38,9 @@ const InteractiveQuestionnaire = () => {
                         type="text"
                         value={responses[currentQuestionIndex]}
                         onChange={handleResponseChange}
+                        multiline
+                        minRows={1} 
+                        maxRows={Infinity} 
                     />
                 </Box>
                 {!showThankYou && (
