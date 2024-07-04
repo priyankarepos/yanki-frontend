@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
@@ -21,6 +22,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
   const [showCheckIcon, setShowCheckIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const [openVideo, setOpenVideo] = useState(true);
+  const [openDailog, setOpenDailog] = useState(false);
 
   const handleCopyClick = () => {
     const address = `Address:${answer.globalAssist.fullAddress}`;
@@ -40,58 +42,127 @@ const HatzalahGlobalAssist = ({ answer }) => {
   const renderClickableContent = (texts) => {
     const phoneRegex = /\b\d{3,}\b/g;
     let content = [];
-
-    // Create an array to hold all phone numbers found across all texts
     let allPhoneNumbers = [];
 
-    // Process each text
-    texts.forEach((text, textIndex) => {
-      const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
+    if (answer.globalAssist.phoneNumber) {
+      texts.forEach((text, textIndex) => {
+        const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
+          match.replace(/[-.]/g, "")
+        );
+
+        cleanedText.split(/\s+/).forEach((word, index, array) => {
+          if (word.match(phoneRegex)) {
+            allPhoneNumbers.push(word);
+          } else {
+            const punctuation = [".", ",", "-"];
+            let cleanedWord = word;
+            let lastChar = "";
+
+            if (punctuation.includes(word.slice(-1))) {
+              lastChar = word.slice(-1);
+              cleanedWord = word.slice(0, -1);
+            }
+
+            content.push(
+              <span key={`${textIndex}-${index}`}>
+                {cleanedWord}
+                {lastChar}{" "}
+              </span>
+            );
+
+            if (index !== array.length - 1) {
+              content.push(" ");
+            }
+          }
+        });
+      });
+    } else {
+      const cleanedText = texts.replace(/(^-|^\.)+/gm, (match) =>
         match.replace(/[-.]/g, "")
       );
 
       cleanedText.split(/\s+/).forEach((word, index, array) => {
         if (word.match(phoneRegex)) {
-          allPhoneNumbers.push(word);
+          content.push(
+            <span
+              key={index}
+              className="phonenumber-link"
+              onClick={() => (window.location.href = `tel:${word}`)}
+            >
+              {word}
+            </span>
+          );
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
         } else {
           const punctuation = [".", ",", "-"];
           let cleanedWord = word;
           let lastChar = "";
-
           if (punctuation.includes(word.slice(-1))) {
             lastChar = word.slice(-1);
             cleanedWord = word.slice(0, -1);
           }
-
           content.push(
-            <span key={`${textIndex}-${index}`}>
+            <span key={index}>
               {cleanedWord}
               {lastChar}{" "}
             </span>
           );
-
-          if (index !== array.length - 1) {
-            content.push(" ");
-          }
         }
       });
-    });
+    }
 
-    // If there are phone numbers, create a single "TAP TO CALL" button
+    const handleClickOpen = () => {
+      setOpenDailog(true);
+    };
+
+    const handleClose = () => {
+      setOpenDailog(false);
+    };
+
+    const handleCall = (phoneNumber) => {
+      window.location.href = `tel:${phoneNumber}`;
+    };
+
     if (allPhoneNumbers.length > 0) {
       content.push(
-        <div>
-          <p
-            key= "phone-button"
-            className="tap-to-call-button"
-            onClick={() =>
-              allPhoneNumbers.map((phoneNumber) => {
-                window.location.href = `tel:${phoneNumber}`;
-              })
-            }
-          >
-            TAP TO CALL
-          </p>
+        <div key="phone-buttons">
+          {allPhoneNumbers.length === 1 ? (
+            <p
+              className="tap-to-call-button"
+              onClick={() => handleCall(allPhoneNumbers[0])}
+            >
+              TAP TO CALL
+            </p>
+          ) : (
+            <p className="tap-to-call-button" onClick={handleClickOpen}>
+              TAP TO CALL
+            </p>
+          )}
+
+          <Dialog open={openDailog} onClose={handleClose}>
+            <DialogTitle>Select a number to call</DialogTitle>
+            <DialogContent>
+              {allPhoneNumbers.map((phoneNumber, index) => (
+                <p
+                  key={index}
+                  className="multiple-phone-number"
+                  onClick={() => {
+                    handleCall(phoneNumber);
+                    handleClose();
+                  }}
+                >
+                  {phoneNumber}
+                </p>
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <p className="multiple-cancel-container" onClick={handleClose}>
+                Cancel
+              </p>
+            </DialogActions>
+          </Dialog>
         </div>
       );
     }
