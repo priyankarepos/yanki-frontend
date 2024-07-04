@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
@@ -21,6 +22,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
   const [showCheckIcon, setShowCheckIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const [openVideo, setOpenVideo] = useState(true);
+  const [openDailog, setOpenDailog] = useState(false);
 
   const handleCopyClick = () => {
     const address = `Address:${answer.globalAssist.fullAddress}`;
@@ -37,28 +39,50 @@ const HatzalahGlobalAssist = ({ answer }) => {
     }, 3000);
   };
 
-  const renderClickableContent = (text) => {
-    const phoneRegex = /\b\d{10,}\b/g;
-
+  const renderClickableContent = (texts) => {
+    const phoneRegex = /\b\d{3,}\b/g;
     let content = [];
+    let allPhoneNumbers = [];
 
-    const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
-      match.replace(/[-.]/g, "")
-    );
+    if (answer.globalAssist.phoneNumber) {
+      texts.forEach((text, textIndex) => {
+        const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
+          match.replace(/[-.]/g, "")
+        );
 
-    cleanedText.split(/\s+/).forEach((word, index, array) => {
-      if (word.match(phoneRegex)) {
-        if (answer.globalAssist.phoneNumber) {
-          content.push(
-            <p
-              key={index}
-              className="tap-to-call-button"
-              onClick={() => (window.location.href = `tel:${word}`)}
-            >
-              TAP TO CALL
-            </p>
-          );
-        } else {
+        cleanedText.split(/\s+/).forEach((word, index, array) => {
+          if (word.match(phoneRegex)) {
+            allPhoneNumbers.push(word);
+          } else {
+            const punctuation = [".", ",", "-"];
+            let cleanedWord = word;
+            let lastChar = "";
+
+            if (punctuation.includes(word.slice(-1))) {
+              lastChar = word.slice(-1);
+              cleanedWord = word.slice(0, -1);
+            }
+
+            content.push(
+              <span key={`${textIndex}-${index}`}>
+                {cleanedWord}
+                {lastChar}{" "}
+              </span>
+            );
+
+            if (index !== array.length - 1) {
+              content.push(" ");
+            }
+          }
+        });
+      });
+    } else {
+      const cleanedText = texts.replace(/(^-|^\.)+/gm, (match) =>
+        match.replace(/[-.]/g, "")
+      );
+
+      cleanedText.split(/\s+/).forEach((word, index, array) => {
+        if (word.match(phoneRegex)) {
           content.push(
             <span
               key={index}
@@ -68,26 +92,80 @@ const HatzalahGlobalAssist = ({ answer }) => {
               {word}
             </span>
           );
+          if (index !== array.length - 1) {
+            content.push(" ");
+          }
+        } else {
+          const punctuation = [".", ",", "-"];
+          let cleanedWord = word;
+          let lastChar = "";
+          if (punctuation.includes(word.slice(-1))) {
+            lastChar = word.slice(-1);
+            cleanedWord = word.slice(0, -1);
+          }
+          content.push(
+            <span key={index}>
+              {cleanedWord}
+              {lastChar}{" "}
+            </span>
+          );
         }
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
-      } else {
-        const punctuation = ['.', ',', '-'];
-        let cleanedWord = word;
-        let lastChar = "";
-        // Check if the word ends with punctuation, and remove only comma and dot
-        if (punctuation.includes(word.slice(-1))) {
-          lastChar = word.slice(-1);
-          cleanedWord = word.slice(0, -1);
-        }
-        content.push(
-          <span key={index}>
-            {cleanedWord}{lastChar}{" "}
-          </span>
-        );
-      }
-    });
+      });
+    }
+
+    const handleClickOpen = () => {
+      setOpenDailog(true);
+    };
+
+    const handleClose = () => {
+      setOpenDailog(false);
+    };
+
+    const handleCall = (phoneNumber) => {
+      window.location.href = `tel:${phoneNumber}`;
+    };
+
+    if (allPhoneNumbers.length > 0) {
+      content.push(
+        <div key="phone-buttons">
+          {allPhoneNumbers.length === 1 ? (
+            <p
+              className="tap-to-call-button"
+              onClick={() => handleCall(allPhoneNumbers[0])}
+            >
+              TAP TO CALL
+            </p>
+          ) : (
+            <p className="tap-to-call-button" onClick={handleClickOpen}>
+              TAP TO CALL
+            </p>
+          )}
+
+          <Dialog open={openDailog} onClose={handleClose}>
+            <DialogTitle>Select a number to call</DialogTitle>
+            <DialogContent>
+              {allPhoneNumbers.map((phoneNumber, index) => (
+                <p
+                  key={index}
+                  className="multiple-phone-number"
+                  onClick={() => {
+                    handleCall(phoneNumber);
+                    handleClose();
+                  }}
+                >
+                  {phoneNumber}
+                </p>
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <p className="multiple-cancel-container" onClick={handleClose}>
+                Cancel
+              </p>
+            </DialogActions>
+          </Dialog>
+        </div>
+      );
+    }
 
     return content;
   };
@@ -189,7 +267,9 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </Typography>
           </Box>
         )}
-        {answer.firstAidVideos && openVideo && <HatzalahVideo video={answer.firstAidVideos} />}
+        {answer.firstAidVideos && openVideo && (
+          <HatzalahVideo video={answer.firstAidVideos} />
+        )}
       </Paper>
 
       <Dialog

@@ -18,6 +18,7 @@ import HatzalahGlobalAssist from "../Components/Hatzalah/HatzalahGlobalAssist";
 import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant";
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
+import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
 
 const SearchHistoryItem = forwardRef(
   ({ query, response, fetchRemainingMessage, remainingMsgData }, ref) => {
@@ -58,17 +59,15 @@ const SearchHistoryItem = forwardRef(
     return (
       <div
         ref={ref}
-        className={`search-history-item ${
-          isTorahAnswer || isGovadenAnswer ? "with-response" : ""
-        }`}
+        className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? "with-response" : ""
+          }`}
       >
         <Paper elevation={3} className="search-query" dir={direction}>
           <Box className="search-query-container">
             <ChatBubbleOutlineIcon
               fontSize="small"
-              className={`marginX-8 ${
-                activeTab === 0 ? "white-color" : "sky-blue-color"
-              }`}
+              className={`marginX-8 ${activeTab === 0 ? "white-color" : "sky-blue-color"
+                }`}
             />
             <Typography
               className={activeTab === 0 ? "white-color" : "sky-blue-color"}
@@ -235,6 +234,12 @@ const SearchHistoryItem = forwardRef(
             </div>
           </Paper>
         )}
+        {response?.isSucess && response?.isLashonHara && (<Paper elevation={3} className="marginBottom-10">
+          <div className="chat-bubble assistant-bubble">
+            <InteractiveQuestionnaire />
+          </div>
+        </Paper>)}
+
       </div>
     );
   }
