@@ -54,6 +54,7 @@ import MembershipPage from "./Components/MembershipPortal/MembershipPage";
 import PaymentSuccessPage from "./Components/MembershipPortal/PaymentSuccessPage";
 import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage";
 import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionCreated";
+import ChangeLanguage from "./Pages/ChangeLanguage";
 
 // Exporting context
 export const Context = createContext("");
@@ -648,6 +649,16 @@ function App() {
                       element={
                         <UserPagesProtection>
                           <PaymentFailurePage />
+                        </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/change-language"
+                      element={
+                        <UserPagesProtection>
+                          <UserPageLayout>
+                            <ChangeLanguage />
+                          </UserPageLayout>
                         </UserPagesProtection>
                       }
                     />

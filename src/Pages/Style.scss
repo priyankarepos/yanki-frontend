@@ -285,7 +285,8 @@
     margin: 0 auto 30px auto;
 }
 
-.policy-container, .termsofUse-container {
+.policy-container,
+.termsofUse-container {
     max-width: 800px;
     margin: auto;
 }
@@ -338,4 +339,36 @@
 
 .partnership-logos-container img {
     object-fit: contain;
+}
+
+.change-language-box button {
+    display: block;
+    width: 100%;
+    margin: 18px 0;
+    text-align: left;
+    position: relative;
+
+    span {
+        text-align: right;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        transform: translate(-15px, 10px);
+
+        svg {
+            color: #0AB27D;
+            font-size: 25px;
+        }
+    }
+}
+
+.bold {
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}
+
+.minus-margin{
+    margin-bottom: -10px !important;
+    margin-top: -10px !important;
 }
