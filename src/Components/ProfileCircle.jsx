@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -24,6 +24,24 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import axios from "axios";
 import "../Components/AnswerStyle.scss";
 import DeleteAccountConfirmDialog from "./DeleteAccountDialog/DeleteAccountDialog";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PhoneMissedIcon from '@mui/icons-material/PhoneMissed';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import TranslateIcon from '@mui/icons-material/Translate';
+import EmailIcon from "../Assets/images/mail-01.svg"
+import AccountSettingIcon from "../Assets/images/account-setting-03.svg"
+import LogoutIcon from "../Assets/images/logout-02.svg"
+import SubscriptionIcon from "../Assets/images/Frame.svg"
+import AiCustomizationIcon from "../Assets/images/list-setting.svg"
+import NotificationIcon from "../Assets/images/notification-01.svg"
+import RightArrowIcon from "../Assets/images/right arrow 6.svg"
+import ChangePassword from "../Assets/images/square-lock-01.svg"
+import ChangePhone from "../Assets/images/arrow-reload-vertical.svg"
+import ChangeLanguage from "../Assets/images/language-square.svg"
+import AccountDelete from "../Assets/images/delete-02.svg"
+import BackArrowIcon from "../Assets/images/back-arrow.svg"
+
 
 export default function ProfielCircle() {
   const navigate = useNavigate();
@@ -57,12 +75,18 @@ export default function ProfielCircle() {
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
   const userStatus = parsedUserObject?.userObject?.status || "";
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const open = Boolean(anchorEl);
+  const accountSettingsIconRef = useRef(null); 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleAccountSettingClick = () => {
+    setSettingsOpen(!settingsOpen);
+  };
+
   const handleClose = (e) => {
-    if (e?.target?.name === "theme-switcher") {
+    if (e?.target?.dataset?.noclose || accountSettingsIconRef.current?.contains(e.target)) {
       return;
     } else {
       setAnchorEl(null);
@@ -70,45 +94,41 @@ export default function ProfielCircle() {
   };
 
   const onClickChangePassword = () => {
-    handleClose();
     navigate("/change-password");
   };
 
   const onClickChangeNumber = () => {
-    handleClose();
     navigate("/change-phone-number");
   };
 
+  const onClickChangeLanguage = () => {
+    navigate("/change-language");
+  };
+
   const onClickAICustomization = () => {
-    handleClose();
     navigate("/ai-customization");
   };
 
   const onClickSubscribeNotification = () => {
-    handleClose();
     navigate("/notification");
   };
 
   const onClickAdmin = () => {
-    handleClose();
     navigate("/admin/search-query-report");
   };
 
   const onClickMembershipPortal = () => {
-    handleClose();
     navigate("/membership");
   }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-    handleClose();
     navigate("/auth");
     sessionStorage.removeItem("selectedChatId");
   };
 
   const onClickNetworkingInterface = () => {
-    handleClose();
     if (userStatus === "Pending" || userStatus === "Rejected") {
       navigate("/enterprise-status");
     } else if (userStatus === "Approved") {
@@ -150,144 +170,223 @@ export default function ProfielCircle() {
     setLoading(false);
   };
 
+  const showLogo = location.pathname !== "/" &&
+    (location.pathname === "/notification" ||
+      location.pathname === "/membership" ||
+      location.pathname === "/ai-customization") &&
+    location.pathname !== "/change-password";
+
+  const showAccountSettings = location.pathname === "/" ||
+    location.pathname === "/notification" ||
+    location.pathname === "/membership" ||
+    location.pathname === "/ai-customization";
+
   return (
     <React.Fragment>
       <Container maxWidth="xl">
         <Box className="user-top-header" sx={{ py: 2 }}>
           <Typography className="profile-logo" onClick={() => navigate("/")}>
-            {location.pathname !== "/" && (
+            {showLogo && (
               <img
-                src={
-                  activeTab === 0
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
+                src={activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"}
                 className="profile-yanki-logo"
                 alt="logo"
               />
             )}
           </Typography>
-          <Tooltip title="Account settings">
-            <IconButton
-              onClick={handleClick}
-              size="small"
-              sx={{ ml: 2 }}
-              aria-controls={open ? "account-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-            >
-              <Avatar
-                sx={{
+          {showAccountSettings && (
+            <Tooltip title="Account settings">
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    backgroundColor: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
+                  }}
+                >
+                  <PersonIcon />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+        {!settingsOpen ? (
+          <Menu
+            className={activeTab === 0 && "menu-li-color"}
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
                   width: 32,
                   height: 32,
-                  backgroundColor:
-                    activeTab === 1 ? "#8bbae5" : "defaultIconColor",
-                }}
-              >
-                <PersonIcon />
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-        </Box>
-        <Menu
-          anchorEl={anchorEl}
-          id="account-menu"
-          open={open}
-          onClose={handleClose}
-          onClick={handleClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              mt: 1.5,
-              "& .MuiAvatar-root": {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
+                  ml: -0.5,
+                  mr: 1,
+                },
               },
-            },
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        >
-          <MenuItem>
-            <ListItemIcon>
-              <EmailOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            {/* This ensures that the text doesn't wrap to the next line */}
-            <span className="email-profile">
-              {parsedUserObject?.userObject?.userEmail || ""}
-            </span>
-          </MenuItem>
-          <MenuItem onClick={onClickChangePassword}>
-            <ListItemIcon>
-              <LockOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            Change Password
-          </MenuItem>
-          {userRoles === "Admin" && activeTab === 0 && (
-            <MenuItem onClick={onClickAdmin}>
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem>
               <ListItemIcon>
-                <AdminPanelSettingsIcon fontSize="small" />
+                {activeTab === 0 ? <img src={EmailIcon} alt='EmailIcon' /> :
+                  <EmailOutlinedIcon fontSize="small" />}
               </ListItemIcon>
-              Go To Admin Panel
+              <span className="email-profile">
+                {parsedUserObject?.userObject?.userEmail || ""}
+              </span>
             </MenuItem>
-          )}
-          {userRoles === "Enterprise" && activeTab === 1 && (
-            <MenuItem onClick={onClickNetworkingInterface}>
+            <MenuItem
+              onClick={handleAccountSettingClick}
+              data-noclose="true"
+              ref={accountSettingsIconRef}
+            >
               <ListItemIcon>
-                <Diversity2Icon fontSize="small" />
+                {activeTab === 0 ? <img src={AccountSettingIcon} alt='AccountSettingIcon' /> :
+                  <ManageAccountsIcon fontSize="small" />}
               </ListItemIcon>
-              Networking Interface
+              Account Settings
+              <ListItemIcon className="account-setting-menu">
+                {activeTab === 0 ? <img src={RightArrowIcon} alt='EmailIcon' /> :
+                  <KeyboardArrowRightIcon fontSize="small" />}
+              </ListItemIcon>
             </MenuItem>
-          )}
-          <MenuItem onClick={onClickChangeNumber}>
-            <ListItemIcon>
-              <LockOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            Change Phone Number
-          </MenuItem>
-          {userRoles !== "Enterprise" && (
-            <MenuItem onClick={onClickSubscribeNotification}>
+
+            {userRoles === "Admin" && activeTab === 0 && (
+              <MenuItem onClick={onClickAdmin}>
+                <ListItemIcon>
+                  <AdminPanelSettingsIcon className={activeTab === 0 && "go-to-admin-icon"} fontSize="small" />
+                </ListItemIcon>
+                Go To Admin Panel
+              </MenuItem>
+            )}
+            {userRoles === "Enterprise" && activeTab === 1 && (
+              <MenuItem onClick={onClickNetworkingInterface}>
+                <ListItemIcon>
+                  <Diversity2Icon className={activeTab === 0 && "go-to-admin-icon"} fontSize="small" />
+                </ListItemIcon>
+                Networking Interface
+              </MenuItem>
+            )}
+            {userRoles !== "Enterprise" && (
+              <>
+                <MenuItem onClick={onClickSubscribeNotification}>
+                  <ListItemIcon>
+                    {activeTab === 0 ? <img src={NotificationIcon} alt='LogoutIcon' /> :
+                      <NotificationsNoneIcon />}
+                  </ListItemIcon>
+                  Notification Settings
+                </MenuItem>
+                <MenuItem onClick={onClickAICustomization}>
+                  <ListItemIcon>
+                    {activeTab === 0 ? <img src={AiCustomizationIcon} alt='LogoutIcon' /> :
+                      <TuneIcon />}
+                  </ListItemIcon>
+                  AI Customization
+                </MenuItem>
+              </>
+            )}
+            {userRoles !== "Admin" && <Divider sx={{ mx: 2 }} />}
+            {userRoles !== "Admin" && (
+              <MenuItem onClick={onClickMembershipPortal}>
+                <ListItemIcon>
+                  {activeTab === 0 ? <img src={SubscriptionIcon} alt='SubscriptionIcon' /> :
+                    <SubscriptionsIcon fontSize="small" />}
+                </ListItemIcon>
+                Subscription Plan
+              </MenuItem>
+            )}
+            <Divider sx={{ mx: 2 }} />
+            <MenuItem onClick={onClickLogout}>
               <ListItemIcon>
-                <NotificationsNoneIcon />
+                {activeTab === 0 ? <img src={LogoutIcon} alt='LogoutIcon' /> :
+                  <Logout fontSize="small" />}
               </ListItemIcon>
-              Notification Settings
+              Logout
             </MenuItem>
-          )}
-          {userRoles !== "Enterprise" && (
-            <MenuItem onClick={onClickAICustomization}>
+          </Menu>
+        ) : (
+          <Menu
+            className={activeTab === 0 && "menu-li-color"}
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem
+              onClick={handleAccountSettingClick}
+              data-noclose="true"
+              ref={accountSettingsIconRef}
+            >
               <ListItemIcon>
-                <TuneIcon />
+                {activeTab === 0 ? <img src={BackArrowIcon} alt='BackArrowIcon' /> :
+                  <KeyboardArrowLeftIcon fontSize="small" />}
               </ListItemIcon>
-              AI Customization
+              Account Settings
             </MenuItem>
-          )}
-          {userRoles !== "Admin" &&
-            <MenuItem onClick={onClickMembershipPortal}>
+            <Divider sx={{ mx: 2 }} />
+            <MenuItem onClick={onClickChangePassword}>
               <ListItemIcon>
-                <SubscriptionsIcon fontSize="small" />
+                {activeTab === 0 ? <img src={ChangePassword} alt='ChangePassword' /> :
+                  <LockOutlinedIcon fontSize="small" />}
               </ListItemIcon>
-              Subscription Plan
+              Change Password
             </MenuItem>
-          }
-          <Divider />
-          <MenuItem onClick={handleDeleteAccount}>
-            <ListItemIcon>
-              <DeleteOutlineIcon fontSize="small" />
-            </ListItemIcon>
-            Delete Your Account
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={onClickLogout}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
+            <MenuItem onClick={onClickChangeNumber}>
+              <ListItemIcon>
+                {activeTab === 0 ? <img src={ChangePhone} alt='ChangePhone' /> :
+                  <PhoneMissedIcon fontSize="small" />}
+              </ListItemIcon>
+              Change Phone Number
+            </MenuItem>
+            <MenuItem onClick={onClickChangeLanguage}>
+              <ListItemIcon>
+                {activeTab === 0 ? <img src={ChangeLanguage} alt='ChangeLanguage' /> :
+                  <TranslateIcon fontSize="small" />}
+              </ListItemIcon>
+              Change Language
+            </MenuItem>
+            <MenuItem onClick={handleDeleteAccount}>
+              <ListItemIcon>
+                {activeTab === 0 ? <img src={AccountDelete} alt='AccountDelete' /> :
+                  <DeleteOutlineIcon fontSize="small" />}
+              </ListItemIcon>
+              Delete Your Account
+            </MenuItem>
+          </Menu>
+        )}
       </Container>
       <DeleteAccountConfirmDialog
         open={confirmDialogOpen}

@@ -215,7 +215,7 @@ const SubscribeNotification = ({ answer }) => {
     };
 
     return (
-        <Box>
+        <Box sx={{mb:2}}>
             <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
