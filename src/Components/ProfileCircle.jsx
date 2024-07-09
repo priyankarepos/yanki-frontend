@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -18,7 +18,7 @@ import Diversity2Icon from "@mui/icons-material/Diversity2";
 import { Context } from "../App";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import TuneIcon from "@mui/icons-material/Tune";
-import { Modal, Typography, Snackbar, MenuList } from "@mui/material";
+import { Modal, Typography, Snackbar } from "@mui/material";
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import axios from "axios";
@@ -27,6 +27,7 @@ import DeleteAccountConfirmDialog from "./DeleteAccountDialog/DeleteAccountDialo
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PhoneMissedIcon from '@mui/icons-material/PhoneMissed';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import TranslateIcon from '@mui/icons-material/Translate';
 import EmailIcon from "../Assets/images/mail-01.svg"
 import AccountSettingIcon from "../Assets/images/account-setting-03.svg"
@@ -39,6 +40,7 @@ import ChangePassword from "../Assets/images/square-lock-01.svg"
 import ChangePhone from "../Assets/images/arrow-reload-vertical.svg"
 import ChangeLanguage from "../Assets/images/language-square.svg"
 import AccountDelete from "../Assets/images/delete-02.svg"
+import BackArrowIcon from "../Assets/images/back-arrow.svg"
 
 
 export default function ProfielCircle() {
@@ -75,6 +77,7 @@ export default function ProfielCircle() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const open = Boolean(anchorEl);
+  const accountSettingsIconRef = useRef(null); 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -83,7 +86,7 @@ export default function ProfielCircle() {
   };
 
   const handleClose = (e) => {
-    if (e?.target?.dataset?.noclose) {
+    if (e?.target?.dataset?.noclose || accountSettingsIconRef.current?.contains(e.target)) {
       return;
     } else {
       setAnchorEl(null);
@@ -91,50 +94,41 @@ export default function ProfielCircle() {
   };
 
   const onClickChangePassword = () => {
-    handleClose();
     navigate("/change-password");
   };
 
   const onClickChangeNumber = () => {
-    handleClose();
     navigate("/change-phone-number");
   };
 
   const onClickChangeLanguage = () => {
-    handleClose();
     navigate("/change-language");
   };
 
   const onClickAICustomization = () => {
-    handleClose();
     navigate("/ai-customization");
   };
 
   const onClickSubscribeNotification = () => {
-    handleClose();
     navigate("/notification");
   };
 
   const onClickAdmin = () => {
-    handleClose();
     navigate("/admin/search-query-report");
   };
 
   const onClickMembershipPortal = () => {
-    handleClose();
     navigate("/membership");
   }
 
   const onClickLogout = () => {
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-    handleClose();
     navigate("/auth");
     sessionStorage.removeItem("selectedChatId");
   };
 
   const onClickNetworkingInterface = () => {
-    handleClose();
     if (userStatus === "Pending" || userStatus === "Rejected") {
       navigate("/enterprise-status");
     } else if (userStatus === "Approved") {
@@ -257,22 +251,21 @@ export default function ProfielCircle() {
                 {parsedUserObject?.userObject?.userEmail || ""}
               </span>
             </MenuItem>
-            <MenuList>
-              <MenuItem
-                onClick={handleAccountSettingClick}
-                data-noclose="true"
-              >
-                <ListItemIcon>
-                  {activeTab === 0 ? <img src={AccountSettingIcon} alt='AccountSettingIcon' /> :
-                    <ManageAccountsIcon fontSize="small" />}
-                </ListItemIcon>
-                Account Setting
-                <ListItemIcon className="account-setting-menu">
-                  {activeTab === 0 ? <img src={RightArrowIcon} alt='EmailIcon' /> :
-                    <KeyboardArrowRightIcon fontSize="small" />}
-                </ListItemIcon>
-              </MenuItem>
-            </MenuList>
+            <MenuItem
+              onClick={handleAccountSettingClick}
+              data-noclose="true"
+              ref={accountSettingsIconRef}
+            >
+              <ListItemIcon>
+                {activeTab === 0 ? <img src={AccountSettingIcon} alt='AccountSettingIcon' /> :
+                  <ManageAccountsIcon fontSize="small" />}
+              </ListItemIcon>
+              Account Settings
+              <ListItemIcon className="account-setting-menu">
+                {activeTab === 0 ? <img src={RightArrowIcon} alt='EmailIcon' /> :
+                  <KeyboardArrowRightIcon fontSize="small" />}
+              </ListItemIcon>
+            </MenuItem>
 
             {userRoles === "Admin" && activeTab === 0 && (
               <MenuItem onClick={onClickAdmin}>
@@ -308,6 +301,7 @@ export default function ProfielCircle() {
                 </MenuItem>
               </>
             )}
+            {userRoles !== "Admin" && <Divider sx={{ mx: 2 }} />}
             {userRoles !== "Admin" && (
               <MenuItem onClick={onClickMembershipPortal}>
                 <ListItemIcon>
@@ -317,7 +311,7 @@ export default function ProfielCircle() {
                 Subscription Plan
               </MenuItem>
             )}
-            <Divider />
+            <Divider sx={{ mx: 2 }} />
             <MenuItem onClick={onClickLogout}>
               <ListItemIcon>
                 {activeTab === 0 ? <img src={LogoutIcon} alt='LogoutIcon' /> :
@@ -354,13 +348,15 @@ export default function ProfielCircle() {
             <MenuItem
               onClick={handleAccountSettingClick}
               data-noclose="true"
+              ref={accountSettingsIconRef}
             >
               <ListItemIcon>
-                <KeyboardArrowRightIcon fontSize="small" />
+                {activeTab === 0 ? <img src={BackArrowIcon} alt='BackArrowIcon' /> :
+                  <KeyboardArrowLeftIcon fontSize="small" />}
               </ListItemIcon>
-              Account Setting
+              Account Settings
             </MenuItem>
-            <Divider />
+            <Divider sx={{ mx: 2 }} />
             <MenuItem onClick={onClickChangePassword}>
               <ListItemIcon>
                 {activeTab === 0 ? <img src={ChangePassword} alt='ChangePassword' /> :
