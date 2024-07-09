@@ -1,3 +1,4 @@
+import React from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -19,6 +20,8 @@ import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import YankiLogo from "../Assets/images/yanki-logo2.png"
+import "./Style.scss";
 
 const ChangePasswordPage = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -87,6 +90,13 @@ const ChangePasswordPage = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
+          <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
+              <img
+                src={YankiLogo}
+                className="profile-yanki-logo"
+                alt="logo"
+              />
+          </Typography>
             <Typography
               component="h1"
               variant="h5"
@@ -143,7 +153,7 @@ const ChangePasswordPage = () => {
                       type: showCurrentPassword ? "text" : "password",
                     }}
                     fullWidth
-                    className="marginBottom-30"
+                    className="marginBottom-20"
                     error={!!errors["currentPassword"]}
                     helperText={
                       errors["currentPassword"]
@@ -196,7 +206,7 @@ const ChangePasswordPage = () => {
                       type: showNewPassword ? "text" : "password",
                     }}
                     fullWidth
-                    className="marginBottom-10"
+                    className="marginBottom-20"
                     error={!!errors["newPassword"]}
                     helperText={
                       errors["newPassword"] ? errors["newPassword"].message : ""
@@ -275,7 +285,7 @@ const ChangePasswordPage = () => {
               <Button
                 variant="contained"
                 fullWidth
-                className="marginBottom-20"
+                className="marginBottom-20 bold"
                 type="submit"
               >
                 Confirm
@@ -287,7 +297,7 @@ const ChangePasswordPage = () => {
               underline="none"
               variant="body1"
             >
-              <div className="text-center cursor-pointer">Cancel</div>
+              <div className="text-center cursor-pointer bold">Cancel</div>
             </Link>
           </Box>
         </Box>

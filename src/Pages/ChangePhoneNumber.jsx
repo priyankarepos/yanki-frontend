@@ -14,6 +14,7 @@ import "react-phone-input-2/lib/style.css";
 import { FormHelperText } from "@mui/material";
 import "./Style.scss";
 import axios from "axios";
+import YankiLogo from "../Assets/images/yanki-logo2.png"
 
 const ChangePhoneNumber = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -95,6 +96,13 @@ const ChangePhoneNumber = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
+          <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
+              <img
+                src={YankiLogo}
+                className="profile-yanki-logo"
+                alt="logo"
+              />
+          </Typography>
             <Typography
               component="h1"
               variant="h5"
@@ -103,7 +111,7 @@ const ChangePhoneNumber = () => {
               Change Phone Number
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <InputLabel>Current Phone:</InputLabel>
+              <InputLabel sx={{pb:1}}>Current Phone:</InputLabel>
               <Controller
                 control={control}
                 name="currentSignInPhone"
@@ -135,7 +143,7 @@ const ChangePhoneNumber = () => {
                   </div>
                 )}
               />
-              <InputLabel>New Phone:</InputLabel>
+              <InputLabel sx={{pb:1}}>New Phone:</InputLabel>
               <Controller
                 control={control}
                 name="signInPhone"
@@ -185,7 +193,7 @@ const ChangePhoneNumber = () => {
               <Button
                 variant="contained"
                 fullWidth
-                className="marginBottom-20"
+                className="marginBottom-20 bold"
                 type="submit"
               >
                 Update
@@ -197,7 +205,7 @@ const ChangePhoneNumber = () => {
               underline="none"
               variant="body1"
             >
-              <div className="text-center cursor-pointer">Cancel</div>
+              <div className="text-center cursor-pointer bold">Cancel</div>
             </Link>
           </Box>
         </Box>

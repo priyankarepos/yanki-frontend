@@ -269,16 +269,19 @@ p.kosher-text strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  
 }
 
 .profile-yanki-logo {
-  width: 10em;
+  width: 200px;
+  margin-bottom: -10px;
+
 }
 
 .user-top-header {
   display: flex;
   text-align: center;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -324,3 +327,18 @@ p.kosher-text strong {
       display: none;
   }
 }
+
+.account-setting-menu{
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.go-to-admin-icon{
+color: #adbac6;
+}
+
+.menu-li-color li.MuiButtonBase-root.MuiMenuItem-root{
+  color: #dddddd;
+  }
+
+
