@@ -55,6 +55,7 @@ import PaymentSuccessPage from "./Components/MembershipPortal/PaymentSuccessPage
 import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage";
 import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionCreated";
 import ChangeLanguage from "./Pages/ChangeLanguage";
+import UserChatList from "./Admin/AdminChat/UserChatList";
 
 // Exporting context
 export const Context = createContext("");
@@ -514,6 +515,24 @@ function App() {
                         </UserPagesProtection>
                       }
                     />
+                    <Route
+                      path="/admin/chat"
+                      element={
+                        <UserPagesProtection>
+                          <UserChatList />
+                        </UserPagesProtection>
+                      }
+                    />
+
+                    <Route
+                      path="/admin/chat/:id"
+                      element={
+                        <UserPagesProtection>
+                          <UserChatList />
+                        </UserPagesProtection>
+                      }
+                    />
+
                     <Route
                       path="/admin/enterprise-categories"
                       element={

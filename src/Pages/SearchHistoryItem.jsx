@@ -208,14 +208,14 @@ const SearchHistoryItem = forwardRef(
           </Paper>
         )}
         {isPersonalAssistant && (
-          <Paper elevation={3} className="marginBottom-10">
+          <div className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
               <PersonalAssistant
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
               />
             </div>
-          </Paper>
+          </div>
         )}
         {response?.isSuccess &&
           response?.isViewReminder &&
