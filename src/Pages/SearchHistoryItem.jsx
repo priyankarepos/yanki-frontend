@@ -19,6 +19,7 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
+import MikvahAnswer from "../Components/MikvahList/MikvahList";
 
 const SearchHistoryItem = forwardRef(
   ({ query, response, fetchRemainingMessage, remainingMsgData }, ref) => {
@@ -239,7 +240,11 @@ const SearchHistoryItem = forwardRef(
             <InteractiveQuestionnaire />
           </div>
         </Paper>)}
-
+        <Paper elevation={3} className="marginBottom-10">
+          <div className="chat-bubble assistant-bubble">
+            <MikvahAnswer />
+          </div>
+        </Paper>
       </div>
     );
   }
