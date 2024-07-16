@@ -164,7 +164,7 @@ const YoutubeContent = ({ answer }) => {
 
         <Carousel responsive={responsive}>
           {showYouTubeVideos ||
-            (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSucess)
+            (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSuccess)
             ? answer?.vimeoVideoDetails.map((item, index) => (
               <Paper key={item.title}>
                 <StyledCarouselItem key={item._id} className="marginRight-5">
