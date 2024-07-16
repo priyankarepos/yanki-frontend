@@ -263,7 +263,7 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    if (queryAnswer?.isSucess === false) {
+    if (queryAnswer?.isSuccess === false) {
       setIsError(true);
       setErrorMsg(queryAnswer?.message);
     }
@@ -370,7 +370,7 @@ const NewHomePageMui = () => {
             id: chatEntry.id,
             contentResponse: gptResponse.contentResponse,
             godavenPrayerDetails: gptResponse.godavenPrayerDetails,
-            isSucess: gptResponse.isSucess,
+            isSuccess: gptResponse.isSuccess,
             message: gptResponse.message,
             torahAnytimeLectures: gptResponse.torahAnytimeLectures,
             vimeoVideoDetails: gptResponse.vimeoVideoDetails,
