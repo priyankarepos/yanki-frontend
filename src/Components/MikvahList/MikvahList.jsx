@@ -78,7 +78,7 @@ const MikvahAnswer = ({ answer }) => {
                             <Box sx={{ margin: 1 }} className={messages.mikvahDetailBox}>
                                 {mikvahDetails ? (
                                     <Grid container spacing={2}>
-                                        <Grid item xs={6}>
+                                        <Grid item lg={6} md={6} sm={6} xs={12}>
                                             <Box className={messages.mikvahDetailInfo}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
                                                     <Home />
@@ -116,7 +116,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Box>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item lg={6} md={6} sm={6} xs={12}>
                                             <Box className={messages.mikvahDetailInfo}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
                                                     <Business />
