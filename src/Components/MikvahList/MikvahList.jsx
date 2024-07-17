@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
     Table,
     TableBody,
@@ -12,184 +13,159 @@ import {
     Box,
     Tooltip,
     Grid,
+    Snackbar,
 } from "@mui/material";
 import {
-    LocationCity,
     Home,
-    Public,
-    MyLocation,
     Business,
-} from "@mui/icons-material";
+    Phone,
+    Language,
+    Schedule,
+} from '@mui/icons-material';
+import PanToolAltIcon from '@mui/icons-material/PanToolAlt';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import "../../Pages/NewHomePageMui/NewHomePageStyle.scss";
 import "./MikvahAnswer.scss";
+import { apiUrls, messages } from "../../Utils/stringConstant/stringConstant";
 
-const MikvahAnswer = () => {
-    const result = [
-        {
-            "id": "206",
-            "name": "Mikvah Of Washington Heights",
-            "shul": "K'HAL ADATH JESHURUN",
-            "type": "Bor Min HaTzad - Side by Side - Bor Geshomim on the side of the immersion pool",
-            "address": "4351 Broadway",
-            "city": "New York",
-            "state": "NY",
-            "country": "United States",
-            "latitude": "40.8531837463379",
-            "longitude": "-73.9342346191406"
-        },
-        {
-            "id": "766",
-            "name": "Fort Lee Mikvah",
-            "shul": "BEIT YOSEF CONGREGATION/YOUNG ISRAEL OF FORT LEE",
-            "type": "Bor Min HaTzad - Side by Side - Bor Geshomim on the side of the immersion pool",
-            "address": "313 Tom Hunter Road",
-            "city": "Fort Lee",
-            "state": "NJ",
-            "country": "United States",
-            "latitude": "40.848991394043",
-            "longitude": "-73.9751434326172"
-        },
-        {
-            "id": "207",
-            "name": "Jacques And Hanna Schwalbe Mikvah",
-            "shul": "CHABAD OF THE UPPER EAST SIDE",
-            "type": "Built Both Ways: Bor Geshomim below immersion pool and Bor Geshomim on the side of the immersion pool",
-            "address": "419 East 77th Street",
-            "city": "New York",
-            "state": "NY",
-            "country": "United States",
-            "latitude": "40.770877",
-            "longitude": "-73.9527782"
-        }
-    ];
+const MikvahAnswer = ({ answer }) => {
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const Row = ({ row }) => {
         const [open, setOpen] = useState(false);
+        const [mikvahDetails, setMikvahDetails] = useState(null);
+
+        useEffect(() => {
+            if (open) {
+                axios.get(`${apiUrls.mikvahDetails}`, { params: { mikvahId: row.id } })
+                    .then(response => {
+                        setMikvahDetails(response.data);
+                    })
+                    .catch(error => {
+                        setSnackbarMessage(messages.mikvahDetailsError, error);
+                        setSnackbarOpen(true);
+                    });
+            }
+        }, [open, row.id]);
 
         return (
             <>
                 <TableRow
-                    sx={{
-                        "& > *": { borderBottom: "1px solid #3f7baf", cursor: "pointer" },
-                    }}
                     onClick={() => setOpen(!open)}
-                    className="godaven-style"
+                    sx={{cursor:messages.cursorPointer}}
                 >
                     <TableCell>
                         <p>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
                     </TableCell>
-                    <TableCell component="th" scope="row">
+                    <TableCell>
                         <Tooltip title={row.name}>
-                            <span>{row.name}</span>
+                            <span>{row.name ? row.name : messages.notAvailable}</span>
                         </Tooltip>
                     </TableCell>
                     <TableCell>
-                        <Tooltip title={row.address}>
-                            <div className="govaden-answer-tooltip">
-                                {row.address}
+                        <Tooltip title={row.address.trim() || messages.notAvailable}>
+                            <div className={messages.govadenAnswerTooltip}>
+                                {row.address.trim() ? row.address : messages.notAvailable}
                             </div>
                         </Tooltip>
                     </TableCell>
-                    <TableCell>5 km</TableCell>
                 </TableRow>
-                <TableRow sx={{ "& > *": { borderBottom: "1px solid #3f7baf" } }}>
-                    <TableCell className='govaden-answer-prayer-table' colSpan={6}>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 1 }} className="mikvah-detail-box">
-                                <Typography variant="h6" gutterBottom component="div" sx={{ pb: 2 }}>
-                                    Detail Data
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={6}>
-                                        <Box className="mikvah-detail-info">
-                                            <Typography className="mikvah-detail-info-logo">
-                                                <Business />
-                                            </Typography>
-                                            <Box className="mikvah-detail-info-content">
-                                                <Typography>
-                                                    <strong>Shul:</strong>
+                <TableRow>
+                    <TableCell sx={{ py: 0 }} colSpan={6}>
+                        <Collapse in={open} unmountOnExit>
+                            <Box sx={{ margin: 1 }} className={messages.mikvahDetailBox}>
+                                {mikvahDetails ? (
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Home />
                                                 </Typography>
-                                                <Typography>
-                                                    {row.shul}
-                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Address:</strong>
+                                                    </Typography>
+                                                    <Typography>
+                                                        {mikvahDetails.result.address.trim() ? mikvahDetails.result.address : messages.notAvailable}
+                                                    </Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Box className="mikvah-detail-info">
-                                            <Typography className="mikvah-detail-info-logo">
-                                                <Home />
-                                            </Typography>
-                                            <Box className="mikvah-detail-info-content">
-                                                <Typography>
-                                                    <strong>Type:</strong>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Phone />
                                                 </Typography>
-                                                <Typography>
-                                                    {row.type}
-                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Phone:</strong>
+                                                    </Typography>
+                                                    {mikvahDetails.result.phone1.trim() ? <><Typography>{mikvahDetails.result.phone1}</Typography>
+                                                        <Typography>{mikvahDetails.result.phone2}</Typography></> : <Typography>NA</Typography>}
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Box className="mikvah-detail-info">
-                                            <Typography className="mikvah-detail-info-logo">
-                                                <LocationCity />
-                                            </Typography>
-                                            <Box className="mikvah-detail-info-content">
-                                                <Typography>
-                                                    <strong>City:</strong>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Home />
                                                 </Typography>
-                                                <Typography>
-                                                    {row.city}
-                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Contact:</strong>
+                                                    </Typography>
+                                                    <Typography>{mikvahDetails.result.contact ? mikvahDetails.result.contact : messages.notAvailable}</Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Box className="mikvah-detail-info">
-                                            <Typography className="mikvah-detail-info-logo">
-                                                <MyLocation />
-                                            </Typography>
-                                            <Box className="mikvah-detail-info-content">
-                                                <Typography>
-                                                    <strong>State:</strong>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Business />
                                                 </Typography>
-                                                <Typography>
-                                                    {row.state}
-                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Shul:</strong>
+                                                    </Typography>
+                                                    <Typography>{mikvahDetails.result.shul.trim() ? mikvahDetails.result.shul : messages.notAvailable}</Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Box className="mikvah-detail-info">
-                                            <Typography className="mikvah-detail-info-logo">
-                                                <Public />
-                                            </Typography>
-                                            <Box className="mikvah-detail-info-content">
-                                                <Typography>
-                                                    <strong>Country:</strong>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <PanToolAltIcon />
                                                 </Typography>
-                                                <Typography>
-                                                    {row.country}
-                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Type:</strong>
+                                                    </Typography>
+                                                    <Typography>{mikvahDetails.result.type.trim() ? mikvahDetails.result.type : messages.notAvailable}</Typography>
+                                                </Box>
                                             </Box>
-                                        </Box>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Language />
+                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Website:</strong>
+                                                    </Typography>
+                                                    <Typography>{mikvahDetails.result.website.trim() ? mikvahDetails.result.website : messages.notAvailable}</Typography>
+                                                </Box>
+                                            </Box>
+                                            <Box className={messages.mikvahDetailInfo}>
+                                                <Typography className={messages.mikvahDetailInfoLogo}>
+                                                    <Schedule />
+                                                </Typography>
+                                                <Box className={messages.mikvahDetailInfoContent}>
+                                                    <Typography>
+                                                        <strong>Schedule:</strong>
+                                                    </Typography>
+                                                    <Typography>{mikvahDetails.result.schedule.trim() ? mikvahDetails.result.schedule : messages.notAvailable}</Typography>
+                                                </Box>
+                                            </Box>
+                                        </Grid>
                                     </Grid>
-                                    {/* <Grid item xs={6}>
-                                        <Typography>
-                                            <LocationOn sx={{ marginRight: 1 }} />
-                                            <strong>Latitude:</strong> {row.latitude}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Typography>
-                                            <Map sx={{ marginRight: 1 }} />
-                                            <strong>Longitude:</strong> {row.longitude}
-                                        </Typography>
-                                    </Grid> */}
-                                </Grid>
+                                ) : (
+                                    <Typography>Loading...</Typography>
+                                )}
                             </Box>
                         </Collapse>
                     </TableCell>
@@ -201,22 +177,27 @@ const MikvahAnswer = () => {
     return (
         <div>
             <TableContainer component={Paper}>
-                <Table aria-label="collapsible table">
+                <Table aria-label={messages.collapsibleTable}>
                     <TableHead>
-                        <TableRow sx={{ "& > *": { borderBottom: "1px solid #3f7baf" } }}>
+                        <TableRow>
                             <TableCell />
                             <TableCell>Name</TableCell>
                             <TableCell>Address</TableCell>
-                            <TableCell>Distance</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {result.map((row) => (
+                        {answer?.mikvahSearchResponse?.result && answer?.mikvahSearchResponse?.result.map((row) => (
                             <Row key={row.id} row={row} />
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </div>
     );
 };
