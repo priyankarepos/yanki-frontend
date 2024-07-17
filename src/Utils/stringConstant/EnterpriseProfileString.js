@@ -97,6 +97,7 @@ export const messages = {
     createAdminEnterpriseErrorclass : "error-message",
     enterpriseProfileInputField : "enterprise-input-field",
     scriptText : "script",
+    googleMapAPIFullyLoaded : "Google Maps API or places library not fully loaded.",
 };
 
 export const apiUrls = {

@@ -438,37 +438,60 @@ const EnterpriseProfile = () => {
 
     function initAutocomplete() {
       const input = document.getElementById(messages.addressElementId);
-      autocomplete = new window.google.maps.places.Autocomplete(input);
+      if (input && window.google && window.google.maps && window.google.maps.places) {
+        autocomplete = new window.google.maps.places.Autocomplete(input);
 
-      autocomplete.addListener('place_changed', () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) {
-          alert(messages.noDetailsAvailable(place.name));
-          return;
-        }
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) {
+            alert(messages.noDetailsAvailable(place.name));
+            return;
+          }
 
-        if (place.geometry) {
           setValue(messages.enterpriseAddressField, place.formatted_address);
           setValue(messages.enterpriseLatitudeField, place.geometry.location.lat());
           setValue(messages.enterpriseLongitudeField, place.geometry.location.lng());
-        }
-      });
+        });
+      } else {
+        setSnackbarMessage(messages.googleMapAPIFullyLoaded);
+        setSnackbarOpen(true)
+      }
     }
 
-    if (!window.google) {
-      const script = document.createElement(messages.scriptText);
-      const googleMapsApiUrl = apiUrls.googleMapsApi(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
-      script.src = googleMapsApiUrl;
-      script.async = true;
-      script.defer = true;
-      script.onload = initAutocomplete;
-      document.head.appendChild(script);
+    function loadGoogleMapsScript() {
+      if (!window.google || !window.google.maps || !window.google.maps.places) {
+        const script = document.createElement(messages.scriptText);
+        const googleMapsApiUrl = apiUrls.googleMapsApi(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
+        script.src = googleMapsApiUrl;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          initAutocomplete();
+        };
+        document.head.appendChild(script);
 
-      return () => {
-        document.head.removeChild(script);
-      };
+        return () => {
+          document.head.removeChild(script);
+        };
+      } else {
+        initAutocomplete();
+      }
+    }
+
+    if (document.getElementById(messages.addressElementId)) {
+      loadGoogleMapsScript();
     } else {
-      initAutocomplete();
+      const observer = new MutationObserver((mutations, me) => {
+        if (document.getElementById(messages.addressElementId)) {
+          loadGoogleMapsScript();
+          me.disconnect(); 
+          return;
+        }
+      });
+      observer.observe(document, {
+        childList: true,
+        subtree: true
+      });
     }
   }, [setValue]);
 
