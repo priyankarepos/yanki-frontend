@@ -87,7 +87,7 @@ const AdminFileUpload = () => {
     fetchData(pageNumber);
   }, [fetchDataState, pageNumber]);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (event, newPage) => {
     setPageNumber(newPage);
   };
 
