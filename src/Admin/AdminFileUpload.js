@@ -68,28 +68,27 @@ const AdminFileUpload = () => {
   const [fileName, setFileName] = useState("");
   const [fetchDataState, setFetchDataState] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
 
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await axios.get(apiUrls.documentMapping(pageNumber));
+      setTableData(response.data.pdfList);
+      setTotalPages(Math.ceil(response.data.totalCount / 10));
+    } catch (error) {
+      setSnackbarMessage(messages.fetchError, error);
+      setSnackbarOpen(true);
+    }
+  };
+
   useEffect(() => {
-    let fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`
-        );
-        setTableData(response.data.jewishPrayerTexts);
-        setTotalPages(Math.ceil(response.data.totalCount / 10));
-      } catch (error) {
-        setSnackbarMessage("Error fetching data:", error);
-        setSnackbarOpen(true);
-      }
-    };
-    fetchData();
+    fetchData(pageNumber);
   }, [fetchDataState, pageNumber]);
 
-  const handlePageChange = (value) => {
-    setPageNumber(value);
+  const handlePageChange = (newPage) => {
+    setPageNumber(newPage);
   };
 
   const openPdfModal = (pdfName) => {
