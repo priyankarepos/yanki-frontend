@@ -15,6 +15,7 @@ import {
   Snackbar,
   CircularProgress,
   useMediaQuery,
+  Pagination,
 } from "@mui/material";
 import AdminDashboard from "./AdminDashboard";
 import IconButton from "@mui/material/IconButton";
@@ -32,6 +33,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const AdminFileUpload = () => {
   const { drawerOpen } = useContext(Context);
@@ -65,6 +67,8 @@ const AdminFileUpload = () => {
   const [isEditModalOpen, setEditIsModalOpen] = useState(false);
   const [fileName, setFileName] = useState("");
   const [fetchDataState, setFetchDataState] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
 
@@ -75,13 +79,18 @@ const AdminFileUpload = () => {
           `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping`
         );
         setTableData(response.data.jewishPrayerTexts);
+        setTotalPages(Math.ceil(response.data.totalCount / 10));
       } catch (error) {
         setSnackbarMessage("Error fetching data:", error);
         setSnackbarOpen(true);
       }
     };
     fetchData();
-  }, [fetchDataState]);
+  }, [fetchDataState, pageNumber]);
+
+  const handlePageChange = (value) => {
+    setPageNumber(value);
+  };
 
   const openPdfModal = (pdfName) => {
     const cleanPdfName = pdfName.replace(/%27/g, "");
@@ -115,11 +124,7 @@ const AdminFileUpload = () => {
       setLoading(true);
       const formData = new FormData();
       formData.append("file", data.file[0]);
-      const apiUrl = `${
-        process.env.REACT_APP_API_HOST
-      }/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(
-        data.file[0].name
-      )}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
+      const apiUrl = `${apiUrls.indexAndUpload}?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -217,11 +222,7 @@ const AdminFileUpload = () => {
     try {
       setLoading(true);
       const response = await axios.put(
-        `${
-          process.env.REACT_APP_API_HOST
-        }/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(
-          pdfId
-        )}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`
+        apiUrls.updateDocumentKeywords(pdfId, tags)
       );
       if (response.status === 200) {
         const updatedTableData = tableData.map((row) => {
@@ -301,7 +302,7 @@ const AdminFileUpload = () => {
             <AddIcon /> Add Files
           </IconButton>
         </Box>
-        {tableData.length === 0 ? (
+        {(tableData && tableData.length === 0) ? (
           <Typography variant="h6" className="no-data-found">
             No data available.
           </Typography>
@@ -323,7 +324,7 @@ const AdminFileUpload = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {tableData.map((row, index) => (
+                    {tableData && tableData.map((row, index) => (
                       <TableRow key={index + 1}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{row.pdfName}</TableCell>
@@ -376,6 +377,15 @@ const AdminFileUpload = () => {
                     ))}
                   </TableBody>
                 </Table>
+                {totalPages > 1 && <Box marginTop={2}>
+                  <Pagination
+                    count={totalPages}
+                    page={pageNumber}
+                    onChange={handlePageChange}
+                    color={messages.primaryColor}
+                    className={messages.enterprisePaginationClass}
+                  />
+                </Box>}
               </TableContainer>
             )}
           </>
@@ -467,7 +477,7 @@ const AdminFileUpload = () => {
               disabled={loading}
             >
               {loading ? (
-                <CircularProgress size={24} className="event-form-submit-button-loader"/>
+                <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
               ) : (
                 "Upload"
               )}
@@ -481,7 +491,7 @@ const AdminFileUpload = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         className="event-pdf-modal-open"
-      > 
+      >
         <Box className="admin-faq-model-content">
           <Typography variant="h5" className="enterprise-add-category-modal-title">
             Update Keyword
@@ -546,7 +556,7 @@ const AdminFileUpload = () => {
               onClick={(e) => updateKeywords(e)}
             >
               {loading ? (
-                <CircularProgress size={24} className="event-form-submit-button-loader" />
+                <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
               ) : (
                 "Update"
               )}
