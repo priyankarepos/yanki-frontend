@@ -240,11 +240,11 @@ const SearchHistoryItem = forwardRef(
             <InteractiveQuestionnaire />
           </div>
         </Paper>)}
-        <Paper elevation={3} className="marginBottom-10">
-          <div className="chat-bubble assistant-bubble">
-            <MikvahAnswer />
+        {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{mb:2}}>
+          <div>
+            <MikvahAnswer answer={response} />
           </div>
-        </Paper>
+        </Paper>)}
       </div>
     );
   }
