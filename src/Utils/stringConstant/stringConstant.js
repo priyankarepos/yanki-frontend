@@ -17,7 +17,7 @@ export const messages = {
 
 export const apiUrls = {
     mikvahDetails: `${process.env.REACT_APP_API_HOST}/api/mikvah/mikvah-details`,
-    indexAndUpload: (pdfName, keywords) => `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload?PdfName=${encodeURIComponent(pdfName)}&Keywords=${encodeURIComponent(JSON.stringify(keywords))}`,
+    indexAndUpload: `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/index-and-upload`,
     updateDocumentKeywords: (pdfId, tags) =>
         `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`,
     documentMapping: (pageNumber) =>
