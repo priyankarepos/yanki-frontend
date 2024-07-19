@@ -176,6 +176,11 @@ const AdminFileUpload = () => {
           const updatedTableData = [...tableData];
           updatedTableData.splice(rowIndex, 1);
           setTableData(updatedTableData);
+          if (updatedTableData.length === 0 && pageNumber > 1) {
+            setPageNumber(pageNumber - 1);
+          } else {
+            fetchData(pageNumber);
+          }
           setConfirmDialogOpen(false);
           setSnackbarMessage(
             `Document with Name ${pdfName} deleted successfully`
