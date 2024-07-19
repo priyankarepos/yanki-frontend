@@ -69,17 +69,21 @@ const AdminFileUpload = () => {
   const [fetchDataState, setFetchDataState] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
 
   const fetchData = async (pageNumber) => {
     try {
+      setLoading(true);
       const response = await axios.get(apiUrls.documentMapping(pageNumber));
       setTableData(response.data.pdfList);
       setTotalPages(Math.ceil(response.data.totalCount / 10));
     } catch (error) {
       setSnackbarMessage(messages.fetchError, error);
       setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,14 +177,11 @@ const AdminFileUpload = () => {
         );
 
         if (response.status === 200) {
-          const updatedTableData = [...tableData];
-          updatedTableData.splice(rowIndex, 1);
+          const updatedTableData = [
+            ...tableData.slice(0, rowIndex),
+            ...tableData.slice(rowIndex + 1),
+          ];
           setTableData(updatedTableData);
-          if (updatedTableData.length === 0 && pageNumber > 1) {
-            setPageNumber(pageNumber - 1);
-          } else {
-            fetchData(pageNumber);
-          }
           setConfirmDialogOpen(false);
           setSnackbarMessage(
             `Document with Name ${pdfName} deleted successfully`
@@ -330,7 +331,7 @@ const AdminFileUpload = () => {
                   <TableBody>
                     {tableData && tableData.map((row, index) => (
                       <TableRow key={index + 1}>
-                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{(pageNumber - 1) * itemsPerPage + index + 1}</TableCell>
                         <TableCell>{row.pdfName}</TableCell>
                         <TableCell>
                           {Array.isArray(row.keywords) ? (
