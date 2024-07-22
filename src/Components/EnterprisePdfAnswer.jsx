@@ -31,7 +31,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
           <CloseIcon />
         </IconButton>
         {!pdfLoadError ? (
-          <>
+          <div>
             {isPdf ? (
               <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                 <Viewer fileUrl={pdfUrl} />
@@ -44,7 +44,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
                 onError={() => setPdfLoadError(true)}
               />
             )}
-          </>
+          </div>
         ) : (
           <div>Error loading content. Please try again.</div>
         )}

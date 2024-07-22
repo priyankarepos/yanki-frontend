@@ -100,8 +100,8 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>Phone:</strong>
                                                     </Typography>
-                                                    {mikvahDetails.result.phone1.trim() ? <><Typography>{mikvahDetails.result.phone1}</Typography>
-                                                        <Typography>{mikvahDetails.result.phone2}</Typography></> : <Typography>NA</Typography>}
+                                                    {mikvahDetails.result.phone1.trim() ? <div><Typography>{mikvahDetails.result.phone1}</Typography>
+                                                        <Typography>{mikvahDetails.result.phone2}</Typography></div> : <Typography>NA</Typography>}
                                                 </Box>
                                             </Box>
                                             <Box className={messages.mikvahDetailInfo}>
