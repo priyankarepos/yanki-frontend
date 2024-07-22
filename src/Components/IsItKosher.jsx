@@ -25,7 +25,7 @@ const IsItKosher = ({ answer }) => {
   return (
     <Paper className='isItKosher-wrapper' elevation={3}>
       {kosherProducts.length > 0 ? (
-        <>
+        <div>
           <Typography sx={{pb:2}}>
             Below is the list of products I have found. Please note that kosher certification may vary, so it's advisable to check specific product packaging for the most accurate and up-to-date information.
           </Typography>
@@ -64,7 +64,7 @@ const IsItKosher = ({ answer }) => {
               </AccordionDetails>
             </Accordion>
           ))}
-        </>
+        </div>
       ) : (
         <Typography variant="body1">
           No kosher products found. Please check back later or try a different search.

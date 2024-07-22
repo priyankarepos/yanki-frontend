@@ -54,7 +54,7 @@
 
 .ya-home-delete-btn {
     position: absolute !important;
-    top: 2px;
+    top: 10px;
     right: 0;
     border-radius: 0 8px 0 0 !important;
 }
@@ -349,6 +349,7 @@
     overflow: hidden;
     text-align: left;
     margin-left: auto;
+    text-transform: none !important;
 }
 
 .ya-question-box {

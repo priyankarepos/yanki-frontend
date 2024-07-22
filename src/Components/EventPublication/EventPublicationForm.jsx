@@ -270,7 +270,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Location is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={eventLocations.map(location => ({
                                                     name: location.eventLocationName,
@@ -294,7 +294,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -373,7 +373,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Publication area is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={publicationArea.map(item => ({
                                                     name: item.eventPublicationAreaName,
@@ -397,7 +397,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -409,7 +409,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Event type is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={eventTypes.map(item => ({
                                                     name: item.eventTypeName,
@@ -433,7 +433,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -517,7 +517,7 @@ const EventPublicationForm = ({ answer }) => {
                         <CloseIcon />
                     </IconButton>
                     {selectedPdf && (
-                        <>
+                        <div>
                             {selectedPdf.type.startsWith('image/') ? (
                                 <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} className='event-submission-image'/>
                             ) : (
@@ -525,7 +525,7 @@ const EventPublicationForm = ({ answer }) => {
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />
                                 </Worker>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </Modal>
