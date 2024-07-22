@@ -433,7 +433,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="/"
+                      path="/:chatId?"
                       element={
                         <UserPagesProtection>
                           <NewHomePageMui />

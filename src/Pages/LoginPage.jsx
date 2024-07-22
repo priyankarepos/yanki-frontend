@@ -18,7 +18,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import { useForm, Controller } from "react-hook-form";
-import { emailRegex, passwordRegex } from "../Utils/validations/validation";
+import { emailRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import { useContext, useState } from "react";
 import axios from "axios";
@@ -222,11 +222,6 @@ const LoginPage = () => {
                 required: {
                   value: true,
                   message: "Password is required",
-                },
-                pattern: {
-                  value: passwordRegex,
-                  message:
-                    "Password must have length of atleast 8 characters. It must contain uppercase letter, lowercase letter, spcial character and digit.",
                 },
               }}
               render={({ field }) => (
