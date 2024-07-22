@@ -648,7 +648,7 @@ const NewHomePageMui = () => {
               </IconButton>
             </Box>
           )}
-          <ProfielCircle />
+          <ProfielCircle chatId={chatId} />
         </Toolbar>
       </AppBar>
 
@@ -976,7 +976,6 @@ const NewHomePageMui = () => {
               )}
               {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                 <div className="home-table-scroll">
-                  <>
                     {[
                       initialQuestions1,
                       initialQuestions2,
@@ -1001,7 +1000,6 @@ const NewHomePageMui = () => {
                         ))}
                       </Typography>
                     ))}
-                  </>
                 </div>
               )}
 
