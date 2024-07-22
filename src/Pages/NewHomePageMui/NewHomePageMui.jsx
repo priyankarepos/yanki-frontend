@@ -25,7 +25,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Context, ThemeModeContext } from "../../App";
 import { useContext } from "react";
 import ProfielCircle from "../../Components/ProfileCircle";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -47,13 +47,15 @@ import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
 
 const NewHomePageMui = () => {
+  const { chatId } = useParams();
+  const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [chatSessions, setChatSessions] = useState([]);
   const [initialChatOpen, setInitialChatOpen] = useState(true);
-  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [selectedChatId, setSelectedChatId] = useState(chatId || null);
   const [searchHistory, setSearchHistory] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -87,7 +89,6 @@ const NewHomePageMui = () => {
       "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
-  const navigate = useNavigate();
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
@@ -203,8 +204,8 @@ const NewHomePageMui = () => {
 
       if (response.status === 200 || response.status >= 300) {
         setHasMore(true);
-        sessionStorage.setItem("selectedChatId", response.data.chatId);
         setInitialChatOpen(false);
+        navigate(`/${response.data.chatId}`);
         if (
           remainingMsgData?.totalMessageLeft <= 0 &&
           remainingMsgData?.totalTaskLeft <= 0 &&
@@ -334,10 +335,9 @@ const NewHomePageMui = () => {
   );
 
   const handleChatSessionClick = useCallback(async (chatId) => {
-    // setSearchHistory([]);
     setIsLoading(false);
-    sessionStorage.setItem("selectedChatId", chatId);
     setSelectedChatId(chatId);
+    navigate(`/${chatId}`); 
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
@@ -356,7 +356,7 @@ const NewHomePageMui = () => {
       setSnackbarMessage("Error:", error);
       setSnackbarOpen(true);
     }
-  }, []);
+  }, [navigate]);
 
   const parseChatHistory = (chatHistoryArray) => {
     return chatHistoryArray.map((chatEntry) => {
@@ -428,18 +428,14 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    if (initialChatOpen && chatSessions.length > 0) {
-      const storedChatId = sessionStorage.getItem("selectedChatId");
-      if (storedChatId) {
-        const firstChatId = storedChatId;
-        handleChatSessionClick(firstChatId);
+    if (initialChatOpen && chatSessions.length > 0 && chatId) {
+        handleChatSessionClick(chatId);
         setInitialChatOpen(false);
 
         chatContainerRef.current.scrollTop =
           chatContainerRef.current.scrollHeight;
-      }
     }
-  }, [initialChatOpen, chatSessions, handleChatSessionClick]);
+  }, [initialChatOpen, chatSessions, handleChatSessionClick, chatId]);
 
   const handleScrollTop = (e) => {
     if (
@@ -460,12 +456,10 @@ const NewHomePageMui = () => {
   }, [scrollToKey]);
 
   useEffect(() => {
-    const storedChatId = sessionStorage.getItem("selectedChatId");
-    if (chatHistoryPageNumber !== 1)
-      if (storedChatId) {
-        handleChatSessionScroll(storedChatId);
-      }
-  }, [handleChatSessionScroll, chatHistoryPageNumber]);
+    if (chatHistoryPageNumber !== 1 && chatId) {
+      handleChatSessionScroll(chatId); 
+    }
+  }, [handleChatSessionScroll, chatHistoryPageNumber, chatId]);
 
   const handleDeleteClick = (id) => {
     setConfirmDialogOpen(true);
@@ -517,7 +511,7 @@ const NewHomePageMui = () => {
     setSelectedChatId(null);
     setIsLoading(false);
     setRemainingSearchHistory([]);
-    sessionStorage.removeItem("selectedChatId");
+    navigate('/');
     if (!isLargeScreen) {
       setDrawerOpen(false);
     } else {
@@ -628,6 +622,7 @@ const NewHomePageMui = () => {
         <Toolbar>
           {!drawerOpen && (
             <Box className="ya-home-sidebar-box">
+              <Link to="/">
               <img
                 src={
                   activeTab === 0
@@ -637,6 +632,7 @@ const NewHomePageMui = () => {
                 className="ya-logo-img"
                 alt="logo"
               />
+              </Link>
               <IconButton
                 edge="end"
                 color="inherit"
