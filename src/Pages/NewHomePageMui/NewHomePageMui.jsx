@@ -86,7 +86,7 @@ const NewHomePageMui = () => {
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
     window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
-      "{}"
+    "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
   const onClickMembershipPortal = () => {
@@ -613,11 +613,10 @@ const NewHomePageMui = () => {
     <Box className="ya-home-wrapper">
       <CssBaseline />
       <AppBar
-        className={`ya-home-header ${
-          activeTab === 0
-            ? "ya-home-darkblue-background"
-            : "ya-home-white-background"
-        } `}
+        className={`ya-home-header ${activeTab === 0
+          ? "ya-home-darkblue-background"
+          : "ya-home-white-background"
+          } `}
       >
         <Toolbar>
           {!drawerOpen && (
@@ -638,11 +637,10 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${
-                  activeTab === 1
-                    ? "ya-home-lightblue-color"
-                    : "ya-home-white-color"
-                }`}
+                className={`${activeTab === 1
+                  ? "ya-home-lightblue-color"
+                  : "ya-home-white-color"
+                  }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -677,11 +675,10 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${
-                  activeTab === 1
-                    ? "ya-home-lightblue-color"
-                    : "ya-home-white-color"
-                }`}
+                className={`${activeTab === 1
+                  ? "ya-home-lightblue-color"
+                  : "ya-home-white-color"
+                  }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -689,11 +686,10 @@ const NewHomePageMui = () => {
           )}
           <IconButton
             color="primary"
-            className={`ya-new-chat-btn ${
-              activeTab === 0
-                ? "ya-home-new-chat-dark-theme"
-                : "ya-home-new-chat-light-theme"
-            }`}
+            className={`ya-new-chat-btn ${activeTab === 0
+              ? "ya-home-new-chat-dark-theme"
+              : "ya-home-new-chat-light-theme"
+              }`}
             onClick={resetPage}
           >
             <AddIcon />
@@ -701,22 +697,20 @@ const NewHomePageMui = () => {
           </IconButton>
           <Box className="ya-new-chat-box" onScroll={handleScroll}>
             <span
-              className={`${
-                activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-              }`}
+              className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                }`}
             >
               Recent Chat
             </span>
             {chatSessions.map((chatSession) => (
               <div key={chatSession.id}>
-                <IconButton
-                  className={`ya-chat-session-btn ${
-                    chatSession.id === selectedChatId
-                      ? "ya-home-active-session-btn"
-                      : activeTab === 0
+                <Button
+                  className={`ya-chat-session-btn ${chatSession.id === selectedChatId
+                    ? "ya-home-active-session-btn"
+                    : activeTab === 0
                       ? "ya-home-new-chat-dark-theme"
                       : "ya-home-new-chat-light-theme"
-                  }`}
+                    }`}
                   color="primary"
                   onClick={() => handleChatSessionClick(chatSession.id)}
                   onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -727,20 +721,22 @@ const NewHomePageMui = () => {
                     &nbsp; {chatSession.name}
                   </Typography>
                   {chatSession.id === hoverChatId && (
-                    <IconButton
-                      className={`ya-home-delete-btn ${
-                        chatSession.id === selectedChatId
-                          ? "ya-home-active-session-btn"
-                          : activeTab === 0
+                    <span
+                      className={`ya-home-delete-btn ${chatSession.id === selectedChatId
+                        ? "ya-home-active-session-btn"
+                        : activeTab === 0
                           ? "ya-home-new-chat-dark-theme"
                           : "ya-home-new-chat-light-theme"
-                      }`}
-                      onClick={() => handleDeleteClick(chatSession.id)}
+                        }`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleDeleteClick(chatSession.id);
+                      }}
                     >
                       <DeleteIcon />
-                    </IconButton>
+                    </span>
                   )}
-                </IconButton>
+                </Button>
               </div>
             ))}
           </Box>
@@ -748,26 +744,22 @@ const NewHomePageMui = () => {
       </Drawer>
 
       <Box
-        className={`ya-answer-wrapper ${
-          activeTab === 0
-            ? "ya-answer-wrapper-dark-theme"
-            : "ya-answer-wrapper-light-theme"
-        } ${
-          drawerOpen && !isSmallScreen
+        className={`ya-answer-wrapper ${activeTab === 0
+          ? "ya-answer-wrapper-dark-theme"
+          : "ya-answer-wrapper-light-theme"
+          } ${drawerOpen && !isSmallScreen
             ? "ya-answer-drawn-close"
             : "ya-answer-drawn-open"
-        }`}
+          }`}
       >
         <Box
-          className={`ya-answer-container ${
-            activeTab === 0
-              ? "ya-answer-container-dark-theme"
-              : "ya-answer-container-light-theme"
-          } ${
-            isSmallScreen
+          className={`ya-answer-container ${activeTab === 0
+            ? "ya-answer-container-dark-theme"
+            : "ya-answer-container-light-theme"
+            } ${isSmallScreen
               ? "ya-answer-container-smallScreen-border"
               : "ya-answer-container-border"
-          } `}
+            } `}
           sx={{
             width: { xs: "100%", sm: "96%" },
           }}
@@ -807,18 +799,16 @@ const NewHomePageMui = () => {
                   <Box sx={{ p: 2 }} className="ya-question-box-flex">
                     <ChatBubbleOutlineIcon
                       fontSize="small"
-                      className={`ya-ChatBubbleOutlineIcon ${
-                        activeTab === 0
-                          ? "ya-home-white-color"
-                          : "ya-home-lightblue-color"
-                      }`}
+                      className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
+                        ? "ya-home-white-color"
+                        : "ya-home-lightblue-color"
+                        }`}
                     />
                     <Typography
-                      className={`ya-question-box-text ${
-                        activeTab === 0
-                          ? "ya-home-white-color"
-                          : "ya-home-lightblue-color"
-                      }`}
+                      className={`ya-question-box-text ${activeTab === 0
+                        ? "ya-home-white-color"
+                        : "ya-home-lightblue-color"
+                        }`}
                     >
                       {storedSearchQuery}
                     </Typography>
@@ -844,14 +834,13 @@ const NewHomePageMui = () => {
 
           <Box className="ya-search-container">
             <Box
-              className={`fixed-search-Box ${
-                drawerOpen && !isSmallScreen
-                  ? "ya-answer-drawn-close"
-                  : "ya-answer-container-question"
-              }`}
+              className={`fixed-search-Box ${drawerOpen && !isSmallScreen
+                ? "ya-answer-drawn-close"
+                : "ya-answer-container-question"
+                }`}
             >
               {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
-                <>
+                <div>
                   <Carousel
                     responsive={responsive}
                     itemClass="carousel-item"
@@ -868,15 +857,14 @@ const NewHomePageMui = () => {
                     {initialQuestions1.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
+                          className={`ya-slider-btn ${activeTab === 0
+                            ? "ya-search-dark-theme"
+                            : "ya-search-light-theme"
+                            }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={question.text}>
-                            {question.text}
+                          <Tooltip title={<span>{question.text}</span>}>
+                            <span>{question.text}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -898,15 +886,14 @@ const NewHomePageMui = () => {
                     {initialQuestions2.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
+                          className={`ya-slider-btn ${activeTab === 0
+                            ? "ya-search-dark-theme"
+                            : "ya-search-light-theme"
+                            }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={question.text}>
-                            {question.text}
+                          <Tooltip title={<span>{question.text}</span>}>
+                            <span>{question.text}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -928,15 +915,14 @@ const NewHomePageMui = () => {
                     {initialQuestions3.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
+                          className={`ya-slider-btn ${activeTab === 0
+                            ? "ya-search-dark-theme"
+                            : "ya-search-light-theme"
+                            }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={question.text}>
-                            {question.text}
+                          <Tooltip title={<span>{question.text}</span>}>
+                            <span>{question.text}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -958,21 +944,20 @@ const NewHomePageMui = () => {
                     {initialQuestions4.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
+                          className={`ya-slider-btn ${activeTab === 0
+                            ? "ya-search-dark-theme"
+                            : "ya-search-light-theme"
+                            }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={question.text}>
-                            {question.text}
+                          <Tooltip title={<span>{question.text}</span>}>
+                            <span>{question.text}</span>
                           </Tooltip>
                         </Button>
                       </div>
                     ))}
                   </Carousel>
-                </>
+                </div>
               )}
               {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                 <div className="home-table-scroll">
@@ -1038,20 +1023,18 @@ const NewHomePageMui = () => {
                       startAdornment: (
                         <InputAdornment position="start">
                           <SearchIcon
-                            className={`${
-                              activeTab === 1
-                                ? "ya-home-lightblue-color"
-                                : "ya-home-white-color"
-                            }`}
+                            className={`${activeTab === 1
+                              ? "ya-home-lightblue-color"
+                              : "ya-home-white-color"
+                              }`}
                           />
                         </InputAdornment>
                       ),
                     }}
-                    className={`ya-search-query-container ${
-                      activeTab === 0
-                        ? "ya-search-query-container-dark-theme"
-                        : "ya-search-query-container-light-theme"
-                    }`}
+                    className={`ya-search-query-container ${activeTab === 0
+                      ? "ya-search-query-container-dark-theme"
+                      : "ya-search-query-container-light-theme"
+                      }`}
                     sx={{
                       fontSize,
                     }}

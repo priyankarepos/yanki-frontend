@@ -185,7 +185,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
         answer.globalAssist.latitude &&
         answer.globalAssist.longitude &&
         answer.globalAssist.phoneNumber ? (
-          <>
+          <div>
             <Box className="hatzala-info-box">
               <Typography component="div" variant="h6">
                 {answer.globalAssist.message}
@@ -241,7 +241,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </>
+          </div>
         ) : (
           <Box className="hatzala-error-box">
             <Typography component="div" variant="h6">

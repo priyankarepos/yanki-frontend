@@ -98,7 +98,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                                                 setSelectedEnterprise(enterprise.enterpriseName);
                                                 handleSendEmail(enterprise);
                                             }}
-                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : <></>}
+                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : null}
                                         </div>
                                     </Box>
                                 </Grid>

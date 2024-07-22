@@ -232,7 +232,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="locations"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={eventLocations.map(location => ({
                                                 name: location.eventLocationName,
@@ -251,7 +251,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>
@@ -262,7 +262,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="publicationArea"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={publicationArea.map(item => ({
                                                 name: item.eventPublicationAreaName,
@@ -281,7 +281,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>
@@ -292,7 +292,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="eventTypes"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={eventTypes.map(item => ({
                                                 name: item.eventTypeName,
@@ -311,7 +311,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>

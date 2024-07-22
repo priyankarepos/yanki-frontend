@@ -91,7 +91,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/search-query-report"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -106,7 +106,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/change-role"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/enterprise-request"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/enterprise-categories"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/create-enterprise"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -166,7 +166,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/create-department"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -181,7 +181,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/upload-files"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/event-request"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -211,7 +211,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/add-event-location"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"
@@ -226,7 +226,7 @@ const AdminDashboard = () => {
             <NavLink
               to="/admin/add-faq"
               className="admin-dashboard-navlink"
-              activeClassName="active"
+              activeclassname="active"
             >
               <ListItem
                 className="highlightStyle"

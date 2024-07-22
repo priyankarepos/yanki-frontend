@@ -102,7 +102,7 @@ const ActiveAccountPage = () => {
               </Box>
             )}
             {errorOnActive && (
-              <>
+              <div>
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {errorMsg}
                 </Alert>
@@ -113,7 +113,7 @@ const ActiveAccountPage = () => {
                 >
                   Try Again
                 </Button>
-              </>
+              </div>
             )}
             {activationDone && (
               <Button variant="contained" fullWidth onClick={gotoLogin}>

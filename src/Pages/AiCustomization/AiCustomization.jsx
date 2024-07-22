@@ -248,7 +248,7 @@ const AiCustomization = () => {
                     name="ageRange"
                     rules={{ min: 1, max: 200 }}
                     render={({ field }) => (
-                      <>
+                      <div>
                         <TextField
                           {...field}
                           fullWidth
@@ -266,7 +266,7 @@ const AiCustomization = () => {
                             Maximum age is 200
                           </FormHelperText>
                         )}
-                      </>
+                      </div>
                     )}
                   />
                 </Grid>
@@ -413,7 +413,7 @@ const AiCustomization = () => {
                               checked={
                                 (field.value &&
                                   field.value.includes("chalabYisroel")) ||
-                                ""
+                                  false 
                               }
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
