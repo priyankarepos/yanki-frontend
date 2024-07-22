@@ -25,7 +25,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Context, ThemeModeContext } from "../../App";
 import { useContext } from "react";
 import ProfielCircle from "../../Components/ProfileCircle";
-import { Outlet, Link, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
@@ -45,6 +45,7 @@ import {
 } from "../../Utils/promptData/promptData";
 import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
+import { messages } from "../../Utils/stringConstant/stringConstant";
 
 const NewHomePageMui = () => {
   const { chatId } = useParams();
@@ -621,7 +622,7 @@ const NewHomePageMui = () => {
         <Toolbar>
           {!drawerOpen && (
             <Box className="ya-home-sidebar-box">
-              <Link to="/">
+              <Box sx={{cursor:messages.cursorPointer}} onClick={resetPage}>
               <img
                 src={
                   activeTab === 0
@@ -631,7 +632,7 @@ const NewHomePageMui = () => {
                 className="ya-logo-img"
                 alt="logo"
               />
-              </Link>
+              </Box>
               <IconButton
                 edge="end"
                 color="inherit"
@@ -659,7 +660,7 @@ const NewHomePageMui = () => {
         <div className="ya-sidebar-styles">
           {drawerOpen && (
             <Box className="ya-sidebar-styles-box">
-              <Link to="/">
+              <Box sx={{cursor:messages.cursorPointer}} onClick={resetPage}>
                 <img
                   src={
                     activeTab === 0
@@ -669,7 +670,7 @@ const NewHomePageMui = () => {
                   className="ya-logo-img"
                   alt="logo"
                 />
-              </Link>
+              </Box>
               <IconButton
                 edge="end"
                 color="inherit"
