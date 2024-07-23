@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
     Table,
@@ -19,7 +19,6 @@ import {
     Home,
     Business,
     Phone,
-    Language,
     Schedule,
 } from '@mui/icons-material';
 import PanToolAltIcon from '@mui/icons-material/PanToolAlt';
@@ -28,10 +27,13 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import "../../Pages/NewHomePageMui/NewHomePageStyle.scss";
 import "./MikvahAnswer.scss";
 import { apiUrls, messages } from "../../Utils/stringConstant/stringConstant";
+import PersonIcon from '@mui/icons-material/Person';
+import { Context } from "../../App";
 
 const MikvahAnswer = ({ answer }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const { activeTab } = useContext(Context);
 
     const Row = ({ row }) => {
         const [open, setOpen] = useState(false);
@@ -54,7 +56,7 @@ const MikvahAnswer = ({ answer }) => {
             <>
                 <TableRow
                     onClick={() => setOpen(!open)}
-                    sx={{cursor:messages.cursorPointer}}
+                    sx={{ cursor: messages.cursorPointer }}
                 >
                     <TableCell>
                         <p>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
@@ -73,7 +75,7 @@ const MikvahAnswer = ({ answer }) => {
                     </TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell sx={{ py: 0 }} colSpan={6}>
+                    <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
                         <Collapse in={open} unmountOnExit>
                             <Box sx={{ margin: 1 }} className={messages.mikvahDetailBox}>
                                 {mikvahDetails ? (
@@ -106,7 +108,7 @@ const MikvahAnswer = ({ answer }) => {
                                             </Box>
                                             <Box className={messages.mikvahDetailInfo}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
-                                                    <Home />
+                                                    <PersonIcon />
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
@@ -137,17 +139,6 @@ const MikvahAnswer = ({ answer }) => {
                                                         <strong>Type:</strong>
                                                     </Typography>
                                                     <Typography>{mikvahDetails.result.type.trim() ? mikvahDetails.result.type : messages.notAvailable}</Typography>
-                                                </Box>
-                                            </Box>
-                                            <Box className={messages.mikvahDetailInfo}>
-                                                <Typography className={messages.mikvahDetailInfoLogo}>
-                                                    <Language />
-                                                </Typography>
-                                                <Box className={messages.mikvahDetailInfoContent}>
-                                                    <Typography>
-                                                        <strong>Website:</strong>
-                                                    </Typography>
-                                                    <Typography>{mikvahDetails.result.website.trim() ? mikvahDetails.result.website : messages.notAvailable}</Typography>
                                                 </Box>
                                             </Box>
                                             <Box className={messages.mikvahDetailInfo}>
