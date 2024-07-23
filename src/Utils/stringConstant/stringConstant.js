@@ -13,6 +13,7 @@ export const messages = {
     primaryColor: "primary",
     eventFormSubmitButtonLoader: "event-form-submit-button-loader",
     fetchError: 'Error fetching data:',
+    mikvahDetailWrapper : "Mikvah-Detail-Wrapper",
 };
 
 export const apiUrls = {
