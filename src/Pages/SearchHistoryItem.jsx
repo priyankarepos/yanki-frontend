@@ -118,7 +118,7 @@ const SearchHistoryItem = forwardRef(
           !response?.safetyChecker &&
           !response?.isEvent &&
           !response?.isPersonalAssistant &&
-          !response?.isViewReminder && !response?.enterpriseLocation && (
+          !response?.isViewReminder && (
             <Paper elevation={3} className="marginBottom-10">
               <div className="chat-bubble assistant-bubble">
                 <DemoEnterpriseChat

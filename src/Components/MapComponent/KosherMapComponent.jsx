@@ -2,7 +2,7 @@ import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { GoogleMap, LoadScriptNext, DirectionsService, DirectionsRenderer, Marker } from '@react-google-maps/api';
 import { useJsApiLoader } from "@react-google-maps/api";
 import { Context } from '../../App';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TextField, Snackbar } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TextField, Snackbar, Typography } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloseIcon from '@mui/icons-material/Close';
 import "./KosherMapComponent.scss"
@@ -74,7 +74,7 @@ const KosherMapComponent = ({ answer }) => {
     return (
         <Paper sx={{ p: 2 }}>
             <Box>
-                <h3>{answer?.message}</h3>
+                <Typography>{showEnterpriseName && messages.listLocationMsg}</Typography>
                 <TableContainer component={Paper} sx={{ mt: 2 }}>
                     <Table>
                         <TableHead>
