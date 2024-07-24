@@ -65,7 +65,6 @@ const KosherMapComponent = ({ answer }) => {
     const handleCloseMap = () => {
         setShowMap(false);
         setResponse(null);
-        setOrigin('');
         setDestination('');
     };
 
