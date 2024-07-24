@@ -392,6 +392,7 @@ const NewHomePageMui = () => {
             totalTaskLeft: gptResponse.totalTaskLeft,
             isLashonHara: gptResponse.isLashonHara,
             mikvahSearchResponse: gptResponse.mikvahSearchResponse,
+            enterpriseLocation: gptResponse.enterpriseLocation,
           },
         },
       };

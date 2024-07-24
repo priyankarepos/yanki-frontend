@@ -20,6 +20,8 @@ import ReminderNotification from "../Components/ReminderNotification/ReminderNot
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
 import MikvahAnswer from "../Components/MikvahList/MikvahList";
+import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const SearchHistoryItem = forwardRef(
   ({ query, response, fetchRemainingMessage, remainingMsgData }, ref) => {
@@ -116,7 +118,7 @@ const SearchHistoryItem = forwardRef(
           !response?.safetyChecker &&
           !response?.isEvent &&
           !response?.isPersonalAssistant &&
-          !response?.isViewReminder && (
+          !response?.isViewReminder && !response?.enterpriseLocation && (
             <Paper elevation={3} className="marginBottom-10">
               <div className="chat-bubble assistant-bubble">
                 <DemoEnterpriseChat
@@ -240,9 +242,14 @@ const SearchHistoryItem = forwardRef(
             <InteractiveQuestionnaire />
           </div>
         </Paper>)}
-        {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{mb:2}}>
+        {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{ mb: 2 }}>
           <div>
             <MikvahAnswer answer={response} />
+          </div>
+        </Paper>)}
+        {response?.isSuccess && response?.enterpriseLocation && (<Paper elevation={3} className={messages.marginBottom10}>
+          <div>
+            <KosherMapComponent answer={response} />
           </div>
         </Paper>)}
       </div>
