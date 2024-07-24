@@ -247,11 +247,13 @@ const SearchHistoryItem = forwardRef(
             <MikvahAnswer answer={response} />
           </div>
         </Paper>)}
-        {response?.isSuccess && response?.enterpriseLocation && (<Paper elevation={3} className={messages.marginBottom10}>
-          <div>
-            <KosherMapComponent answer={response} />
-          </div>
-        </Paper>)}
+        {response?.isSuccess && response?.enterpriseLocation?.length > 0 && (
+          <Paper elevation={3} className={messages.marginBottom10}>
+            <div>
+              <KosherMapComponent answer={response} />
+            </div>
+          </Paper>
+        )}
       </div>
     );
   }
