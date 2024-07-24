@@ -10,7 +10,7 @@ export const useFormSubmit = () => {
   // All state initialization
   const [isLoading, setIsLoading] = useState(false); // State for loading flag
   const [error, setError] = useState(null); // State for error handling
-  const BASE_URL = process.env.REACT_APP_API_URL; // Accessing base url from .env
+  const BASE_URL = import.meta.env.VITE_API_; // Accessing base url from .env
 
   // Using async await due to api call
   const submitForm = async data => {

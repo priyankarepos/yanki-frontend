@@ -19,7 +19,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                 departmentEmail: enterprise?.departmentEmail,
             };
 
-            const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
+            const response = await axios.post(`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
                 requestData);
             if (response.status === 200) {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;

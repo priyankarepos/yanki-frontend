@@ -71,7 +71,7 @@ const AdminFileUpload = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
 
-  const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
+  const s3BaseUrl = import.meta.env.VITE_API_S3_BASE_URL;
 
   const fetchData = async (pageNumber) => {
     try {
@@ -167,7 +167,7 @@ const AdminFileUpload = () => {
     if (rowIndex !== -1) {
       try {
         const response = await axios.delete(
-          `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
+          `${import.meta.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
           {
             params: {
               documentId: pdfId,

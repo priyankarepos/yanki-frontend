@@ -27,7 +27,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isChatStarted, setIsChatStarted] = useState(false);
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) ||
       "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
@@ -35,7 +35,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   const handlePersonalAssistant = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
       const response = await axios.post(apiUrl, { content });
       if (response.status === 200) {
         const sendMessage = await axios.post(`${apiUrls.sendMessage}`, {

@@ -67,23 +67,23 @@ const LoginPage = () => {
         userType: activeTab === 0 ? "User" : "Enterprise",
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/login`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/login`,
         dataToSend
       );
 
       if (response.status === 200) {
         if (!data.logInRemeber) {
           window.sessionStorage.setItem(
-            process.env.REACT_APP_SESSIONSTORAGE_REFRESH,
+            import.meta.env.VITE_API_SESSIONSTORAGE_REFRESH,
             JSON.stringify(true)
           );
         }
         window.localStorage.setItem(
-          process.env.REACT_APP_LOCALSTORAGE_REMEMBER,
+          import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER,
           JSON.stringify(data.logInRemeber)
         );
         window.localStorage.setItem(
-          process.env.REACT_APP_LOCALSTORAGE_TOKEN,
+          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
@@ -121,12 +121,12 @@ const LoginPage = () => {
       setLoginLoading(true);
       const { access_token } = codeResponse;
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-google-access-token`,
         { access_token }
       );
       if (response.status === 200) {
         window.localStorage.setItem(
-          process.env.REACT_APP_LOCALSTORAGE_TOKEN,
+          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");

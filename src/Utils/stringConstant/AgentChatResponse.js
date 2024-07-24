@@ -96,12 +96,12 @@ export const agentChatResponse = {
 }
 
 export const apiUrls = {
-    getUserMessage: `${process.env.REACT_APP_API_HOST}/api/agent-chat/get-user-message`,
-    signalRConnection: `${process.env.REACT_APP_API_HOST}/chat`,
-    userChatList: `${process.env.REACT_APP_API_HOST}/api/agent-chat/get-user-list`,
-    getAdminMessage: (id) => `${process.env.REACT_APP_API_HOST}/api/agent-chat/get-admin-message?id=${id}`,
-    sendMessage: `${process.env.REACT_APP_API_HOST}/api/agent-chat/send-message`,
+    getUserMessage: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-user-message`,
+    signalRConnection: `${import.meta.env.VITE_APP_API_HOST}/chat`,
+    userChatList: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-user-list`,
+    getAdminMessage: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-admin-message?id=${id}`,
+    sendMessage: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/send-message`,
     chatNavigateUrl: '/admin/chat',
     chatNavigateUrlById: (id) => `/admin/chat/${id}`,
-    getUserListById: (id) => `${process.env.REACT_APP_API_HOST}/api/agent-chat/get-user-list-id?Id=${id}`
+    getUserListById: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-user-list-id?Id=${id}`
 }

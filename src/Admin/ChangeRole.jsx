@@ -43,7 +43,7 @@ const ChangeRole = () => {
         email: data.logInEmail,
       };
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/change-role`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/change-role`,
         dataToSend
       );
 

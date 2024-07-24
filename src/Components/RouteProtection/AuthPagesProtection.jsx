@@ -6,7 +6,7 @@ const AuthPagesProtection = ({ children }) => {
   const location = useLocation();
 
   const tokenFromLocalStorage = localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
   );
 
   const getCurrentUnixTimeStamp = getUtcUnixTimeStampInSeconds();
@@ -22,15 +22,15 @@ const AuthPagesProtection = ({ children }) => {
         return children;
       }
     } else {
-      window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
       window.localStorage.removeItem(
-        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
       );
       return children;
     }
   } catch (e) {
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER);
     return children;
   }
 };

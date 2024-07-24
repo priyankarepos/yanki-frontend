@@ -40,7 +40,7 @@ const AdminAddEventLocation = () => {
     const fetchEventLocations = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`
         );
 
         if (response.status === 200) {
@@ -74,7 +74,7 @@ const AdminAddEventLocation = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/event-location/delete-event-location/${selectedLocationId}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/event-location/delete-event-location/${selectedLocationId}`
       );
 
       if (response.status === 200) {
@@ -117,7 +117,7 @@ const AdminAddEventLocation = () => {
       }
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/event-location/add-event-location`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/event-location/add-event-location`,
         { eventLocationName: locationName }
       );
 
@@ -154,7 +154,7 @@ const AdminAddEventLocation = () => {
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-location/update-event-location`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-location/update-event-location`;
       const response = await axios.put(apiUrl, {
         id: editLocationId,
         eventLocationName: locationName,

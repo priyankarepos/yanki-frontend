@@ -43,7 +43,7 @@ const ForgotPasswordPage = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/forgot-password?email=${
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/forgot-password?email=${
           data.emailAddress
         }&userType=${activeTab === 0 ? "User" : "Enterprise"}`
       );

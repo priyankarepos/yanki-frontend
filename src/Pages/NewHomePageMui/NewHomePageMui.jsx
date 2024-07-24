@@ -86,7 +86,7 @@ const NewHomePageMui = () => {
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) ||
     "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
@@ -99,7 +99,7 @@ const NewHomePageMui = () => {
   const fetchRemainingMessage = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/stripe/get-remaining-message-task`
+        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-remaining-message-task`
       );
 
       if (response.status === 200) {
@@ -117,7 +117,7 @@ const NewHomePageMui = () => {
     const fetchUpdateCustomerId = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/stripe/get-customer-id`
+          `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-customer-id`
         );
         setUpdateCustomerId(response.data);
       } catch (error) {
@@ -188,7 +188,7 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
         { prompt: searchQuery },
         {
           headers: {
@@ -283,7 +283,7 @@ const NewHomePageMui = () => {
     if (hasMore) {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
         );
         if (response.status === 200) {
           if (response.data.chatList.length > 0) {
@@ -310,7 +310,7 @@ const NewHomePageMui = () => {
     async (chatId) => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
         );
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
@@ -341,7 +341,7 @@ const NewHomePageMui = () => {
     navigate(`/${chatId}`); 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
       );
 
       if (response.status === 200) {
@@ -402,7 +402,7 @@ const NewHomePageMui = () => {
   const fetchChatHistory = async (chatId) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
       );
 
       if (response.status === 200) {
@@ -472,7 +472,7 @@ const NewHomePageMui = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
       );
 
       if (response.status === 200) {

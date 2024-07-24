@@ -10,13 +10,13 @@ const SafetyChecker = ({ answer, fetchRemainingMessage }) => {
     const [mailMessage, setMailMessage] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
 
     const handleSafetyCheck = async () => {
         try {
             setLoading(true);
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/safety-checker-email`;
+            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/safety-checker-email`;
             const response = await axios.post(apiUrl, { content });
             if (response.status === 200) {
                 setMailMessage(response?.data?.message)

@@ -30,7 +30,7 @@ const ActiveAccountPage = () => {
     try {
       setActivating(true);
       const queryParamsObj = Object.fromEntries([...searchParams]);
-      const url = `${process.env.REACT_APP_API_HOST}/api/auth/verify-email`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-email`;
       const configs = {
         method: "get",
         url,
