@@ -30,6 +30,7 @@ export const messages = {
     showGoogleMapClass: "ShowGoogleMapClass",
     closeButtonCls: "close-button",
     marginBottom10: "marginBottom-10",
+    listLocationMsg: "Below is the list of locations.",
 };
 
 export const apiUrls = {
