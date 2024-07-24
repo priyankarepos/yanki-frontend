@@ -13,7 +13,23 @@ export const messages = {
     primaryColor: "primary",
     eventFormSubmitButtonLoader: "event-form-submit-button-loader",
     fetchError: 'Error fetching data:',
-    mikvahDetailWrapper : "Mikvah-Detail-Wrapper",
+    mikvahDetailWrapper: "Mikvah-Detail-Wrapper",
+    errorFetchingLocation: "Error fetching current location:",
+    statusOk: 'OK',
+    errorFetchingDirections: "Error fetching directions:",
+    nameText: "Name",
+    addressText: "Address",
+    locationText: "Location",
+    buttonContainedVarient: "contained",
+    colorBlue: "blue",
+    travelMode: "DRIVING",
+    mapInputBox: "Map-input-box",
+    enterOrigin: "Enter origin",
+    enterDestination: "Enter destination",
+    text: "text",
+    showGoogleMapClass: "ShowGoogleMapClass",
+    closeButtonCls: "close-button",
+    marginBottom10: "marginBottom-10",
 };
 
 export const apiUrls = {
@@ -23,4 +39,9 @@ export const apiUrls = {
         `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`,
     documentMapping: (pageNumber) =>
         `${process.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping?pageNumber=${pageNumber}&pageSize=10`,
+};
+
+export const mapContainerStyle = {
+    width: '100%',
+    height: '400px',
 };
