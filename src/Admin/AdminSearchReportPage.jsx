@@ -38,7 +38,7 @@ const AdminSearchRepostPage = () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-user-report`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/admin-user-report`,
         {
           params: {
             startDate: startDate,

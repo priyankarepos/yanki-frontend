@@ -7,11 +7,11 @@ const ReminderNotification = ({ answer }) => {
     const [reminders, setReminders] = useState([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) || '{}');
     const userId = yankiUser?.userObject?.userId || '';
     const fetchReminders = useCallback(async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`);
+            const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`);
             setReminders(response.data);
         } catch (error) {
             setSnackbarMessage('Error fetching reminders:', error);
@@ -25,7 +25,7 @@ const ReminderNotification = ({ answer }) => {
 
     const handleCancel = async (id, messageServiceId) => {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_HOST}/api/reminder/delete-reminder?reminderId=${id}&messageServiceId=${messageServiceId}`);
+            await axios.delete(`${import.meta.env.VITE_APP_API_HOST}/api/reminder/delete-reminder?reminderId=${id}&messageServiceId=${messageServiceId}`);
             setReminders(reminders.filter(reminder => reminder.id !== id));
             setSnackbarMessage('Reminder cancelled successfully');
             setSnackbarOpen(true);

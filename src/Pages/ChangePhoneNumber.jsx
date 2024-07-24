@@ -28,7 +28,7 @@ const ChangePhoneNumber = () => {
     const fetchCurrentPhoneNumber = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/auth/current-phoneNumber`
+          `${import.meta.env.VITE_APP_API_HOST}/api/auth/current-phoneNumber`
         );
 
         if (response.status === 200) {
@@ -67,7 +67,7 @@ const ChangePhoneNumber = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/auth/change-phoneNumber`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
         {
           newPhoneNumber: data.signInPhone,
         }

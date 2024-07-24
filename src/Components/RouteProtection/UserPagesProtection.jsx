@@ -6,7 +6,7 @@ const UserPagesProtection = ({ children }) => {
   const location = useLocation();
 
   const tokenFromLocalStorage = localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
   );
 
   const getCurrentUnixTimeStamp = getUtcUnixTimeStampInSeconds();
@@ -22,15 +22,15 @@ const UserPagesProtection = ({ children }) => {
         return <Navigate to="/auth" state={{ from: location }} replace />;
       }
     } else {
-      window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
       window.localStorage.removeItem(
-        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
       );
       return <Navigate to="/auth" state={{ from: location }} replace />;
     }
   } catch (e) {
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER);
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 };

@@ -39,7 +39,7 @@ const AdminAddFaq = () => {
       setLoadingData(true);
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/faqManagement/get-faq`
+          `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/get-faq`
         );
         setAdminFaqData(response.data);
         setLoadingData(false);
@@ -68,7 +68,7 @@ const AdminAddFaq = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/faqManagement/delete-faq/${selectedFaqId}`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/delete-faq/${selectedFaqId}`;
       const response = await axios.delete(apiUrl);
       const updatedFaqList = adminFaqData.filter(
         (faq) => faq.id !== selectedFaqId
@@ -93,7 +93,7 @@ const AdminAddFaq = () => {
   const handleSaveFaqs = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/faqManagement/add-faq`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/add-faq`;
       const trimmedQuestion = question.trim();
       const trimmedAnswer = answer.trim();
 
@@ -121,7 +121,7 @@ const AdminAddFaq = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/faqManagement/edit-faq`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/edit-faq`;
       const trimmedQuestion = question.trim();
       const trimmedAnswer = answer.trim();
 

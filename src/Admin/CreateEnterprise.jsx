@@ -443,7 +443,7 @@ const AdminCreateEnterprise = () => {
     function loadGoogleMapsScript() {
       if (!window.google || !window.google.maps || !window.google.maps.places) {
         const script = document.createElement(messages.scriptText);
-        const googleMapsApiUrl = apiUrls.googleMapsApi(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
+        const googleMapsApiUrl = apiUrls.googleMapsApi(import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY);
         script.src = googleMapsApiUrl;
         script.async = true;
         script.defer = true;

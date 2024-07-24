@@ -40,7 +40,7 @@ const AdminAddEventType = () => {
     const fetchEventTypes = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`
         );
 
         if (response.status === 200) {
@@ -74,7 +74,7 @@ const AdminAddEventType = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/event-type/delete-event-type/${selectedEventTypeId}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/event-type/delete-event-type/${selectedEventTypeId}`
       );
 
       if (response.status === 200) {
@@ -115,7 +115,7 @@ const AdminAddEventType = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/add-event-type`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-type/add-event-type`;
 
       const response = await axios.post(apiUrl, { eventTypeName });
 
@@ -154,7 +154,7 @@ const AdminAddEventType = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-type/update-event-type`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-type/update-event-type`;
 
       const response = await axios.put(apiUrl, {
         id: editEventTypeId,
