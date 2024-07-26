@@ -90,6 +90,7 @@ export const agentChatResponse = {
     sendButtonMessage: "send-button-message",
     enterprise: "Enterprise",
     customDisableLight: "Custom-disable-light",
+    chatHeaderHideUserList: "chat-header-hide-user-list",
 }
 
 export const apiUrls = {

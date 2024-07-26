@@ -1,5 +1,7 @@
 .event-request-container {
     display: flex;
+    height: 100vh;
+    overflow-y: hidden;
 }
 
 .enterpriseFormBox {
@@ -259,4 +261,8 @@
 
 .input-field-hide {
     width: 80vw !important;
+}
+
+.chat-header-hide-user-list {
+    margin-top: 10px;
 }
