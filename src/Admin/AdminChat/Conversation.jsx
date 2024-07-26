@@ -209,9 +209,9 @@ const Conversation = ({ onUserList }) => {
           ref={chatContainerRef}
         >
           {messageList.map((message) => (
-            <div>
+            <>
               {(message.senderId === id || message.senderId === currentUserId) && (
-                <div>
+                <>
                   <Box
                     key={message.id}
                     className={`${agentChatResponse.messageItem}
@@ -234,9 +234,9 @@ const Conversation = ({ onUserList }) => {
                   >
                     {message.timestamp}
                   </span>
-                </div>
+                </>
               )}
-            </div>
+            </>
           ))}
         </Box>
         <Box className={agentChatResponse.chatBox}>
