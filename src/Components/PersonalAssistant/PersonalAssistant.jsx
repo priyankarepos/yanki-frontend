@@ -5,10 +5,19 @@ import {
   CircularProgress,
   FormHelperText,
   Snackbar,
+  Box,
 } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
+import UserChatSession from "./UserChatSesion";
+import "./PersonalAssistant.scss";
+import {
+  agentChatResponse,
+  apiUrls,
+} from "../../Utils/stringConstant/AgentChatResponse";
+import { startConnection, stopConnection } from "../../SignalR/signalRService";
+
 const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
@@ -16,6 +25,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   const [mailMessage, setMailMessage] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isChatStarted, setIsChatStarted] = useState(false);
   const yankiUser = JSON.parse(
     window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
       "{}"
@@ -28,11 +38,17 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
       const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
       const response = await axios.post(apiUrl, { content });
       if (response.status === 200) {
-        setMailMessage(response?.data?.message);
-        setLoading(false);
-        setContent("");
-        setTouched(false);
-        fetchRemainingMessage();
+        const sendMessage = await axios.post(`${apiUrls.sendMessage}`, {
+          content,
+        });
+        if (sendMessage.status === 200) {
+          await initializeConnection();
+          setMailMessage(response?.data?.message);
+          setLoading(false);
+          setContent("");
+          setTouched(false);
+          fetchRemainingMessage();
+        }
       } else {
         setSnackbarMessage("Failed to send personal assistant email");
         setSnackbarOpen(true);
@@ -43,8 +59,20 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
     }
   };
 
+  const initializeConnection = async () => {
+    await startConnection();
+
+    return () => {
+      stopConnection();
+    };
+  };
+
   const handleBlur = () => {
     setTouched(true);
+  };
+
+  const handleStartChat = () => {
+    setIsChatStarted(!isChatStarted);
   };
 
   return (
@@ -93,21 +121,38 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
           )}
         </Typography>
         {mailMessage && (
+        <div>
           <Typography sx={{ mt: 2 }}>
-            Your personal assistance request has been received and is currently
-            being reviewed by our YankiAI agents. Depending on your subscription
-            you can expect to receive a response via the email address or SMS
-            number registered with us
+            {agentChatResponse.emailSentMessage}
+            <span className={agentChatResponse.emailSentMessageClass}>
+              {agentChatResponse.agentAvailabe}
+            </span>
           </Typography>
-        )}
+          <Box className={agentChatResponse.startChatContainer}>
+            <Typography
+              className={`${agentChatResponse.startChat} ${
+                userRoles === agentChatResponse.enterprise ? agentChatResponse.customDisableLight : ""
+              }`}
+              onClick={handleStartChat}
+            >
+              {agentChatResponse.startingChat}
+            </Typography>
+          </Box>
+        </div>
+        )} 
       </Paper>
-
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
+
+      {isChatStarted && (
+        <Box className={agentChatResponse.userChatSession}>
+          <UserChatSession />
+        </Box>
+      )}
     </>
   );
 };

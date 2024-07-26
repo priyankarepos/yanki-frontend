@@ -31,6 +31,19 @@ export const messages = {
     closeButtonCls: "close-button",
     marginBottom10: "marginBottom-10",
     listLocationMsg: "Below is the list of locations.",
+    adminDashboardSidebarIcon: "admin-dashboard-sidebar-icon",
+    assignmentIcon: "assignmentIcon",
+    createAdminIcon: "createAdminIcon",
+    bubbleChatUser: "bubbleChatUser",
+    ruleIcon: "ruleIcon",
+    categoryIcon: "categoryIcon",
+    addIcon: "addIcon",
+    accountBalanceIcon: "accountBalanceIcon",
+    upload: "upload",
+    eventIcon: "eventIcon",
+    addLocationAltIcon: "addLocationAltIcon",
+    liveHelpIcon: "liveHelpIcon",
+    adminChat: "Admin Chat"
 };
 
 export const apiUrls = {
