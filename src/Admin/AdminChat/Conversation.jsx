@@ -169,7 +169,7 @@ const Conversation = ({ onUserList }) => {
       }`}
     >
       {userList && (
-        <Box className={agentChatResponse.chatHeader}>
+        <Box className={`${agentChatResponse.chatHeader} ${isMediumScreen ? agentChatResponse.chatHeaderHideUserList: ""}`}>
           {isMediumScreen && (
             <img
               className={agentChatResponse.chatHeaderBackArrow}
