@@ -91,6 +91,8 @@ export const agentChatResponse = {
     enterprise: "Enterprise",
     customDisableLight: "Custom-disable-light",
     chatHeaderHideUserList: "chat-header-hide-user-list",
+    agentChatContainerShow: "agent-chat-container-show",
+    agentChatContainerHide: "agent-chat-container-hide",
 }
 
 export const apiUrls = {

@@ -144,7 +144,7 @@ const UserChatList = () => {
   };
 
   return (
-    <Box className={agentChatResponse.eventRequestContainer}>
+    <Box className={`${agentChatResponse.eventRequestContainer} ${isMediumScreen ? agentChatResponse.agentChatContainerHide : agentChatResponse.agentChatContainerShow}`}>
       <Box
         sx={{
           width:
