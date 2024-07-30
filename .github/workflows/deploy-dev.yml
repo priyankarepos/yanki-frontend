@@ -43,22 +43,22 @@ jobs:
           CI: ${{secrets.CI }}
         run: npm run build
 
-      # - name: Deploy to S3
-      #   uses: jakejarvis/s3-sync-action@master
-      #   with:
-      #    args: --follow-symlinks --delete 	
-      #   env:
-      #     AWS_S3_BUCKET: static-site-bucket-yanki
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     SOURCE_DIR: 'dist'
+      - name: Deploy to S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+         args: --follow-symlinks --delete 	
+        env:
+          AWS_S3_BUCKET: static-site-bucket-yanki
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SOURCE_DIR: 'dist'
       
-      # - name: Invalidate CloudFront
-      #   uses: chetan/invalidate-cloudfront-action@v2
-      #   env:
-      #     #DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
-      #     DISTRIBUTION: "E2PBFISBH0TMVN"
-      #     PATHS: "/index.html"
-      #     AWS_REGION: "us-east-1"
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          #DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
+          DISTRIBUTION: "E2PBFISBH0TMVN"
+          PATHS: "/index.html"
+          AWS_REGION: "us-east-1"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
