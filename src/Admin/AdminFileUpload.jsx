@@ -167,7 +167,7 @@ const AdminFileUpload = () => {
     if (rowIndex !== -1) {
       try {
         const response = await axios.delete(
-          `${import.meta.env.REACT_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
+          `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
           {
             params: {
               documentId: pdfId,
