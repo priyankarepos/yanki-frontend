@@ -43,6 +43,9 @@ jobs:
           CI: ${{secrets.CI }}
         run: npm run build
 
+      - name: List build directory
+        run: ls -la dist
+
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
