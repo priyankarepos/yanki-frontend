@@ -71,7 +71,7 @@ const AdminFileUpload = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
 
-  const s3BaseUrl = import.meta.env.VITE_API_S3_BASE_URL;
+  const s3BaseUrl = import.meta.env.VITE_APP_S3_BASE_URL;
 
   const fetchData = async (pageNumber) => {
     try {
