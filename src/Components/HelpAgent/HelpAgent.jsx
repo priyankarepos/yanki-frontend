@@ -26,7 +26,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const handlePersonalAssistant = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${import.meta.env.REACT_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
       const response = await axios.post(apiUrl, { content });
       if (response.status === 200) {
         setMailMessage(response?.data?.message);

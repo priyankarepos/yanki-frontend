@@ -35,7 +35,7 @@ const KosherMapComponent = ({ answer }) => {
     const { userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
     const showEnterpriseName = answer?.enterpriseLocation?.some(location => location.enterpriseName);
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
     });
 
     const Row = ({ location }) => {
@@ -121,7 +121,7 @@ const KosherMapComponent = ({ answer }) => {
                                     )}
                                 </Box>
                                 {isLoaded && showMap && (
-                                    <LoadScriptNext googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                                    <LoadScriptNext googleMapsApiKey={import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY}>
                                         <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={15}>
                                             {response && (
                                                 <DirectionsRenderer
