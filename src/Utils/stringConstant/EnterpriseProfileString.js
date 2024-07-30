@@ -101,15 +101,15 @@ export const messages = {
 };
 
 export const apiUrls = {
-    getCertificate: `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`,
-    uploadDocument: `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=true`,
-    deleteDocument: `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=`,
-    getEnterpriseCategories: `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`,
-    getEnterpriseDetails: `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`,
-    checkEnterpriseKeyword: `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/`,
-    adminCreateEnterprise :`${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
-    updateEnterpriseDetails: `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
+    getCertificate: `${import.meta.env.VITE_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`,
+    uploadDocument: `${import.meta.env.VITE_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=true`,
+    deleteDocument: `${import.meta.env.VITE_APP_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=`,
+    getEnterpriseCategories: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`,
+    getEnterpriseDetails: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-details`,
+    checkEnterpriseKeyword: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/`,
+    adminCreateEnterprise :`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
+    updateEnterpriseDetails: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
     googleMapsApi: (apiKey) => `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initAutocomplete`,
-    adminDeleteEnterprise: (enterpriseId) => `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-delete-enterprise/${enterpriseId}`,
+    adminDeleteEnterprise: (enterpriseId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/admin-delete-enterprise/${enterpriseId}`,
     
 };

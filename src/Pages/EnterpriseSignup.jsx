@@ -84,7 +84,7 @@ const EnterpriseSignup = () => {
     const fetchEnterpriseCategories = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
@@ -118,7 +118,7 @@ const EnterpriseSignup = () => {
 
       // Make the POST request
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/register`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
         dataToSend
       );
 

@@ -56,7 +56,7 @@ const AdminEnterpriseRequest = () => {
     const fetchEnterpriseCategories = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
 
         if (response.status === 200) {
@@ -76,7 +76,7 @@ const AdminEnterpriseRequest = () => {
         const categoryIdParam = selectedCategory || null;
 
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
           {
             params: {
               categoryId: categoryIdParam,
@@ -113,7 +113,7 @@ const AdminEnterpriseRequest = () => {
       const updatedLoadingRows = [...loadingRows, enterpriseId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
       const response = await axios.post(url);
 
       if (response.status === 200) {
@@ -147,7 +147,7 @@ const AdminEnterpriseRequest = () => {
       const updatedLoadingRows = [...loadingRows, enterpriseId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
       const response = await axios.post(url);
 
       if (response.status === 200) {
@@ -185,7 +185,7 @@ const AdminEnterpriseRequest = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
       const response = await axios.delete(url);
 
       if (response.status === 200) {

@@ -80,7 +80,7 @@ const SigninPage = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/register`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
         dataToSend
       );
 
@@ -109,7 +109,7 @@ const SigninPage = () => {
       const { access_token } = codeResponse;
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/verify-google-access-token`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-google-access-token`,
         { access_token }
       );
 

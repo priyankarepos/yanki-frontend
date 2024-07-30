@@ -109,7 +109,7 @@ const AdminEventRequest = () => {
   const fetchEventRequest = async (pageNumber) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`
       );
 
       if (response.status === 200) {
@@ -132,7 +132,7 @@ const AdminEventRequest = () => {
     const fetchEventLocations = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`
         );
 
         if (response.status === 200) {
@@ -153,7 +153,7 @@ const AdminEventRequest = () => {
     const fetchEventPublicationArea = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
         );
 
         if (response.status === 200) {
@@ -174,7 +174,7 @@ const AdminEventRequest = () => {
     const fetchEventTypes = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`
         );
 
         if (response.status === 200) {
@@ -199,7 +199,7 @@ const AdminEventRequest = () => {
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
+      const addEventUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`;
       const addEventData = {
         eventName: data.EventName,
         eventAddress: data.EventLocationAddress,
@@ -224,7 +224,7 @@ const AdminEventRequest = () => {
         return;
       }
 
-      const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+      const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
       await axios.post(imageUploadUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -300,7 +300,7 @@ const AdminEventRequest = () => {
         eventDateAndTime: `${formData.date}T${formData.time}`,
       };
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/events/update-event`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/update-event`;
       await axios.put(apiUrl, requestData);
       if (
         Array.isArray(formData.uploadedFiles) &&
@@ -310,7 +310,7 @@ const AdminEventRequest = () => {
         formData.uploadedFiles.forEach((file) => {
           formDataImages.append("imageFiles", file);
         });
-        const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${editEventId}`;
+        const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${editEventId}`;
         await axios.post(imageUploadUrl, formDataImages, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -338,10 +338,10 @@ const AdminEventRequest = () => {
     try {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
-      const approveUrl = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
+      const approveUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
       const approveResponse = await axios.post(approveUrl);
       if (approveResponse.status === 200) {
-        const emailUrl = `${process.env.REACT_APP_API_HOST}/api/events/send-email-to-eventSubscribers?eventId=${eventId}`;
+        const emailUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/send-email-to-eventSubscribers?eventId=${eventId}`;
         await axios.post(emailUrl);
         setSnackbarMessage(
           `Event ${EventName} approved successfully`,
@@ -369,7 +369,7 @@ const AdminEventRequest = () => {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/reject`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/reject`;
       const response = await axios.post(url);
 
       if (response.status === 200) {
@@ -399,7 +399,7 @@ const AdminEventRequest = () => {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${process.env.REACT_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/askformoreinformation`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/askformoreinformation`;
       const response = await axios.post(url);
 
       if (response.status === 200) {
@@ -431,7 +431,7 @@ const AdminEventRequest = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_HOST}/api/events/delete-event/${eventIdToDelete}`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/delete-event/${eventIdToDelete}`;
       const response = await axios.delete(url);
 
       if (response.status === 200) {
@@ -507,7 +507,7 @@ const AdminEventRequest = () => {
 
   const handleDeleteImage = async (imageId) => {
     try {
-      const deleteImageUrl = `${process.env.REACT_APP_API_HOST}/api/events/delete-event-image/${imageId}`;
+      const deleteImageUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/delete-event-image/${imageId}`;
       await axios.delete(deleteImageUrl);
       setSnackbarMessage("Image deleted successfully");
       setSnackbarOpen(true);
