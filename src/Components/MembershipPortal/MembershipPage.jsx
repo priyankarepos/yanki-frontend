@@ -17,8 +17,10 @@ import "./MembershipStyle.scss";
 import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useTranslation } from "react-i18next";
 
 const MembershipPage = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
   const [reversedProducts, setReversedProducts] = useState([]);
@@ -253,11 +255,11 @@ const MembershipPage = () => {
         <Box className="subscription-page">
           <Box className="membership-heading-wrapper">
             <Typography variant="h5" sx={{ my: 2 }}>
-              Choose a subscription plan that best supports your empowerment
+              {t('subscriptionPageTitle')}
             </Typography>
             {updateCustomerId?.isPlanSubscribed && <Typography className="subscribe-link">
               <span onClick={handleUpdateSubscriptionPlan}>
-                View Plan Details
+              {t('viewPlanDetails')}
               </span>
             </Typography>}
           </Box>
@@ -265,7 +267,7 @@ const MembershipPage = () => {
             remainingMsgData?.totalTaskLeft <= 0) &&
             updateCustomerId?.isPlanSubscribed && (
               <Typography sx={{ my: 2 }}>
-                Your current limit of messages has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset.
+                {t('limitReached')}
               </Typography>
             )}
           <Grid container spacing={2} alignItems="center">
@@ -320,12 +322,12 @@ const MembershipPage = () => {
           {updateCustomerId?.isPlanSubscribed && (
             <Box className="taskPurchaseContainer">
               <Typography variant="h5" className="taskPurchaseHeader">
-                Purchase additional personal tasks
+              {t('purchaseAdditionalTasks')}
               </Typography>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={12} sm="auto">
                   <Typography className="taskPurchaseText">
-                    Additional task $
+                  {t('additionalTask')} $
                     {reversedProducts
                       .filter(
                         (item) =>
@@ -359,7 +361,7 @@ const MembershipPage = () => {
                 </Grid>
                 <Grid item xs={12} sm="auto">
                   <Typography className="totalText">
-                    Total = $
+                  {t('total')} = $
                     {(
                       reversedProducts
                         .filter(
@@ -382,7 +384,7 @@ const MembershipPage = () => {
                 className="purchase-task-btn"
                 onClick={handleBuyTask}
               >
-                Buy Task
+                {t('buyTask')}
               </Button>
             </Box>
           )}

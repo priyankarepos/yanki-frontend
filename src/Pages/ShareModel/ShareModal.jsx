@@ -8,8 +8,10 @@ import shareChatIcon4 from "../../Assets/images/share-chat4.svg";
 import shareChatIcon5 from "../../Assets/images/share-chat5.svg";
 import "./ShareChatLink.scss";
 import { apiUrls, classNames, messages } from '../../Utils/stringConstant/stringConstant';
+import { useTranslation } from "react-i18next";
 
 const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
+    const { t } = useTranslation();
     const [chatLink, setChatLink] = useState('');
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -34,12 +36,12 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                 setChatLink(newChatLink);
                 setLinkGenerated(true);
                 await navigator.clipboard.writeText(newChatLink);
-                setSnackbarMessage(messages.copyToClipboard);
+                setSnackbarMessage(`${t('copiedToClipboard')}`);
             } else {
-                setSnackbarMessage(messages.failedToGenerateShareChatId);
+                setSnackbarMessage(`${t('failedToGenerateShareChatId')}`);
             }
         } catch (error) {
-            setSnackbarMessage(messages.errorMessagePrefix + error.message);
+            setSnackbarMessage(error.message);
         } finally {
             setSnackbarOpen(true);
         }
@@ -48,9 +50,9 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     const handleCopyLink = async () => {
         try {
             await navigator.clipboard.writeText(chatLink);
-            setSnackbarMessage(messages.copyToClipboard);
+            setSnackbarMessage(`${t('copiedToClipboard')}`);
         } catch (error) {
-            setSnackbarMessage(messages.errorMessagePrefix + error.message);
+            setSnackbarMessage(error.message);
         } finally {
             setSnackbarOpen(true);
         }
@@ -85,10 +87,10 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             >
                 <Box mb={2}>
                     <Typography className={classNames.sharedChatMsgTitle}>
-                        {messages.shareLinkModalTitle}
+                    {t('sharePublicLinkToChat')}
                     </Typography>
                     <Typography className={classNames.sharedChatMsgTxt}>
-                        {!linkGenerated ? messages.sharedChatMsg1 : messages.sharedChatMsg2}
+                        {!linkGenerated ? `${t('yourNameAndMessagesStayPrivate')}` : `${t('publicLinkCreated')}`}
                     </Typography>
                 </Box>
                 {linkGenerated && <Box className={classNames.sharedChatLinkIcons} mt={2}>
@@ -117,7 +119,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                             onClick={handleCopyLink}
                             className={classNames?.sharedChatButton}
                         >
-                            {messages.copyLinkButtonText}
+                            {t('copyLink')}
                         </Button>
                     ) : (
                         <Button
@@ -126,7 +128,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                             onClick={handleCreateLink}
                             className={classNames?.sharedChatButton}
                         >
-                            {messages.createLinkButtonText}
+                            {t('createLink')}
                         </Button>
                     )}
                 </Box>

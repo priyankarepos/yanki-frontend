@@ -16,8 +16,10 @@ import "./Style.scss";
 import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
 
 const ChangePhoneNumber = () => {
+  const { t } = useTranslation();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -36,7 +38,7 @@ const ChangePhoneNumber = () => {
           setCurrentPhoneNumber(response.data.phoneNumber);
         }
       } catch (error) {
-        setSnackbarMessage("Error fetching current phone number:", error);
+        setSnackbarMessage(`${t('errorFetchingPhoneNumber')}`, error);
         setSnackbarOpen(true);
       }
     };
@@ -87,7 +89,7 @@ const ChangePhoneNumber = () => {
       if (e?.response?.data?.message) {
         setErrorMsg(e?.response?.data?.message);
       } else {
-        setErrorMsg("Something went wrong");
+        setErrorMsg(`${t('somethingWentWrong')}`);
       }
     }
   };
@@ -110,7 +112,7 @@ const ChangePhoneNumber = () => {
               variant="h5"
               className="text-center marginBottom-34"
             >
-              Change Phone Number
+              {t('changePhoneNumberTxt')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <InputLabel sx={{pb:1}}>Current Phone:</InputLabel>
@@ -128,7 +130,7 @@ const ChangePhoneNumber = () => {
                         currentPhoneNumber ? currentPhoneNumber : field.value
                       }
                       preferredCountries={["us", "il", "gb", "ca", "mx"]}
-                      placeholder="No current number; enter a new one."
+                      placeholder={t('noCurrentNumberEnterNewOne')}
                       onChange={(value, country, event) => {
                         field.onChange(value);
                       }}
@@ -145,14 +147,14 @@ const ChangePhoneNumber = () => {
                   </div>
                 )}
               />
-              <InputLabel sx={{pb:1}}>New Phone:</InputLabel>
+              <InputLabel sx={{pb:1}}>{t('newPhone')}</InputLabel>
               <Controller
                 control={control}
                 name="signInPhone"
                 rules={{
                   required: {
                     value: true,
-                    message: "Phone number is required.",
+                    message: `${t('phoneNumberRequired')}`,
                   },
                 }}
                 render={({ field }) => (
@@ -164,7 +166,7 @@ const ChangePhoneNumber = () => {
                       }}
                       value={field.value}
                       preferredCountries={["us", "il", "gb", "ca", "mx"]}
-                      placeholder="Phone number"
+                      placeholder={t('phoneNumber')}
                       onChange={(value, country, event) => {
                         field.onChange(value);
                       }}
@@ -198,7 +200,7 @@ const ChangePhoneNumber = () => {
                 className="marginBottom-20 bold"
                 type="submit"
               >
-                Update
+                {t('updateButton')}
               </Button>
             </form>
             <Link
@@ -207,7 +209,7 @@ const ChangePhoneNumber = () => {
               underline="none"
               variant="body1"
             >
-              <div className="text-center cursor-pointer bold">Cancel</div>
+              <div className="text-center cursor-pointer bold">{t('cancelButton')}</div>
             </Link>
           </Box>
         </Box>

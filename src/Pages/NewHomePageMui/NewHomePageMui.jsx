@@ -51,8 +51,10 @@ import {
 } from "../../Utils/stringConstant/stringConstant";
 import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg";
 import ShareLinkModal from "../ShareModel/ShareModal";
+import { useTranslation } from 'react-i18next';
 
 const NewHomePageMui = () => {
+  const { t } = useTranslation();
   const { chatId } = useParams();
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
@@ -354,17 +356,14 @@ const NewHomePageMui = () => {
     [chatHistoryPageNumber]
   );
 
-  const handleChatSessionClick = useCallback(
-    async (chatId) => {
-      setIsLoading(false);
-      setSelectedChatId(chatId);
-      navigate(`/${chatId}`);
-      try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
-        );
+  const handleChatSessionClick = useCallback(async (chatId) => {
+    setIsLoading(false);
+    setSelectedChatId(chatId);
+    navigate(`/${chatId}`);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
+      );
 
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
@@ -668,6 +667,14 @@ const NewHomePageMui = () => {
       };
     }
   }, [chatId, navigate]);
+  const getTranslationKey = (arrayName, index) => `${arrayName}.${index}`;
+
+  const allQuestions = [
+    { questions: initialQuestions1, name: messages.languageInitialQuestions1 },
+    { questions: initialQuestions2, name: messages.languageInitialQuestions2 },
+    { questions: initialQuestions3, name: messages.languageInitialQuestions3 },
+    { questions: initialQuestions4, name: messages.languageIinitialQuestions4 },
+  ];
 
   return (
     <Box className="ya-home-wrapper">
@@ -691,6 +698,7 @@ const NewHomePageMui = () => {
                   }
                   width="160px"
                   height="50px"
+                  className="ya-logo-img"
                   alt="logo"
                 />
               </Box>
@@ -773,7 +781,7 @@ const NewHomePageMui = () => {
             onClick={resetPage}
           >
             <AddIcon />
-            &nbsp; New Chat
+            &nbsp;  {t("newChatTxt")}
           </IconButton>
           <Box className="ya-new-chat-box" onScroll={handleScroll}>
             <span
@@ -781,7 +789,7 @@ const NewHomePageMui = () => {
                 activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
               }`}
             >
-              Recent Chat
+              {t("recentChatTxt")}
             </span>
             {chatSessions.map((chatSession) => (
               <div key={chatSession.id}>
@@ -915,7 +923,7 @@ const NewHomePageMui = () => {
             {searchHistory.length <= 0 && !isSubmitting && (
               <Box className="ya-answer-container-response">
                 <Typography className="ya-main-text-heading">
-                  What mitzvah can AI help you with?
+                  {t("homeMainCenterText")}
                 </Typography>
               </Box>
             )}
@@ -954,8 +962,8 @@ const NewHomePageMui = () => {
                           }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={<span>{question.text}</span>}>
-                            <span>{question.text}</span>
+                          <Tooltip title={<span>{t(`initialQuestions1.${question.id - 1}`)}</span>}>
+                            <span>{t(`initialQuestions1.${question.id - 1}`)}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -984,8 +992,8 @@ const NewHomePageMui = () => {
                           }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={<span>{question.text}</span>}>
-                            <span>{question.text}</span>
+                          <Tooltip title={<span>{t(`initialQuestions2.${question.id - 11}`)}</span>}>
+                            <span>{t(`initialQuestions2.${question.id - 11}`)}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -1014,8 +1022,8 @@ const NewHomePageMui = () => {
                           }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={<span>{question.text}</span>}>
-                            <span>{question.text}</span>
+                          <Tooltip title={<span>{t(`initialQuestions3.${question.id - 21}`)}</span>}>
+                            <span>{t(`initialQuestions3.${question.id - 21}`)}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -1044,8 +1052,8 @@ const NewHomePageMui = () => {
                           }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
-                          <Tooltip title={<span>{question.text}</span>}>
-                            <span>{question.text}</span>
+                          <Tooltip title={<span>{t(`initialQuestions4.${question.id - 31}`)}</span>}>
+                            <span>{t(`initialQuestions4.${question.id - 31}`)}</span>
                           </Tooltip>
                         </Button>
                       </div>
@@ -1055,46 +1063,41 @@ const NewHomePageMui = () => {
               )}
               {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                 <div className="home-table-scroll">
-                  {[
-                    initialQuestions1,
-                    initialQuestions2,
-                    initialQuestions3,
-                    initialQuestions4,
-                  ].map((questions, index) => (
-                    <Typography className="ya-mobile-prompt" key={index}>
-                      {questions.map((question) => (
+                  {allQuestions.map((group, groupIndex) => (
+                    <Typography className="ya-mobile-prompt" key={groupIndex}>
+                      {group.questions.map((question, index) => (
                         <span
                           key={question.id}
                           onClick={() => handleQuestionClick(question.text)}
-                          className={`ya-home-table-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
+                          className={`ya-home-table-btn ${activeTab === 0
+                            ? 'ya-search-dark-theme'
+                            : 'ya-search-light-theme'
+                            }`}
                         >
-                          <Tooltip title={question.text}>
-                            {question.text}
+                          <Tooltip title={<span>{t(getTranslationKey(group.name, index), { defaultValue: question.text })}</span>}>
+                            {t(getTranslationKey(group.name, index), { defaultValue: question.text })}
                           </Tooltip>
                         </span>
                       ))}
                     </Typography>
                   ))}
                 </div>
+
               )}
 
               <form>
                 {userRoles !== "Admin" && (
                   <Box className="ya-task-msg-text">
                     <Typography>
-                      Messages Left:{" "}
+                    {t('messagesLeft')}{" "}
                       {remainingMsgData?.totalMessageLeft > 1200
-                        ? "Unlimited"
+                        ? `${t('unlimited')}`
                         : remainingMsgData?.totalMessageLeft}{" "}
-                      Task Left: {remainingMsgData?.totalTaskLeft}
+                      {t('taskLeft')} {remainingMsgData?.totalTaskLeft}
                     </Typography>
                     <Typography>
                       <span onClick={onClickMembershipPortal}>
-                        Upgrade Plan
+                      {t('upgradePlan')}
                       </span>
                     </Typography>
                   </Box>
@@ -1111,7 +1114,7 @@ const NewHomePageMui = () => {
                     name="searchQuery"
                     value={searchQuery}
                     onChange={handleChange}
-                    placeholder="What else can you do?"
+                    placeholder={t("searchPromptPlaceholder")}
                     dir={direction}
                     InputProps={{
                       startAdornment: (

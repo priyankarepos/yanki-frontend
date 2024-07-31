@@ -9,8 +9,10 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/system';
 import "./AnswerStyle.scss";
+import { useTranslation } from "react-i18next";
 
 const IsItKosher = ({ answer }) => {
+  const { t } = useTranslation();
   const kosherProducts = answer?.isItKosher?.products?.data || [];
   const [expandedItems, setExpandedItems] = useState(
     Array(kosherProducts.length).fill(false)
@@ -27,7 +29,7 @@ const IsItKosher = ({ answer }) => {
       {kosherProducts.length > 0 ? (
         <div>
           <Typography sx={{pb:2}}>
-            Below is the list of products I have found. Please note that kosher certification may vary, so it's advisable to check specific product packaging for the most accurate and up-to-date information.
+            {t('productsFound')}
           </Typography>
           {kosherProducts.map((product, index) => (
             <Accordion
@@ -46,20 +48,20 @@ const IsItKosher = ({ answer }) => {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography className="kosher-text">
-                  <strong>Brand:</strong> {product.brand}<br />
-                  <strong>Condition Type:</strong> {product.condition_Type}<br />
-                  <strong>Symbol:</strong> {product.symbol}<br />
-                  <strong>Category:</strong> {product.category}<br />
-                  <strong>Additional Info:</strong>{' '}
+                  <strong>{t('brand')}</strong> {product.brand}<br />
+                  <strong>{t('conditionType')}</strong> {product.condition_Type}<br />
+                  <strong>{t('symbol')}</strong> {product.symbol}<br />
+                  <strong>{t('category')}</strong> {product.category}<br />
+                  <strong>{t('additionalInfo')}</strong>{' '}
                   <span
                     dangerouslySetInnerHTML={{
                       __html: product.notes.replace(/<br\s*[/]?>/gi, '<br/>'),
                     }}
                   />
                   <br />
-                  <strong>Is Gluten-Free:</strong> {product.isGlutenFree ? 'True' : 'False'}<br />
-                  <strong>Is Kosher:</strong> {product.isKosher ? 'True' : 'False'}<br />
-                  <strong>Is Kosher for Passover:</strong> {product.isKosherPassover ? 'True' : 'False'}<br />
+                  <strong>{t('isGlutenFree')}</strong> {product.isGlutenFree ? 'True' : 'False'}<br />
+                  <strong>{t('isKosher')}</strong> {product.isKosher ? 'True' : 'False'}<br />
+                  <strong>{t('isKosherForPassover')}</strong> {product.isKosherPassover ? 'True' : 'False'}<br />
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -67,7 +69,7 @@ const IsItKosher = ({ answer }) => {
         </div>
       ) : (
         <Typography variant="body1">
-          No kosher products found. Please check back later or try a different search.
+          {t('noKosherProductsFound')}
         </Typography>
       )}
     </Paper>

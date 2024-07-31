@@ -6,8 +6,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { ThemeModeContext } from "../../App";
 import "./PaymentSuccessPage.scss";
+import { useTranslation } from "react-i18next";
 
 const PaymentSuccessPage = () => {
+    const { t } = useTranslation();
     const { themeMode } = useContext(ThemeModeContext);
     const navigate = useNavigate();
 
@@ -35,13 +37,13 @@ const PaymentSuccessPage = () => {
                         component="h1"
                         className="title"
                     >
-                        You are now upgraded!
+                        {t('upgradeComplete')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="message"
                     >
-                        Start enjoying all Yanki’s premium features.
+                        {t('enjoyPremiumFeatures')}
                     </Typography>
                     <Button
                         variant="contained"
@@ -49,7 +51,7 @@ const PaymentSuccessPage = () => {
                         onClick={onGoToHome}
                         className="button"
                     >
-                        Continue to Home
+                        {t('continueToHome')}
                     </Button>
                 </Box>
             </Box>

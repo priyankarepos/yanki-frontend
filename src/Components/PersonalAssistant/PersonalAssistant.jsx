@@ -17,8 +17,10 @@ import {
   apiUrls,
 } from "../../Utils/stringConstant/AgentChatResponse";
 import { startConnection, stopConnection } from "../../SignalR/signalRService";
+import { useTranslation } from 'react-i18next';
 
 const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,11 +52,11 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
           fetchRemainingMessage();
         }
       } else {
-        setSnackbarMessage("Failed to send personal assistant email");
+        setSnackbarMessage(`${t('errorSendingPersonalAssistantEmail')}`);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error sending personal assistant email:", error);
+      setSnackbarMessage(`${t('errorSendingPersonalAssistantEmail')}`, error);
       setSnackbarOpen(true);
     }
   };
@@ -79,7 +81,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
     <>
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Personal Assistant
+          {t('personalAssistant')}
         </Typography>
         <Typography>{answer?.message}</Typography>
         <TextField
@@ -88,7 +90,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
           variant="outlined"
           fullWidth
           margin="normal"
-          placeholder="Enter the content here"
+          placeholder={t('enterContentHere')}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
@@ -96,7 +98,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
           disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true || clickableOff}
         />
         <FormHelperText className="error-message">
-          {touched && !content.trim() && "This field is required."}
+          {touched && !content.trim() && `${t('fieldRequired')}`}
         </FormHelperText>
         <Typography
           className={`${
@@ -117,15 +119,15 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
           {loading ? (
             <CircularProgress size={24} className="dark-blur-color" />
           ) : (
-            "Submit"
+            `${t('submit')}`
           )}
         </Typography>
         {mailMessage && (
         <div>
           <Typography sx={{ mt: 2 }}>
-            {agentChatResponse.emailSentMessage}
+          {t('personalAssistanceRequestReceived')}
             <span className={agentChatResponse.emailSentMessageClass}>
-              {agentChatResponse.agentAvailabe}
+            {t('startingChat')}
             </span>
           </Typography>
           <Box className={agentChatResponse.startChatContainer}>
@@ -135,7 +137,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
               }`}
               onClick={handleStartChat}
             >
-              {agentChatResponse.startingChat}
+              {t('startChat')}
             </Typography>
           </Box>
         </div>

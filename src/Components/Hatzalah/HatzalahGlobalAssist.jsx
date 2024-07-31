@@ -17,8 +17,10 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import HatzalahDisclaimer from "./HatzalahDisclaimer";
 import HatzalahVideo from "./HatzalahVideo";
+import { useTranslation } from 'react-i18next';
 
 const HatzalahGlobalAssist = ({ answer }) => {
+  const { t } = useTranslation();
   const [showCheckIcon, setShowCheckIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const [openVideo, setOpenVideo] = useState(true);
@@ -133,16 +135,16 @@ const HatzalahGlobalAssist = ({ answer }) => {
               className="tap-to-call-button"
               onClick={() => handleCall(allPhoneNumbers[0])}
             >
-              TAP TO CALL
+              {t('tapToCall')}
             </p>
           ) : (
             <p className="tap-to-call-button" onClick={handleClickOpen}>
-              TAP TO CALL
+              {t('tapToCall')}
             </p>
           )}
 
           <Dialog open={openDailog} onClose={handleClose}>
-            <DialogTitle>Select a number to call</DialogTitle>
+            <DialogTitle>{t('selectNumberToCall')}</DialogTitle>
             <DialogContent>
               {allPhoneNumbers.map((phoneNumber, index) => (
                 <p
@@ -159,7 +161,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
             </DialogContent>
             <DialogActions>
               <p className="multiple-cancel-container" onClick={handleClose}>
-                Cancel
+                {t('cancelButton')}
               </p>
             </DialogActions>
           </Dialog>
@@ -182,9 +184,9 @@ const HatzalahGlobalAssist = ({ answer }) => {
     <>
       <Paper sx={{ p: 2 }}>
         {answer.globalAssist.fullAddress &&
-        answer.globalAssist.latitude &&
-        answer.globalAssist.longitude &&
-        answer.globalAssist.phoneNumber ? (
+          answer.globalAssist.latitude &&
+          answer.globalAssist.longitude &&
+          answer.globalAssist.phoneNumber ? (
           <div>
             <Box className="hatzala-info-box">
               <Typography component="div" variant="h6">
@@ -196,7 +198,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
                 <TableBody>
                   <TableRow>
                     <TableCell className="coordinates-label">
-                      <strong>Location:</strong>
+                      <strong>{t('location')}:</strong>
                     </TableCell>
                     <TableCell className="coordinates-value">
                       {answer.globalAssist.fullAddress}
@@ -204,7 +206,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
                   </TableRow>
                   <TableRow>
                     <TableCell className="coordinates-label">
-                      <strong>Latitude:</strong>
+                      <strong>{t('latitude')}</strong>
                     </TableCell>
                     <TableCell className="coordinates-value">
                       {answer.globalAssist.latitude}
@@ -212,7 +214,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
                   </TableRow>
                   <TableRow>
                     <TableCell className="coordinates-label">
-                      <strong>Longitude:</strong>
+                      <strong>{t('longitude')}</strong>
                     </TableCell>
                     <TableCell className="coordinates-value">
                       {answer.globalAssist.longitude}
@@ -255,7 +257,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
               onClick={() => setOpenVideo(!openVideo)}
               className="hatzala-training"
             >
-              Training
+              {t('training')}
             </Typography>
             <Typography>|</Typography>
             <Typography
@@ -263,7 +265,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
               onClick={handleOpen}
               className="hatzala-disclaimer"
             >
-              Disclaimer
+              {t('disclaimer')}
             </Typography>
           </Box>
         )}
@@ -284,7 +286,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
         }}
       >
         <DialogTitle variant="h6" className="hatzala-disclaimer-title">
-          Emergency Instructional Videos Disclaimer
+          {t('emergencyInstructionalVideosDisclaimer')}
           <IconButton
             aria-label="close"
             onClick={handleClose}

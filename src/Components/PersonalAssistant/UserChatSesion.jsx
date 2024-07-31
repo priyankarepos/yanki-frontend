@@ -23,8 +23,10 @@ import {
   onReceiveMessage,
   stopConnection,
 } from "../../SignalR/signalRService";
+import { useTranslation } from 'react-i18next';
 
 const UserChatSession = () => {
+  const { t } = useTranslation();
   const [messageList, setMessageList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState();
   const [searchQuery, setSearchQuery] = useState("");
@@ -135,10 +137,10 @@ const UserChatSession = () => {
     <Paper sx={{ p: 2 }}>
       <Box className={agentChatResponse.chatAgentContainer}>
         <Typography className={agentChatResponse.chatAgentHeading}>
-          {agentChatResponse.chatYankiAgent}
+          {t('chatWithYankiAgent')}
         </Typography>
         <Typography className={agentChatResponse.chatAgentTitle}>
-          {agentChatResponse.chatYankiAgentTitle}
+          {t('describeNeedHelp')}
         </Typography>
         <Box className={`${ isSmallScreen ? agentChatResponse.smallUserChatContainer : agentChatResponse.userChatContainer}`} ref={chatContainerRef}>
           {messageList.map((message) => (
@@ -200,7 +202,7 @@ const UserChatSession = () => {
                 name={agentChatResponse.searchQuery}
                 value={searchQuery}
                 onChange={handleChange}
-                placeholder={agentChatResponse.chatwithAgentPlaceholder}
+                placeholder={t('chatWithAgent')}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -208,7 +210,7 @@ const UserChatSession = () => {
                       type={agentChatResponse.submit}
                       onClick={onSubmit}
                     >
-                      <span className={agentChatResponse.sendButtonMessage}>Send</span>
+                      <span className={agentChatResponse.sendButtonMessage}>{t(send)}</span>
                       <img
                         src={SendIcon}
                         alt={agentChatResponse.userAvtar}
