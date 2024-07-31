@@ -91,7 +91,7 @@ const MikvahAnswer = ({ answer }) => {
                 setSnackbarOpen(true);
                 setResponse(null);
             } else {
-                setSnackbarMessage(`${messages.errorFetchingDirections} ${status}`);
+                setSnackbarMessage(`${messages.errorFetchingDirections}`);
                 setSnackbarOpen(true);
                 setResponse(null);
             }
