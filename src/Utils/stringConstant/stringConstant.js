@@ -211,6 +211,7 @@ export const apiUrls = {
     changePhoneNumber: `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
     getAllEvents: (pageNumber) =>
         `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`,
+    deleteDocument: `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
 };
 
 export const membershipApiUrls = {
@@ -255,3 +256,6 @@ export const sourceSelectionStrings = {
     accountMenu: "account-menu",
     true: "true",
 }
+export const headers = {
+    "Content-Type": "multipart/form-data",
+};

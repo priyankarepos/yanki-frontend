@@ -16,6 +16,7 @@ import { ThemeModeContext } from "../App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../Utils/stringConstant/AdminString";
 
 const ChangeRole = () => {
   const [loginLoading, setLoginLoading] = useState(false);
@@ -43,15 +44,12 @@ const ChangeRole = () => {
       const dataToSend = {
         email: data.logInEmail,
       };
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/change-role`,
-        dataToSend
-      );
+      const response = await axios.post(apiUrls.changeRole, dataToSend);
 
       if (response.status === 200) {
         toast.success(response.data.message);
         setTimeout(() => {
-          navigate("/login");
+          navigate(apiUrls.login);
         }, 1000);
       }
     } catch (e) {

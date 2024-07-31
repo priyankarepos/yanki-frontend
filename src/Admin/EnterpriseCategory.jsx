@@ -27,6 +27,7 @@ import { Context } from "../App";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 import { classNames } from "../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../Utils/stringConstant/AdminString";
 
 const AdminEnterpriseCategory = () => {
   const { drawerOpen } = useContext(Context);
@@ -45,10 +46,7 @@ const AdminEnterpriseCategory = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        setLoadingData(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-        );
+        const response = await axios.get(apiUrls.getEnterprisesCategories);
 
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
@@ -84,7 +82,7 @@ const AdminEnterpriseCategory = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
+        apiUrls.deleteEnterprisesCategories(selectedCategoryId)
       );
 
       if (response.status === 200) {
@@ -125,9 +123,9 @@ const AdminEnterpriseCategory = () => {
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
-
-      const response = await axios.post(apiUrl, { name: categoryName });
+      const response = await axios.post(apiUrls.addEnterprisesCategories, {
+        name: categoryName,
+      });
 
       if (response.status === 200) {
         const newCategory = response.data;
@@ -165,11 +163,11 @@ const AdminEnterpriseCategory = () => {
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
-      const response = await axios.put(apiUrl, {
+      const response = await axios.put(apiUrls.updateEnterprisesCategories, {
         name: categoryName,
         id: editCategoryId,
       });
+      
       if (response.status === 200) {
         const updatedCategory = response.data;
         setEnterpriseCategories((prevCategories) => {

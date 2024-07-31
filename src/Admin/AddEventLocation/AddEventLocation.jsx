@@ -24,6 +24,7 @@ import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
+import { apiUrls, message } from "../../Utils/stringConstant/AdminString";
 
 const AdminAddEventLocation = () => {
   const [eventLocations, setEventLocations] = useState([]);
@@ -41,19 +42,16 @@ const AdminAddEventLocation = () => {
   useEffect(() => {
     const fetchEventLocations = async () => {
       try {
-        setLoadingData(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`
-        );
+        const response = await axios.get(apiUrls.getEventLocations);
 
         if (response.status === 200) {
           setEventLocations(response.data);
         } else {
-          setSnackbarMessage("Failed to fetch event location");
+          setSnackbarMessage(message.failedFetchEventLocation);
           setSnackbarOpen(true);
         }
       } catch (error) {
-        setSnackbarMessage("Error fetching event location", error);
+        setSnackbarMessage(message.failedFetchEventLocation, error);
         setSnackbarOpen(true);
       } finally {
         setLoadingData(false);
@@ -73,13 +71,13 @@ const AdminAddEventLocation = () => {
   const handleDeleteLocation = (id) => {
     setConfirmDialogOpen(true);
     setSelectedLocationId(id);
-    setConfirmationText(`Are you sure you want to delete this location?`);
+    setConfirmationText(message.deleteLocation);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/event-location/delete-event-location/${selectedLocationId}`
+        apiUrls.deleteEventLocations(selectedLocationId)
       );
 
       if (response.status === 200) {
@@ -88,14 +86,14 @@ const AdminAddEventLocation = () => {
         );
         setEventLocations(updatedCategories);
         setConfirmDialogOpen(false);
-        setSnackbarMessage("Location deleted successfully");
+        setSnackbarMessage(message.successDeleteLocation);
         setSnackbarOpen(true);
       } else {
-        setSnackbarMessage("Failed to delete event location");
+        setSnackbarMessage(message.failedDeleteLocation);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error deleting event location", error);
+      setSnackbarMessage(message.errorDeleteLocation, error);
       setSnackbarOpen(true);
     }
   };
@@ -116,15 +114,14 @@ const AdminAddEventLocation = () => {
             locationName.toLowerCase()
         )
       ) {
-        setSnackbarMessage("This location already exists!");
+        setSnackbarMessage(message.locationAlreadyExists);
         setSnackbarOpen(true);
         return;
       }
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/event-location/add-event-location`,
-        { eventLocationName: locationName }
-      );
+      const response = await axios.post(apiUrls.addEventLocations, {
+        eventLocationName: locationName,
+      });
 
       if (response.status === 200) {
         const newLocation = response.data;
@@ -134,11 +131,11 @@ const AdminAddEventLocation = () => {
         setSnackbarMessage(newLocation);
         setSnackbarOpen(true);
       } else {
-        setSnackbarMessage("Failed to save event location");
+        setSnackbarMessage(message.failedSaveLocation);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error:", error);
+      setSnackbarMessage(message.failedSaveLocation, error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -155,12 +152,11 @@ const AdminAddEventLocation = () => {
             location.id !== editLocationId
         )
       ) {
-        setSnackbarMessage("This location already exists!");
+        setSnackbarMessage(message.locationAlreadyExists);
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-location/update-event-location`;
-      const response = await axios.put(apiUrl, {
+      const response = await axios.put(apiUrls.updateEventLocations, {
         id: editLocationId,
         eventLocationName: locationName,
       });
@@ -175,14 +171,14 @@ const AdminAddEventLocation = () => {
           setEditLocationId(null);
           return updatedCategories;
         });
-        setSnackbarMessage("Location updated successfully");
+        setSnackbarMessage(message.locationUpdatedSuccess);
         setSnackbarOpen(true);
       } else {
-        setSnackbarMessage("Failed to update event location");
+        setSnackbarMessage(message.failedUpdateLocation);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error:", error);
+      setSnackbarMessage(message.failedUpdateLocation, error);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);

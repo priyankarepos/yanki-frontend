@@ -28,6 +28,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 import { classNames } from "../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../Utils/stringConstant/AdminString";
 
 const AdminEnterpriseRequest = () => {
   const { drawerOpen } = useContext(Context);
@@ -58,10 +59,7 @@ const AdminEnterpriseRequest = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        setLoadingData(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-        );
+        const response = await axios.get(apiUrls.getEnterprisesCategories);
 
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
@@ -81,17 +79,14 @@ const AdminEnterpriseRequest = () => {
       try {
         const categoryIdParam = selectedCategory || null;
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-requests`,
-          {
-            params: {
-              categoryId: categoryIdParam,
-              enterpriseName: query,
-              pageNumber: pageNumber,
-              pageSize: 10,
-            },
-          }
-        );
+        const response = await axios.get(apiUrls.getEnterprisesRequests, {
+          params: {
+            categoryId: categoryIdParam,
+            enterpriseName: query,
+            pageNumber: pageNumber,
+            pageSize: 10,
+          },
+        });
 
         if (response.status === 200) {
           setEnterpriseRequests(response.data);
@@ -119,8 +114,9 @@ const AdminEnterpriseRequest = () => {
       const updatedLoadingRows = [...loadingRows, enterpriseId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/approve`;
-      const response = await axios.post(url);
+      const response = await axios.post(
+        apiUrls.approveRejectEnterprisesRequests(userId, enterpriseId, "approve")
+      );
 
       if (response.status === 200) {
         const updatedRequests = enterpriseRequests.data.map((row) =>
@@ -153,8 +149,9 @@ const AdminEnterpriseRequest = () => {
       const updatedLoadingRows = [...loadingRows, enterpriseId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/approve-reject-enterprises-requests/${userId}/${enterpriseId}/reject`;
-      const response = await axios.post(url);
+      const response = await axios.post(
+        apiUrls.approveRejectEnterprisesRequests(userId, enterpriseId, "reject")
+      );
 
       if (response.status === 200) {
         const updatedRequests = enterpriseRequests.data.map((row) =>
@@ -191,8 +188,9 @@ const AdminEnterpriseRequest = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise/${userIdToDelete}/${enterpriseIdToDelete}`;
-      const response = await axios.delete(url);
+      const response = await axios.delete(
+        apiUrls.deleteEnterprise(userIdToDelete, enterpriseIdToDelete)
+      );
 
       if (response.status === 200) {
         const updatedRequests = enterpriseRequests.data.filter(
@@ -252,7 +250,7 @@ const AdminEnterpriseRequest = () => {
       >
         <Box className="enterprise-content">
           <Box className="enterprise-request-header">
-
+            
             <Typography variant="h6" sx={{ pb: 2 }}>
               Enterprise Request
             </Typography>

@@ -24,6 +24,7 @@ import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../../Utils/stringConstant/AdminString";
 
 const AdminAddEventType = () => {
   const [eventTypes, setEventTypes] = useState([]);
@@ -41,10 +42,7 @@ const AdminAddEventType = () => {
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
-        setLoadingData(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`
-        );
+        const response = await axios.get(apiUrls.getEventsTypes);
 
         if (response.status === 200) {
           setEventTypes(response.data);
@@ -79,7 +77,7 @@ const AdminAddEventType = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/event-type/delete-event-type/${selectedEventTypeId}`
+        apiUrls.deleteEventTypes(selectedEventTypeId)
       );
 
       if (response.status === 200) {
@@ -120,9 +118,7 @@ const AdminAddEventType = () => {
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-type/add-event-type`;
-
-      const response = await axios.post(apiUrl, { eventTypeName });
+      const response = await axios.post(apiUrls.addEventTypes, { eventTypeName });
 
       if (response.status === 200) {
         const newEventType = response.data;
@@ -159,9 +155,7 @@ const AdminAddEventType = () => {
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-type/update-event-type`;
-
-      const response = await axios.put(apiUrl, {
+      const response = await axios.put(apiUrls.updateEventTypes, {
         id: editEventTypeId,
         eventTypeName,
       });
@@ -248,7 +242,7 @@ const AdminAddEventType = () => {
         className="event-pdf-modal-open"
       >
         <Box className="enterprise-add-category-container">
-          <Typography variant="h5" className="enterprise-add-category-modal-title">
+          <Typography variant="h5"className="enterprise-add-category-modal-title">
             {editEventTypeId !== null ? "Edit Event Type" : "Add Event Type"}
           </Typography>
           <form
