@@ -461,7 +461,7 @@ const EnterpriseProfile = () => {
     function loadGoogleMapsScript() {
       if (!window.google || !window.google.maps || !window.google.maps.places) {
         const script = document.createElement(messages.scriptText);
-        const googleMapsApiUrl = apiUrls.googleMapsApi(import.meta.env.VITE_API_GOOGLE_MAPS_API_KEY);
+        const googleMapsApiUrl = apiUrls.googleMapsApi(import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY);
         script.src = googleMapsApiUrl;
         script.async = true;
         script.defer = true;

@@ -74,16 +74,16 @@ const LoginPage = () => {
       if (response.status === 200) {
         if (!data.logInRemeber) {
           window.sessionStorage.setItem(
-            import.meta.env.VITE_API_SESSIONSTORAGE_REFRESH,
+            import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH,
             JSON.stringify(true)
           );
         }
         window.localStorage.setItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER,
+          import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER,
           JSON.stringify(data.logInRemeber)
         );
         window.localStorage.setItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN,
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
@@ -126,7 +126,7 @@ const LoginPage = () => {
       );
       if (response.status === 200) {
         window.localStorage.setItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN,
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
         navigate("/");
