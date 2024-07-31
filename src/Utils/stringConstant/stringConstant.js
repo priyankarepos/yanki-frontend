@@ -43,7 +43,9 @@ export const messages = {
     eventIcon: "eventIcon",
     addLocationAltIcon: "addLocationAltIcon",
     liveHelpIcon: "liveHelpIcon",
-    adminChat: "Admin Chat"
+    adminChat: "Admin Chat",
+    geolocationText : "geolocation",
+    grantedText : "granted",
 };
 
 export const apiUrls = {
