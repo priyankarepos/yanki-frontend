@@ -86,7 +86,7 @@ const NewHomePageMui = () => {
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
     "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";

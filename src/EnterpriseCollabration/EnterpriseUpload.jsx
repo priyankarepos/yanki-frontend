@@ -80,7 +80,7 @@ const EnterpriseFileUpload = () => {
             const formData = new FormData();
             formData.append('file', data.file[0]);
 
-            const apiUrl = `${import.meta.env.VITE_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=false`;
+            const apiUrl = `${import.meta.env.VITE_APP_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=false`;
 
             const response = await axios.post(apiUrl, formData, {
                 headers: {
@@ -127,7 +127,7 @@ const EnterpriseFileUpload = () => {
         if (rowIndex !== -1) {
             try {
                 setLoading(true);
-                const response = await axios.delete(`${import.meta.env.VITE_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
+                const response = await axios.delete(`${import.meta.env.VITE_APP_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
 
                 if (response.status === 200) {
                     const updatedTableData = [...tableData];

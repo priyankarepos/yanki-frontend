@@ -59,7 +59,7 @@ export default function ProfielCircle({ chatId }) {
   const emailBody = "Email body";
 
   const yankiUser = window.localStorage.getItem(
-    import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
   );
 
   let parsedUserObject;
@@ -122,8 +122,8 @@ export default function ProfielCircle({ chatId }) {
   }
 
   const onClickLogout = () => {
-    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER);
-    window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+    window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
+    window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
     navigate("/auth");
 
   };
@@ -153,8 +153,8 @@ export default function ProfielCircle({ chatId }) {
         }, 1000);
         setTimeout(() => {
           clearInterval(timerInterval);
-          window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER);
-          window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+          window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
+          window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
           setIsModalOpen(false);
           navigate("/auth");
         }, 5000);

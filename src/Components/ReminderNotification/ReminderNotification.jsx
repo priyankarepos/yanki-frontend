@@ -7,7 +7,7 @@ const ReminderNotification = ({ answer }) => {
     const [reminders, setReminders] = useState([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userId = yankiUser?.userObject?.userId || '';
     const fetchReminders = useCallback(async () => {
         try {

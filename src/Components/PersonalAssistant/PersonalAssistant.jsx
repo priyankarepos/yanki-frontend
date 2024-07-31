@@ -27,7 +27,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isChatStarted, setIsChatStarted] = useState(false);
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
       "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";

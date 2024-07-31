@@ -67,10 +67,10 @@ const ChangePasswordPage = () => {
         setIsSubmitError(false);
         setErrorMsg("");
         window.localStorage.removeItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
         );
         window.localStorage.removeItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
+          import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
         );
         navigate("/change-password-success");
       }

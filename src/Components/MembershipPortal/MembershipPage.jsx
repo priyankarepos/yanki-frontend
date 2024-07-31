@@ -20,7 +20,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 const MembershipPage = () => {
   const [products, setProducts] = useState([]);
-  const stripePromise = loadStripe(import.meta.env.VITE_API_STRIPE_PUBLIC_KEY);
+  const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
   const [reversedProducts, setReversedProducts] = useState([]);
   const [userId, setUserId] = useState("");
   const [updateCustomerId, setUpdateCustomerId] = useState("");
@@ -54,7 +54,7 @@ const MembershipPage = () => {
 
   useEffect(() => {
     const yankiUser = window.localStorage.getItem(
-      import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+      import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
     );
     if (yankiUser) {
       const parsedUserObject = JSON.parse(yankiUser);
@@ -64,7 +64,7 @@ const MembershipPage = () => {
 
   useEffect(() => {
     const yankiUser = window.localStorage.getItem(
-      import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+      import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
     );
     if (yankiUser) {
       const parsedUserObject = JSON.parse(yankiUser);
