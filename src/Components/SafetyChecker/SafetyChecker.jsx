@@ -10,7 +10,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage }) => {
     const [mailMessage, setMailMessage] = useState("");
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
 
     const handleSafetyCheck = async () => {

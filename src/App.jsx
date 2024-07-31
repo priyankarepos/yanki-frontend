@@ -69,11 +69,11 @@ export const ThemeModeContext = createContext({
 
 // window.onbeforeunload = function () {
 //   const rememeberMe = window.localStorage.getItem(
-//     import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
+//     import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
 //   );
 //   if (rememeberMe === undefined || rememeberMe === "false") {
-//     window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
-//     window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER);
+//     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
+//     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
 //   }
 // };
 
@@ -97,7 +97,7 @@ const accepts401 = [
 */
 axios.interceptors.request.use((request) => {
   const yankiUser = window.localStorage.getItem(
-    import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
   );
   if (yankiUser) {
     const parsedYankiUser = JSON.parse(yankiUser);
@@ -132,12 +132,12 @@ axios.interceptors.response.use(
       error?.response?.status === 401 &&
       !accepts401.includes(pathname)
     ) {
-      window.localStorage.removeItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
       window.localStorage.removeItem(
-        import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );
       window.sessionStorage.removeItem(
-        import.meta.env.VITE_API_SESSIONSTORAGE_REFRESH
+        import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
       );
       window.location.replace("/login");
     } else {
@@ -261,25 +261,25 @@ function App() {
 
   useLayoutEffect(() => {
     let session = window.sessionStorage.getItem(
-      import.meta.env.VITE_API_SESSIONSTORAGE_REFRESH
+      import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
         window.sessionStorage.getItem(
-          import.meta.env.VITE_API_SESSIONSTORAGE_REFRESH
+          import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
         )
       )
       : "";
 
     if (!session) {
       const rememeberMe = window.localStorage.getItem(
-        import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );
       if (rememeberMe === undefined || rememeberMe === "false") {
         window.localStorage.removeItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_TOKEN
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
         );
         window.localStorage.removeItem(
-          import.meta.env.VITE_API_LOCALSTORAGE_REMEMBER
+          import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
         );
       } else {
       }

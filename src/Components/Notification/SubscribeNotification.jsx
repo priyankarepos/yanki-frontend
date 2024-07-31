@@ -19,10 +19,10 @@ const SubscribeNotification = ({ answer }) => {
     const [isSelectedPublicationArea, setIsSelectedPublicationArea] = useState(false);
     const [isSelectedEventTypes, setIsSelectedEventTypes] = useState(false);
 
-    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
     useEffect(() => {
-        const yankiUser = window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+        const yankiUser = window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
         if (yankiUser) {
             const parsedUserObject = JSON.parse(yankiUser);
             setUserId(parsedUserObject?.userObject?.userId || '');
@@ -71,7 +71,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchSubscribeNotification = async () => {
             try {
-                const yankiUser = window.localStorage.getItem(import.meta.env.VITE_API_LOCALSTORAGE_TOKEN);
+                const yankiUser = window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
                 let userId = '';
 
                 if (yankiUser) {
