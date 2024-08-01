@@ -16,7 +16,7 @@ export const messages = {
     mikvahDetailWrapper: "Mikvah-Detail-Wrapper",
     errorFetchingLocation: "Please enable location access to get directions.",
     statusOk: 'OK',
-    errorFetchingDirections: "Location is not available for this address",
+    errorFetchingDirections: "The route is not available from your current location to the specified destination.",
     nameText: "Name",
     addressText: "Address",
     locationText: "Location",
@@ -46,6 +46,7 @@ export const messages = {
     adminChat: "Admin Chat",
     geolocationText : "geolocation",
     grantedText : "granted",
+    errorCheckLocationPermission : "Error checking location permissions:",
 };
 
 export const apiUrls = {
