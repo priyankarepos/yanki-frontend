@@ -44,7 +44,8 @@ import CloseIcon from "@mui/icons-material/Close";
 const MikvahAnswer = ({ answer }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const { activeTab, userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
+    const { activeTab, userLatitude, userLongitude } = useContext(Context);
+    const [isLocationAllowed, setIsLocationAllowed] = useState(false);
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
     });
@@ -69,18 +70,35 @@ const MikvahAnswer = ({ answer }) => {
         };
 
         useEffect(() => {
-            if (isLocationAllowed && navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        setOrigin(`${latitude},${longitude}`);
-                    },
-                    (error) => {
-                        setSnackbarMessage(messages.errorFetchingLocation, error);
+            const checkPermissionsAndFetchLocation = async () => {
+                if (navigator.geolocation) {
+                    try {
+                        const result = await navigator.permissions.query({ name: messages.geolocationText });
+                        const permissionGranted = result.state === messages.grantedText;
+                        setIsLocationAllowed(permissionGranted);
+                        if (permissionGranted) {
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const { latitude, longitude } = position.coords;
+                                    setOrigin(`${latitude},${longitude}`);
+                                },
+                                () => {
+                                    setSnackbarMessage(messages.errorFetchingLocation);
+                                    setSnackbarOpen(true);
+                                }
+                            );
+                        }
+
+                        result.onchange = () => setIsLocationAllowed(result.state === messages.grantedText);
+
+                    } catch (error) {
+                        setSnackbarMessage(messages.errorCheckLocationPermission, error);
                         setSnackbarOpen(true);
                     }
-                );
-            }
+                }
+            };
+
+            checkPermissionsAndFetchLocation();
         }, []);
 
         const directionsCallback = (result, status) => {
@@ -91,7 +109,7 @@ const MikvahAnswer = ({ answer }) => {
                 setSnackbarOpen(true);
                 setResponse(null);
             } else {
-                setSnackbarMessage(`${messages.errorFetchingDirections}`);
+                setSnackbarMessage(`${messages.errorFetchingDirections} ${status}`);
                 setSnackbarOpen(true);
                 setResponse(null);
             }
@@ -105,11 +123,16 @@ const MikvahAnswer = ({ answer }) => {
             setShowMap(true);
         };
 
+        const locationEnable = () => {
+            setSnackbarMessage(`${messages.errorFetchingLocation}`);
+            setSnackbarOpen(true);
+        }
+
         const handleShowDetails = () => {
             fetchMikvahDetails();
             setOpen(!open);
             if (open) {
-                setShowMap(false); 
+                setShowMap(false);
             }
         };
 
@@ -141,7 +164,7 @@ const MikvahAnswer = ({ answer }) => {
                     </TableCell>
                     <TableCell>
                         <Box className={messages.mikvahDetailInfo}>
-                            <Button variant={messages.buttonContainedVarient} onClick={handleSetDestination}>
+                            <Button variant={messages.buttonContainedVarient} onClick={!isLocationAllowed ? locationEnable : handleSetDestination} >
                                 <LocationOnIcon />
                             </Button>
                         </Box>
