@@ -54,7 +54,7 @@ const ChangePasswordPage = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/auth/change-password`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-password`,
         {
           currentPassword: data.currentPassword,
           newPassword: data.newPassword,
@@ -67,10 +67,10 @@ const ChangePasswordPage = () => {
         setIsSubmitError(false);
         setErrorMsg("");
         window.localStorage.removeItem(
-          process.env.REACT_APP_LOCALSTORAGE_TOKEN
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
         );
         window.localStorage.removeItem(
-          process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+          import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
         );
         navigate("/change-password-success");
       }

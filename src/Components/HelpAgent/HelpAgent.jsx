@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
+import { apiUrls } from "../../Utils/stringConstant/stringConstant";
 const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
@@ -18,7 +19,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [showMsg, setShowMsg] = useState(false);
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
     "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
@@ -26,8 +27,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
   const handlePersonalAssistant = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/personal-assistant-email`;
-      const response = await axios.post(apiUrl, { content });
+      const response = await axios.post(apiUrls.personalAssistantEmail, { content });
       if (response.status === 200) {
         setMailMessage(response?.data?.message);
         setLoading(false);

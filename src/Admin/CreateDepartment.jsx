@@ -73,7 +73,7 @@ const AdminCreateDepartment = () => {
     const getEnterpriseDetails = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-all-enterprise-details`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-all-enterprise-details`
         );
 
         if (response.status === 200) {
@@ -152,7 +152,7 @@ const AdminCreateDepartment = () => {
   const checkEnterpriseKeyword = async (tag, enterpriseId) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${selectedEnterpriseId}/${tag}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${selectedEnterpriseId}/${tag}`
       );
       setSnackbarMessage("Keyword Check Response:", response.data);
       setSnackbarOpen(true);
@@ -256,7 +256,7 @@ const AdminCreateDepartment = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${selectedEnterpriseId}`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${selectedEnterpriseId}`
         );
 
         if (response.status === 200) {
@@ -350,7 +350,7 @@ const AdminCreateDepartment = () => {
   const deleteDepartment = async () => {
     const { departmentId } = departmentsData[selectedDepartmentIndex];
     try {
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
       const response = await axios.delete(apiUrl);
 
       if (response.status === 200) {
@@ -379,7 +379,7 @@ const AdminCreateDepartment = () => {
         setLoading(true);
         const response = await axios.delete(
           `${
-            process.env.REACT_APP_API_HOST
+            import.meta.env.VITE_APP_API_HOST
           }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
             pdfName
           )}`
@@ -419,7 +419,7 @@ const AdminCreateDepartment = () => {
         setLoading(true);
         const response = await axios.delete(
           `${
-            process.env.REACT_APP_API_HOST
+            import.meta.env.VITE_APP_API_HOST
           }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
             pdfName
           )}`
@@ -480,7 +480,7 @@ const AdminCreateDepartment = () => {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
         payload
       );
       setTriggerEffect((prev) => !prev);
@@ -519,7 +519,7 @@ const AdminCreateDepartment = () => {
     }
     try {
       const tagsAsString = tags.join(",");
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
 
       const requestBody = {
         departmentId: data.DepartmentId,
@@ -575,7 +575,7 @@ const AdminCreateDepartment = () => {
       const formData = new FormData();
       formData.append("file", data.file[0]);
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=false&EnterpriseId=${selectedEnterpriseId}`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=false&EnterpriseId=${selectedEnterpriseId}`;
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -616,7 +616,7 @@ const AdminCreateDepartment = () => {
       const formData = new FormData();
       formData.append("file", data.file[0]);
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=true&EnterpriseId=${selectedEnterpriseId}`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=true&EnterpriseId=${selectedEnterpriseId}`;
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -657,7 +657,7 @@ const AdminCreateDepartment = () => {
       setTableData([]);
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-document?EnterpriseId=${selectedEnterpriseId}`
+          `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-document?EnterpriseId=${selectedEnterpriseId}`
         );
 
         if (response.status === 200) {
@@ -685,7 +685,7 @@ const AdminCreateDepartment = () => {
       setCertificateDetails([]);
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-certificate?EnterpriseId=${selectedEnterpriseId}`
+          `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-certificate?EnterpriseId=${selectedEnterpriseId}`
         );
 
         if (response.status === 200) {

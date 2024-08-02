@@ -19,7 +19,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                 departmentEmail: enterprise?.departmentEmail,
             };
 
-            const response = await axios.post(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
+            const response = await axios.post(`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
                 requestData);
             if (response.status === 200) {
                 const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
@@ -98,7 +98,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                                                 setSelectedEnterprise(enterprise.enterpriseName);
                                                 handleSendEmail(enterprise);
                                             }}
-                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : <></>}
+                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : null}
                                         </div>
                                     </Box>
                                 </Grid>

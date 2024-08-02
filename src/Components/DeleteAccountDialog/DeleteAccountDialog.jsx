@@ -32,12 +32,12 @@ const DeleteAccountConfirmDialog = ({
                     <DialogContentText className="confirm-dialog-text confirm-dialog-text-heading">
                         Account Deletion Details:
                     </DialogContentText>
-                    <DialogContentText className="confirm-dialog-text">
+                    <div className="confirm-dialog-text">
                         <ul>
                             <li><FiberManualRecordIcon fontSize="small" /> Your account and all associated data, including your subscription, will be permanently deleted.</li>
                             <li><FiberManualRecordIcon fontSize="small" /> This action cannot be undone.</li>
                         </ul>
-                    </DialogContentText>
+                    </div>
                 </DialogContent>
                 <DialogActions className="confirm-dialog-actions">
                     <Button className="confirm-delete-button" onClick={handleConfirm} color="error" disabled={loading}>

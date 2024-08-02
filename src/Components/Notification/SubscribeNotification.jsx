@@ -19,10 +19,10 @@ const SubscribeNotification = ({ answer }) => {
     const [isSelectedPublicationArea, setIsSelectedPublicationArea] = useState(false);
     const [isSelectedEventTypes, setIsSelectedEventTypes] = useState(false);
 
-    const yankiUser = JSON.parse(window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) || '{}');
+    const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
     useEffect(() => {
-        const yankiUser = window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+        const yankiUser = window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
         if (yankiUser) {
             const parsedUserObject = JSON.parse(yankiUser);
             setUserId(parsedUserObject?.userObject?.userId || '');
@@ -31,7 +31,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
                 setEventLocations(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching event location:', error);
@@ -44,7 +44,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
                 setPublicationArea(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching publication area:', error);
@@ -57,7 +57,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
                 setEventTypes(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching event types:', error);
@@ -71,7 +71,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchSubscribeNotification = async () => {
             try {
-                const yankiUser = window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+                const yankiUser = window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
                 let userId = '';
 
                 if (yankiUser) {
@@ -79,7 +79,7 @@ const SubscribeNotification = ({ answer }) => {
                     userId = parsedUserObject?.userObject?.userId || '';
                 }
 
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
 
                 setSubscribeNotification(response.data);
             } catch (error) {
@@ -103,7 +103,7 @@ const SubscribeNotification = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 isSubscribeToEvent: true
             };
-            const addSubscriptionUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/add-subscription`;
+            const addSubscriptionUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/add-subscription`;
             const addSubscriptionResponse = await axios.post(addSubscriptionUrl, addSubscriptionData);
 
             if (addSubscriptionResponse.status === 200) {
@@ -141,7 +141,7 @@ const SubscribeNotification = ({ answer }) => {
                 isSubscribeToEvent: true
             };
 
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
+            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
             const updateSubscriptionResponse = await axios.put(apiUrl, updateSubscriptionData);
 
             if (updateSubscriptionResponse.status === 200) {
@@ -191,7 +191,7 @@ const SubscribeNotification = ({ answer }) => {
             setIsLoading(true);
 
             // Define the API URL with the subscriptionId as a query parameter
-            const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
+            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
 
             // Make the DELETE request
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
@@ -232,7 +232,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="locations"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={eventLocations.map(location => ({
                                                 name: location.eventLocationName,
@@ -251,7 +251,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>
@@ -262,7 +262,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="publicationArea"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={publicationArea.map(item => ({
                                                 name: item.eventPublicationAreaName,
@@ -281,7 +281,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>
@@ -292,7 +292,7 @@ const SubscribeNotification = ({ answer }) => {
                                 name="eventTypes"
                                 defaultValue={[]}
                                 render={({ field }) => (
-                                    <>
+                                    <div>
                                         <Multiselect
                                             options={eventTypes.map(item => ({
                                                 name: item.eventTypeName,
@@ -311,7 +311,7 @@ const SubscribeNotification = ({ answer }) => {
                                             }}
                                             displayValue="name"
                                         />
-                                    </>
+                                    </div>
                                 )}
                             />
                         </div>

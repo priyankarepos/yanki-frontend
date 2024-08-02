@@ -38,7 +38,7 @@ const GovadenAnswer = ({ answer }) => {
     };
 
     return (
-      <>
+      <React.Fragment>
         <TableRow
           sx={{
             "& > *": { borderBottom: "1px solid #3f7baf", cursor: "pointer" },
@@ -136,7 +136,7 @@ const GovadenAnswer = ({ answer }) => {
             </Collapse>
           </TableCell>
         </TableRow>
-      </>
+      </React.Fragment>
     );
   };
 

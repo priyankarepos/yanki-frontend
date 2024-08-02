@@ -22,7 +22,7 @@ import "./AiCustomization.scss";
 
 const AiCustomization = () => {
   const yankiUser = JSON.parse(
-    window.localStorage.getItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN) ||
+    window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
       "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
@@ -45,7 +45,7 @@ const AiCustomization = () => {
     const fetchCurrentAiCustomizeData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/CustomPrompt/get-custom-prompt`
+          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/get-custom-prompt`
         );
 
         if (response.status === 200) {
@@ -97,7 +97,7 @@ const AiCustomization = () => {
         };
 
         const response = await axios.post(
-          `${process.env.REACT_APP_API_HOST}/api/CustomPrompt/add-custom-prompt`,
+          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/add-custom-prompt`,
           requestBody,
           {
             headers: {
@@ -121,7 +121,7 @@ const AiCustomization = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/CustomPrompt/delete-custom-prompt`
+        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/delete-custom-prompt`
       );
 
       if (response.status === 200) {
@@ -170,7 +170,7 @@ const AiCustomization = () => {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/CustomPrompt/update-custom-prompt`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/update-custom-prompt`,
         requestBody,
         {
           headers: {
@@ -248,7 +248,7 @@ const AiCustomization = () => {
                     name="ageRange"
                     rules={{ min: 1, max: 200 }}
                     render={({ field }) => (
-                      <>
+                      <div>
                         <TextField
                           {...field}
                           fullWidth
@@ -266,7 +266,7 @@ const AiCustomization = () => {
                             Maximum age is 200
                           </FormHelperText>
                         )}
-                      </>
+                      </div>
                     )}
                   />
                 </Grid>
@@ -413,7 +413,7 @@ const AiCustomization = () => {
                               checked={
                                 (field.value &&
                                   field.value.includes("chalabYisroel")) ||
-                                ""
+                                  false 
                               }
                               onChange={(e) => {
                                 const isChecked = e.target.checked;

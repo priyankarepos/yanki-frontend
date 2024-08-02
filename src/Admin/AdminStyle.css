@@ -529,3 +529,11 @@ span.react-tagsinput-tags,
 .enterprise-text-color input {
   color: #8bbae5 !important; 
 }
+
+.admin-dashboard-sidebar .highlightStyle {
+  gap: 24px;
+} 
+
+.highlightStyle .admin-dashboard-sidebar-icon {
+  min-width: 0px !important;
+}

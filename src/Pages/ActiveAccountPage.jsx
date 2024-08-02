@@ -30,7 +30,7 @@ const ActiveAccountPage = () => {
     try {
       setActivating(true);
       const queryParamsObj = Object.fromEntries([...searchParams]);
-      const url = `${process.env.REACT_APP_API_HOST}/api/auth/verify-email`;
+      const url = `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-email`;
       const configs = {
         method: "get",
         url,
@@ -102,7 +102,7 @@ const ActiveAccountPage = () => {
               </Box>
             )}
             {errorOnActive && (
-              <>
+              <div>
                 <Alert severity="error" sx={{ mb: 2 }}>
                   {errorMsg}
                 </Alert>
@@ -113,7 +113,7 @@ const ActiveAccountPage = () => {
                 >
                   Try Again
                 </Button>
-              </>
+              </div>
             )}
             {activationDone && (
               <Button variant="contained" fullWidth onClick={gotoLogin}>

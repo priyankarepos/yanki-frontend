@@ -48,7 +48,7 @@ const EventPublicationForm = ({ answer }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
                 setEventLocations(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching event location:', error);
@@ -61,7 +61,7 @@ const EventPublicationForm = ({ answer }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
                 setPublicationArea(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching publication area:', error);
@@ -74,7 +74,7 @@ const EventPublicationForm = ({ answer }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
                 setEventTypes(response.data);
             } catch (error) {
                 setSnackbarMessage('Error fetching event types:', error);
@@ -97,7 +97,7 @@ const EventPublicationForm = ({ answer }) => {
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
-            const addEventUrl = `${process.env.REACT_APP_API_HOST}/api/events/add-event`;
+            const addEventUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
                 eventAddress: data.EventLocationAddress,
@@ -116,7 +116,7 @@ const EventPublicationForm = ({ answer }) => {
                     formData.append('imageFiles', file);
                 });
                 const eventId = addEventResponse.data;
-                const imageUploadUrl = `${process.env.REACT_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
+                const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
                 const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -270,7 +270,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Location is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={eventLocations.map(location => ({
                                                     name: location.eventLocationName,
@@ -294,7 +294,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isLocationDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.locations && <span className='error-message'>{errors.locations.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -373,7 +373,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Publication area is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={publicationArea.map(item => ({
                                                     name: item.eventPublicationAreaName,
@@ -397,7 +397,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isPublicationAreaDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.publicationArea && <span className='error-message'>{errors.publicationArea.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -409,7 +409,7 @@ const EventPublicationForm = ({ answer }) => {
                                     defaultValue={[]}
                                     rules={{ required: 'Event type is required.' }}
                                     render={({ field }) => (
-                                        <>
+                                        <div>
                                             <Multiselect
                                                 options={eventTypes.map(item => ({
                                                     name: item.eventTypeName,
@@ -433,7 +433,7 @@ const EventPublicationForm = ({ answer }) => {
                                                 className={!isEventTypeDropdownOpen ? "displayNoneShow" : "displayBlockShow"}
                                             />
                                             {errors.eventTypes && <span className='error-message'>{errors.eventTypes.message}</span>}
-                                        </>
+                                        </div>
                                     )}
                                 />
                             </Grid>
@@ -517,7 +517,7 @@ const EventPublicationForm = ({ answer }) => {
                         <CloseIcon />
                     </IconButton>
                     {selectedPdf && (
-                        <>
+                        <div>
                             {selectedPdf.type.startsWith('image/') ? (
                                 <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} className='event-submission-image'/>
                             ) : (
@@ -525,7 +525,7 @@ const EventPublicationForm = ({ answer }) => {
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />
                                 </Worker>
                             )}
-                        </>
+                        </div>
                     )}
                 </div>
             </Modal>

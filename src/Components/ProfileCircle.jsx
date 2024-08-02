@@ -43,7 +43,7 @@ import AccountDelete from "../Assets/images/delete-02.svg"
 import BackArrowIcon from "../Assets/images/back-arrow.svg"
 
 
-export default function ProfielCircle() {
+export default function ProfielCircle({ chatId }) {
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const location = useLocation();
@@ -59,7 +59,7 @@ export default function ProfielCircle() {
   const emailBody = "Email body";
 
   const yankiUser = window.localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
   );
 
   let parsedUserObject;
@@ -77,7 +77,7 @@ export default function ProfielCircle() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const open = Boolean(anchorEl);
-  const accountSettingsIconRef = useRef(null); 
+  const accountSettingsIconRef = useRef(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -122,10 +122,10 @@ export default function ProfielCircle() {
   }
 
   const onClickLogout = () => {
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
-    window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+    window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
+    window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
     navigate("/auth");
-    sessionStorage.removeItem("selectedChatId");
+
   };
 
   const onClickNetworkingInterface = () => {
@@ -143,7 +143,7 @@ export default function ProfielCircle() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/auth/delete-account`);
+      const response = await axios.delete(`${import.meta.env.VITE_APP_API_HOST}/api/auth/delete-account`);
       if (response.status === 200) {
         setConfirmDialogOpen(false);
         setIsModalOpen(true)
@@ -153,11 +153,10 @@ export default function ProfielCircle() {
         }, 1000);
         setTimeout(() => {
           clearInterval(timerInterval);
-          window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
-          window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+          window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
+          window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
           setIsModalOpen(false);
           navigate("/auth");
-          sessionStorage.removeItem("selectedChatId");
         }, 5000);
       } else {
         setSnackbarMessage("Failed to delete account");
@@ -177,6 +176,7 @@ export default function ProfielCircle() {
     location.pathname !== "/change-password";
 
   const showAccountSettings = location.pathname === "/" ||
+    location.pathname === `/${chatId}` ||
     location.pathname === "/notification" ||
     location.pathname === "/membership" ||
     location.pathname === "/ai-customization";
@@ -284,7 +284,7 @@ export default function ProfielCircle() {
               </MenuItem>
             )}
             {userRoles !== "Enterprise" && (
-              <>
+              <div>
                 <MenuItem onClick={onClickSubscribeNotification}>
                   <ListItemIcon>
                     {activeTab === 0 ? <img src={NotificationIcon} alt='LogoutIcon' /> :
@@ -299,7 +299,7 @@ export default function ProfielCircle() {
                   </ListItemIcon>
                   AI Customization
                 </MenuItem>
-              </>
+              </div>
             )}
             {userRoles !== "Admin" && <Divider sx={{ mx: 2 }} />}
             {userRoles !== "Admin" && (

@@ -55,6 +55,7 @@ import PaymentSuccessPage from "./Components/MembershipPortal/PaymentSuccessPage
 import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage";
 import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionCreated";
 import ChangeLanguage from "./Pages/ChangeLanguage";
+import UserChatList from "./Admin/AdminChat/UserChatList";
 
 // Exporting context
 export const Context = createContext("");
@@ -68,11 +69,11 @@ export const ThemeModeContext = createContext({
 
 // window.onbeforeunload = function () {
 //   const rememeberMe = window.localStorage.getItem(
-//     process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+//     import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
 //   );
 //   if (rememeberMe === undefined || rememeberMe === "false") {
-//     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
-//     window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_REMEMBER);
+//     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
+//     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER);
 //   }
 // };
 
@@ -96,7 +97,7 @@ const accepts401 = [
 */
 axios.interceptors.request.use((request) => {
   const yankiUser = window.localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
   );
   if (yankiUser) {
     const parsedYankiUser = JSON.parse(yankiUser);
@@ -131,12 +132,12 @@ axios.interceptors.response.use(
       error?.response?.status === 401 &&
       !accepts401.includes(pathname)
     ) {
-      window.localStorage.removeItem(process.env.REACT_APP_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
       window.localStorage.removeItem(
-        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );
       window.sessionStorage.removeItem(
-        process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+        import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
       );
       window.location.replace("/login");
     } else {
@@ -260,25 +261,25 @@ function App() {
 
   useLayoutEffect(() => {
     let session = window.sessionStorage.getItem(
-      process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+      import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
         window.sessionStorage.getItem(
-          process.env.REACT_APP_SESSIONSTORAGE_REFRESH
+          import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
         )
       )
       : "";
 
     if (!session) {
       const rememeberMe = window.localStorage.getItem(
-        process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+        import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );
       if (rememeberMe === undefined || rememeberMe === "false") {
         window.localStorage.removeItem(
-          process.env.REACT_APP_LOCALSTORAGE_TOKEN
+          import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
         );
         window.localStorage.removeItem(
-          process.env.REACT_APP_LOCALSTORAGE_REMEMBER
+          import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
         );
       } else {
       }
@@ -433,7 +434,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="/"
+                      path="/:chatId?"
                       element={
                         <UserPagesProtection>
                           <NewHomePageMui />
@@ -514,6 +515,24 @@ function App() {
                         </UserPagesProtection>
                       }
                     />
+                    <Route
+                      path="/admin/chat"
+                      element={
+                        <UserPagesProtection>
+                          <UserChatList />
+                        </UserPagesProtection>
+                      }
+                    />
+
+                    <Route
+                      path="/admin/chat/:id"
+                      element={
+                        <UserPagesProtection>
+                          <UserChatList />
+                        </UserPagesProtection>
+                      }
+                    />
+
                     <Route
                       path="/admin/enterprise-categories"
                       element={

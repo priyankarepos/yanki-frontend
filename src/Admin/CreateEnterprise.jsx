@@ -36,6 +36,7 @@ import "../EnterpriseCollabration/EnterpriseStyle.scss";
 import ReactPhoneInput from "react-phone-input-2";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import { messages, apiUrls } from "../Utils/stringConstant/EnterpriseProfileString";
 
 const AdminCreateEnterprise = () => {
   const { drawerOpen } = useContext(Context);
@@ -60,7 +61,7 @@ const AdminCreateEnterprise = () => {
       setIsLoading(true);
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details?enterpriseName=${query}&pageNumber=${pageNumber}&pageSize=10`
+        `${apiUrls.getEnterpriseDetails}?enterpriseName=${query}&pageNumber=${pageNumber}&pageSize=10`
       );
 
       if (response.status === 200) {
@@ -74,11 +75,11 @@ const AdminCreateEnterprise = () => {
         }
         setTotalPages(Math.ceil(response.data.totalCount / 10));
       } else {
-        setSnackbarMessage("Failed to fetch enterprise details");
+        setSnackbarMessage(messages.fetchDetailsFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error fetching enterprise details:", error);
+      setSnackbarMessage(messages.errorFetchEnterpriseDetails, error);
       setSnackbarOpen(true);
     } finally {
       setIsLoading(false);
@@ -99,14 +100,12 @@ const AdminCreateEnterprise = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-        );
+        const response = await axios.get(apiUrls.getEnterpriseCategories);
 
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
-          setSnackbarMessage("Failed to fetch enterprise categories");
+          setSnackbarMessage(messages.fetchCategoriesFailed);
           setSnackbarOpen(true);
         }
       } catch (error) {
@@ -130,6 +129,8 @@ const AdminCreateEnterprise = () => {
       EnterpriseName: enterpriseDetails.enterpriseName || "",
       EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
       EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
+      EnterpriseLatitude: enterpriseDetails.latitude || "",
+      EnterpriseLongitude: enterpriseDetails.longitude || "",
       EmailAddress: enterpriseDetails.enterpriseEmail || "",
       PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
       WebsiteUrl: enterpriseDetails.website || "",
@@ -150,12 +151,12 @@ const AdminCreateEnterprise = () => {
       const validationErrors = {
         EnterpriseIdentificationKeywords:
           data.EnterpriseIdentificationKeywords.length > 0 ||
-          "At least one keyword is required",
+          messages.oneKeywordRequired,
       };
 
       if (data.BusinessHoursOpeningTime === data.BusinessHoursClosingTime) {
         validationErrors.BusinessHoursClosingTime =
-          "Opening and closing times cannot be the same";
+          messages.openCloseTimeNotSame;
       }
 
       return validationErrors;
@@ -164,31 +165,29 @@ const AdminCreateEnterprise = () => {
 
   const checkEnterpriseKeyword = async (tag) => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/${tag}`
-      );
+      const response = await axios.get(`${apiUrls.checkEnterpriseKeyword}${tag}`);
 
       if (response.status === 200) {
         const keywordExists = response.data.exists;
 
         if (keywordExists !== undefined) {
           if (keywordExists) {
-            setSnackbarMessage("Keyword already exists:", tag);
+            setSnackbarMessage(messages.keywordExists, tag);
             setSnackbarOpen(true);
           } else {
             setTags((prevTags) => [...prevTags, tag]);
           }
         } else {
-          setSnackbarMessage("Keyword existence is undefined for:", tag);
+          setSnackbarMessage(messages.keywordUndefined, tag);
           setSnackbarOpen(false);
         }
       } else {
-        setSnackbarMessage("Failed to check enterprise keyword");
+        setSnackbarMessage(messages.keywordCheckFailed);
         setSnackbarOpen(true);
       }
       return response.data;
     } catch (error) {
-      setSnackbarMessage("Error checking enterprise keyword:", error);
+      setSnackbarMessage(messages.errorCheckENterpriseKeyword, error);
       setSnackbarOpen(true);
       return { isSuccess: false };
     }
@@ -197,13 +196,13 @@ const AdminCreateEnterprise = () => {
   const handleAddTag = async (tag) => {
     try {
       if (tagCount >= 25) {
-        setSnackbarMessage("You have reached the maximum limit of tags (25).");
+        setSnackbarMessage(messages.tagLimitReached);
         setSnackbarOpen(true);
         return;
       }
 
       if (tag.length > 40) {
-        setSnackbarMessage("Tag should not exceed 40 characters.");
+        setSnackbarMessage(messages.tagTooLong);
         setSnackbarOpen(true);
         return;
       }
@@ -230,17 +229,15 @@ const AdminCreateEnterprise = () => {
             return [...uniqueTags];
           });
         } else {
-          setSnackbarMessage(
-            `Tag "${tag}" is not available in this enterprise.`
-          );
+          setSnackbarMessage(messages.tagNotAvailable);
           setSnackbarOpen(true);
         }
       } else {
-        setSnackbarMessage("Failed to check enterprise keyword");
+        setSnackbarMessage(messages.keywordCheckFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error handling tag:", error);
+      setSnackbarMessage(messages.errorHandelingTag, error);
       setSnackbarOpen(true);
       setSnackbarOpen(true);
     }
@@ -248,7 +245,7 @@ const AdminCreateEnterprise = () => {
 
   const handleRemoveTag = (tag) => {
     if (tags.length === 1) {
-      setSnackbarMessage("At least one tag is required.");
+      setSnackbarMessage(messages.oneTagRequired);
       setSnackbarOpen(true);
       return;
     }
@@ -268,13 +265,15 @@ const AdminCreateEnterprise = () => {
       const formData = getValues();
       const tagsAsString = tags.join(",");
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-create-enterprise`,
+        apiUrls.adminCreateEnterprise,
         {
           enterpriseName: formData.EnterpriseName,
           categoryId: formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
           enterpriseAddress: formData.EnterpriseAddress,
+          latitude: String(formData.EnterpriseLatitude),
+          longitude: String(formData.EnterpriseLongitude),
           enterprisePhoneNumber: formData.PhoneNumber,
           enterpriseEmail: formData.EmailAddress,
           whatsAppPhoneNumber: formData.WhatsappPhoneNumber,
@@ -292,20 +291,20 @@ const AdminCreateEnterprise = () => {
 
       if (response.status === 200) {
         if (departmentsData.length === 0) {
-          setSnackbarMessage("Enterprise details created successfully.");
+          setSnackbarMessage(messages.EnterpriseCreatedSuccessfully);
           setSnackbarOpen(true);
         } else {
-          setSnackbarMessage("Enterprise details created successfully");
+          setSnackbarMessage(messages.EnterpriseCreatedSuccessfully);
           setSnackbarOpen(true);
         }
         setSnackbarOpen(true);
         getEnterpriseDetails();
       } else {
-        setSnackbarMessage("Failed to create enterprise details");
+        setSnackbarMessage(messages.EnterpriseCreatedFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error creating enterprise details:", error);
+      setSnackbarMessage(messages.EnterpriseCreatedError, error);
       setSnackbarOpen(true);
     } finally {
       setIsLoading(false);
@@ -320,6 +319,8 @@ const AdminCreateEnterprise = () => {
     setValue("EnterpriseName", enterprise.enterpriseName || "");
     setValue("EnterprisePointOfContact", enterprise.contactPersonName || "");
     setValue("EnterpriseAddress", enterprise.enterpriseAddress || "");
+    setValue(messages.enterpriseLatitudeField, enterprise.latitude || "");
+    setValue(messages.enterpriseLongitudeField, enterprise.longitude || "");
     setValue("EmailAddress", enterprise.enterpriseEmail || "");
     setValue("PhoneNumber", enterprise.enterprisePhoneNumber || "");
     setValue("WebsiteUrl", enterprise.website || "");
@@ -344,24 +345,22 @@ const AdminCreateEnterprise = () => {
     setEnterpriseId(enterpriseId);
     setConfirmDialogOpen(true);
     setConfirmationText(
-      `Are you sure you want to delete the enterprise "${enterpriseList[key].enterpriseName}"?`
+      `${messages.createdEnterpriseDelete} "${enterpriseList[key].enterpriseName}"?`
     );
   };
 
   const handleConfirmDelete = async () => {
     setConfirmDialogOpen(false);
     try {
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/admin-delete-enterprise/${enterpriseId}`
-      );
+      const response = await axios.delete(apiUrls.adminDeleteEnterprise(enterpriseId));
       if (response.status === 200) {
         getEnterpriseDetails();
       } else {
-        setSnackbarMessage("Failed to delete enterprise");
+        setSnackbarMessage(messages.adminDeleteEnterpriseFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error deleting enterprise:", error);
+      setSnackbarMessage(messages.adminDeleteEnterpriseError, error);
       setSnackbarOpen(true);
     }
   };
@@ -378,6 +377,8 @@ const AdminCreateEnterprise = () => {
         contactPersonName: formData.EnterprisePointOfContact,
         website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
         enterpriseAddress: formData.EnterpriseAddress,
+        latitude: String(formData.EnterpriseLatitude),
+        longitude: String(formData.EnterpriseLongitude),
         enterprisePhoneNumber: formData.PhoneNumber,
         enterpriseEmail: formData.EmailAddress,
         whatsAppPhoneNumber: formData.WhatsappPhoneNumber,
@@ -391,39 +392,94 @@ const AdminCreateEnterprise = () => {
         enterpriseKeywords: tagsAsString,
       };
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
+        `${apiUrls.updateEnterpriseDetails}`,
         requestBody
       );
       if (response.status === 200) {
         if (departmentsData.length === 0) {
-          setSnackbarMessage("Enterprise details updated successfully.");
+          setSnackbarMessage(messages.AdminEnterpriseUpdateSuccess);
         } else {
-          setSnackbarMessage("Enterprise details updated successfully");
+          setSnackbarMessage(messages.AdminEnterpriseUpdateSuccess);
         }
         setSnackbarOpen(true);
         getEnterpriseDetails();
       } else {
-        setSnackbarMessage("Failed to update enterprise details");
+        setSnackbarMessage(messages.updateFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error updating enterprise details:", error);
+      setSnackbarMessage(messages.updateError, error);
       setSnackbarOpen(true);
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    let autocomplete;
+
+    function initAutocomplete() {
+      const input = document.getElementById(messages.addressElementId);
+      if (input && window.google && window.google.maps && window.google.maps.places) {
+        autocomplete = new window.google.maps.places.Autocomplete(input);
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) {
+            alert(messages.noDetailsAvailable(place.name));
+            return;
+          }
+
+          setValue(messages.enterpriseAddressField, place.formatted_address);
+          setValue(messages.enterpriseLatitudeField, place.geometry.location.lat());
+          setValue(messages.enterpriseLongitudeField, place.geometry.location.lng());
+        });
+      } else {
+        setSnackbarMessage(messages.googleMapAPIFullyLoaded);
+        setSnackbarOpen(true)
+      }
+    }
+
+    function loadGoogleMapsScript() {
+      if (!window.google || !window.google.maps || !window.google.maps.places) {
+        const script = document.createElement(messages.scriptText);
+        const googleMapsApiUrl = apiUrls.googleMapsApi(import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY);
+        script.src = googleMapsApiUrl;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          initAutocomplete();
+        };
+        document.head.appendChild(script);
+
+        return () => {
+          document.head.removeChild(script);
+        };
+      } else {
+        initAutocomplete();
+      }
+    }
+
+    if (document.getElementById(messages.addressElementId)) {
+      loadGoogleMapsScript();
+    } else {
+      const observer = new MutationObserver((mutations, me) => {
+        if (document.getElementById(messages.addressElementId)) {
+          loadGoogleMapsScript();
+          me.disconnect(); 
+          return;
+        }
+      });
+      observer.observe(document, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }, [setValue]);
+
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const placeholderText = `Product Overview:
-    • Could you please provide an overview of the products you offer?
-    • What are the key features and benefits of your products?
-    
-    Service Offerings:
-    • What services does your enterprise provide, and what’s the market you’re focusing?
-    • Are there any unique or specialized services that your enterprise offers?
-    `;
+  const placeholderText = messages.productOverviewPlaceholder;
 
   return (
     <Box className="admin-faq-wrapper">
@@ -438,39 +494,38 @@ const AdminCreateEnterprise = () => {
         }}
       >
         <Box className="admin-faq-heading">
-          <Typography variant="h6">My Enterprise Profile</Typography>
+          <Typography variant="h6">{messages.myEnterpriseProfileHeading}</Typography>
         </Box>
         <Grid container spacing={2} className="enterprise-profile">
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Enterprise Name<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterpriseNameLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
               rules={{
-                required: "Enterprise name is required.",
+                required: messages.enterpriseNameRequired,
                 minLength: {
                   value: 3,
-                  message:
-                    "Enterprise name should be at least 3 characters long.",
+                  message: messages.enterpriseNameMin3,
                 },
                 maxLength: {
                   value: 30,
-                  message: "Enterprise name should not exceed 30 characters.",
+                  message: messages.enterpriseNameMax30,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className={messages.enterpriseInputFieldClass}
                     {...field}
                     type="outlined"
-                    placeholder="Type enterprise name here"
+                    placeholder={messages.enterpriseNamePlaceholder}
                     fullWidth
                   />
                   {errors["EnterpriseName"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["EnterpriseName"].message}
                     </FormHelperText>
                   )}
@@ -479,36 +534,34 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Enterprise point of contact<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterprisePointOfContactLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
               name="EnterprisePointOfContact"
               rules={{
-                required: "Enterprise Point Of Contact is required.",
+                required: messages.enterprisePointOfContactRequired,
                 minLength: {
                   value: 3,
-                  message:
-                    "Enterprise Point Of Contact should be at least 3 characters long.",
+                  message: messages.enterprisePointOfContactMin3,
                 },
                 maxLength: {
                   value: 30,
-                  message:
-                    "Enterprise Point Of Contact should not exceed 30 characters.",
+                  message: messages.enterprisePointOfContactMax30,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className={messages.enterpriseInputFieldClass}
                     {...field}
                     type="outlined"
-                    placeholder="Enterprise point of contact name"
+                    placeholder={messages.enterprisePointOfContactPlaceholder}
                     fullWidth
                   />
                   {errors["EnterprisePointOfContact"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["EnterprisePointOfContact"].message}
                     </FormHelperText>
                   )}
@@ -517,19 +570,20 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel className="enterprise-label">
-              Enterprise address<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterpriseAddressLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
               name="EnterpriseAddress"
-              rules={{ required: "Enterprise Address is required" }}
+              rules={{ required: messages.enterpriseAddressRequired }}
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
                     className="TextareaAutosize"
+                    id={messages.addressElementId}
                     {...field}
-                    placeholder="Type enterprise address here"
+                    placeholder={messages.enterpriseAddressPlaceholder}
                     onFocus={(e) => (e.target.style.outline = "none")}
                     onMouseOver={(e) =>
                       (e.target.style.backgroundColor = "none")
@@ -539,7 +593,7 @@ const AdminCreateEnterprise = () => {
                     }
                   />
                   {errors["EnterpriseAddress"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["EnterpriseAddress"].message}
                     </FormHelperText>
                   )}
@@ -547,9 +601,57 @@ const AdminCreateEnterprise = () => {
               )}
             />
           </Grid>
+          <Grid item xs={6}>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.latitudeLabel}<sup className={messages.requiredIcon}>*</sup></InputLabel>
+            <Controller
+              control={control}
+              name={messages.enterpriseLatitudeField}
+              rules={{ required: messages.latitudeRequired }}
+              render={({ field }) => (
+                <div>
+                  <TextField
+                    className={messages.enterpriseInputFieldClass}
+                    {...field}
+                    placeholder={messages.enterpriseLatitude}
+                    fullWidth
+                    error={!!errors.EnterpriseLatitude}
+                  />
+                  {errors[messages.enterpriseLatitudeField] && (
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                      {errors[messages.enterpriseLatitudeField].message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.longitudeLabel}<sup className={messages.requiredIcon}>*</sup></InputLabel>
+            <Controller
+              control={control}
+              name={messages.enterpriseLongitudeField}
+              rules={{ required: messages.longitudeRequired }}
+              render={({ field }) => (
+                <div>
+                  <TextField
+                    className={messages.enterpriseInputFieldClass}
+                    {...field}
+                    placeholder={messages.enterpriseLongitude}
+                    fullWidth
+                    error={!!errors.EnterpriseLongitude}
+                  />
+                  {errors[messages.enterpriseLongitudeField] && (
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                      {errors[messages.enterpriseLongitudeField].message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Email Address<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.emailAddressLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -557,24 +659,24 @@ const AdminCreateEnterprise = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Email address is required.",
+                  message: messages.enterpriseEmailAddressRequired,
                 },
                 pattern: {
                   value: emailRegex,
-                  message: "Enter valid email address.",
+                  message: messages.enterpriseEmailAddressValid,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className={messages.enterpriseInputFieldClass}
                     {...field}
                     type="outlined"
-                    placeholder="Type email address here"
+                    placeholder={messages.enterpriseEmailAddressplaceholder}
                     fullWidth
                   />
                   {errors["EmailAddress"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["EmailAddress"].message}
                     </FormHelperText>
                   )}
@@ -583,8 +685,8 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Phone Number<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.phoneNumberLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -592,11 +694,11 @@ const AdminCreateEnterprise = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Phone number is required.",
+                  message: messages.enterprisePhoneNumberRequired,
                 },
                 pattern: {
                   value: phoneRegex,
-                  message: "Enter valid phone number",
+                  message: messages.enterprisePhoneNumberValid,
                 },
               }}
               render={({ field }) => (
@@ -631,14 +733,14 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">Website URL</InputLabel>
+            <InputLabel className={messages.enterpriseLabelClass}>{messages.websiteUrlLabel}</InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className={messages.enterpriseInputFieldClass}
                     {...field}
                     type="outlined"
                     placeholder="Type website URL here"
@@ -652,15 +754,15 @@ const AdminCreateEnterprise = () => {
             <Divider className="table-devider"></Divider>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              WhatsApp Phone Number
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.whatsappPhoneNumberLabel}
             </InputLabel>
             <Controller
               control={control}
               name="WhatsappPhoneNumber"
               render={({ field }) => (
                 <TextField
-                  className="enterprise-inputField"
+                  className={messages.enterpriseInputFieldClass}
                   {...field}
                   type="outlined"
                   placeholder="Type WhatsApp phone number here"
@@ -676,15 +778,15 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Instagram Username
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.instagramUsernameLabel}
             </InputLabel>
             <Controller
               control={control}
               name="InstagramUsername"
               render={({ field }) => (
                 <TextField
-                  className="enterprise-inputField"
+                  className={messages.enterpriseInputFieldClass}
                   {...field}
                   type="outlined"
                   placeholder="Type Instagram username here"
@@ -700,15 +802,15 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              LinkedIn Username
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.linkedinUsernameLabel}
             </InputLabel>
             <Controller
               control={control}
               name="LinkedinUsername"
               render={({ field }) => (
                 <TextField
-                  className="enterprise-inputField"
+                  className={messages.enterpriseInputFieldClass}
                   {...field}
                   type="outlined"
                   placeholder="Type LinkedIn username here"
@@ -724,8 +826,8 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} className="Enterprise-Description">
-            <InputLabel className="enterprise-label">
-              Enterprise Description<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterpriseDescriptionLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -746,7 +848,7 @@ const AdminCreateEnterprise = () => {
                     }
                   />
                   {errors["EnterpriseDescription"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["EnterpriseDescription"].message}
                     </FormHelperText>
                   )}
@@ -762,8 +864,8 @@ const AdminCreateEnterprise = () => {
             lg={4}
             className="enterprise-profile-category"
           >
-            <InputLabel className="enterprise-label">
-              Enterprise Categories<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterpriseCategoriesLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <FormControl
               fullWidth
@@ -794,8 +896,8 @@ const AdminCreateEnterprise = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Business Hours Opening Time<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.businessHoursOpeningTimeLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -811,7 +913,7 @@ const AdminCreateEnterprise = () => {
                     fullWidth
                   />
                   {errors["BusinessHoursOpeningTime"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["BusinessHoursOpeningTime"].message}
                     </FormHelperText>
                   )}
@@ -820,8 +922,8 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Business Hours Closing Time<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.businessHoursClosingTimeLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -837,7 +939,7 @@ const AdminCreateEnterprise = () => {
                     fullWidth
                   />
                   {errors.BusinessHoursClosingTime && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors.BusinessHoursClosingTime.message}
                     </FormHelperText>
                   )}
@@ -846,8 +948,8 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className="enterprise-label">
-              Founded Year<sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.foundedYearLabel}<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -856,7 +958,7 @@ const AdminCreateEnterprise = () => {
               render={({ field }) => (
                 <div>
                   <TextField
-                    className="enterprise-inputField"
+                    className={messages.enterpriseInputFieldClass}
                     {...field}
                     type="outlined"
                     inputProps={{ maxLength: 4 }}
@@ -864,7 +966,7 @@ const AdminCreateEnterprise = () => {
                     fullWidth
                   />
                   {errors["FoundedYear"] && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["FoundedYear"].message}
                     </FormHelperText>
                   )}
@@ -877,8 +979,8 @@ const AdminCreateEnterprise = () => {
             <Divider className="table-devider"></Divider>
           </Grid>
           <Grid item xs={12}>
-            <InputLabel className="enterprise-label">
-              Frequently Asked Questions (FAQs)
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.frequentlyAskedQuestionsLabel}
             </InputLabel>
             <Controller
               control={control}
@@ -896,9 +998,9 @@ const AdminCreateEnterprise = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel className="enterprise-label">
-              Enterprise identification keywords
-              <sup className="required-icon">*</sup>
+            <InputLabel className={messages.enterpriseLabelClass}>
+              {messages.enterpriseIdentificationKeywordsLabel}
+              <sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <Controller
               control={control}
@@ -910,7 +1012,7 @@ const AdminCreateEnterprise = () => {
                     value={tags}
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
-                    placeholder="Type Enterprise identification keywords here"
+                    placeholder={messages.enterpriseIdentificationKeywordsPlaceholderText}
                     inputProps={{
                       ...field,
                       value: tagInput,
@@ -947,7 +1049,7 @@ const AdminCreateEnterprise = () => {
                     ))}
                   </div>
                   {isSubmitted && !tags.length && (
-                    <FormHelperText className="error-message">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       At least one keyword is required
                     </FormHelperText>
                   )}
@@ -974,7 +1076,7 @@ const AdminCreateEnterprise = () => {
               }
               disabled={isLoading}
             >
-              {enterpriseId !== null ? "Save Changes" : "Save"}
+              {enterpriseId !== null ? messages.saveChangesButtonText : messages.saveButtonText}
             </Button>
           </Grid>
 

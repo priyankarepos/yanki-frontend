@@ -19,6 +19,9 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
+import MikvahAnswer from "../Components/MikvahList/MikvahList";
+import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const SearchHistoryItem = forwardRef(
   ({ query, response, fetchRemainingMessage, remainingMsgData }, ref) => {
@@ -42,19 +45,19 @@ const SearchHistoryItem = forwardRef(
     }, [query]);
 
     const isTorahAnswer =
-      response?.isSucess &&
+      response?.isSuccess &&
       response?.torahAnytimeLectures?.hits?.hits?.length > 0;
     const isGovadenAnswer =
-      response?.isSucess && response?.godavenPrayerDetails?.length;
+      response?.isSuccess && response?.godavenPrayerDetails?.length;
     const isDataAvailable =
       response?.isItKosher?.isSuccess &&
       response?.isItKosher?.products?.data.length > 0;
     const isHatzalah =
-      response.isSucess &&
+      response.isSuccess &&
       response.message &&
       response?.globalAssist?.isSuccess;
     const isPersonalAssistant =
-      response.isSucess && response.message && response.isPersonalAssistant;
+      response.isSuccess && response.message && response.isPersonalAssistant;
     const isHelpAgent = response.contentResponse && response.isHelpAgent;
     return (
       <div
@@ -91,7 +94,7 @@ const SearchHistoryItem = forwardRef(
           </Paper>
         )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.contentResponse &&
           !response.isHelpAgent &&
           (response.enterprisePdfNames === null ||
@@ -107,7 +110,7 @@ const SearchHistoryItem = forwardRef(
             </Paper>
           )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           !response?.contentResponse &&
           response?.message &&
           !response?.globalAssist &&
@@ -126,7 +129,7 @@ const SearchHistoryItem = forwardRef(
             </Paper>
           )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.pdfNames &&
           response?.pdfNames.length > 0 && (
             <Paper elevation={3} className="marginBottom-10">
@@ -136,7 +139,7 @@ const SearchHistoryItem = forwardRef(
             </Paper>
           )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.vimeoVideoDetails &&
           response?.vimeoVideoDetails.length > 0 &&
           response?.isExclusiveContent && (
@@ -147,7 +150,7 @@ const SearchHistoryItem = forwardRef(
             </Paper>
           )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.contentResponse &&
           response?.enterprisePdfNames &&
           response?.enterprisePdfNames.length > 0 && (
@@ -158,7 +161,7 @@ const SearchHistoryItem = forwardRef(
             </Paper>
           )}
 
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.isEvent &&
           response?.message &&
           activeTab === 0 && (
@@ -170,7 +173,7 @@ const SearchHistoryItem = forwardRef(
           )}
 
         <Paper elevation={3} className="marginBottom-10">
-          {response.isSucess === false &&
+          {response.isSuccess === false &&
             !response.isHelpAgent &&
             (response?.message || response?.contentResponse) && (
               <div className="response">
@@ -187,7 +190,7 @@ const SearchHistoryItem = forwardRef(
           </Paper>
         )}
 
-        {response?.isSucess && response?.safetyChecker && (
+        {response?.isSuccess && response?.safetyChecker && (
           <Paper elevation={3} className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
               <SafetyChecker
@@ -205,16 +208,16 @@ const SearchHistoryItem = forwardRef(
           </Paper>
         )}
         {isPersonalAssistant && (
-          <Paper elevation={3} className="marginBottom-10">
+          <div className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
               <PersonalAssistant
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
               />
             </div>
-          </Paper>
+          </div>
         )}
-        {response?.isSucess &&
+        {response?.isSuccess &&
           response?.isViewReminder &&
           response?.message && (
             <Paper elevation={3} className="marginBottom-10">
@@ -234,12 +237,23 @@ const SearchHistoryItem = forwardRef(
             </div>
           </Paper>
         )}
-        {response?.isSucess && response?.isLashonHara && (<Paper elevation={3} className="marginBottom-10">
+        {response?.isSuccess && response?.isLashonHara && (<Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
             <InteractiveQuestionnaire />
           </div>
         </Paper>)}
-
+        {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{ mb: 2 }}>
+          <div>
+            <MikvahAnswer answer={response} />
+          </div>
+        </Paper>)}
+        {response?.isSuccess && response?.enterpriseLocation?.length > 0 && (
+          <Paper elevation={3} className={messages.marginBottom10}>
+            <div>
+              <KosherMapComponent answer={response} />
+            </div>
+          </Paper>
+        )}
       </div>
     );
   }

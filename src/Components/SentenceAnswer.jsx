@@ -53,7 +53,7 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
       setLoadingButtonIndex(index);
       setLoading(true);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/send-mail-to-rabbi`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-rabbi`,
         {
           additionalMessage,
           userType,

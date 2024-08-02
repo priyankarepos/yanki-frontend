@@ -40,7 +40,7 @@ const AdminAddEventPublicationArea = () => {
     const fetchEventPublicationArea = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
+          `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
         );
 
         if (response.status === 200) {
@@ -78,7 +78,7 @@ const AdminAddEventPublicationArea = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/event-publication-area/delete-event-publicationArea/${selectedAreaId}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/delete-event-publicationArea/${selectedAreaId}`
       );
 
       if (response.status === 200) {
@@ -120,7 +120,7 @@ const AdminAddEventPublicationArea = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/add-event-publicationArea`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/add-event-publicationArea`;
 
       const response = await axios.post(apiUrl, {
         eventPublicationAreaName: publicationAreaName,
@@ -161,7 +161,7 @@ const AdminAddEventPublicationArea = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/event-publication-area/update-event-publicationArea`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/update-event-publicationArea`;
 
       const response = await axios.put(apiUrl, {
         id: editPublicationAreaId,

@@ -17,7 +17,7 @@ const EnterprisePendingStatusPage = () => {
   };
 
   const yankiUser = window.localStorage.getItem(
-    process.env.REACT_APP_LOCALSTORAGE_TOKEN
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
   );
 
   let parsedUserObject;

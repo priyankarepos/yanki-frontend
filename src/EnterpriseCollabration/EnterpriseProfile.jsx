@@ -22,6 +22,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ConfirmDialog from './ConfirmDialog';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { messages, apiUrls } from "../Utils/stringConstant/EnterpriseProfileString";
 
 const EnterpriseProfile = () => {
   const [tags, setTags] = useState([]);
@@ -47,12 +48,12 @@ const EnterpriseProfile = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-certificate`);
+      const response = await axios.get(apiUrls.getCertificate);
 
       setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
 
     } catch (error) {
-      setSnackbarMessage('Error fetching data:', error);
+      setSnackbarMessage(`${messages.fetchError} ${error}`);
       setSnackbarOpen(false);
     }
   };
@@ -81,7 +82,7 @@ const EnterpriseProfile = () => {
   const validateFile = (file) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!file || !allowedTypes.includes(file.type)) {
-      return 'Invalid file type. Please upload a JPEG, PNG, or PDF file.';
+      return messages.invalidFileType;
     }
     return '';
   };
@@ -93,7 +94,7 @@ const EnterpriseProfile = () => {
       const formData = new FormData();
       formData.append('file', data.file[0]);
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=true`;
+      const apiUrl = apiUrls.uploadDocument;
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -102,7 +103,7 @@ const EnterpriseProfile = () => {
       });
 
       if (response.status === 200) {
-        setSnackbarMessage(`Document with Name ${data.file[0].name} added successfully`);
+        setSnackbarMessage(`${messages.documentAdded}${data.file[0].name}${messages.addedSuccessfully}`);
         setSnackbarOpen(true);
         setIsModalOpen(false);
         setTableData((prevTableData) => [
@@ -114,12 +115,12 @@ const EnterpriseProfile = () => {
         ]);
         fetchData();
       } else {
-        setSnackbarMessage('Failed to upload file');
+        setSnackbarMessage(messages.uploadFailed);
         setSnackbarOpen(true);
         setIsModalOpen(false);
       }
     } catch (error) {
-      setSnackbarMessage('An error occurred while uploading the file.');
+      setSnackbarMessage(messages.uploadError);
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -129,7 +130,7 @@ const EnterpriseProfile = () => {
   const handleDelete = (pdfName) => {
     setPdfName(pdfName);
     setConfirmDialogOpen(true);
-    setConfirmationText(`Are you sure you want to delete this file?`);
+    setConfirmationText(messages.deleteConfirm);
   };
 
   const handleConfirmation = async () => {
@@ -138,21 +139,21 @@ const EnterpriseProfile = () => {
     if (rowIndex !== -1) {
       try {
         setLoading(true);
-        const response = await axios.delete(`${process.env.REACT_APP_API_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
+        const response = await axios.delete(`${apiUrls.deleteDocument}${encodeURIComponent(pdfName)}`);
 
         if (response.status === 200) {
           const updatedTableData = [...tableData];
           updatedTableData.splice(rowIndex, 1);
           setTableData(updatedTableData);
           setConfirmDialogOpen(false);
-          setSnackbarMessage(`Document with Name ${pdfName} deleted successfully`);
+          setSnackbarMessage(`${messages.deleteSuccess}${pdfName}${messages.deletedSuccessfully}`);
           setSnackbarOpen(true);
         } else {
-          setSnackbarMessage(`Failed to delete document: ${response.status}, ${response.data.message}`);
+          setSnackbarMessage(`${messages.deleteFailed} ${response.status}, ${response.data.message}`);
           setSnackbarOpen(true);
         }
       } catch (error) {
-        setSnackbarMessage(`Error deleting document: ${error.message}`);
+        setSnackbarMessage(`${messages.deleteError} ${error.message}`);
         setSnackbarOpen(true);
       } finally {
         setLoading(false);
@@ -174,6 +175,8 @@ const EnterpriseProfile = () => {
       EnterprisePointOfContact: enterpriseDetails.contactPersonName || "",
       EnterpriseAddress: enterpriseDetails.enterpriseAddress || "",
       EmailAddress: enterpriseDetails.enterpriseEmail || "",
+      EnterpriseLatitude: enterpriseDetails.latitude || "",
+      EnterpriseLongitude: enterpriseDetails.longitude || "",
       PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
       WebsiteUrl: enterpriseDetails.website || "",
       WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
@@ -192,13 +195,13 @@ const EnterpriseProfile = () => {
       const validationErrors = {
         EnterpriseIdentificationKeywords:
           data.EnterpriseIdentificationKeywords.length > 0 ||
-          'At least one keyword is required',
+          messages.oneKeywordRequired,
       };
 
       // Validate that opening and closing times are not the same
       if (data.BusinessHoursOpeningTime === data.BusinessHoursClosingTime) {
         validationErrors.BusinessHoursClosingTime =
-          'Opening and closing times cannot be the same';
+          messages.openCloseTimeNotSame;
       }
 
       return validationErrors;
@@ -213,14 +216,12 @@ const EnterpriseProfile = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-        );
+        const response = await axios.get(apiUrls.getEnterpriseCategories);
 
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
-          setSnackbarMessage('Failed to fetch enterprise categories');
+          setSnackbarMessage(messages.fetchCategoriesFailed);
           setSnackbarOpen(true);
         }
       } catch (error) {
@@ -235,13 +236,13 @@ const EnterpriseProfile = () => {
   useEffect(() => {
     const fetchEnterpriseDetails = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`);
+        const response = await axios.get(apiUrls.getEnterpriseDetails);
 
         if (response.status === 200) {
           setEnterpriseDetails(response.data.data);
           sessionStorage.setItem('enterpriseId', response.data.data[0].enterpriseId);
         } else {
-          setSnackbarMessage('Failed to fetch enterprise details');
+          setSnackbarMessage(messages.fetchDetailsFailed);
           setSnackbarOpen(true);
         }
       } catch (error) {
@@ -258,6 +259,8 @@ const EnterpriseProfile = () => {
     setValue("EnterprisePointOfContact", enterpriseDetails[0]?.contactPersonName || "");
     setValue("EnterpriseAddress", enterpriseDetails[0]?.enterpriseAddress || "");
     setValue("EmailAddress", enterpriseDetails[0]?.enterpriseEmail || "");
+    setValue(messages.enterpriseLatitudeField, enterpriseDetails[0]?.latitude || "");
+    setValue(messages.enterpriseLongitudeField, enterpriseDetails[0]?.longitude || "");
     setValue("PhoneNumber", enterpriseDetails[0]?.enterprisePhoneNumber || "");
     setValue("WebsiteUrl", enterpriseDetails[0]?.website || "");
     setValue("WhatsappPhoneNumber", enterpriseDetails[0]?.whatsAppPhoneNumber || "");
@@ -279,9 +282,7 @@ const EnterpriseProfile = () => {
 
   const checkEnterpriseKeyword = async (tag) => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-keyword/${tag}`
-      );
+      const response = await axios.get(`${apiUrls.checkEnterpriseKeyword}${tag}`);
 
       if (response.status === 200) {
         const keywordExists = response.data.exists;
@@ -291,25 +292,25 @@ const EnterpriseProfile = () => {
           setSnackbarOpen(true);
 
           if (keywordExists) {
-            setSnackbarMessage('Keyword already exists:', tag);
+            setSnackbarMessage(messages.keywordExists, tag);
             setSnackbarOpen(true);
           } else {
-            setSnackbarMessage('Keyword does not exist:', tag);
+            setSnackbarMessage(messages.keywordNotExist, tag);
             setSnackbarOpen(true);
 
             setTags((prevTags) => [...prevTags, tag]);
           }
         } else {
-          setSnackbarMessage('Keyword existence is undefined for:', tag);
+          setSnackbarMessage(messages.keywordUndefined, tag);
           setSnackbarOpen(false);
         }
       } else {
-        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarMessage(messages.keywordCheckFailed);
         setSnackbarOpen(true);
       }
       return response.data;
     } catch (error) {
-      setSnackbarMessage('Error checking enterprise keyword:', error);
+      setSnackbarMessage(messages.errorCheckENterpriseKeyword, error);
       setSnackbarOpen(true);
       return { isSuccess: false };
     }
@@ -318,13 +319,13 @@ const EnterpriseProfile = () => {
   const handleAddTag = async (tag) => {
     try {
       if (tagCount >= 25) {
-        setSnackbarMessage('You have reached the maximum limit of tags (25).');
+        setSnackbarMessage(messages.tagLimitReached);
         setSnackbarOpen(true);
         return;
       }
 
       if (tag.length > 40) {
-        setSnackbarMessage('Tag should not exceed 40 characters.');
+        setSnackbarMessage(messages.tagTooLong);
         setSnackbarOpen(true);
         return;
       }
@@ -348,15 +349,15 @@ const EnterpriseProfile = () => {
             return [...uniqueTags];
           });
         } else {
-          setSnackbarMessage(`Tag "${tag}" is not available in this enterprise.`);
+          setSnackbarMessage(messages.tagNotAvailable);
           setSnackbarOpen(true);
         }
       } else {
-        setSnackbarMessage('Failed to check enterprise keyword');
+        setSnackbarMessage(messages.keywordCheckFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage('Error handling tag:', error);
+      setSnackbarMessage(messages.errorHandelingTag, error);
       setSnackbarOpen(true);
     }
   };
@@ -364,7 +365,7 @@ const EnterpriseProfile = () => {
 
   const handleRemoveTag = (tag) => {
     if (tags.length === 1) {
-      setSnackbarMessage('At least one tag is required.');
+      setSnackbarMessage(messages.oneTagRequired);
       setSnackbarOpen(true);
       return;
     }
@@ -388,7 +389,7 @@ const EnterpriseProfile = () => {
       const formData = getValues();
       const tagsAsString = tags.join(',');
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-details`,
+        `${apiUrls.updateEnterpriseDetails}`,
         {
           enterpriseId: enterpriseDetails[0]?.enterpriseId,
           enterpriseName: formData.EnterpriseName,
@@ -396,6 +397,8 @@ const EnterpriseProfile = () => {
           contactPersonName: formData.EnterprisePointOfContact,
           website: formData.WebsiteUrl ? formData.WebsiteUrl : null,
           enterpriseAddress: formData.EnterpriseAddress,
+          latitude: String(formData.EnterpriseLatitude),
+          longitude: String(formData.EnterpriseLongitude),
           enterprisePhoneNumber: formData.PhoneNumber,
           enterpriseEmail: formData.EmailAddress,
           whatsAppPhoneNumber: formData.WhatsappPhoneNumber,
@@ -412,30 +415,86 @@ const EnterpriseProfile = () => {
 
       if (response.status === 200) {
         if (departmentsData.length === 0) {
-          setSnackbarMessage('Enterprise details updated successfully. You can now start adding departments');
+          setSnackbarMessage(messages.updateSuccess);
         } else {
-          setSnackbarMessage('Enterprise details updated successfully');
+          setSnackbarMessage(messages.updateSuccessNoDepartments);
         }
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        setSnackbarMessage('Failed to update enterprise details');
+        setSnackbarMessage(messages.updateFailed);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage('Error updating enterprise details:', error);
+      setSnackbarMessage(messages.updateError, error);
       setSnackbarOpen(true);
     }
   };
 
-  const placeholderText = `Product Overview:
-• Could you please provide an overview of the products you offer?
-• What are the key features and benefits of your products?
+  const placeholderText = messages.productOverviewPlaceholder;
 
-Service Offerings:
-• What services does your enterprise provide, and what’s the market you’re focusing?
-• Are there any unique or specialized services that your enterprise offers?
-`;
+  useEffect(() => {
+    let autocomplete;
+
+    function initAutocomplete() {
+      const input = document.getElementById(messages.addressElementId);
+      if (input && window.google && window.google.maps && window.google.maps.places) {
+        autocomplete = new window.google.maps.places.Autocomplete(input);
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) {
+            alert(messages.noDetailsAvailable(place.name));
+            return;
+          }
+
+          setValue(messages.enterpriseAddressField, place.formatted_address);
+          setValue(messages.enterpriseLatitudeField, place.geometry.location.lat());
+          setValue(messages.enterpriseLongitudeField, place.geometry.location.lng());
+        });
+      } else {
+        setSnackbarMessage(messages.googleMapAPIFullyLoaded);
+        setSnackbarOpen(true)
+      }
+    }
+
+    function loadGoogleMapsScript() {
+      if (!window.google || !window.google.maps || !window.google.maps.places) {
+        const script = document.createElement(messages.scriptText);
+        const googleMapsApiUrl = apiUrls.googleMapsApi(import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY);
+        script.src = googleMapsApiUrl;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          initAutocomplete();
+        };
+        document.head.appendChild(script);
+
+        return () => {
+          document.head.removeChild(script);
+        };
+      } else {
+        initAutocomplete();
+      }
+    }
+
+    if (document.getElementById(messages.addressElementId)) {
+      loadGoogleMapsScript();
+    } else {
+      const observer = new MutationObserver((mutations, me) => {
+        if (document.getElementById(messages.addressElementId)) {
+          loadGoogleMapsScript();
+          me.disconnect(); 
+          return;
+        }
+      });
+      observer.observe(document, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }, [setValue]);
+
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 600px)");
@@ -484,34 +543,34 @@ Service Offerings:
       <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
         <EnterpriseDashboard />
       </Box>
-      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content"}`} >
         <Typography variant="h6" className='enterprise-heading'>
-          My Enterprise Profile
+          {messages.myEnterpriseProfileHeading}
         </Typography>
         <Grid container spacing={2} className='enterprise-profile'>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Enterprise Name<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterpriseNameLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseName"
               rules={{
-                required: "Enterprise name is required.",
+                required: messages.enterpriseNameRequired,
                 minLength: {
                   value: 3,
-                  message: "Enterprise name should be at least 3 characters long.",
+                  message: messages.enterpriseNameMin3,
                 },
                 maxLength: {
                   value: 30,
-                  message: "Enterprise name should not exceed 30 characters.",
+                  message: messages.enterpriseNameMax30,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="outlined"
-                    placeholder="Type enterprise name here"
+                    placeholder={messages.enterpriseNamePlaceholder}
                     fullWidth
                   />
                   {errors['EnterpriseName'] && (
@@ -522,28 +581,28 @@ Service Offerings:
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Enterprise point of contact<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterprisePointOfContactLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterprisePointOfContact"
               rules={{
-                required: "Enterprise Point Of Contact is required.",
+                required: messages.enterprisePointOfContactRequired,
                 minLength: {
                   value: 3,
-                  message: "Enterprise Point Of Contact should be at least 3 characters long.",
+                  message: messages.enterprisePointOfContactMin3,
                 },
                 maxLength: {
                   value: 30,
-                  message: "Enterprise Point Of Contact should not exceed 30 characters.",
+                  message: messages.enterprisePointOfContactMax30,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                   className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="outlined"
-                    placeholder="Enterprise point of contact name"
+                    placeholder={messages.enterprisePointOfContactPlaceholder}
                     fullWidth
                   />
                   {errors['EnterprisePointOfContact'] && (
@@ -554,17 +613,18 @@ Service Offerings:
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel className='enterprise-input-lable'>Enterprise address<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterpriseAddressLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseAddress"
-              rules={{ required: "Enterprise Address is required" }}
+              rules={{ required: messages.enterpriseAddressRequired }}
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
                     className='enterprise-text-area'
                     {...field}
-                    placeholder="Type enterprise address here"
+                    id={messages.addressElementId}
+                    placeholder={messages.enterpriseAddressPlaceholder}
                     onFocus={(e) => e.target.style.outline = 'none'}
                     onMouseOver={(e) => e.target.style.backgroundColor = 'none'}
                     onMouseOut={(e) => e.target.style.backgroundColor = 'none'}
@@ -576,28 +636,76 @@ Service Offerings:
               )}
             />
           </Grid>
+          <Grid item xs={6}>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.latitudeLabel}<sup className={messages.requiredIcon}>*</sup></InputLabel>
+            <Controller
+              control={control}
+              name={messages.enterpriseLatitudeField}
+              rules={{ required: messages.latitudeRequired }}
+              render={({ field }) => (
+                <div>
+                  <TextField
+                    className={messages.enterpriseInputFieldClass}
+                    {...field}
+                    placeholder={messages.enterpriseLatitude}
+                    fullWidth
+                    error={!!errors.EnterpriseLatitude}
+                  />
+                  {errors[messages.enterpriseLatitudeField] && (
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                      {errors[messages.enterpriseLatitudeField].message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.longitudeLabel}<sup className={messages.requiredIcon}>*</sup></InputLabel>
+            <Controller
+              control={control}
+              name={messages.enterpriseLongitudeField}
+              rules={{ required: messages.longitudeRequired }}
+              render={({ field }) => (
+                <div>
+                  <TextField
+                    className={messages.enterpriseInputFieldClass}
+                    {...field}
+                    placeholder={messages.enterpriseLongitude}
+                    fullWidth
+                    error={!!errors.EnterpriseLongitude}
+                  />
+                  {errors[messages.enterpriseLongitudeField] && (
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                      {errors[messages.enterpriseLongitudeField].message}
+                    </FormHelperText>
+                  )}
+                </div>
+              )}
+            />
+          </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Email Address<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.emailAddressLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EmailAddress"
               rules={{
                 required: {
                   value: true,
-                  message: "Email address is required.",
+                  message: messages.enterpriseEmailAddressRequired,
                 },
                 pattern: {
                   value: emailRegex,
-                  message: "Enter valid email address.",
+                  message: messages.enterpriseEmailAddressValid,
                 },
               }}
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="outlined"
-                    placeholder="Type email address here"
+                    placeholder={messages.enterpriseEmailAddressplaceholder}
                     fullWidth
                   />
                   {errors['EmailAddress'] && (
@@ -608,22 +716,22 @@ Service Offerings:
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Phone Number<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.phoneNumberLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="PhoneNumber"
               rules={{
                 required: {
                   value: true,
-                  message: "Phone number is required.",
+                  message: messages.enterprisePhoneNumberRequired,
                 },
               }}
               render={({ field }) => (
                 <div>
-                  <ReactPhoneInput className='enterprise-input-field'
+                  <ReactPhoneInput className={messages.enterpriseProfileInputField}
                     value={field.value}
                     preferredCountries={['us', 'il', 'gb', 'ca', 'mx']}
-                    placeholder="Phone number"
+                    placeholder={messages.enterprisePhoneNumberplaceholder}
                     onChange={(value, country, event) => {
                       field.onChange(value);
                     }}
@@ -638,14 +746,14 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Website URL</InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.websiteUrlLabel}</InputLabel>
             <Controller
               control={control}
               name="WebsiteUrl"
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="outlined"
                     placeholder="Type website URL here"
@@ -656,16 +764,16 @@ Service Offerings:
             />
           </Grid>
 
-          <Grid item xs={12}><Divider sx={{ marginY: { xs: '10px' } }}  className="custom-divider"></Divider></Grid>
+          <Grid item xs={12}><Divider sx={{ marginY: { xs: '10px' } }} className="custom-divider"></Divider></Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>WhatsApp Phone Number</InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.whatsappPhoneNumberLabel}</InputLabel>
             <Controller
               control={control}
               name="WhatsappPhoneNumber"
               render={({ field }) => (
                 <TextField
-                  className='enterprise-input-field'
+                  className={messages.enterpriseProfileInputField}
                   {...field}
                   type="outlined"
                   placeholder="Type WhatsApp phone number here"
@@ -678,13 +786,13 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Instagram Username</InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.instagramUsernameLabel}</InputLabel>
             <Controller
               control={control}
               name="InstagramUsername"
               render={({ field }) => (
                 <TextField
-                  className='enterprise-input-field'
+                  className={messages.enterpriseProfileInputField}
                   {...field}
                   type="outlined"
                   placeholder="Type Instagram username here"
@@ -697,13 +805,13 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>LinkedIn Username</InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.linkedinUsernameLabel}</InputLabel>
             <Controller
               control={control}
               name="LinkedinUsername"
               render={({ field }) => (
                 <TextField
-                  className='enterprise-input-field'
+                  className={messages.enterpriseProfileInputField}
                   {...field}
                   type="outlined"
                   placeholder="Type LinkedIn username here"
@@ -716,7 +824,7 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} className="Enterprise-Description">
-            <InputLabel className='enterprise-input-lable'>Enterprise Description<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterpriseDescriptionLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseDescription"
@@ -724,7 +832,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextareaAutosize
-                   className='enterprise-text-area enterprise-description-text-area'
+                    className='enterprise-text-area enterprise-description-text-area'
                     {...field}
                     placeholder={placeholderText}
                     onFocus={(e) => e.target.style.outline = 'none'}
@@ -740,7 +848,7 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4} className='enterprise-profile-category'>
-            <InputLabel className='enterprise-input-lable'>Enterprise Categories<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterpriseCategoriesLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <FormControl fullWidth error={!!errors['EnterpriseCategories']} required>
               <Controller
                 control={control}
@@ -776,7 +884,7 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Business Hours Opening Time<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.businessHoursOpeningTimeLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursOpeningTime"
@@ -784,7 +892,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="time"
                     placeholder="Office opening time"
@@ -799,7 +907,7 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Business Hours Closing Time<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.businessHoursClosingTimeLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="BusinessHoursClosingTime"
@@ -807,7 +915,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="time"
                     placeholder="Office closing time"
@@ -822,7 +930,7 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Founded Year<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.foundedYearLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="FoundedYear"
@@ -830,7 +938,7 @@ Service Offerings:
               render={({ field }) => (
                 <div>
                   <TextField
-                    className='enterprise-input-field'
+                    className={messages.enterpriseProfileInputField}
                     {...field}
                     type="outlined"
                     inputProps={{ maxLength: 4 }}
@@ -846,8 +954,8 @@ Service Offerings:
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className='enterprise-input-lable'>Religious Certifications<sup className='asterisk'>*</sup></InputLabel>
-            
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.religiousCertificationsLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
+
             <Button
               variant="contained"
               component="label"
@@ -856,7 +964,7 @@ Service Offerings:
               className='enterprise-profile-upload-button'
               disabled={enterpriseDetails[0]?.isProfileCompleted === false}
               onClick={() => setIsModalOpen(true)}
-            >{enterpriseDetails[0]?.isProfileCompleted === false && "Please complete your profile first."}
+            >{enterpriseDetails[0]?.isProfileCompleted === false && messages.uploadButtonText}
             </Button>
 
             <ul className='enterprise-profile-ul'>
@@ -883,7 +991,7 @@ Service Offerings:
           <Grid item xs={12}><Divider sx={{ marginY: { xs: '10px' } }} className='custom-divider'></Divider></Grid>
 
           <Grid item xs={12}>
-            <InputLabel className='enterprise-input-lable'>Frequently Asked Questions (FAQs)</InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.frequentlyAskedQuestionsLabel}</InputLabel>
             <Controller
               control={control}
               name="FrequentlyAskedQuestions"
@@ -899,9 +1007,8 @@ Service Offerings:
               )}
             />
           </Grid>
-
           <Grid item xs={12}>
-            <InputLabel className='enterprise-input-lable'>Enterprise identification keywords<sup className='asterisk'>*</sup></InputLabel>
+            <InputLabel className={messages.enterpriseInputLabel}>{messages.enterpriseIdentificationKeywordsLabel}<sup className={messages.asterisk}>*</sup></InputLabel>
             <Controller
               control={control}
               name="EnterpriseIdentificationKeywords"
@@ -911,8 +1018,8 @@ Service Offerings:
                     value={tags}
                     onChange={(newTags) => setTags(newTags)}
                     addKeys={[13, 9]}
-                    placeholder="Type Enterprise identification keywords here"
-                    className='enterprise-input-field'
+                    placeholder={messages.enterpriseIdentificationKeywordsPlaceholderText}
+                    className={messages.enterpriseProfileInputField}
                     inputProps={{
                       ...field,
                       value: tagInput,
@@ -958,20 +1065,20 @@ Service Offerings:
             {(isButtonClick || selectedCategory) ? <Button
               variant="outlined"
               fullWidth
-              className='enterprise-profile-submit-button'
+              className={messages.enterpriseProfileSubmitButton}
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={isLoading}
             >
-              {isLoading ? <CircularProgress size={24} className='enterprise-white-color' /> : 'Save'}
+              {isLoading ? <CircularProgress size={24} className='enterprise-white-color' /> : messages.saveButtonText}
             </Button> : <Button
               variant="outlined"
               sx={{ marginY: { xs: '10px' } }}
               fullWidth
-              className='enterprise-profile-submit-button'
+              className={messages.enterpriseProfileSubmitButton}
               onClick={handleSubmit(updateEnterpriseDetails)}
               disabled={!isDirty || isLoading}
             >
-              {isLoading ? <CircularProgress size={24} className='enterprise-white-color'/> : 'Save'}
+              {isLoading ? <CircularProgress size={24} className='enterprise-white-color' /> : 'Save'}
             </Button>}
           </Grid>
         </Grid>
@@ -1005,7 +1112,7 @@ Service Offerings:
               type="submit"
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} className='enterprise-profile-modal-button-loader'/> : 'Upload'}
+              {loading ? <CircularProgress size={24} className='enterprise-profile-modal-button-loader' /> : 'Upload'}
             </Button>
           </form>
         </Box>

@@ -32,7 +32,7 @@ const Departments = () => {
     const getEnterpriseDetails = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
+                `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-details`
             );
 
             if (response.status === 200) {
@@ -75,7 +75,7 @@ const Departments = () => {
   const checkEnterpriseKeyword = async (tag) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${enterpriseDetails[0]?.enterpriseId}/${tag}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${enterpriseDetails[0]?.enterpriseId}/${tag}`
       );
       if (response.status === 200) {
         const keywordExists = response.data.exists;
@@ -177,7 +177,7 @@ const Departments = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${enterpriseDetails[0]?.enterpriseId}`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${enterpriseDetails[0]?.enterpriseId}`
         );
 
         if (response.status === 200) {
@@ -227,7 +227,7 @@ const Departments = () => {
     const { departmentId } = departmentsData[selectedDepartmentIndex];
     // Delete the department
     try {
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
       const response = await axios.delete(apiUrl);
 
       if (response.status === 200) {
@@ -279,7 +279,7 @@ const Departments = () => {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
         payload
       );
       setTriggerEffect((prev) => !prev);
@@ -319,7 +319,7 @@ const Departments = () => {
     }
     try {
       const tagsAsString = tags.join(',');
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
 
       const requestBody = {
         departmentId: data.DepartmentId,

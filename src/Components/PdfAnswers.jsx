@@ -18,7 +18,7 @@ const PdfAnswers = ({ answer }) => {
 
     const pdfNames = useMemo(() => answer?.pdfNames || [], [answer?.pdfNames]);
 
-    const s3BaseUrl = process.env.REACT_APP_S3_BASE_URL;
+    const s3BaseUrl = import.meta.env.VITE_APP_S3_BASE_URL;
 
     const openPdfModal = (pdfName) => {
         const cleanPdfName = pdfName.replace(/%27/g, '');

@@ -43,7 +43,7 @@ const AdminEnterpriseCategory = () => {
     const fetchEnterpriseCategories = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
+          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
 
         if (response.status === 200) {
@@ -78,7 +78,7 @@ const AdminEnterpriseCategory = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
+        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise-category/${selectedCategoryId}`
       );
 
       if (response.status === 200) {
@@ -119,7 +119,7 @@ const AdminEnterpriseCategory = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/add-enterprise-category`;
 
       const response = await axios.post(apiUrl, { name: categoryName });
 
@@ -159,7 +159,7 @@ const AdminEnterpriseCategory = () => {
         setSnackbarOpen(true);
         return;
       }
-      const apiUrl = `${process.env.REACT_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
+      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-category`;
       const response = await axios.put(apiUrl, {
         name: categoryName,
         id: editCategoryId,
