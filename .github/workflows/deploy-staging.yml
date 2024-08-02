@@ -1,6 +1,6 @@
 # frontend Staging
 
-name: ReactJS CI/CD Pipeline
+name: Staging-React-Vite CI/CD Pipeline
 
 on:
   push:
@@ -24,23 +24,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 20
 
       - name: Install dependencies
         run: npm i
 
       - name: Build
         env: 
-          REACT_APP_S3_BASE_URL: ${{ secrets.STAGING_REACT_APP_S3_BASE_URL }}
-          REACT_APP_API_HOST: ${{ secrets.STAGING_REACT_APP_API_HOST }}
-          REACT_APP_API_URL: ${{secrets.STAGING_REACT_APP_API_URL }}
-          REACT_APP_NOMINATIM_API: ${{secrets.STAGING_REACT_APP_NOMINATIM_API }}
-          REACT_APP_LOCALSTORAGE_TOKEN: ${{secrets.STAGING_REACT_APP_LOCALSTORAGE_TOKEN }}
-          REACT_APP_LOCALSTORAGE_REMEMBER: ${{secrets.STAGING_REACT_APP_LOCALSTORAGE_REMEMBER }}
-          REACT_APP_SESSIONSTORAGE_REFRESH: ${{secrets.STAGING_REACT_APP_SESSIONSTORAGE_REFRESH }}
-          REACT_APP_STRIPE_PUBLIC_KEY: ${{secrets.STAGING_REACT_APP_STRIPE_PUBLIC_KEY }}
+          VITE_APP_S3_BASE_URL: ${{ secrets.STAGING_VITE_APP_S3_BASE_URL }}
+          VITE_APP_API_HOST: ${{ secrets.STAGING_VITE_APP_API_HOST }}
+          VITE_APP_API_URL: ${{secrets.STAGING_VITE_APP_API_URL }}
+          VITE_APP_NOMINATIM_API: ${{secrets.STAGING_VITE_APP_NOMINATIM_API }}
+          VITE_APP_LOCALSTORAGE_TOKEN: ${{secrets.STAGING_VITE_APP_LOCALSTORAGE_TOKEN }}
+          VITE_APP_LOCALSTORAGE_REMEMBER: ${{secrets.STAGING_VITE_APP_LOCALSTORAGE_REMEMBER }}
+          VITE_APP_SESSIONSTORAGE_REFRESH: ${{secrets.STAGING_VITE_APP_SESSIONSTORAGE_REFRESH }}
+          VITE_APP_STRIPE_PUBLIC_KEY: ${{secrets.STAGING_VITE_APP_STRIPE_PUBLIC_KEY }}
+          VITE_APP_GOOGLE_MAPS_API_KEY: ${{secrets.VITE_APP_GOOGLE_MAPS_API_KEY}}
           CI: ${{secrets.CI }}
-        run: npm run build:staging
+        run: npm run build
 
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
