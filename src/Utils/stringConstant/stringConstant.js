@@ -56,6 +56,7 @@ export const apiUrls = {
         `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/update-document-keywords?documentId=${encodeURIComponent(pdfId)}&newKeywords=${encodeURIComponent(JSON.stringify(tags))}`,
     documentMapping: (pageNumber) =>
         `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping?pageNumber=${pageNumber}&pageSize=10`,
+    personalAssistantEmail:`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`,
 };
 
 export const mapContainerStyle = {
