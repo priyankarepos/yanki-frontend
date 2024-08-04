@@ -1,0 +1,89 @@
+.share-link-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 16px;
+    border-radius: 8px;
+
+    .shared-chat-link-icons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0;
+    }
+}
+
+
+.Sharelink-input-box {
+    position: relative !important;
+
+    button.Sharelink-input-btn {
+        position: absolute;
+        right: 0;
+        top: -50%;
+        bottom: 0;
+        transform: translateY(50%);
+        margin: auto;
+        background: #1F345C;
+        color: #fff;
+        margin-right: 3px;
+    }
+}
+
+.Sharelink-input-box input {
+    position: relative;
+    background: #fff !important;
+    border-radius: 8px;
+    color: #011527 !important;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+    padding-right: 120px;
+}
+
+.shared-chat-paper {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.shared-chat-header {
+    text-align: center;
+    padding: 16px;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 16px;
+
+    .shared-chat-title {
+        font-weight: bold;
+        font-size: 24px;
+    }
+}
+
+.shared-chat-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2) !important;
+    text-align: center;
+}
+
+.shared-chat-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px
+}
+
+.sharedChatMsgTxt {
+    opacity: 0.5;
+    margin: 5px 0 !important;
+    font-size: 15px !important;
+}
+
+.sharedChatMsgTitle {
+    font-size: 18px !important;
+}

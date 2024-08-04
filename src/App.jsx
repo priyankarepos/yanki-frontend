@@ -56,6 +56,7 @@ import PaymentFailurePage from "./Components/MembershipPortal/PaymentFailurePage
 import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionCreated";
 import ChangeLanguage from "./Pages/ChangeLanguage";
 import UserChatList from "./Admin/AdminChat/UserChatList";
+import SharedChat from "./Pages/ShareModel/SharedChat";
 
 // Exporting context
 export const Context = createContext("");
@@ -679,6 +680,12 @@ function App() {
                             <ChangeLanguage />
                           </UserPageLayout>
                         </UserPagesProtection>
+                      }
+                    />
+                    <Route
+                      path="/share/:sharedChatId"
+                      element={
+                        <SharedChat />
                       }
                     />
                   </Routes>

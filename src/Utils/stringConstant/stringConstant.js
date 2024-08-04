@@ -47,6 +47,50 @@ export const messages = {
     geolocationText : "geolocation",
     grantedText : "granted",
     errorCheckLocationPermission : "Error checking location permissions:",
+    fetchErrorMessage: 'Failed to fetch the shared chat content',
+    errorMessagePrefix: 'Error: ',
+    noChatHistoryMessage: 'No chat history available',
+    getStartedButtonText: 'Get Started with Yanki',
+    sharedChatTitle: 'Yanki Shared Chat',
+    sharedChatLinkTitle: 'Share Chat Link',
+    copyToClipboard: "Copied to clipboard",
+    failedToGenerateShareChatId: 'Failed to generate share chat ID',
+    createLinkButtonText: 'Create Link',
+    copyLinkButtonText: 'Copy Link',
+    shareLinkIconAlt: 'Share Chatlink',
+    shareLinkPlaceholder: 'https://example.com/chat/dummy-id',
+    shareLinkModalTitle: 'Share public link to chat',
+    sharedChatMsg1: "Your name and any messages you add after sharing stay private.",
+    sharedChatMsg2: "A public link to your chat has been created.",
+    generateLinkError: 'Failed to generate share chat ID',
+    outlined: "outlined",
+    normal: "normal",
+    messengerAppIdPlaceholder: '<YOUR_APP_ID>',
+    shareChatTitle: "Share Chat",
+};
+
+export const classNames = {
+    sharedChatContainer: "shared-chat-container",
+    sharedChatPaper: "shared-chat-paper",
+    sharedChatHeader: "shared-chat-header",
+    sharedChatTitle: "shared-chat-title",
+    sharedChatLoader: "shared-chat-loader",
+    sharedChatFooter: "shared-chat-footer",
+    shareChatLinkModel: "share-link-modal-title",
+    shareLinkModal: "share-link-modal",
+    backgroundPaper: "background.paper",
+    sharedChatLinkIcons: "shared-chat-link-icons",
+    sharedChatLinkInputBox: "Sharelink-input-box",
+    sharedChatInput: "Sharelink-input",
+    sharedChatButton: "Sharelink-input-btn",
+    shareChatLinkIcon: "shareChatLinkIcon",
+    tooltipPlacement: "bottom",
+    altShareChatlink : "Share Chatlink",
+    muiContainerUserMenu: "Mui-Container-UserMenu",
+    sharedChatMsgTitle: "sharedChatMsgTitle",
+    sharedChatMsgTxt: "sharedChatMsgTxt",
+    xLWidth: "xl",
+
 };
 
 export const apiUrls = {
@@ -57,6 +101,14 @@ export const apiUrls = {
     documentMapping: (pageNumber) =>
         `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/document-mapping?pageNumber=${pageNumber}&pageSize=10`,
     personalAssistantEmail:`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`,
+    sharedChatApiUrl: (sharedChatId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-shared-chat?sharedChatId=${sharedChatId}`,
+    generateShareChatIdApiUrl: (chatId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/generate-share-chat-id?chatId=${chatId}`,
+    chatLinkBaseUrl: `${window.location.origin}/share/`,
+    whatsappShareUrl: 'https://api.whatsapp.com/send?text=',
+    twitterShareUrl: 'https://twitter.com/intent/tweet?url=',
+    smsShareUrl: 'sms:?&body=',
+    instagramShareUrl: 'https://www.instagram.com/?url=',
+    messengerShareUrl: (chatLink, appId) => `https://www.facebook.com/dialog/send?link=${encodeURIComponent(chatLink)}&app_id=${appId}`,
 };
 
 export const mapContainerStyle = {
