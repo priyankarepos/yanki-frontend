@@ -5,12 +5,16 @@
     transform: translate(-50%, -50%);
     padding: 16px;
     border-radius: 8px;
+    min-width: 400px;
 
     .shared-chat-link-icons {
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 10px 0;
+    }
+    @media (max-width: 576px) {
+        min-width: 350px; 
     }
 }
 
