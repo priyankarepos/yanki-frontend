@@ -18,7 +18,7 @@ import {
 } from "../../Utils/stringConstant/AgentChatResponse";
 import { startConnection, stopConnection } from "../../SignalR/signalRService";
 
-const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
+const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -93,7 +93,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage }) => {
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
           error={touched && !content.trim()}
-          disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true}
+          disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true || clickableOff}
         />
         <FormHelperText className="error-message">
           {touched && !content.trim() && "This field is required."}
