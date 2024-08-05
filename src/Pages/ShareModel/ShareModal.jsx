@@ -91,13 +91,13 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                         {!linkGenerated ? messages.sharedChatMsg1 : messages.sharedChatMsg2}
                     </Typography>
                 </Box>
-                <Box className={classNames.sharedChatLinkIcons} mt={2}>
+                {linkGenerated && <Box className={classNames.sharedChatLinkIcons} mt={2}>
                     <Button onClick={handleShareMessage}><img src={shareChatIcon1} alt={messages.shareLinkIconAlt} /></Button>
                     <Button onClick={handleShareWhatsApp}><img src={shareChatIcon2} alt={messages.shareLinkIconAlt} /></Button>
                     <Button onClick={handleShareInstagram}><img src={shareChatIcon3} alt={messages.shareLinkIconAlt} /></Button>
                     <Button onClick={handleShareTwitter}><img src={shareChatIcon4} alt={messages.shareLinkIconAlt} /></Button>
                     <Button onClick={handleShareMessenger}><img src={shareChatIcon5} alt={messages.shareLinkIconAlt} /></Button>
-                </Box>
+                </Box>}
                 <Box className={classNames.sharedChatLinkInputBox}>
                     <TextField
                         fullWidth
