@@ -10,6 +10,7 @@ const SharedChat = () => {
     const { sharedChatId } = useParams();
     const [chatContent, setChatContent] = useState('');
     const [loading, setLoading] = useState(true);
+    const [clickableOff, setClickableOff] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,13 +20,16 @@ const SharedChat = () => {
 
                 if (response.status === 200) {
                     setChatContent(response.data);
+                    setClickableOff(true);
                 } else {
                     setChatContent(messages.fetchErrorMessage);
+                    setClickableOff(true);
                 }
             } catch (error) {
                 setChatContent(messages.errorMessagePrefix + error.message);
             } finally {
                 setLoading(false);
+                setClickableOff(true);
             }
         };
 
@@ -55,6 +59,8 @@ const SharedChat = () => {
                                 key={item.id}
                                 response={item.gptResponse}
                                 query={item.userQuery}
+                                clickableOff={clickableOff}
+                                setClickableOff={setClickableOff}
                             />
                         ))
                     ) : (

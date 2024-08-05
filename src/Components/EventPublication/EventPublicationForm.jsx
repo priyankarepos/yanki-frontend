@@ -11,8 +11,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
+import { messages } from '../../Utils/stringConstant/stringConstant';
 
-const EventPublicationForm = ({ answer }) => {
+const EventPublicationForm = ({ answer, clickableOff }) => {
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
@@ -207,9 +208,9 @@ const EventPublicationForm = ({ answer }) => {
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
                 </Typography>
-                <Typography className='Custom-Button' onClick={openFormModal}>
-                    Open Form
-                </Typography>
+                <Button className='Custom-Button' onClick={openFormModal} disabled={clickableOff}>
+                    {messages.openForm}
+                </Button>
                 {responseMessage && <Typography sx={{ mt: 2 }}>{responseMessage}</Typography>}
             </Paper>
             <Modal

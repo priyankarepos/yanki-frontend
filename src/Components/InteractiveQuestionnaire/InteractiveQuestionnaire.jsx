@@ -3,7 +3,7 @@ import { questions } from '../../Utils/promptData/InterectiveQuestions';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import "./InteractiveQuestionnaire.scss";
 
-const InteractiveQuestionnaire = () => {
+const InteractiveQuestionnaire = ({clickableOff}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState(Array(questions.length).fill(""));
     const [showThankYou, setShowThankYou] = useState(false);
@@ -41,6 +41,7 @@ const InteractiveQuestionnaire = () => {
                         multiline
                         minRows={1} 
                         maxRows={Infinity} 
+                        disabled={clickableOff}
                     />
                 </Box>
                 {!showThankYou && (

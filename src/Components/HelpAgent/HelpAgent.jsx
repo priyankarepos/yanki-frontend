@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
 import { apiUrls } from "../../Utils/stringConstant/stringConstant";
-const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
+const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableOff }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -71,7 +71,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData }) => {
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
           error={touched && !content.trim()}
-          disabled={mailMessage !== "" || !answer?.isHelpAgent === true}
+          disabled={mailMessage !== "" || !answer?.isHelpAgent === true || clickableOff}
         />
         <FormHelperText className="error-message">
           {touched && !content.trim() && "This field is required."}

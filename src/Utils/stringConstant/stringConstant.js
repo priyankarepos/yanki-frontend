@@ -67,6 +67,8 @@ export const messages = {
     normal: "normal",
     messengerAppIdPlaceholder: '<YOUR_APP_ID>',
     shareChatTitle: "Share Chat",
+    clickSendMessageToEnterprise : "Click here to send message to Enterprise",
+    openForm: "Open Form",
 };
 
 export const classNames = {

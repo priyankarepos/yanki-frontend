@@ -2,8 +2,9 @@ import { Box, Typography, List, Button, Paper, Grid, CircularProgress, Snackbar 
 import React, { useState } from 'react';
 import axios from 'axios';
 import "./AnswerStyle.scss";
+import { messages } from '../Utils/stringConstant/stringConstant';
 
-const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
+const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
 
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
@@ -98,7 +99,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage }) => {
                                                 setSelectedEnterprise(enterprise.enterpriseName);
                                                 handleSendEmail(enterprise);
                                             }}
-                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "")}>Click here to send message to Enterprise</Button> : null}
+                                                disabled={(!answer?.isMail === true || selectedEnterpriseMessage !== "" || clickableOff)}>{messages.clickSendMessageToEnterprise}</Button> : null}
                                         </div>
                                     </Box>
                                 </Grid>

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import "./SafetyChecker.scss"
 
-const SafetyChecker = ({ answer, fetchRemainingMessage }) => {
+const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
@@ -58,7 +58,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage }) => {
                     onChange={(e) => setContent(e.target.value)}
                     onBlur={handleBlur}
                     error={touched && !content.trim()}
-                    disabled={mailMessage !== "" || !answer?.safetyChecker === true}
+                    disabled={mailMessage !== "" || !answer?.safetyChecker === true || clickableOff}
                 />
                 <FormHelperText className="error-message">
                     {touched && !content.trim() && 'This field is required.'}
