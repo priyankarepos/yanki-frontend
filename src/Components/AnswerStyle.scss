@@ -231,7 +231,8 @@ p.kosher-text strong {
   margin-bottom: 12px !important;
 }
 
-.enterprise-pdf-link, .sentence-answer-container a {
+.enterprise-pdf-link,
+.sentence-answer-container a {
   color: #007bff;
   cursor: pointer;
 }
@@ -269,7 +270,7 @@ p.kosher-text strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  
+
 }
 
 .profile-yanki-logo {
@@ -313,32 +314,36 @@ p.kosher-text strong {
   text-align: left;
 }
 
-.sentence-answer-container ol, ul {
+.sentence-answer-container ol,
+ul {
   margin-left: 20px;
 }
 
 .enterprise-prompt-msg {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .delete-account-content {
-  strong{
-      color: #6fa8dd;
-      display: none;
+  strong {
+    color: #6fa8dd;
+    display: none;
   }
 }
 
-.account-setting-menu{
+.account-setting-menu {
   display: flex !important;
   justify-content: flex-end !important;
 }
 
-.go-to-admin-icon{
-color: #adbac6;
+.go-to-admin-icon {
+  color: #adbac6;
 }
 
-.menu-li-color li.MuiButtonBase-root.MuiMenuItem-root{
+.menu-li-color li.MuiButtonBase-root.MuiMenuItem-root {
   color: #dddddd;
-  }
+}
 
-
+.Mui-Container-UserMenu {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}

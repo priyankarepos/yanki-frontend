@@ -45,7 +45,9 @@ import {
 } from "../../Utils/promptData/promptData";
 import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
-import { messages } from "../../Utils/stringConstant/stringConstant";
+import { classNames, messages } from "../../Utils/stringConstant/stringConstant";
+import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg"
+import ShareLinkModal from "../ShareModel/ShareModal";
 
 const NewHomePageMui = () => {
   const { chatId } = useParams();
@@ -77,6 +79,7 @@ const NewHomePageMui = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [scrollToKey, setScrollToKey] = useState();
   const [remainingSearchHistory, setRemainingSearchHistory] = useState([]);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -92,6 +95,11 @@ const NewHomePageMui = () => {
   const userRoles = yankiUser?.userObject?.userRoles || "";
   const onClickMembershipPortal = () => {
     navigate("/membership");
+  };
+
+  const handleOpenShareModal = (chatId) => {
+    setSelectedChatId(chatId);
+    setShareModalOpen(true);
   };
 
   const defulatSizePageSize = 20;
@@ -648,6 +656,11 @@ const NewHomePageMui = () => {
               </IconButton>
             </Box>
           )}
+          {chatId && <div className={classNames.shareChatLinkIcon}>
+            <Tooltip title={messages.shareChatTitle} placement={classNames.tooltipPlacement}>
+              <img src={shareChatLinkIcon} alt={classNames.altShareChatlink} onClick={() => handleOpenShareModal(chatId)} />
+            </Tooltip>
+          </div>}
           <ProfielCircle chatId={chatId} />
         </Toolbar>
       </AppBar>
@@ -1079,6 +1092,11 @@ const NewHomePageMui = () => {
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
+      />
+       <ShareLinkModal
+        open={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        selectedChatId={selectedChatId}
       />
     </Box>
   );
