@@ -19,15 +19,14 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
-import MikvahAnswer from "../Components/MikvahList/MikvahList";
+import MikvahAnswer from "../Components/MikvahList/MikvahList1";
 import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
 
 const SearchHistoryItem = forwardRef(
-  ({ query, response, fetchRemainingMessage, remainingMsgData, clickableOff,setClickableOff }, ref) => {
+  ({ query, response, fetchRemainingMessage, remainingMsgData, clickableOff }, ref) => {
     const [direction, setDirection] = useState("ltr");
     const { activeTab } = React.useContext(Context);
-    console.log("clickableOff", clickableOff);
 
     React.useEffect(() => {
       const containsHebrew = /[\u0590-\u05FF]/.test(query);

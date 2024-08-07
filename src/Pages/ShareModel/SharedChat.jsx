@@ -60,7 +60,6 @@ const SharedChat = () => {
                                 response={item.gptResponse}
                                 query={item.userQuery}
                                 clickableOff={clickableOff}
-                                setClickableOff={setClickableOff}
                             />
                         ))
                     ) : (
