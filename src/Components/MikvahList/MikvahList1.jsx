@@ -75,58 +75,74 @@ const MikvahAnswer = ({ answer }) => {
                     try {
                         if (navigator.permissions && navigator.permissions.query) {
                             const result = await navigator.permissions.query({ name: messages.geolocationText });
-                            const handlePermissionChange = () => {
-                                if (result.state === messages.grantedText) {
-                                    setIsLocationAllowed(true);
-                                    getCurrentPosition();
-                                } else {
-                                    setIsLocationAllowed(false);
-                                }
-                            };
-        
-                            result.onchange = handlePermissionChange;
-        
                             if (result.state === messages.grantedText) {
-                                setIsLocationAllowed(true);
-                                getCurrentPosition();
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const { latitude, longitude } = position.coords;
+                                        setOrigin(`${latitude},${longitude}`);
+                                        setIsLocationAllowed(true);
+                                    },
+                                    () => {
+                                        setSnackbarMessage(messages.errorFetchingLocation);
+                                        setSnackbarOpen(true);
+                                        setIsLocationAllowed(false);
+                                    }
+                                );
                             } else if (result.state === messages.promptText) {
-                                getCurrentPosition();
+                                navigator.geolocation.getCurrentPosition(
+                                    (position) => {
+                                        const { latitude, longitude } = position.coords;
+                                        setOrigin(`${latitude},${longitude}`);
+                                        setIsLocationAllowed(true);
+                                    },
+                                    (error) => {
+                                        if (error.code === error.PERMISSION_DENIED) {
+                                            setSnackbarMessage(messages.permissionDeniedMessage);
+                                            setSnackbarOpen(true);
+                                            setIsLocationAllowed(false);
+                                        } else {
+                                            setSnackbarMessage(messages.errorFetchingLocation);
+                                            setSnackbarOpen(true);
+                                        }
+                                    }
+                                );
                             } else {
+                                setSnackbarMessage(messages.permissionDeniedMessage);
+                                setSnackbarOpen(true);
                                 setIsLocationAllowed(false);
                             }
+                            result.onchange = () => {
+                                setIsLocationAllowed(result.state === messages.grantedText);
+                            };
                         } else {
-                            getCurrentPosition();
+                            navigator.geolocation.getCurrentPosition(
+                                (position) => {
+                                    const { latitude, longitude } = position.coords;
+                                    setOrigin(`${latitude},${longitude}`);
+                                    setIsLocationAllowed(true);
+                                },
+                                (error) => {
+                                    if (error.code === error.PERMISSION_DENIED) {
+                                        setSnackbarMessage(messages.permissionDeniedMessage);
+                                        setSnackbarOpen(true);
+                                        setIsLocationAllowed(false);
+                                    } else {
+                                        setSnackbarMessage(messages.errorFetchingLocation);
+                                        setSnackbarOpen(true);
+                                    }
+                                }
+                            );
                         }
                     } catch (error) {
                         setSnackbarMessage(messages.errorCheckLocationPermission);
                         setSnackbarOpen(true);
                     }
-                } else {
-                    setIsLocationAllowed(false);
-                    setSnackbarMessage(messages.geolocationNotSupported);
-                    setSnackbarOpen(true);
                 }
             };
-        
-            const getCurrentPosition = () => {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        setIsLocationAllowed(true);
-                        setOrigin(`${latitude},${longitude}`);
-                    },
-                    () => {
-                        setIsLocationAllowed(false);
-                        setSnackbarMessage(messages.errorFetchingLocation);
-                        setSnackbarOpen(true);
-                    },
-                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                );
-            };
-        
+
             checkPermissionsAndFetchLocation();
         }, []);
-
+        
         const directionsCallback = (result, status) => {
             if (status === messages.statusOk) {
                 setResponse(result);
