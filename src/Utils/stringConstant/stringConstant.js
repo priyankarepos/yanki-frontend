@@ -70,6 +70,7 @@ export const messages = {
     shareChatTitle: "Share Chat",
     clickSendMessageToEnterprise : "Click here to send message to Enterprise",
     openForm: "Open Form",
+    mikvahDetailsNotFound: 'Mikvah details not found',
     permissionDeniedMessage: 'Geolocation permission was denied. Please enable location services to use this feature.',
 };
 
