@@ -73,65 +73,45 @@ const MikvahAnswer = ({ answer }) => {
             const checkPermissionsAndFetchLocation = async () => {
                 if (navigator.geolocation) {
                     try {
+                        const handleGeolocationSuccess = (position) => {
+                            const { latitude, longitude } = position.coords;
+                            setOrigin(`${latitude},${longitude}`);
+                            setIsLocationAllowed(true);
+                        };
+
+                        const handleGeolocationError = (error) => {
+                            if (error.code === error.PERMISSION_DENIED) {
+                                setSnackbarMessage(messages.permissionDeniedMessage);
+                                setIsLocationAllowed(false);
+                            } else {
+                                setSnackbarMessage(messages.errorFetchingLocation);
+                            }
+                            setSnackbarOpen(true);
+                        };
+
                         if (navigator.permissions && navigator.permissions.query) {
                             const result = await navigator.permissions.query({ name: messages.geolocationText });
                             if (result.state === messages.grantedText) {
-                                navigator.geolocation.getCurrentPosition(
-                                    (position) => {
-                                        const { latitude, longitude } = position.coords;
-                                        setOrigin(`${latitude},${longitude}`);
-                                        setIsLocationAllowed(true);
-                                    },
-                                    () => {
-                                        setSnackbarMessage(messages.errorFetchingLocation);
-                                        setSnackbarOpen(true);
-                                        setIsLocationAllowed(false);
-                                    }
-                                );
+                                navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else if (result.state === messages.promptText) {
-                                navigator.geolocation.getCurrentPosition(
-                                    (position) => {
-                                        const { latitude, longitude } = position.coords;
-                                        setOrigin(`${latitude},${longitude}`);
-                                        setIsLocationAllowed(true);
-                                    },
-                                    (error) => {
-                                        if (error.code === error.PERMISSION_DENIED) {
-                                            setSnackbarMessage(messages.permissionDeniedMessage);
-                                            setSnackbarOpen(true);
-                                            setIsLocationAllowed(false);
-                                        } else {
-                                            setSnackbarMessage(messages.errorFetchingLocation);
-                                            setSnackbarOpen(true);
-                                        }
-                                    }
-                                );
+                                navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else {
                                 setSnackbarMessage(messages.permissionDeniedMessage);
-                                setSnackbarOpen(true);
                                 setIsLocationAllowed(false);
+                                setSnackbarOpen(true);
                             }
+
                             result.onchange = () => {
-                                setIsLocationAllowed(result.state === messages.grantedText);
+                                if (result.state === messages.grantedText) {
+                                    navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
+                                } else {
+                                    setSnackbarMessage(messages.permissionDeniedMessage);
+                                    setIsLocationAllowed(false);
+                                    setSnackbarOpen(true);
+                                }
                             };
                         } else {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const { latitude, longitude } = position.coords;
-                                    setOrigin(`${latitude},${longitude}`);
-                                    setIsLocationAllowed(true);
-                                },
-                                (error) => {
-                                    if (error.code === error.PERMISSION_DENIED) {
-                                        setSnackbarMessage(messages.permissionDeniedMessage);
-                                        setSnackbarOpen(true);
-                                        setIsLocationAllowed(false);
-                                    } else {
-                                        setSnackbarMessage(messages.errorFetchingLocation);
-                                        setSnackbarOpen(true);
-                                    }
-                                }
-                            );
+                            navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                         }
                     } catch (error) {
                         setSnackbarMessage(messages.errorCheckLocationPermission);
@@ -320,7 +300,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     }}
                                                 />
                                             )}
-                                            {shouldFetchDirections && origin && destination && (
+                                            {shouldFetchDirections && (
                                                 <DirectionsService
                                                     options={{
                                                         destination: destination,
