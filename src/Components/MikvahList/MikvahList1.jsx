@@ -21,25 +21,25 @@ import {
     Business,
     Phone,
     Schedule,
-} from '@mui/icons-material';
-import PanToolAltIcon from '@mui/icons-material/PanToolAlt';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+    LocationOn as LocationOnIcon,
+    Person as PersonIcon,
+    PanToolAlt as PanToolAltIcon,
+    KeyboardArrowDown as KeyboardArrowDownIcon,
+    KeyboardArrowUp as KeyboardArrowUpIcon,
+    Close as CloseIcon,
+} from "@mui/icons-material";
 import "../../Pages/NewHomePageMui/NewHomePageStyle.scss";
 import "./MikvahAnswer.scss";
 import { apiUrls, mapContainerStyle, messages } from "../../Utils/stringConstant/stringConstant";
-import PersonIcon from '@mui/icons-material/Person';
 import { Context } from "../../App";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
     GoogleMap,
     LoadScriptNext,
     DirectionsService,
     DirectionsRenderer,
-    Marker
-} from '@react-google-maps/api';
-import CloseIcon from "@mui/icons-material/Close";
+    Marker,
+} from "@react-google-maps/api";
 
 const MikvahAnswer = ({ answer }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -58,71 +58,77 @@ const MikvahAnswer = ({ answer }) => {
         const [destination, setDestination] = useState('');
         const [shouldFetchDirections, setShouldFetchDirections] = useState(false);
         const [showMap, setShowMap] = useState(false);
+        const [loadingDetails, setLoadingDetails] = useState(false);
+
+        useEffect(() => {
+            if (isLocationAllowed && open) {
+                checkPermissionsAndFetchLocation();
+            }
+        }, [isLocationAllowed, open]);
 
         const fetchMikvahDetails = async () => {
+            setLoadingDetails(true);
             try {
-                const response = await axios.get(`${apiUrls.mikvahDetails}`, { params: { mikvahId: row.id } });
+                const response = await axios.get(apiUrls.mikvahDetails, { params: { mikvahId: row.id } });
                 setMikvahDetails(response.data);
             } catch (error) {
                 setSnackbarMessage(messages.mikvahDetailsError);
                 setSnackbarOpen(true);
+            } finally {
+                setLoadingDetails(false);
             }
         };
 
-        useEffect(() => {
-            const checkPermissionsAndFetchLocation = async () => {
-                if (navigator.geolocation) {
-                    try {
-                        const handleGeolocationSuccess = (position) => {
-                            const { latitude, longitude } = position.coords;
-                            setOrigin(`${latitude},${longitude}`);
-                            setIsLocationAllowed(true);
-                        };
+        const checkPermissionsAndFetchLocation = async () => {
+            if (navigator.geolocation) {
+                try {
+                    const handleGeolocationSuccess = (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setOrigin(`${latitude},${longitude}`);
+                        setIsLocationAllowed(true);
+                    };
 
-                        const handleGeolocationError = (error) => {
-                            if (error.code === error.PERMISSION_DENIED) {
-                                setSnackbarMessage(messages.permissionDeniedMessage);
-                                setIsLocationAllowed(false);
-                            } else {
-                                setSnackbarMessage(messages.errorFetchingLocation);
-                            }
+                    const handleGeolocationError = (error) => {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            setSnackbarMessage(messages.errorFetchingLocation);
+                            setIsLocationAllowed(false);
+                        } else {
+                            setSnackbarMessage(messages.errorFetchingLocation);
+                        }
+                        setSnackbarOpen(true);
+                    };
+
+                    if (navigator.permissions && navigator.permissions.query) {
+                        const result = await navigator.permissions.query({ name: messages.geolocationText });
+                        if (result.state === messages.grantedText) {
+                            navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
+                        } else if (result.state === messages.promptText) {
+                            navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
+                        } else {
+                            setSnackbarMessage(messages.errorFetchingLocation);
+                            setIsLocationAllowed(false);
                             setSnackbarOpen(true);
-                        };
+                        }
 
-                        if (navigator.permissions && navigator.permissions.query) {
-                            const result = await navigator.permissions.query({ name: messages.geolocationText });
+                        result.onchange = () => {
                             if (result.state === messages.grantedText) {
                                 navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
-                            } else if (result.state === messages.promptText) {
-                                navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else {
-                                setSnackbarMessage(messages.permissionDeniedMessage);
+                                setSnackbarMessage(messages.errorFetchingLocation);
                                 setIsLocationAllowed(false);
                                 setSnackbarOpen(true);
                             }
-
-                            result.onchange = () => {
-                                if (result.state === messages.grantedText) {
-                                    navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
-                                } else {
-                                    setSnackbarMessage(messages.permissionDeniedMessage);
-                                    setIsLocationAllowed(false);
-                                    setSnackbarOpen(true);
-                                }
-                            };
-                        } else {
-                            navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
-                        }
-                    } catch (error) {
-                        setSnackbarMessage(messages.errorCheckLocationPermission);
-                        setSnackbarOpen(true);
+                        };
+                    } else {
+                        navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                     }
+                } catch (error) {
+                    setSnackbarMessage(messages.errorCheckLocationPermission);
+                    setSnackbarOpen(true);
                 }
-            };
+            }
+        };
 
-            checkPermissionsAndFetchLocation();
-        }, []);
-        
         const directionsCallback = (result, status) => {
             if (status === messages.statusOk) {
                 setResponse(result);
@@ -131,7 +137,7 @@ const MikvahAnswer = ({ answer }) => {
                 setSnackbarOpen(true);
                 setResponse(null);
             } else {
-                setSnackbarMessage(`${messages.errorFetchingDirections}`);
+                setSnackbarMessage(messages.errorFetchingDirections);
                 setSnackbarOpen(true);
                 setResponse(null);
             }
@@ -139,19 +145,17 @@ const MikvahAnswer = ({ answer }) => {
         };
 
         const handleSetDestination = () => {
-            handleShowDetails();
             setDestination(`${row.latitude},${row.longitude}`);
             setShouldFetchDirections(true);
             setShowMap(true);
+            handleShowDetails();
+            checkPermissionsAndFetchLocation();
         };
 
-        const locationEnable = () => {
-            setSnackbarMessage(`${messages.errorFetchingLocation}`);
-            setSnackbarOpen(true);
-        }
-
         const handleShowDetails = () => {
-            fetchMikvahDetails();
+            if (!open) {
+                fetchMikvahDetails();
+            }
             setOpen(!open);
             if (open) {
                 setShowMap(false);
@@ -184,16 +188,16 @@ const MikvahAnswer = ({ answer }) => {
                             </div>
                         </Tooltip>
                     </TableCell>
-                    <TableCell>
+                    <TableCell onClick={handleShowDetails}>
                         <Box className={messages.mikvahDetailInfo}>
-                            <Button variant={messages.buttonContainedVarient} onClick={!isLocationAllowed ? locationEnable : handleSetDestination} >
+                            <Button variant={messages.buttonContainedVarient} onClick={handleSetDestination} >
                                 <LocationOnIcon />
                             </Button>
                         </Box>
                     </TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
+                <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
                         <Collapse in={open} unmountOnExit>
                             <Box sx={{ margin: 1 }} className={`${showMap ? messages.displayNoneClass : ""} ${messages.mikvahDetailBox}`}>
                                 {mikvahDetails ? (
@@ -273,8 +277,10 @@ const MikvahAnswer = ({ answer }) => {
 
                                         </Grid>
                                     </Grid>
-                                ) : (
+                                ) : loadingDetails ? (
                                     <Typography>Loading...</Typography>
+                                ) : (
+                                    <Typography>{messages.mikvahDetailsNotFound}</Typography>
                                 )}
                             </Box>
                             <Box sx={{ margin: 1 }}>
@@ -300,7 +306,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     }}
                                                 />
                                             )}
-                                            {shouldFetchDirections && (
+                                            {shouldFetchDirections && origin && destination && (
                                                 <DirectionsService
                                                     options={{
                                                         destination: destination,
@@ -329,9 +335,15 @@ const MikvahAnswer = ({ answer }) => {
     };
 
     return (
-        <div>
+        <Box>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
             <TableContainer component={Paper}>
-                <Table aria-label={messages.collapsibleTable}>
+                <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell />
@@ -341,19 +353,13 @@ const MikvahAnswer = ({ answer }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {answer?.mikvahSearchResponse?.result && answer?.mikvahSearchResponse?.result.map((row) => (
+                    {answer?.mikvahSearchResponse?.result && answer?.mikvahSearchResponse?.result.map((row) => (
                             <Row key={row.id} row={row} />
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={() => setSnackbarOpen(false)}
-                message={snackbarMessage}
-            />
-        </div>
+        </Box>
     );
 };
 
