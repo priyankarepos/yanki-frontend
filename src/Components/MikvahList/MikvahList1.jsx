@@ -75,43 +75,55 @@ const MikvahAnswer = ({ answer }) => {
                     try {
                         if (navigator.permissions && navigator.permissions.query) {
                             const result = await navigator.permissions.query({ name: messages.geolocationText });
-                            const permissionGranted = result.state === messages.grantedText;
-                            setIsLocationAllowed(permissionGranted);
-                            if (permissionGranted) {
-                                navigator.geolocation.getCurrentPosition(
-                                    (position) => {
-                                        const { latitude, longitude } = position.coords;
-                                        setOrigin(`${latitude},${longitude}`);
-                                    },
-                                    () => {
-                                        setSnackbarMessage(messages.errorFetchingLocation);
-                                        setSnackbarOpen(true);
-                                    }
-                                );
-                            }
-
-                            result.onchange = () => setIsLocationAllowed(result.state === messages.grantedText);
-                        } else {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const { latitude, longitude } = position.coords;
+                            const handlePermissionChange = () => {
+                                if (result.state === messages.grantedText) {
                                     setIsLocationAllowed(true);
-                                    setOrigin(`${latitude},${longitude}`);
-                                },
-                                () => {
+                                    getCurrentPosition();
+                                } else {
                                     setIsLocationAllowed(false);
-                                    setSnackbarMessage(messages.errorFetchingLocation);
-                                    setSnackbarOpen(true);
                                 }
-                            );
+                            };
+        
+                            result.onchange = handlePermissionChange;
+        
+                            if (result.state === messages.grantedText) {
+                                setIsLocationAllowed(true);
+                                getCurrentPosition();
+                            } else if (result.state === messages.promptText) {
+                                getCurrentPosition();
+                            } else {
+                                setIsLocationAllowed(false);
+                            }
+                        } else {
+                            getCurrentPosition();
                         }
                     } catch (error) {
                         setSnackbarMessage(messages.errorCheckLocationPermission);
                         setSnackbarOpen(true);
                     }
+                } else {
+                    setIsLocationAllowed(false);
+                    setSnackbarMessage(messages.geolocationNotSupported);
+                    setSnackbarOpen(true);
                 }
             };
-
+        
+            const getCurrentPosition = () => {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setIsLocationAllowed(true);
+                        setOrigin(`${latitude},${longitude}`);
+                    },
+                    () => {
+                        setIsLocationAllowed(false);
+                        setSnackbarMessage(messages.errorFetchingLocation);
+                        setSnackbarOpen(true);
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            };
+        
             checkPermissionsAndFetchLocation();
         }, []);
 
