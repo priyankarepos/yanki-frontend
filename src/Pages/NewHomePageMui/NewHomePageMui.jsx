@@ -627,7 +627,7 @@ const NewHomePageMui = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           resetPage();
-        }, 5000); 
+        }, 3600000); 
       };
 
       document.onmousemove = resetTimer;
