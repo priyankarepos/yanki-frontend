@@ -19,7 +19,7 @@ import PersonalAssistant from "../Components/PersonalAssistant/PersonalAssistant
 import ReminderNotification from "../Components/ReminderNotification/ReminderNotification";
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
-import MikvahAnswer from "../Components/MikvahList/MikvahList1";
+import MikvahAnswer from "../Components/MikvahList/MikvahList";
 import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
 
