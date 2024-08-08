@@ -619,6 +619,37 @@ const NewHomePageMui = () => {
     setQueryDirection(newDirection);
   };
 
+  useEffect(() => {
+    if (chatId) {
+      let timeoutId;
+
+      const resetTimer = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          resetPage();
+        }, 5000); 
+      };
+
+      document.onmousemove = resetTimer;
+      document.onkeydown = resetTimer;
+      document.ontouchstart = resetTimer;
+      document.onclick = resetTimer;
+      document.onscroll = resetTimer;
+      document.onfocus = resetTimer;
+      resetTimer();
+
+      return () => {
+        clearTimeout(timeoutId);
+        document.onmousemove = null;
+        document.onkeydown = null;
+        document.ontouchstart = null;
+        document.onclick = null;
+        document.onscroll = null;
+        document.onfocus = null;
+      };
+    }
+  }, [chatId, navigate]);
+
   return (
     <Box className="ya-home-wrapper">
       <CssBaseline />
