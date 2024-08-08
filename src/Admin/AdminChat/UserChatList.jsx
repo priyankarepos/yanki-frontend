@@ -1,5 +1,5 @@
 import { Box, useMediaQuery, Typography } from "@mui/material";
-import { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../App";
 import AdminDashboard from "../AdminDashboard";
@@ -11,22 +11,23 @@ import axios from "axios";
 import OfflineUserAvtar from "../../Assets/images/OfflineUserAvtar.svg";
 import Conversation from "./Conversation";
 import "./AdminChat.scss";
-import {
-  startConnection,
-  stopConnection,
-  onReceiveMessage,
-} from "../../SignalR/signalRService";
+import UserInformations from "./UserInformations";
+import { getConnectionPromise } from "../../SignalR/signalRService";
+import OnlineUserAvatar from "../../Assets/images/OnlineUserAvtar.svg";
 
 const UserChatList = () => {
   const [userList, setUserList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userStatus, setUserStatus] = useState({});
   const { drawerOpen } = useContext(Context);
   const navigate = useNavigate();
   const { id } = useParams();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
   );
-  const isMediumScreen = useMediaQuery((theme) =>
-    theme.breakpoints.down(agentChatResponse.mediumScreen)
+  const isLargeScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down(agentChatResponse.largeScreen)
   );
   const latestUser = userList[0]?.userId;
 
@@ -49,19 +50,38 @@ const UserChatList = () => {
       email: response.data.email,
       lastMessage: message.content,
       lastMessageTime: localTimeString,
+      unseenMessageCount: id ? 0 : 1,
     };
 
     setUserList([newUser]);
-    stopConnection();
   }, []);
 
   const initializeConnection = useCallback(async () => {
-    await startConnection();
-    onReceiveMessage(handleReceivedMessage);
-  
-    return () => {
-      stopConnection();
-    };
+    const connection = await getConnectionPromise();
+
+    if (connection) {
+      connection.on(agentChatResponse.receiveMessage, (message) => {
+        handleReceivedMessage(message);
+      });
+
+      connection.on(agentChatResponse.newUser, (senderUser) => {
+        
+        setUserStatus(prevStatus => {
+          if (prevStatus[senderUser.userId]) {
+            return {
+              ...prevStatus,
+              [senderUser.userId]: senderUser.status
+            };
+          } else {
+            return {
+              ...prevStatus,
+              [senderUser.userId]: senderUser.status
+            };
+          }
+        });
+        
+      })
+    }
   }, [handleReceivedMessage]);
 
   useEffect(() => {
@@ -71,21 +91,22 @@ const UserChatList = () => {
         if (response.data.length === 0) {
           setUserList([]);
           await initializeConnection();
+        } else {
+          const processedMessages = response.data.map((message) => {
+            const date = new Date(message.lastMessageTime);
+            const options = {
+              hour: agentChatResponse.numeric,
+              minute: agentChatResponse.numeric,
+              hour12: true,
+            };
+            const localTimeString = date.toLocaleTimeString(undefined, options);
+
+            return { ...message, lastMessageTime: localTimeString };
+          });
+
+          setUserList(processedMessages);
         }
-
-        const processedMessages = response.data.map((message) => {
-          const date = new Date(message.lastMessageTime);
-          const options = {
-            hour: agentChatResponse.numeric,
-            minute: agentChatResponse.numeric,
-            hour12: true,
-          };
-          const localTimeString = date.toLocaleTimeString(undefined, options);
-
-          return { ...message, lastMessageTime: localTimeString };
-        });
-
-        setUserList(processedMessages);
+        setIsLoading(true);
       } catch (err) {}
     };
     fetchUsers();
@@ -97,8 +118,7 @@ const UserChatList = () => {
     if (userList.length > 0) {
       userIndex = userList.findIndex(
         (user) =>
-          user.userId === message.senderId ||
-          message.receiverId.includes(user.userId)
+          user.userId === message.senderId || message.receiverId === user.userId
       );
     }
     if (userIndex !== -1) {
@@ -107,6 +127,13 @@ const UserChatList = () => {
         ...updatedUserList[userIndex],
         lastMessage: message.content,
         lastMessageTime: message.timestamp,
+        unseenMessageCount: message.receiverId
+          ? 0
+          : id === message.senderId
+          ? 0
+          : updatedUserList[userIndex].unseenMessageCount
+          ? updatedUserList[userIndex].unseenMessageCount + 1
+          : 1,
       };
 
       return updatedUserList;
@@ -120,6 +147,7 @@ const UserChatList = () => {
         email: response.data.email,
         lastMessage: message.content,
         lastMessageTime: message.timestamp,
+        unseenMessageCount: 1,
       };
 
       const updatedUserList = [newUser, ...userList];
@@ -133,18 +161,59 @@ const UserChatList = () => {
     setUserList(updatedUserList);
   };
 
+  const updateUserList = (id) => {
+    setUserList((prevList) => {
+      const userIndex = prevList.findIndex((user) => user.userId === id);
+
+      if (userIndex !== -1) {
+        const updatedList = [...prevList];
+        updatedList[userIndex] = {
+          ...updatedList[userIndex],
+          unseenMessageCount: 0,
+        };
+
+        return updatedList;
+      }
+    });
+  };
+
   useEffect(() => {
-    if (!id && latestUser && !isMediumScreen) {
+    if (!id && latestUser && !isLargeScreen) {
+      updateUserList(latestUser);
       navigate(`${apiUrls.chatNavigateUrlById(latestUser)}`);
     }
-  }, [id, latestUser, navigate, isMediumScreen]);
+  }, [id, latestUser, navigate, isLargeScreen]);
 
   const handleListItemClick = (id) => {
+    updateUserList(id);
+
     navigate(`${apiUrls.chatNavigateUrlById(id)}`);
   };
 
+  const handleUserInfoModalOpen = (res) => {
+    setIsModalOpen(res);
+  };
+
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+        var response = await axios.get(`${apiUrls.getUserStatus}`);
+        const statusDict = response.data.reduce((acc, status) => {
+          acc[status.userId] = status.status;
+          return acc;
+        }, {});
+        setUserStatus(statusDict);
+    };
+    fetchUserStatus();
+  }, []);
+
   return (
-    <Box className={`${agentChatResponse.eventRequestContainer} ${isMediumScreen ? agentChatResponse.agentChatContainerHide : agentChatResponse.agentChatContainerShow}`}>
+    <Box
+      className={`${agentChatResponse.eventRequestContainer} ${
+        isLargeScreen
+          ? agentChatResponse.agentChatContainerHide
+          : agentChatResponse.agentChatContainerShow
+      }`}
+    >
       <Box
         sx={{
           width:
@@ -156,8 +225,10 @@ const UserChatList = () => {
         <AdminDashboard />
       </Box>
       <Box
-        className={`${agentChatResponse.enterpriseFormBox} ${
-          isMediumScreen
+        className={`${ agentChatResponse.agentChatBackground } 
+          ${agentChatResponse.enterpriseFormBox}
+        } ${
+          isLargeScreen
             ? agentChatResponse.enterpriseFormBoxHide
             : agentChatResponse.enterpriseFormBoxShow
         }`}
@@ -167,51 +238,107 @@ const UserChatList = () => {
             : agentChatResponse.hundredWidth,
         }}
       >
-        {userList.length === 0 ? (
-          <Typography className={agentChatResponse.noUserMessage}>
-            No users have sent a message
-          </Typography>
-        ) : (
-          <Box className={agentChatResponse.chatContainer}>
-            <Box
-              className={`${
-                isMediumScreen && id
-                  ? agentChatResponse.userListHide
-                  : agentChatResponse.userListContainer
-              }`}
-            >
-              {userList.map((user, index) => (
-                <Box
-                  className={`${agentChatResponse.userInfoContainer} ${
-                    user.userId === id
-                      ? agentChatResponse.activeChatSession
-                      : agentChatResponse.deactivateChatSession
-                  }`}
-                  onClick={() => handleListItemClick(user.userId)}
-                >
-                  <img
-                    className={agentChatResponse.userImage}
-                    src={OfflineUserAvtar}
-                    alt={user.email}
-                  />
-                  <Box className={agentChatResponse.userInfo}>
-                    <Box className={agentChatResponse.userDetails}>
-                      <Typography className={agentChatResponse.userEmail}>
-                        {user.email}
-                      </Typography>
-                      <span className={agentChatResponse.lastMessageTime}>
-                        {user.lastMessageTime}
-                      </span>
-                    </Box>
-                    <Typography className={agentChatResponse.lastMessage}>
-                      {user.lastMessage}
-                    </Typography>
+        {isLoading && (
+          <React.Fragment>
+            {userList.length === 0 ? (
+              <Typography className={agentChatResponse.noUserMessage}>
+                No users have sent a message
+              </Typography>
+            ) : (
+              <Box
+                className={` ${
+                  !isModalOpen ||
+                  (!isModalOpen && !isLargeScreen) ||
+                  (isModalOpen && !isLargeScreen)
+                    ? agentChatResponse.chatContainer
+                    : agentChatResponse.hideChatContainer
+                }`}
+              >
+                {(!isModalOpen ||
+                  (!isModalOpen && !isLargeScreen) ||
+                  (isModalOpen && !isLargeScreen)) && (
+                  <Box
+                    className={` ${
+                      !isModalOpen
+                        ? agentChatResponse.chatInformationContainer
+                        : agentChatResponse.chatInformationContainerModalOpen
+                    }`}
+                  >
+                    {!isModalOpen && (
+                      <Box
+                        className={`${
+                          isLargeScreen && id
+                            ? agentChatResponse.userListHide
+                            : agentChatResponse.userListContainer
+                        }`}
+                      >
+                        {userList.map((user, index) => (
+                          <Box
+                            key={index}
+                            className={`${
+                              agentChatResponse.userInfoContainer
+                            } ${
+                              user.userId === id
+                                ? agentChatResponse.activeChatSession
+                                : agentChatResponse.deactivateChatSession
+                            }`}
+                            onClick={() => handleListItemClick(user.userId)}
+                          >
+                            <img
+                              className={agentChatResponse.userImage}
+                              src={userStatus[user.userId] === "online" ? OnlineUserAvatar : OfflineUserAvtar}
+                              alt={user.email}
+                            />
+
+                            <Box className={agentChatResponse.userInfo}>
+                              <Box className={agentChatResponse.userDetails}>
+                                <Typography
+                                  className={agentChatResponse.userEmail}
+                                >
+                                  {user.email}
+                                </Typography>
+                                <Box className={agentChatResponse.messageBox}>
+                                  {user.unseenMessageCount !== 0 && (
+                                    <span
+                                      className={
+                                        agentChatResponse.unseenMessageCount
+                                      }
+                                    >
+                                      {user.unseenMessageCount}
+                                    </span>
+                                  )}
+                                  <span
+                                    className={
+                                      agentChatResponse.lastMessageTime
+                                    }
+                                  >
+                                    {user.lastMessageTime}
+                                  </span>
+                                </Box>
+                              </Box>
+                              <Typography
+                                className={agentChatResponse.lastMessage}
+                              >
+                                {user.lastMessage}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+                    {id && (
+                      <Conversation
+                        onUserList={handleUserList}
+                        isModalOpen={isModalOpen}
+                        userInfoModalOpen={handleUserInfoModalOpen}
+                      />
+                    )}
                   </Box>
-                </Box>
-              ))}
-            </Box>
-            {id && <Conversation onUserList={handleUserList} />}
-          </Box>
+                )}
+                {isModalOpen && <UserInformations />}
+              </Box>
+            )}
+          </React.Fragment>
         )}
       </Box>
     </Box>

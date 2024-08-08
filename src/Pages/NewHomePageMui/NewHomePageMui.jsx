@@ -52,6 +52,11 @@ import {
 import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg";
 import ShareLinkModal from "../ShareModel/ShareModal";
 import { useTranslation } from 'react-i18next';
+import {
+  agentChatResponse,
+  apiUrls,
+} from "../../Utils/stringConstant/AgentChatResponse";
+import { getConnectionPromise } from "../../SignalR/signalRService";
 
 const NewHomePageMui = () => {
   const { t } = useTranslation();
@@ -85,6 +90,9 @@ const NewHomePageMui = () => {
   const [scrollToKey, setScrollToKey] = useState();
   const [remainingSearchHistory, setRemainingSearchHistory] = useState([]);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [agentChatSession, setAgentChatSession] = useState([]);
+  const [showChatSession, setShowChatSession] = useState(false);
+  const [agentChatSessionId, setAgentChatSessionId] = useState(null);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -98,6 +106,7 @@ const NewHomePageMui = () => {
       "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
+  const currentUserId = yankiUser?.userObject?.userId || "";
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
@@ -106,6 +115,7 @@ const NewHomePageMui = () => {
     setSelectedChatId(chatId);
     setShareModalOpen(true);
   };
+  const { chatSessionId } = useParams();
 
   const defulatSizePageSize = 20;
 
@@ -325,6 +335,14 @@ const NewHomePageMui = () => {
     }
   }, [pageNumber, hasMore]);
 
+  useEffect(() => {
+    const fetchAgentChatSession = async () => {
+      const response = await axios.get(apiUrls.getAgentChatSession);
+      setAgentChatSession(response.data);
+    };
+    fetchAgentChatSession();
+  }, []);
+
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
@@ -356,15 +374,19 @@ const NewHomePageMui = () => {
     [chatHistoryPageNumber]
   );
 
-  const handleChatSessionClick = useCallback(async (chatId) => {
-    setIsLoading(false);
-    setSelectedChatId(chatId);
-    navigate(`/${chatId}`);
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
-      );
-
+  const handleChatSessionClick = useCallback(
+    async (chatId) => {
+      setIsLoading(false);
+      setAgentChatSessionId(null);
+      setShowChatSession(false);
+      setSelectedChatId(chatId);
+      navigate(`/${chatId}`);
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_APP_API_HOST
+          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
+        );
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -381,6 +403,31 @@ const NewHomePageMui = () => {
     },
     [navigate]
   );
+
+  const handleAgentChatSessionClick = (chatSessionId) => {
+    setAgentChatSessionId(chatSessionId);
+    setSearchHistory([]);
+    setShowChatSession(true);
+    setSelectedChatId(null);
+    setIsError(false);
+    setErrorMsg("");
+    navigate(`/chat/${chatSessionId}`);
+    setAgentChatSession((prevData) => {
+      if (!prevData) return prevData;
+
+      const updatedData = prevData.map((item) =>
+        item.id === chatSessionId ? { ...item, unseenMessageCount: 0 } : item
+      );
+
+      return updatedData;
+    });
+  };
+
+  useEffect(() => {
+    if (chatSessionId) {
+      handleAgentChatSessionClick(chatSessionId);
+    }
+  }, [chatSessionId]);
 
   const parseChatHistory = (chatHistoryArray) => {
     return chatHistoryArray.map((chatEntry) => {
@@ -508,7 +555,7 @@ const NewHomePageMui = () => {
         setChatSessions(updatedChatSessions);
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        resetPage();
+        resetPage(false);
       } else {
         setSnackbarMessage("Failed to delete chat session");
         setSnackbarOpen(true);
@@ -529,12 +576,16 @@ const NewHomePageMui = () => {
     }
   };
 
-  const resetPage = () => {
+  const resetPage = (isAssistantChat) => {
     setIsSubmitting(false);
     setIsError(false);
     setErrorMsg("");
     setQueryAnswer(null);
-    setSearchQuery("");
+    setShowChatSession(false);
+    setAgentChatSessionId(null);
+    setSearchQuery(
+      isAssistantChat ? agentChatResponse.askForPersonalAssistant : ""
+    );
     setSearchHistory([]);
     setSelectedChatId(null);
     setIsLoading(false);
@@ -564,59 +615,39 @@ const NewHomePageMui = () => {
     };
   }, []);
 
-  // It might be used in future
-
-  // useEffect(() => {
-  //   const chatContainerNode = chatContainerRef.current;
-
-  //   const scrollToBottom = () => {
-  //     chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-  //   };
-
-  //   scrollToBottom();
-
-  //   chatContainerNode.style.scrollBehavior = "auto";
-
-  //   const observer = new MutationObserver(scrollToBottom);
-  //   observer.observe(chatContainerNode, { childList: true, subtree: true });
-
-  //   return () => {
-  //     chatContainerNode.style.scrollBehavior = "smooth";
-  //     observer.disconnect();
-  //   };
-  // }, []);
-
   useEffect(() => {
-    const chatContainerNode = chatContainerRef.current;
+    if (!agentChatSessionId) {
+      const chatContainerNode = chatContainerRef.current;
 
-    const scrollToBottom = () => {
-      chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
-    };
+      const scrollToBottom = () => {
+        chatContainerNode.scrollTop = chatContainerNode.scrollHeight;
+      };
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === "childList") {
-          if (shouldScroll) {
-            scrollToBottom();
-            chatContainerNode.style.scrollBehavior = "auto";
-            setShouldScroll(false);
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === "childList") {
+            if (shouldScroll) {
+              scrollToBottom();
+              chatContainerNode.style.scrollBehavior = "auto";
+              setShouldScroll(false);
+            }
           }
-        }
+        });
       });
-    });
 
-    observer.observe(chatContainerNode, {
-      childList: true,
-      subtree: true,
-    });
+      observer.observe(chatContainerNode, {
+        childList: true,
+        subtree: true,
+      });
 
-    scrollToBottom();
-    chatContainerNode.style.scrollBehavior = "auto";
+      scrollToBottom();
+      chatContainerNode.style.scrollBehavior = "auto";
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [shouldScroll]);
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [shouldScroll, agentChatSessionId]);
 
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
@@ -676,6 +707,64 @@ const NewHomePageMui = () => {
     { questions: initialQuestions4, name: messages.languageIinitialQuestions4 },
   ];
 
+  useEffect(() => {
+    const handleReceivedMessage = (message) => {
+      if (message.senderId === currentUserId) {
+        setAgentChatSession((prevData) => {
+          if (!prevData) {
+            return [
+              {
+                id: message.agentChatSessionId,
+                content: data.content,
+                unseenMessageCount: 0,
+              },
+            ];
+          }
+
+          const isDataPresent = prevData.some(
+            (item) => item.id === message.agentChatSessionId
+          );
+
+          if (isDataPresent) {
+            return prevData.map((item) =>
+              item.id === message.agentChatSessionId
+                ? {
+                    ...item,
+                    content: item.content,
+                    unseenMessageCount:
+                      message.agentChatSessionId === item.id
+                        ? 0
+                        : item.unseenMessageCount + 1,
+                  }
+                : item
+            );
+          } else {
+            return [
+              ...prevData,
+              {
+                id: message.agentChatSessionId,
+                content: message.content,
+                unseenMessageCount: 0,
+              },
+            ];
+          }
+        });
+      }
+    };
+
+    const initializeConnection = async () => {
+      const connection = await getConnectionPromise();      
+
+      if (connection) {
+        connection.on(agentChatResponse.receiveMessage, (message) => {
+          handleReceivedMessage(message);
+        });
+      }
+    };
+
+    initializeConnection();
+  }, []);
+
   return (
     <Box className="ya-home-wrapper">
       <CssBaseline />
@@ -731,7 +820,7 @@ const NewHomePageMui = () => {
               </Tooltip>
             </div>
           )}
-          <ProfielCircle chatId={chatId} />
+          <ProfielCircle chatId={chatId} chatSessionId={agentChatSessionId} />
         </Toolbar>
       </AppBar>
 
@@ -744,14 +833,17 @@ const NewHomePageMui = () => {
         <div className="ya-sidebar-styles">
           {drawerOpen && (
             <Box className="ya-sidebar-styles-box">
-              <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
+              <Box
+                sx={{ cursor: messages.cursorPointer }}
+                onClick={() => resetPage(false)}
+              >
                 <img
                   src={
                     activeTab === 0
                       ? "/auth-logo-dark.svg"
                       : "/auth-logo-light.svg"
                   }
-                   width="160px"
+                  width="160px"
                   height="50px"
                   alt="logo"
                 />
@@ -771,65 +863,124 @@ const NewHomePageMui = () => {
               </IconButton>
             </Box>
           )}
-          <IconButton
-            color="primary"
-            className={`ya-new-chat-btn ${
-              activeTab === 0
-                ? "ya-home-new-chat-dark-theme"
-                : "ya-home-new-chat-light-theme"
-            }`}
-            onClick={resetPage}
-          >
-            <AddIcon />
-            &nbsp;  {t("newChatTxt")}
-          </IconButton>
-          <Box className="ya-new-chat-box" onScroll={handleScroll}>
-            <span
-              className={`${
-                activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-              }`}
-            >
-              {t("recentChatTxt")}
-            </span>
-            {chatSessions.map((chatSession) => (
-              <div key={chatSession.id}>
-                <Button
-                  className={`ya-chat-session-btn ${
-                    chatSession.id === selectedChatId
-                      ? "ya-home-active-session-btn"
-                      : activeTab === 0
-                      ? "ya-home-new-chat-dark-theme"
-                      : "ya-home-new-chat-light-theme"
-                  }`}
-                  color="primary"
-                  onClick={() => handleChatSessionClick(chatSession.id)}
-                  onMouseEnter={() => handleMouseEnter(chatSession.id)}
-                  onMouseLeave={() => handleMouseLeave()}
-                >
-                  <ChatBubbleIcon />
-                  <Typography className="ya-chat-session-name">
-                    &nbsp; {chatSession.name}
-                  </Typography>
-                  {chatSession.id === hoverChatId && (
-                    <span
-                      className={`ya-home-delete-btn ${
+          <Box className="chat-session-conteriner">
+            <Box className="ya-new-assistant-chat">
+              <span
+                className={`${
+                  activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                }`}
+              >
+                Recent Assistant Chat
+              </span>
+
+              <IconButton
+                color="primary"
+                className={`ya-new-chat-btn ${
+                  activeTab === 0
+                    ? "ya-home-new-chat-dark-theme"
+                    : "ya-home-new-chat-light-theme"
+                }`}
+                onClick={() => resetPage(true)}
+              >
+                <AddIcon />
+                &nbsp; New Assistant Chat
+              </IconButton>
+
+              <Box className="agent-chat-session-list">
+                {agentChatSession.map((agentChatSession) => (
+                  <div key={agentChatSession.id}>
+                    <Button
+                      className={`ya-chat-session-btn ${
+                        agentChatSession.id === agentChatSessionId
+                          ? "ya-home-active-session-btn"
+                          : activeTab === 0
+                          ? "ya-home-new-chat-dark-theme"
+                          : "ya-home-new-chat-light-theme"
+                      }`}
+                      color="primary"
+                      onClick={() =>
+                        handleAgentChatSessionClick(agentChatSession.id)
+                      }
+                    >
+                      <ChatBubbleIcon />
+                      <Typography className="ya-chat-session-name">
+                        &nbsp; {agentChatSession.content}
+                        {agentChatSession.unseenMessageCount !== 0 && (
+                          <span className="ya-chat-session-unseen-name">
+                            {agentChatSession.unseenMessageCount}
+                          </span>
+                        )}
+                      </Typography>
+                    </Button>
+                  </div>
+                ))}
+              </Box>
+            </Box>
+
+            <Box className="ya-new-chat-box" onScroll={handleScroll}>
+              <span
+                className={`${
+                  activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                }`}
+              >
+                {t("recentChatTxt")}
+              </span>
+
+              <IconButton
+                color="primary"
+                className={`ya-new-chat-btn ${
+                  activeTab === 0
+                    ? "ya-home-new-chat-dark-theme"
+                    : "ya-home-new-chat-light-theme"
+                }`}
+                onClick={() => resetPage(false)}
+              >
+                <AddIcon />
+                &nbsp; {t("newChatTxt")}
+              </IconButton>
+
+              <Box className="ya-chat-session-list">
+                {chatSessions.map((chatSession) => (
+                  <div key={chatSession.id}>
+                    <Button
+                      className={`ya-chat-session-btn ${
                         chatSession.id === selectedChatId
                           ? "ya-home-active-session-btn"
                           : activeTab === 0
                           ? "ya-home-new-chat-dark-theme"
                           : "ya-home-new-chat-light-theme"
                       }`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleDeleteClick(chatSession.id);
-                      }}
+                      color="primary"
+                      onClick={() => handleChatSessionClick(chatSession.id)}
+                      onMouseEnter={() => handleMouseEnter(chatSession.id)}
+                      onMouseLeave={() => handleMouseLeave()}
                     >
-                      <DeleteIcon />
-                    </span>
-                  )}
-                </Button>
-              </div>
-            ))}
+                      <ChatBubbleIcon />
+                      <Typography className="ya-chat-session-name">
+                        &nbsp; {chatSession.name}
+                      </Typography>
+                      {chatSession.id === hoverChatId && (
+                        <span
+                          className={`ya-home-delete-btn ${
+                            chatSession.id === selectedChatId
+                              ? "ya-home-active-session-btn"
+                              : activeTab === 0
+                              ? "ya-home-new-chat-dark-theme"
+                              : "ya-home-new-chat-light-theme"
+                          }`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteClick(chatSession.id);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </Box>
+            </Box>
           </Box>
         </div>
       </Drawer>
@@ -847,6 +998,8 @@ const NewHomePageMui = () => {
       >
         <Box
           className={`ya-answer-container ${
+            agentChatSessionId ? "" : "ya-answer-container-chat-yanki"
+          } ${
             activeTab === 0
               ? "ya-answer-container-dark-theme"
               : "ya-answer-container-light-theme"
@@ -860,8 +1013,10 @@ const NewHomePageMui = () => {
           }}
         >
           <Box
-            className="ya-answer"
-            ref={chatContainerRef}
+            className={`${
+              agentChatSessionId ? "ya-answer-agent-chat" : "ya-answer"
+            }`}
+            ref={agentChatSessionId ? null : chatContainerRef}
             onScroll={handleScrollTop}
           >
             {isLoading && (
@@ -884,6 +1039,18 @@ const NewHomePageMui = () => {
                 remainingMsgData={remainingMsgData}
               />
             ))}
+
+            {agentChatSessionId && showChatSession && (
+              <SearchHistoryItem
+              ref={(el) =>
+                (itemRefs.current[entry.response.response.id] = el)
+              }
+                key={agentChatSessionId}
+                AgentChatSessionId={agentChatSessionId}
+                AgentChatSession={true}
+              />
+            )}
+
             {storedSearchQuery && (
               <Paper
                 elevation={3}
@@ -920,149 +1087,156 @@ const NewHomePageMui = () => {
                 </Typography>
               </Box>
             )}
-            {searchHistory.length <= 0 && !isSubmitting && (
-              <Box className="ya-answer-container-response">
-                <Typography className="ya-main-text-heading">
+
+            {(agentChatSessionId && showChatSession) ||
+              (searchHistory.length <= 0 && !isSubmitting && (
+                <Box className="ya-answer-container-response">
+                  <Typography className="ya-main-text-heading">
                   {t("homeMainCenterText")}
-                </Typography>
-              </Box>
-            )}
+                  </Typography>
+                </Box>
+              ))}
           </Box>
 
-          <Box className="ya-search-container">
-            <Box
-              className={`fixed-search-Box ${
-                drawerOpen && !isSmallScreen
-                  ? "ya-answer-drawn-close"
-                  : "ya-answer-container-question"
-              }`}
-            >
-              {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
-                <div>
-                  <Carousel
-                    responsive={responsive}
-                    itemClass="carousel-item"
-                    swipeable={true}
-                    draggable={false}
-                    showDots={false}
-                    arrows={false}
-                    autoPlay={true}
-                    autoPlaySpeed={2000}
-                    infinite={true}
-                    className="new-home-initial-questions"
-                    customTransition="transform 500ms ease 0s"
-                  >
-                    {initialQuestions1.map((question, index) => (
-                      <div key={question.id} className="carousel-item">
-                        <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
-                          onClick={() => handleQuestionClick(question.text)}
-                        >
-                          <Tooltip title={<span>{t(`initialQuestions1.${question.id - 1}`)}</span>}>
+          {!agentChatSessionId && !showChatSession && (
+            <Box className="ya-search-container">
+              <Box
+                className={`fixed-search-Box ${
+                  drawerOpen && !isSmallScreen
+                    ? "ya-answer-drawn-close"
+                    : "ya-answer-container-question"
+                }`}
+              >
+                {isLargeScreen &&
+                  searchHistory.length <= 0 &&
+                  !isSubmitting && (
+                    <div>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        className="new-home-initial-questions"
+                        customTransition="transform 500ms ease 0s"
+                      >
+                        {initialQuestions1.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={<span>{t(`initialQuestions1.${question.id - 1}`)}</span>}>
                             <span>{t(`initialQuestions1.${question.id - 1}`)}</span>
                           </Tooltip>
-                        </Button>
-                      </div>
-                    ))}
-                  </Carousel>
-                  <Carousel
-                    responsive={responsive}
-                    itemClass="carousel-item"
-                    swipeable={true}
-                    draggable={false}
-                    showDots={false}
-                    arrows={false}
-                    autoPlay={true}
-                    autoPlaySpeed={2000}
-                    infinite={true}
-                    customTransition="transform 500ms ease 0s"
-                    className="new-home-initial-questions"
-                  >
-                    {initialQuestions2.map((question, index) => (
-                      <div key={question.id} className="carousel-item">
-                        <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
-                          onClick={() => handleQuestionClick(question.text)}
-                        >
-                          <Tooltip title={<span>{t(`initialQuestions2.${question.id - 11}`)}</span>}>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
+                      >
+                        {initialQuestions2.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={<span>{t(`initialQuestions2.${question.id - 11}`)}</span>}>
                             <span>{t(`initialQuestions2.${question.id - 11}`)}</span>
                           </Tooltip>
-                        </Button>
-                      </div>
-                    ))}
-                  </Carousel>
-                  <Carousel
-                    responsive={responsive}
-                    itemClass="carousel-item"
-                    swipeable={true}
-                    draggable={false}
-                    showDots={false}
-                    arrows={false}
-                    autoPlay={true}
-                    autoPlaySpeed={2000}
-                    infinite={true}
-                    customTransition="transform 500ms ease 0s"
-                    className="new-home-initial-questions"
-                  >
-                    {initialQuestions3.map((question, index) => (
-                      <div key={question.id} className="carousel-item">
-                        <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
-                          onClick={() => handleQuestionClick(question.text)}
-                        >
-                          <Tooltip title={<span>{t(`initialQuestions3.${question.id - 21}`)}</span>}>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
+                      >
+                        {initialQuestions3.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={<span>{t(`initialQuestions3.${question.id - 21}`)}</span>}>
                             <span>{t(`initialQuestions3.${question.id - 21}`)}</span>
                           </Tooltip>
-                        </Button>
-                      </div>
-                    ))}
-                  </Carousel>
-                  <Carousel
-                    responsive={responsive}
-                    itemClass="carousel-item"
-                    swipeable={true}
-                    draggable={false}
-                    showDots={false}
-                    arrows={false}
-                    autoPlay={true}
-                    autoPlaySpeed={2000}
-                    infinite={true}
-                    customTransition="transform 500ms ease 0s"
-                    className="new-home-initial-questions"
-                  >
-                    {initialQuestions4.map((question, index) => (
-                      <div key={question.id} className="carousel-item">
-                        <Button
-                          className={`ya-slider-btn ${
-                            activeTab === 0
-                              ? "ya-search-dark-theme"
-                              : "ya-search-light-theme"
-                          }`}
-                          onClick={() => handleQuestionClick(question.text)}
-                        >
-                          <Tooltip title={<span>{t(`initialQuestions4.${question.id - 31}`)}</span>}>
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                      <Carousel
+                        responsive={responsive}
+                        itemClass="carousel-item"
+                        swipeable={true}
+                        draggable={false}
+                        showDots={false}
+                        arrows={false}
+                        autoPlay={true}
+                        autoPlaySpeed={2000}
+                        infinite={true}
+                        customTransition="transform 500ms ease 0s"
+                        className="new-home-initial-questions"
+                      >
+                        {initialQuestions4.map((question, index) => (
+                          <div key={question.id} className="carousel-item">
+                            <Button
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() => handleQuestionClick(question.text)}
+                            >
+                              <Tooltip title={<span>{t(`initialQuestions4.${question.id - 31}`)}</span>}>
                             <span>{t(`initialQuestions4.${question.id - 31}`)}</span>
                           </Tooltip>
-                        </Button>
-                      </div>
-                    ))}
-                  </Carousel>
-                </div>
-              )}
-              {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
-                <div className="home-table-scroll">
+                            </Button>
+                          </div>
+                        ))}
+                      </Carousel>
+                    </div>
+                  )}
+                {!isLargeScreen &&
+                  searchHistory.length <= 0 &&
+                  !isSubmitting && (
+                    <div className="home-table-scroll">
                   {allQuestions.map((group, groupIndex) => (
                     <Typography className="ya-mobile-prompt" key={groupIndex}>
                       {group.questions.map((question, index) => (
@@ -1082,12 +1256,10 @@ const NewHomePageMui = () => {
                     </Typography>
                   ))}
                 </div>
-
-              )}
-
-              <form>
-                {userRoles !== "Admin" && (
-                  <Box className="ya-task-msg-text">
+                  )}
+                <form>
+                  {userRoles !== "Admin" && (
+                    <Box className="ya-task-msg-text">
                     <Typography>
                     {t('messagesLeft')}{" "}
                       {remainingMsgData?.totalMessageLeft > 1200
@@ -1101,67 +1273,68 @@ const NewHomePageMui = () => {
                       </span>
                     </Typography>
                   </Box>
-                )}
-                <Box
-                  className={
-                    activeTab === 0
-                      ? "ya-home-search-wrapper"
-                      : "ya-home-search-wrapper ya-home-search-wrapper-light"
-                  }
-                >
-                  <TextField
-                    fullWidth
-                    name="searchQuery"
-                    value={searchQuery}
-                    onChange={handleChange}
-                    placeholder={t("searchPromptPlaceholder")}
-                    dir={direction}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon
-                            className={`${
-                              activeTab === 1
-                                ? "ya-home-lightblue-color"
-                                : "ya-home-white-color"
-                            }`}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                    className={`ya-search-query-container ${
+                  )}
+                  <Box
+                    className={
                       activeTab === 0
-                        ? "ya-search-query-container-dark-theme"
-                        : "ya-search-query-container-light-theme"
-                    }`}
-                    sx={{
-                      fontSize,
-                    }}
-                    error={isError}
-                  />
-                  <Box className="ya-send-btn-box">
-                    <IconButton
-                      variant="contained"
-                      type="submit"
-                      disabled={!searchQuery || isSubmitting}
-                      onClick={onSubmit}
-                      className="ya-send-icon"
-                      sx={{
-                        backgroundColor:
-                          themeMode === "dark" ? "#6fa8dd" : "#fff",
-                        color: themeMode === "dark" ? "#fff" : "#2a2b35",
-                        "&:hover": {
-                          backgroundColor: "primary.dark",
-                        },
+                        ? "ya-home-search-wrapper"
+                        : "ya-home-search-wrapper ya-home-search-wrapper-light"
+                    }
+                  >
+                    <TextField
+                      fullWidth
+                      name="searchQuery"
+                      value={searchQuery}
+                      onChange={handleChange}
+                      placeholder={t("searchPromptPlaceholder")}
+                      dir={direction}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon
+                              className={`${
+                                activeTab === 1
+                                  ? "ya-home-lightblue-color"
+                                  : "ya-home-white-color"
+                              }`}
+                            />
+                          </InputAdornment>
+                        ),
                       }}
-                    >
-                      <SendIcon />
-                    </IconButton>
+                      className={`ya-search-query-container ${
+                        activeTab === 0
+                          ? "ya-search-query-container-dark-theme"
+                          : "ya-search-query-container-light-theme"
+                      }`}
+                      sx={{
+                        fontSize,
+                      }}
+                      error={isError}
+                    />
+                    <Box className="ya-send-btn-box">
+                      <IconButton
+                        variant="contained"
+                        type="submit"
+                        disabled={!searchQuery || isSubmitting}
+                        onClick={onSubmit}
+                        className="ya-send-icon"
+                        sx={{
+                          backgroundColor:
+                            themeMode === "dark" ? "#6fa8dd" : "#fff",
+                          color: themeMode === "dark" ? "#fff" : "#2a2b35",
+                          "&:hover": {
+                            backgroundColor: "primary.dark",
+                          },
+                        }}
+                      >
+                        <SendIcon />
+                      </IconButton>
+                    </Box>
                   </Box>
-                </Box>
-              </form>
+                </form>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Box>
       <Outlet />
