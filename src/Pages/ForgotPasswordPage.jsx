@@ -17,6 +17,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context, ThemeModeContext } from "../App";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,7 +79,8 @@ const ForgotPasswordPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                className="yanki-logo-image"
+                width={messages.imgSize250}
+                height={messages.imgSize80}
               />
             </Box>
             <Typography

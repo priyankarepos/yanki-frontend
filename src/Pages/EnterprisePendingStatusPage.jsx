@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeModeContext } from "../App";
 import "./PagesStyle.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const EnterprisePendingStatusPage = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -45,7 +46,8 @@ const EnterprisePendingStatusPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                className="enterprise-yanki-logo-image"
+                width={messages.imgSize200}
+                height={messages.imgSize80}
               />
             </Box>
             {userStatus === "Pending" && (

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeModeContext } from "../App";
 import "./Style.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ChangePasswordSuccessPage = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -31,7 +32,8 @@ const ChangePasswordSuccessPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                className="yanki-logo-image"
+                width={messages.imgSize250}
+                height={messages.imgSize80}
               />
             </Box>
             <Typography
