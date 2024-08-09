@@ -72,6 +72,14 @@ export const messages = {
     openForm: "Open Form",
     mikvahDetailsNotFound: 'Mikvah details not found',
     shareRoute: '/share/',
+    imgSize150: "150px",
+    imgSize44: "44px",
+    imgSize210: "210px",
+    imgSize70: "70px",
+    imgSize200: "200px",
+    imgSize60: "60px",
+    imgSize250: "250px",
+    imgSize80: "80px",
 };
 
 export const classNames = {

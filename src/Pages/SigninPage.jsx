@@ -32,6 +32,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FormHelperText, Snackbar } from "@mui/material";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -98,11 +99,6 @@ const SigninPage = () => {
     }
   };
 
-  /* 
-    Box sizes for screen sizes. Maybe will use in future.
-     md: "540px", lg: "720px", xl: "921px"
-  */
-
   const onSuccess = async (codeResponse) => {
     try {
       setSigninLoading(true);
@@ -154,7 +150,8 @@ const SigninPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  className="yanki-logo-image"
+                   width={messages.imgSize250}
+                  height={messages.imgSize80}
                 />
               </RouterLink>
             </Box>

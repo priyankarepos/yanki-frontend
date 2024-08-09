@@ -23,6 +23,7 @@ import {
   Link as RouterLink,
 } from "react-router-dom";
 import { ThemeModeContext } from "../App";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ResetPasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -105,7 +106,8 @@ const ResetPasswordPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  className="yanki-logo-image"
+                  width={messages.imgSize250}
+                  height={messages.imgSize80}
                 />
               </RouterLink>
             </Box>

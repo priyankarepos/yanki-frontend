@@ -55,6 +55,8 @@ const AdminDashboard = () => {
             <img
               src={DarkYankilogo}
               alt="Yanki logo"
+              width={messages.imgSize150}
+              height={messages.imgSize44}
             />
           </Link>
           <Box className="admin-dashbard-topbar">

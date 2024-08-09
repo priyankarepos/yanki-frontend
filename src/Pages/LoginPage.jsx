@@ -28,6 +28,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useMediaQuery } from "@mui/material";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -96,7 +97,7 @@ const LoginPage = () => {
       } else {
         if (
           e?.response?.data?.message ===
-          "This email isn't registered. Please sign up." &&
+            "This email isn't registered. Please sign up." &&
           activeTab === 1
         ) {
           setLoginErrorMsg(
@@ -121,7 +122,9 @@ const LoginPage = () => {
       setLoginLoading(true);
       const { access_token } = codeResponse;
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-google-access-token`,
+        `${
+          import.meta.env.VITE_APP_API_HOST
+        }/api/auth/verify-google-access-token`,
         { access_token }
       );
       if (response.status === 200) {
@@ -163,7 +166,8 @@ const LoginPage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  className="yanki-logo-image"
+                  width={messages.imgSize250}
+                  height={messages.imgSize80}
                 />
               </RouterLink>
             </Box>
@@ -189,8 +193,9 @@ const LoginPage = () => {
               }}
               render={({ field }) => (
                 <TextField
-                  className={`marginBottom-10 ${activeTab === 1 ? "InputFieldColor" : ""
-                    }`}
+                  className={`marginBottom-10 ${
+                    activeTab === 1 ? "InputFieldColor" : ""
+                  }`}
                   {...field}
                   type="outlined"
                   placeholder="Email address"

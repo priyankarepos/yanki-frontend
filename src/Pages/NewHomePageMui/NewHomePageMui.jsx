@@ -45,8 +45,11 @@ import {
 } from "../../Utils/promptData/promptData";
 import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
-import { classNames, messages } from "../../Utils/stringConstant/stringConstant";
-import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg"
+import {
+  classNames,
+  messages,
+} from "../../Utils/stringConstant/stringConstant";
+import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg";
 import ShareLinkModal from "../ShareModel/ShareModal";
 
 const NewHomePageMui = () => {
@@ -90,7 +93,7 @@ const NewHomePageMui = () => {
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
-    "{}"
+      "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
   const onClickMembershipPortal = () => {
@@ -107,7 +110,9 @@ const NewHomePageMui = () => {
   const fetchRemainingMessage = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-remaining-message-task`
+        `${
+          import.meta.env.VITE_APP_API_HOST
+        }/api/stripe/get-remaining-message-task`
       );
 
       if (response.status === 200) {
@@ -196,7 +201,9 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
+        `${
+          import.meta.env.VITE_APP_API_HOST
+        }/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
         { prompt: searchQuery },
         {
           headers: {
@@ -291,7 +298,9 @@ const NewHomePageMui = () => {
     if (hasMore) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
+          `${
+            import.meta.env.VITE_APP_API_HOST
+          }/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
         );
         if (response.status === 200) {
           if (response.data.chatList.length > 0) {
@@ -318,7 +327,9 @@ const NewHomePageMui = () => {
     async (chatId) => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
+          `${
+            import.meta.env.VITE_APP_API_HOST
+          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
         );
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
@@ -343,29 +354,34 @@ const NewHomePageMui = () => {
     [chatHistoryPageNumber]
   );
 
-  const handleChatSessionClick = useCallback(async (chatId) => {
-    setIsLoading(false);
-    setSelectedChatId(chatId);
-    navigate(`/${chatId}`); 
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
-      );
+  const handleChatSessionClick = useCallback(
+    async (chatId) => {
+      setIsLoading(false);
+      setSelectedChatId(chatId);
+      navigate(`/${chatId}`);
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_APP_API_HOST
+          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
+        );
 
-      if (response.status === 200) {
-        const chatHistoryArray = response.data.chatHistory;
+        if (response.status === 200) {
+          const chatHistoryArray = response.data.chatHistory;
 
-        const allResponses = parseChatHistory(chatHistoryArray).flat();
-        setRemainingSearchHistory(allResponses);
-        setScrollToKey();
-        setChatHistoryPageNumber(1);
-        setSearchHistory([...allResponses].reverse());
+          const allResponses = parseChatHistory(chatHistoryArray).flat();
+          setRemainingSearchHistory(allResponses);
+          setScrollToKey();
+          setChatHistoryPageNumber(1);
+          setSearchHistory([...allResponses].reverse());
+        }
+      } catch (error) {
+        setSnackbarMessage("Error:", error);
+        setSnackbarOpen(true);
       }
-    } catch (error) {
-      setSnackbarMessage("Error:", error);
-      setSnackbarOpen(true);
-    }
-  }, [navigate]);
+    },
+    [navigate]
+  );
 
   const parseChatHistory = (chatHistoryArray) => {
     return chatHistoryArray.map((chatEntry) => {
@@ -410,7 +426,9 @@ const NewHomePageMui = () => {
   const fetchChatHistory = async (chatId) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
+        `${
+          import.meta.env.VITE_APP_API_HOST
+        }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
       );
 
       if (response.status === 200) {
@@ -439,11 +457,11 @@ const NewHomePageMui = () => {
 
   useEffect(() => {
     if (initialChatOpen && chatSessions.length > 0 && chatId) {
-        handleChatSessionClick(chatId);
-        setInitialChatOpen(false);
+      handleChatSessionClick(chatId);
+      setInitialChatOpen(false);
 
-        chatContainerRef.current.scrollTop =
-          chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [initialChatOpen, chatSessions, handleChatSessionClick, chatId]);
 
@@ -459,15 +477,14 @@ const NewHomePageMui = () => {
   };
 
   useLayoutEffect(() => {
-    if (scrollToKey === undefined)
-      return;
+    if (scrollToKey === undefined) return;
 
     itemRefs.current[scrollToKey].scrollIntoView();
   }, [scrollToKey]);
 
   useEffect(() => {
     if (chatHistoryPageNumber !== 1 && chatId) {
-      handleChatSessionScroll(chatId); 
+      handleChatSessionScroll(chatId);
     }
   }, [handleChatSessionScroll, chatHistoryPageNumber, chatId]);
 
@@ -480,7 +497,9 @@ const NewHomePageMui = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
+        `${
+          import.meta.env.VITE_APP_API_HOST
+        }/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
       );
 
       if (response.status === 200) {
@@ -521,7 +540,7 @@ const NewHomePageMui = () => {
     setSelectedChatId(null);
     setIsLoading(false);
     setRemainingSearchHistory([]);
-    navigate('/');
+    navigate("/");
     if (!isLargeScreen) {
       setDrawerOpen(false);
     } else {
@@ -627,7 +646,7 @@ const NewHomePageMui = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           resetPage();
-        }, 3600000); 
+        }, 3600000);
       };
 
       document.onmousemove = resetTimer;
@@ -654,44 +673,56 @@ const NewHomePageMui = () => {
     <Box className="ya-home-wrapper">
       <CssBaseline />
       <AppBar
-        className={`ya-home-header ${activeTab === 0
-          ? "ya-home-darkblue-background"
-          : "ya-home-white-background"
-          } `}
+        className={`ya-home-header ${
+          activeTab === 0
+            ? "ya-home-darkblue-background"
+            : "ya-home-white-background"
+        } `}
       >
         <Toolbar>
           {!drawerOpen && (
             <Box className="ya-home-sidebar-box">
-              <Box sx={{cursor:messages.cursorPointer}} onClick={resetPage}>
-              <img
-                src={
-                  activeTab === 0
-                    ? "/auth-logo-dark.svg"
-                    : "/auth-logo-light.svg"
-                }
-                className="ya-logo-img"
-                alt="logo"
-              />
+              <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
+                <img
+                  src={
+                    activeTab === 0
+                      ? "/auth-logo-dark.svg"
+                      : "/auth-logo-light.svg"
+                  }
+                  width="160px"
+                  height="50px"
+                  alt="logo"
+                />
               </Box>
               <IconButton
                 edge="end"
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
+                className={`${
+                  activeTab === 1
+                    ? "ya-home-lightblue-color"
+                    : "ya-home-white-color"
+                }`}
               >
                 <MenuIcon />
               </IconButton>
             </Box>
           )}
-          {chatId && <div className={classNames.shareChatLinkIcon}>
-            <Tooltip title={messages.shareChatTitle} placement={classNames.tooltipPlacement}>
-              <img src={shareChatLinkIcon} alt={classNames.altShareChatlink} onClick={() => handleOpenShareModal(chatId)} />
-            </Tooltip>
-          </div>}
+          {chatId && (
+            <div className={classNames.shareChatLinkIcon}>
+              <Tooltip
+                title={messages.shareChatTitle}
+                placement={classNames.tooltipPlacement}
+              >
+                <img
+                  src={shareChatLinkIcon}
+                  alt={classNames.altShareChatlink}
+                  onClick={() => handleOpenShareModal(chatId)}
+                />
+              </Tooltip>
+            </div>
+          )}
           <ProfielCircle chatId={chatId} />
         </Toolbar>
       </AppBar>
@@ -705,14 +736,15 @@ const NewHomePageMui = () => {
         <div className="ya-sidebar-styles">
           {drawerOpen && (
             <Box className="ya-sidebar-styles-box">
-              <Box sx={{cursor:messages.cursorPointer}} onClick={resetPage}>
+              <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
                 <img
                   src={
                     activeTab === 0
                       ? "/auth-logo-dark.svg"
                       : "/auth-logo-light.svg"
                   }
-                  className="ya-logo-img"
+                   width="160px"
+                  height="50px"
                   alt="logo"
                 />
               </Box>
@@ -721,10 +753,11 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
+                className={`${
+                  activeTab === 1
+                    ? "ya-home-lightblue-color"
+                    : "ya-home-white-color"
+                }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -732,10 +765,11 @@ const NewHomePageMui = () => {
           )}
           <IconButton
             color="primary"
-            className={`ya-new-chat-btn ${activeTab === 0
-              ? "ya-home-new-chat-dark-theme"
-              : "ya-home-new-chat-light-theme"
-              }`}
+            className={`ya-new-chat-btn ${
+              activeTab === 0
+                ? "ya-home-new-chat-dark-theme"
+                : "ya-home-new-chat-light-theme"
+            }`}
             onClick={resetPage}
           >
             <AddIcon />
@@ -743,20 +777,22 @@ const NewHomePageMui = () => {
           </IconButton>
           <Box className="ya-new-chat-box" onScroll={handleScroll}>
             <span
-              className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-                }`}
+              className={`${
+                activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+              }`}
             >
               Recent Chat
             </span>
             {chatSessions.map((chatSession) => (
               <div key={chatSession.id}>
                 <Button
-                  className={`ya-chat-session-btn ${chatSession.id === selectedChatId
-                    ? "ya-home-active-session-btn"
-                    : activeTab === 0
+                  className={`ya-chat-session-btn ${
+                    chatSession.id === selectedChatId
+                      ? "ya-home-active-session-btn"
+                      : activeTab === 0
                       ? "ya-home-new-chat-dark-theme"
                       : "ya-home-new-chat-light-theme"
-                    }`}
+                  }`}
                   color="primary"
                   onClick={() => handleChatSessionClick(chatSession.id)}
                   onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -768,12 +804,13 @@ const NewHomePageMui = () => {
                   </Typography>
                   {chatSession.id === hoverChatId && (
                     <span
-                      className={`ya-home-delete-btn ${chatSession.id === selectedChatId
-                        ? "ya-home-active-session-btn"
-                        : activeTab === 0
+                      className={`ya-home-delete-btn ${
+                        chatSession.id === selectedChatId
+                          ? "ya-home-active-session-btn"
+                          : activeTab === 0
                           ? "ya-home-new-chat-dark-theme"
                           : "ya-home-new-chat-light-theme"
-                        }`}
+                      }`}
                       onClick={(event) => {
                         event.stopPropagation();
                         handleDeleteClick(chatSession.id);
@@ -790,22 +827,26 @@ const NewHomePageMui = () => {
       </Drawer>
 
       <Box
-        className={`ya-answer-wrapper ${activeTab === 0
-          ? "ya-answer-wrapper-dark-theme"
-          : "ya-answer-wrapper-light-theme"
-          } ${drawerOpen && !isSmallScreen
+        className={`ya-answer-wrapper ${
+          activeTab === 0
+            ? "ya-answer-wrapper-dark-theme"
+            : "ya-answer-wrapper-light-theme"
+        } ${
+          drawerOpen && !isSmallScreen
             ? "ya-answer-drawn-close"
             : "ya-answer-drawn-open"
-          }`}
+        }`}
       >
         <Box
-          className={`ya-answer-container ${activeTab === 0
-            ? "ya-answer-container-dark-theme"
-            : "ya-answer-container-light-theme"
-            } ${isSmallScreen
+          className={`ya-answer-container ${
+            activeTab === 0
+              ? "ya-answer-container-dark-theme"
+              : "ya-answer-container-light-theme"
+          } ${
+            isSmallScreen
               ? "ya-answer-container-smallScreen-border"
               : "ya-answer-container-border"
-            } `}
+          } `}
           sx={{
             width: { xs: "100%", sm: "96%" },
           }}
@@ -845,16 +886,18 @@ const NewHomePageMui = () => {
                   <Box sx={{ p: 2 }} className="ya-question-box-flex">
                     <ChatBubbleOutlineIcon
                       fontSize="small"
-                      className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
-                        ? "ya-home-white-color"
-                        : "ya-home-lightblue-color"
-                        }`}
+                      className={`ya-ChatBubbleOutlineIcon ${
+                        activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                      }`}
                     />
                     <Typography
-                      className={`ya-question-box-text ${activeTab === 0
-                        ? "ya-home-white-color"
-                        : "ya-home-lightblue-color"
-                        }`}
+                      className={`ya-question-box-text ${
+                        activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                      }`}
                     >
                       {storedSearchQuery}
                     </Typography>
@@ -880,10 +923,11 @@ const NewHomePageMui = () => {
 
           <Box className="ya-search-container">
             <Box
-              className={`fixed-search-Box ${drawerOpen && !isSmallScreen
-                ? "ya-answer-drawn-close"
-                : "ya-answer-container-question"
-                }`}
+              className={`fixed-search-Box ${
+                drawerOpen && !isSmallScreen
+                  ? "ya-answer-drawn-close"
+                  : "ya-answer-container-question"
+              }`}
             >
               {isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                 <div>
@@ -903,10 +947,11 @@ const NewHomePageMui = () => {
                     {initialQuestions1.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${activeTab === 0
-                            ? "ya-search-dark-theme"
-                            : "ya-search-light-theme"
-                            }`}
+                          className={`ya-slider-btn ${
+                            activeTab === 0
+                              ? "ya-search-dark-theme"
+                              : "ya-search-light-theme"
+                          }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
                           <Tooltip title={<span>{question.text}</span>}>
@@ -932,10 +977,11 @@ const NewHomePageMui = () => {
                     {initialQuestions2.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${activeTab === 0
-                            ? "ya-search-dark-theme"
-                            : "ya-search-light-theme"
-                            }`}
+                          className={`ya-slider-btn ${
+                            activeTab === 0
+                              ? "ya-search-dark-theme"
+                              : "ya-search-light-theme"
+                          }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
                           <Tooltip title={<span>{question.text}</span>}>
@@ -961,10 +1007,11 @@ const NewHomePageMui = () => {
                     {initialQuestions3.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${activeTab === 0
-                            ? "ya-search-dark-theme"
-                            : "ya-search-light-theme"
-                            }`}
+                          className={`ya-slider-btn ${
+                            activeTab === 0
+                              ? "ya-search-dark-theme"
+                              : "ya-search-light-theme"
+                          }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
                           <Tooltip title={<span>{question.text}</span>}>
@@ -990,10 +1037,11 @@ const NewHomePageMui = () => {
                     {initialQuestions4.map((question, index) => (
                       <div key={question.id} className="carousel-item">
                         <Button
-                          className={`ya-slider-btn ${activeTab === 0
-                            ? "ya-search-dark-theme"
-                            : "ya-search-light-theme"
-                            }`}
+                          className={`ya-slider-btn ${
+                            activeTab === 0
+                              ? "ya-search-dark-theme"
+                              : "ya-search-light-theme"
+                          }`}
                           onClick={() => handleQuestionClick(question.text)}
                         >
                           <Tooltip title={<span>{question.text}</span>}>
@@ -1007,30 +1055,30 @@ const NewHomePageMui = () => {
               )}
               {!isLargeScreen && searchHistory.length <= 0 && !isSubmitting && (
                 <div className="home-table-scroll">
-                    {[
-                      initialQuestions1,
-                      initialQuestions2,
-                      initialQuestions3,
-                      initialQuestions4,
-                    ].map((questions, index) => (
-                      <Typography className="ya-mobile-prompt" key={index}>
-                        {questions.map((question) => (
-                          <span
-                            key={question.id}
-                            onClick={() => handleQuestionClick(question.text)}
-                            className={`ya-home-table-btn ${
-                              activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                            }`}
-                          >
-                            <Tooltip title={question.text}>
-                              {question.text}
-                            </Tooltip>
-                          </span>
-                        ))}
-                      </Typography>
-                    ))}
+                  {[
+                    initialQuestions1,
+                    initialQuestions2,
+                    initialQuestions3,
+                    initialQuestions4,
+                  ].map((questions, index) => (
+                    <Typography className="ya-mobile-prompt" key={index}>
+                      {questions.map((question) => (
+                        <span
+                          key={question.id}
+                          onClick={() => handleQuestionClick(question.text)}
+                          className={`ya-home-table-btn ${
+                            activeTab === 0
+                              ? "ya-search-dark-theme"
+                              : "ya-search-light-theme"
+                          }`}
+                        >
+                          <Tooltip title={question.text}>
+                            {question.text}
+                          </Tooltip>
+                        </span>
+                      ))}
+                    </Typography>
+                  ))}
                 </div>
               )}
 
@@ -1069,18 +1117,20 @@ const NewHomePageMui = () => {
                       startAdornment: (
                         <InputAdornment position="start">
                           <SearchIcon
-                            className={`${activeTab === 1
-                              ? "ya-home-lightblue-color"
-                              : "ya-home-white-color"
-                              }`}
+                            className={`${
+                              activeTab === 1
+                                ? "ya-home-lightblue-color"
+                                : "ya-home-white-color"
+                            }`}
                           />
                         </InputAdornment>
                       ),
                     }}
-                    className={`ya-search-query-container ${activeTab === 0
-                      ? "ya-search-query-container-dark-theme"
-                      : "ya-search-query-container-light-theme"
-                      }`}
+                    className={`ya-search-query-container ${
+                      activeTab === 0
+                        ? "ya-search-query-container-dark-theme"
+                        : "ya-search-query-container-light-theme"
+                    }`}
                     sx={{
                       fontSize,
                     }}
@@ -1124,7 +1174,7 @@ const NewHomePageMui = () => {
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
-       <ShareLinkModal
+      <ShareLinkModal
         open={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
         selectedChatId={selectedChatId}
