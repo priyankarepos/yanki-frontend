@@ -57,6 +57,7 @@ import SubscriptionCreatedPage from "./Components/MembershipPortal/SubscriptionC
 import ChangeLanguage from "./Pages/ChangeLanguage";
 import UserChatList from "./Admin/AdminChat/UserChatList";
 import SharedChat from "./Pages/ShareModel/SharedChat";
+import { messages } from "./Utils/stringConstant/stringConstant";
 
 // Exporting context
 export const Context = createContext("");
@@ -271,7 +272,9 @@ function App() {
       )
       : "";
 
-    if (!session) {
+      const isShareChatRoute = () => window.location.pathname.startsWith(messages.shareRoute);
+
+    if (!session && isShareChatRoute === null) {
       const rememeberMe = window.localStorage.getItem(
         import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );

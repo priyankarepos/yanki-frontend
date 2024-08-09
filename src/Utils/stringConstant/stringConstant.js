@@ -71,6 +71,7 @@ export const messages = {
     clickSendMessageToEnterprise : "Click here to send message to Enterprise",
     openForm: "Open Form",
     mikvahDetailsNotFound: 'Mikvah details not found',
+    shareRoute: '/share/',
 };
 
 export const classNames = {
