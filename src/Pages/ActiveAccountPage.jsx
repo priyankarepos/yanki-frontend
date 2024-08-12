@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { ThemeModeContext } from "../App";
 import "./Style.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ActiveAccountPage = () => {
   const [activating, setActivating] = useState(false);
@@ -82,7 +83,8 @@ const ActiveAccountPage = () => {
                     : "/auth-logo-light.svg"
                 }
                 alt="logo"
-                className="yanki-logo-image"
+                width={messages.imgSize250}
+                height={messages.imgSize80}
               />
             </Box>
             <Typography

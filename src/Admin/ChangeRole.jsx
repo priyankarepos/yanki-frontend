@@ -15,6 +15,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { ThemeModeContext } from "../App";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ChangeRole = () => {
   const [loginLoading, setLoginLoading] = useState(false);
@@ -82,7 +83,8 @@ const ChangeRole = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  className="yanki-logo-image"
+                  width={messages.imgSize210}
+                  height={messages.imgSize70}
                 />
               </RouterLink>
             </Box>

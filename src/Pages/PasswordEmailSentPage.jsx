@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { ThemeModeContext } from "../App";
 import { Link as RouterLink } from "react-router-dom";
 import "./Style.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const PasswordEmailSentpage = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -26,7 +27,8 @@ const PasswordEmailSentpage = () => {
                       : "/auth-logo-light.svg"
                   }
                   alt="logo"
-                  className="yanki-logo-image"
+                  width={messages.imgSize250}
+                  height={messages.imgSize80}
                 />
               </RouterLink>
             </Box>

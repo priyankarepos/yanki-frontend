@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import "./Style.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ChangePasswordPage = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -93,8 +94,9 @@ const ChangePasswordPage = () => {
           <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
               <img
                 src={YankiLogo}
-                className="profile-yanki-logo"
                 alt="logo"
+                width={messages.imgSize200}
+                height={messages.imgSize150}
               />
           </Typography>
             <Typography

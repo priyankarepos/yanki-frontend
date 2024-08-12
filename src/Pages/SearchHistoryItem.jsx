@@ -24,7 +24,7 @@ import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
 
 const SearchHistoryItem = forwardRef(
-  ({ query, response, fetchRemainingMessage, remainingMsgData }, ref) => {
+  ({ query, response, fetchRemainingMessage, remainingMsgData, clickableOff }, ref) => {
     const [direction, setDirection] = useState("ltr");
     const { activeTab } = React.useContext(Context);
 
@@ -124,6 +124,7 @@ const SearchHistoryItem = forwardRef(
                 <DemoEnterpriseChat
                   fetchRemainingMessage={fetchRemainingMessage}
                   answer={response}
+                  clickableOff={clickableOff}
                 />
               </div>
             </Paper>
@@ -167,7 +168,7 @@ const SearchHistoryItem = forwardRef(
           activeTab === 0 && (
             <Paper elevation={3} className="marginBottom-10">
               <div className="chat-bubble assistant-bubble">
-                <EventPublicationForm answer={response} />
+                <EventPublicationForm clickableOff={clickableOff}  answer={response} />
               </div>
             </Paper>
           )}
@@ -185,7 +186,7 @@ const SearchHistoryItem = forwardRef(
         {isDataAvailable && (
           <Paper elevation={3} className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
-              <IsItKosher answer={response} />
+              <IsItKosher answer={response} clickableOff={clickableOff} />
             </div>
           </Paper>
         )}
@@ -196,6 +197,7 @@ const SearchHistoryItem = forwardRef(
               <SafetyChecker
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
+                clickableOff={clickableOff}
               />
             </div>
           </Paper>
@@ -213,6 +215,7 @@ const SearchHistoryItem = forwardRef(
               <PersonalAssistant
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
+                clickableOff={clickableOff}
               />
             </div>
           </div>
@@ -233,13 +236,14 @@ const SearchHistoryItem = forwardRef(
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
                 remainingMsgData={remainingMsgData}
+                clickableOff={clickableOff}
               />
             </div>
           </Paper>
         )}
         {response?.isSuccess && response?.isLashonHara && (<Paper elevation={3} className="marginBottom-10">
           <div className="chat-bubble assistant-bubble">
-            <InteractiveQuestionnaire />
+            <InteractiveQuestionnaire clickableOff={clickableOff} />
           </div>
         </Paper>)}
         {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{ mb: 2 }}>

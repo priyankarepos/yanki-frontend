@@ -41,6 +41,7 @@ import ChangePhone from "../Assets/images/arrow-reload-vertical.svg"
 import ChangeLanguage from "../Assets/images/language-square.svg"
 import AccountDelete from "../Assets/images/delete-02.svg"
 import BackArrowIcon from "../Assets/images/back-arrow.svg"
+import { classNames, messages } from "../Utils/stringConstant/stringConstant";
 
 
 export default function ProfielCircle({ chatId }) {
@@ -183,7 +184,7 @@ export default function ProfielCircle({ chatId }) {
 
   return (
     <React.Fragment>
-      <Container maxWidth="xl">
+      <Container className={classNames.muiContainerUserMenu} maxWidth={classNames.xLWidth}>
         <Box className="user-top-header" sx={{ py: 2 }}>
           <Typography className="profile-logo" onClick={() => navigate("/")}>
             {showLogo && (
@@ -191,6 +192,8 @@ export default function ProfielCircle({ chatId }) {
                 src={activeTab === 0 ? "/auth-logo-dark.svg" : "/auth-logo-light.svg"}
                 className="profile-yanki-logo"
                 alt="logo"
+                width={messages.imgSize200}
+                height={messages.imgSize60}
               />
             )}
           </Typography>

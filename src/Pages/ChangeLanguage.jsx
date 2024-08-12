@@ -5,6 +5,7 @@ import LinkBehavior from '../Components/Helpers/LinkBehavior';
 import { Link, useNavigate } from 'react-router-dom';
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import CheckCircleIcon from "../Assets/images/Checkbox.svg"
+import { messages } from '../Utils/stringConstant/stringConstant';
 
 const languages = [
     { label: 'English', value: 'en' },
@@ -32,7 +33,8 @@ const ChangeLanguage = () => {
                         <Typography className="profile-logo text-center minus-margin" onClick={() => navigate("/")}>
                             <img
                                 src={YankiLogo}
-                                className="profile-yanki-logo"
+                                width={messages.imgSize200}
+                                height={messages.imgSize150}
                                 alt="logo"
                             />
                         </Typography>

@@ -15,6 +15,7 @@ import { FormHelperText } from "@mui/material";
 import "./Style.scss";
 import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const ChangePhoneNumber = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -99,8 +100,9 @@ const ChangePhoneNumber = () => {
           <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
               <img
                 src={YankiLogo}
-                className="profile-yanki-logo"
                 alt="logo"
+                width={messages.imgSize200}
+                height={messages.imgSize150}
               />
           </Typography>
             <Typography

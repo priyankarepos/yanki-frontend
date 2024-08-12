@@ -20,6 +20,7 @@ import partnershipLogoLightNine from "../Assets/images/partnet-logo9.png";
 import partnershipLogoLightTen from "../Assets/images/partnet-logo10.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -75,9 +76,8 @@ const NewTitlePage = () => {
               }
               alt="logo"
               className="new-title-yanki-logo"
-              style={{
-                maxWidth: isLargeScreen ? "250px" : "200px",
-              }}
+              width={messages.imgSize250}
+              height={messages.imgSize80}
             />
             <Typography
               variant="body1"
@@ -160,9 +160,8 @@ const NewTitlePage = () => {
                     src={partner.imageSrc}
                     alt={partner.altText}
                     className="margin-10"
-                    style={{
-                      maxWidth: isLargeScreen ? "70px" : "60px",
-                    }}
+                    width={messages.imgSize60}
+                    height={messages.imgSize60}
                   />
                 ))}
               </Box>
