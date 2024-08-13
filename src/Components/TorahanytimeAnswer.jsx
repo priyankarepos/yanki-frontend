@@ -23,7 +23,9 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
 
 const TorahanytimeAnswer = ({ answer }) => {
   const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
-  const data = answer?.torahAnytimeLectures?.hits?.hits || [];
+  const rawData = answer?.torahAnytimeLectures?.hits?.hits || [];
+  const validData = rawData.filter(item => item._source.vimeo_video_links !== null);
+  const data = validData; 
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
   const fixedId = 23200;
 
