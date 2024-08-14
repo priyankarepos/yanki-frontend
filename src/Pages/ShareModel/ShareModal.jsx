@@ -9,6 +9,8 @@ import shareChatIcon5 from "../../Assets/images/share-chat5.svg";
 import "./ShareChatLink.scss";
 import { apiUrls, classNames, messages } from '../../Utils/stringConstant/stringConstant';
 import { useTranslation } from "react-i18next";
+import Clipboard from 'clipboard';
+
 
 const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     const { t } = useTranslation();
@@ -35,7 +37,9 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                 const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
                 setChatLink(newChatLink);
                 setLinkGenerated(true);
-                await navigator.clipboard.writeText(newChatLink);
+                new Clipboard(classNames.copyButton, {
+                    text: () => newChatLink
+                });
                 setSnackbarMessage(`${t('copiedToClipboard')}`);
             } else {
                 setSnackbarMessage(`${t('failedToGenerateShareChatId')}`);
