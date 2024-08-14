@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -83,9 +83,11 @@ const SearchHistoryItem = forwardRef(
       response.contentResponse &&
       response.isHelpAgent;
 
+    const defaultRef = useRef(null);
+
     return (
       <div
-        ref={ref}
+        ref={ref || defaultRef}
         className={`search-history-item ${
           isTorahAnswer || isGovadenAnswer ? "with-response" : ""
         } ${
