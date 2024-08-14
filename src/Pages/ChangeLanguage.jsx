@@ -7,26 +7,27 @@ import YankiLogo from '../Assets/images/yanki-logo2.png';
 import CheckCircleIcon from '../Assets/images/Checkbox.svg';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { apiUrls } from '../Utils/stringConstant/stringConstant';
 
 const ChangeLanguage = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+
     const languages = [
-        { code: 'en', lang: t('englishText'), name: 'English' },
-        { code: 'he', lang: t('hebrewText'), name: 'Hebrew' },
-        { code: 'es', lang: t('spanishText'), name: 'Spanish' },
-        { code: 'yi', lang: t('yiddishText'), name: 'Yiddish' },
+        { code: 'en', lang: 'English', name: 'English' },
+        { code: 'he', lang: 'עברית', name: 'Hebrew' },
+        { code: 'es', lang: 'Español', name: 'Spanish' },
+        { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
     ];
 
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0].code);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     useEffect(() => {
         const fetchUserLanguage = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`);
+                const response = await axios.get(apiUrls.getUserLanguage);
                 const userLanguage = response.data.language;
                 const matchedLanguage = languages.find(lang => lang.name.toLowerCase() === userLanguage.toLowerCase());
                 if (matchedLanguage) {
@@ -34,7 +35,6 @@ const ChangeLanguage = () => {
                 }
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingLanguage'));
-                setSnackbarSeverity('error');
                 setSnackbarOpen(true);
             }
         };
@@ -50,18 +50,16 @@ const ChangeLanguage = () => {
         const selectedLang = languages.find(lang => lang.code === selectedLanguage).name;
 
         try {
-            await axios.put(`${import.meta.env.VITE_APP_API_HOST}/api/language-selection/update-user-language`, {
+            await axios.put(apiUrls.updateUserLanguage, {
                 language: selectedLang,
             });
             i18n.changeLanguage(selectedLanguage);
             localStorage.setItem('userLanguage', selectedLanguage);
             setSnackbarMessage(t('languageChangedSuccess'));
-            setSnackbarSeverity('success');
             setSnackbarOpen(true);
             navigate('/');
         } catch (error) {
             setSnackbarMessage(t('errorUpdatingLanguage'));
-            setSnackbarSeverity('error');
             setSnackbarOpen(true);
         }
     };
