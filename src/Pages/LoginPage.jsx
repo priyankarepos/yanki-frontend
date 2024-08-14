@@ -29,6 +29,7 @@ import "./Style.scss";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useMediaQuery } from "@mui/material";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { startConnection } from "../SignalR/signalRService";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,6 +88,7 @@ const LoginPage = () => {
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
+        startConnection();
         navigate("/");
       }
     } catch (e) {
@@ -132,6 +134,7 @@ const LoginPage = () => {
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
+        startConnection();
         navigate("/");
       } else {
         setLoginError(true);

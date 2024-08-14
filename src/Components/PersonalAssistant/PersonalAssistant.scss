@@ -14,6 +14,7 @@
         font-weight: 700;
         cursor: pointer;
         text-align: center;
+        text-decoration: none;
     }
 }
 
@@ -50,6 +51,7 @@
     position: relative;
     border-radius: 10px;
     min-width: 55px;
+    word-wrap: break-word;
 }
 
 .incoming {
@@ -164,4 +166,11 @@
 .send-button-message {
     font-size: 16px !important;
     font-weight: 500;
+}
+
+.chat-finished-title {
+    text-align: center;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    margin-bottom: 20px !important;
 }

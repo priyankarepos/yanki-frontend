@@ -1,11 +1,20 @@
 import * as signalR from "@microsoft/signalr";
-import { apiUrls, agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import {
+  apiUrls,
+  agentChatResponse,
+} from "../Utils/stringConstant/AgentChatResponse";
 
 let connection = null;
+let connectionPromise = null;
 let hubUrl = apiUrls.signalRConnection;
 
-export const startConnection = async () => {
-  const currentUserInfo = window.localStorage.getItem(agentChatResponse.yankiUser);
+export const startConnection = () => {
+  if(connectionPromise) {
+    return;
+  }
+  const currentUserInfo = window.localStorage.getItem(
+    agentChatResponse.yankiUser
+  );
   const parsedUserInfo = JSON.parse(currentUserInfo);
 
   connection = new signalR.HubConnectionBuilder()
@@ -14,23 +23,20 @@ export const startConnection = async () => {
       withCredentials: false,
     })
     .configureLogging(signalR.LogLevel.Warning)
+    .withAutomaticReconnect()
     .build();
 
-  await connection.start();
+    connectionPromise = connection.start();
 };
 
-export const stopConnection = async () => {
+export const stopConnection = () => {
   if (connection) {
-    await connection.stop();
+    connection.stop();
+    connection = null;
+    connectionPromise = null
   }
 };
 
-export const onReceiveMessage = (callback) => {
-  if (connection) {
-    connection.on(agentChatResponse.receiveMessage, (message) => {
-      if (callback) {
-        callback(message);
-      }
-    });
-  }
+export const getConnectionPromise = () => {
+  return connection;
 };

@@ -7,7 +7,12 @@ import {
 } from "react";
 import darkTheme from "./Themes/darkTheme";
 import lightTheme from "./Themes/lightTheme";
-import { CssBaseline, ThemeProvider, createTheme, Snackbar } from "@mui/material";
+import {
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  Snackbar,
+} from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthPagesProtection from "./Components/RouteProtection/AuthPagesProtection";
 import LoginPage from "./Pages/LoginPage";
@@ -58,6 +63,7 @@ import ChangeLanguage from "./Pages/ChangeLanguage";
 import UserChatList from "./Admin/AdminChat/UserChatList";
 import SharedChat from "./Pages/ShareModel/SharedChat";
 import { messages } from "./Utils/stringConstant/stringConstant";
+import { startConnection, stopConnection } from "./SignalR/signalRService";
 
 // Exporting context
 export const Context = createContext("");
@@ -134,7 +140,9 @@ axios.interceptors.response.use(
       error?.response?.status === 401 &&
       !accepts401.includes(pathname)
     ) {
-      window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
+      window.localStorage.removeItem(
+        import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
+      );
       window.localStorage.removeItem(
         import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
       );
@@ -188,6 +196,13 @@ function App() {
     setSnackbarOpen(true);
   };
 
+  const yankiUser = window.localStorage.getItem(
+    import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
+  );
+  if (yankiUser) {
+    startConnection();
+  }
+
   useEffect(() => {
     const getLocation = () => {
       if (navigator.geolocation) {
@@ -218,7 +233,7 @@ function App() {
 
   const userRoles = parsedUserObject?.userObject?.userRoles || "";
 
-  //It might be used in future 
+  //It might be used in future
 
   // const currentTheme = useMemo(() => {
   //   if (activeTab === 0 ) {
@@ -266,13 +281,14 @@ function App() {
       import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
     )
       ? JSON.parse(
-        window.sessionStorage.getItem(
-          import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
+          window.sessionStorage.getItem(
+            import.meta.env.VITE_APP_SESSIONSTORAGE_REFRESH
+          )
         )
-      )
       : "";
 
-      const isShareChatRoute = () => window.location.pathname.startsWith(messages.shareRoute);
+    const isShareChatRoute = () =>
+      window.location.pathname.startsWith(messages.shareRoute);
 
     if (!session && isShareChatRoute === null) {
       const rememeberMe = window.localStorage.getItem(
@@ -687,8 +703,14 @@ function App() {
                     />
                     <Route
                       path="/share/:sharedChatId"
+                      element={<SharedChat />}
+                    />
+                    <Route
+                      path="/chat/:chatSessionId"
                       element={
-                        <SharedChat />
+                        <UserPagesProtection>
+                          <NewHomePageMui />
+                        </UserPagesProtection>
                       }
                     />
                   </Routes>

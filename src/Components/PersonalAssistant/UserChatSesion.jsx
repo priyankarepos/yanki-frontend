@@ -19,67 +19,69 @@ import TickDouble from "../../Assets/images/Tick-double.svg";
 import "./PersonalAssistant.scss";
 import SendIcon from "../../Assets/images/sendIcon.svg";
 import {
-  startConnection,
-  onReceiveMessage,
-  stopConnection,
+  getConnectionPromise,
 } from "../../SignalR/signalRService";
 import { useTranslation } from 'react-i18next';
+import { useParams } from "react-router-dom";
 
 const UserChatSession = () => {
   const { t } = useTranslation();
   const [messageList, setMessageList] = useState([]);
-  const [currentUserId, setCurrentUserId] = useState();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isChatFinish, setIsChatFinish] = useState(null);
   const chatContainerRef = useRef(null);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down(agentChatResponse.smallScreen));
+  const isSmallScreen = useMediaQuery((theme) =>
+    theme.breakpoints.down(agentChatResponse.smallScreen)
+  );
 
+  const { chatSessionId } = useParams();
+
+  const yankiUser = JSON.parse(
+    window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
+      "{}"
+  );
+  const currentUserId = yankiUser?.userObject?.userId || "";
 
   useEffect(() => {
     const handleReceivedMessage = (message) => {
-      const date = new Date(message.timestamp);
+      if (message.receiverId === currentUserId) {
+        const date = new Date(message.timestamp);
 
-      const options = {
-        hour: agentChatResponse.numeric,
-        minute: agentChatResponse.numeric,
-        hour12: true,
-      };
-      const localTimeString = date.toLocaleTimeString(undefined, options);
+        const options = {
+          hour: agentChatResponse.numeric,
+          minute: agentChatResponse.numeric,
+          hour12: true,
+        };
+        const localTimeString = date.toLocaleTimeString(undefined, options);
 
-      message.timestamp = localTimeString;
+        message.timestamp = localTimeString;
 
-      setMessageList((prevMessages) => [...prevMessages, message]);
+        setMessageList((prevMessages) => [...prevMessages, message]);
+      }
     };
 
     const initializeConnection = async () => {
-      await startConnection();
-      onReceiveMessage(handleReceivedMessage);
+      const connection = await getConnectionPromise();
+
+      if(connection) {
+        connection.on(agentChatResponse.receiveMessage, (message) => {          
+          handleReceivedMessage(message);
+        });
+      }
     };
 
     initializeConnection();
-
-    return () => {
-      stopConnection();
-    };
-  }, []);
-
-  useEffect(() => {
-    const currentUserInfo = window.localStorage.getItem(
-      agentChatResponse.yankiUser
-    );
-    if (currentUserInfo) {
-      const parsedUserInfo = JSON.parse(currentUserInfo);
-      const {
-        userObject: { userId }, 
-      } = parsedUserInfo;
-      setCurrentUserId(userId);
-    }
   }, []);
 
   useEffect(() => {
     const fetchMessage = async () => {
-      const response = await axios.get(`${apiUrls.getUserMessage}`);
+      const response = await axios.get(
+        `${apiUrls.getUserMessage(chatSessionId)}`
+      );      
+            
+      setIsChatFinish(response.data.isChatSessionActive);
 
-      const processedMessages = response.data.map((message) => {
+      const processedMessages = response.data.messages.map((message) => {
         const date = new Date(message.timestamp);
         const options = {
           hour: agentChatResponse.numeric,
@@ -95,7 +97,7 @@ const UserChatSession = () => {
     };
 
     fetchMessage();
-  }, []);
+  }, [chatSessionId]);
 
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
@@ -103,57 +105,70 @@ const UserChatSession = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await axios.post(`${apiUrls.sendMessage}`, {
-        content: searchQuery,
-      });
+    const response = await axios.post(`${apiUrls.sendMessage}`, {
+      content: searchQuery,
+      userType: agentChatResponse.user,
+    });
 
-      let message = response.data.data;
+    let message = response.data.data;
 
-      const date = new Date(message.timestamp);
+    const date = new Date(message.timestamp);
 
-      const options = {
-        hour: agentChatResponse.numeric,
-        minute: agentChatResponse.numeric,
-        hour12: true,
-      };
-      const localTimeString = date.toLocaleTimeString(undefined, options);
+    const options = {
+      hour: agentChatResponse.numeric,
+      minute: agentChatResponse.numeric,
+      hour12: true,
+    };
+    const localTimeString = date.toLocaleTimeString(undefined, options);
 
-      message.timestamp = localTimeString;
+    message.timestamp = localTimeString;
 
-      setMessageList((prevMessages) => [...prevMessages, message]);
+    setMessageList((prevMessages) => [...prevMessages, message]);
 
-      setSearchQuery("");
-    } catch {}
+    setSearchQuery("");
   };
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [messageList]);
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <Box className={agentChatResponse.chatAgentContainer}>
+    <Paper sx={{ p: 2 }} className={agentChatResponse.agentChatSessionContainer}>
+      <Box
+        className={`${
+          chatSessionId
+            ? agentChatResponse.agentChatSessionContainer
+            : agentChatResponse.chatAgentContainer
+        }`}
+      >
         <Typography className={agentChatResponse.chatAgentHeading}>
           {t('chatWithYankiAgent')}
         </Typography>
         <Typography className={agentChatResponse.chatAgentTitle}>
           {t('describeNeedHelp')}
         </Typography>
-        <Box className={`${ isSmallScreen ? agentChatResponse.smallUserChatContainer : agentChatResponse.userChatContainer}`} ref={chatContainerRef}>
+        <Box
+          className={`${
+            isSmallScreen
+              ? agentChatResponse.smallUserChatContainer
+              : agentChatResponse.userChatContainer
+          }`}
+          ref={chatContainerRef}
+        >
           {messageList.map((message) => (
-            <div>
+            <div key={message.id}>
               <Box className={agentChatResponse.messageContainer}>
                 <Box
                   className={`${
-                    message.senderId === currentUserId
+                    message.userType === agentChatResponse.user
                       ? agentChatResponse.messageOutgoingContainer
                       : agentChatResponse.messageIncomingContainer
                   }`}
                 >
-                  {message.senderId !== currentUserId && (
+                  {message.userType !== agentChatResponse.user && (
                     <Avatar className={agentChatResponse.agentAvtar}>
                       <img src={AgentLogo} alt={agentChatResponse.agentLogo} />
                     </Avatar>
@@ -162,7 +177,7 @@ const UserChatSession = () => {
                     key={message.id}
                     className={`${agentChatResponse.message}
                 ${
-                  message.senderId === currentUserId
+                  message.userType === agentChatResponse.user
                     ? agentChatResponse.outgoing
                     : agentChatResponse.incoming
                 }
@@ -172,7 +187,7 @@ const UserChatSession = () => {
                     <img src={TickDouble} alt={TickDouble} />
                     <span
                       className={`${agentChatResponse.userMessageTime} ${
-                        message.senderId === currentUserId
+                        message.userType === agentChatResponse.user
                           ? agentChatResponse.outgoingTime
                           : agentChatResponse.incomingTime
                       }`}
@@ -180,7 +195,7 @@ const UserChatSession = () => {
                       {message.timestamp}
                     </span>
                   </Box>
-                  {message.senderId === currentUserId && (
+                  {message.userType === agentChatResponse.user && (
                     <Avatar className={agentChatResponse.userAvtar}>
                       <img
                         src={OfflineUserAvtar}
@@ -195,32 +210,42 @@ const UserChatSession = () => {
         </Box>
 
         <Box className={agentChatResponse.chatWithAgentContainer}>
-          <form>
-            <Box className={`${ isSmallScreen ? agentChatResponse.smallChatWithAgent : agentChatResponse.chatWithAgent}`}>
-              <TextField
-                fullWidth
-                name={agentChatResponse.searchQuery}
-                value={searchQuery}
-                onChange={handleChange}
-                placeholder={t('chatWithAgent')}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      className={agentChatResponse.sendButton}
-                      type={agentChatResponse.submit}
-                      onClick={onSubmit}
-                    >
-                      <span className={agentChatResponse.sendButtonMessage}>{t(send)}</span>
-                      <img
-                        src={SendIcon}
-                        alt={agentChatResponse.userAvtar}
-                      />
-                    </IconButton>
-                  ),
-                }}
-              />
-            </Box>
-          </form>
+          {!isChatFinish ? (
+            <form>
+              <Box
+                className={`${
+                  isSmallScreen
+                    ? agentChatResponse.smallChatWithAgent
+                    : agentChatResponse.chatWithAgent
+                }`}
+              >
+                <TextField
+                  fullWidth
+                  name={agentChatResponse.searchQuery}
+                  value={searchQuery}
+                  onChange={handleChange}
+                  placeholder={t('chatWithAgent')}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        className={agentChatResponse.sendButton}
+                        type={agentChatResponse.submit}
+                        onClick={onSubmit}
+                        disabled={!searchQuery.trim()}
+                      >
+                        <span className={agentChatResponse.sendButtonMessage}>
+                          Send
+                        </span>
+                        <img src={SendIcon} alt={agentChatResponse.userAvtar} />
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </Box>
+            </form>
+          ) : (
+            <Typography className={agentChatResponse.chatFinishedTitle}>The chat has been finished by the admin. If you need further assistance, feel free to start a new assistant chat.</Typography>
+          ) }
         </Box>
       </Box>
     </Paper>

@@ -61,11 +61,14 @@
 
 .ya-answer-container {
     height: 100%;
-    display: flex;
-    flex-direction: column;
     border-radius: 20px;
     margin: 0 auto;
     padding: 20px;
+}
+
+.ya-answer-container-chat-yanki {
+    display: flex;
+    flex-direction: column;
 }
 
 .ya-answer-container-border {
@@ -295,6 +298,7 @@
     border: none;
     padding-left: 15px;
     overflow-y: hidden;
+    height: 100%;
 
     .ya-sidebar-styles-box {
         display: flex;
@@ -317,17 +321,17 @@
     justify-content: flex-start !important;
     align-items: center !important;
     margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    border-radius: 10px;
 }
 
 .ya-new-chat-box {
-    min-height: calc(100vh - 168px);
-    max-height: calc(100vh - 168px);
     margin-top: 25px;
-    overflow-x: hidden;
-    overflow-y: auto;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+    overflow: hidden;
+    height: 65%;
 }
 
 .ya-chat-session-btn {
@@ -454,6 +458,41 @@
     }
 }
 
+.ya-answer-agent-chat {
+    height: 100%;
+}
+
+.ya-chat-session-unseen-name {
+    background: var(--primary-300, #3F85D5);
+    height: 22.67px;
+    width: 22.67px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+    border-radius: 10px;
+}
+
+.ya-new-assistant-chat {
+    height: 30%;
+    margin-top: 10px;
+}
+
+.chat-session-conteriner {
+    height: 100%;
+    overflow: hidden;
+}
+
+.agent-chat-session-list {
+    min-height: calc(100% - 100px);
+    max-height: calc(100% - 100px);
+    overflow: auto;
+}
+
+.ya-chat-session-list {
+    min-height: calc(100% - 160px);
+    max-height: calc(100% - 160px);
+    overflow-y: auto;
+}
 
 @media (max-width: 600px) {
     .fixed-search-Box {
