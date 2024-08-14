@@ -23,8 +23,10 @@ import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import "./Style.scss";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
 
 const ChangePasswordPage = () => {
+  const { t } = useTranslation();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -81,7 +83,7 @@ const ChangePasswordPage = () => {
       if (e?.response?.data?.message) {
         setErrorMsg(e?.response?.data?.message);
       } else {
-        setErrorMsg("Something went wrong");
+        setErrorMsg(t('somethingWentWrong'));
       }
     }
   };
@@ -104,7 +106,7 @@ const ChangePasswordPage = () => {
               variant="h5"
               className="text-center marginBottom-34"
             >
-              Change password
+              {t('changePassword')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
@@ -113,7 +115,7 @@ const ChangePasswordPage = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "Current password is required",
+                    message: `${t('currentPasswordRequired')}`,
                   },
                   pattern: {
                     value: passwordRegex,
@@ -122,14 +124,14 @@ const ChangePasswordPage = () => {
                   validate: {
                     passwordMatch: (value) =>
                       value !== watchNewPassword ||
-                      "Current password must be not equal to New password.",
+                      `${t('currentPasswordMustNotEqualNewPassword')}`,
                   },
                 }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     type="outlined"
-                    placeholder="Current password"
+                    placeholder={t('currentPassword')}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -173,7 +175,7 @@ const ChangePasswordPage = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "New password is required.",
+                    message: `${t('newPasswordRequired')}`,
                   },
                   pattern: {
                     value: passwordRegex,
@@ -184,7 +186,7 @@ const ChangePasswordPage = () => {
                   <TextField
                     {...field}
                     type="outlined"
-                    placeholder="New password"
+                    placeholder={t('newPassword')}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -224,7 +226,7 @@ const ChangePasswordPage = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "Confirm password is required",
+                    message: `${t('confirmPasswordRequired')}`,
                   },
                   pattern: {
                     value: passwordRegex,
@@ -233,14 +235,14 @@ const ChangePasswordPage = () => {
                   validate: {
                     passwordMatch: (value) =>
                       value === watchNewPassword ||
-                      "Confirm password must match with new password.",
+                      `${t('confirmPasswordMustMatchNewPassword')}`,
                   },
                 }}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     type="outlined"
-                    placeholder="Confirm password"
+                    placeholder={t('confirmPassword')}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -290,7 +292,7 @@ const ChangePasswordPage = () => {
                 className="marginBottom-20 bold"
                 type="submit"
               >
-                Confirm
+                {t('confirm')}
               </Button>
             </form>
             <Link
@@ -299,7 +301,7 @@ const ChangePasswordPage = () => {
               underline="none"
               variant="body1"
             >
-              <div className="text-center cursor-pointer bold">Cancel</div>
+              <div className="text-center cursor-pointer bold">{t('cancelReminder')}</div>
             </Link>
           </Box>
         </Box>

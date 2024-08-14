@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import "./AnswerStyle.scss";
 import { messages } from '../Utils/stringConstant/stringConstant';
+import { useTranslation } from "react-i18next";
 
 const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
-
+    const { t } = useTranslation();
     const [selectedEnterprise, setSelectedEnterprise] = useState(null);
     const [chatMessages, setChatMessages] = useState([]);
     const [selectedEnterpriseMessage, setSelectedEnterpriseMessage] = useState("");
@@ -23,15 +24,15 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
             const response = await axios.post(`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
                 requestData);
             if (response.status === 200) {
-                const message = `Your message has been sent to ${enterprise?.enterpriseName}. The organization administrator will contact you directly if needed.`;
+                const message = `${t('messageSent')}`;
                 setChatMessages([...chatMessages, message]);
                 setSelectedEnterpriseMessage(response.data.message);
                 fetchRemainingMessage();
             } else if (response.data && response.data.isSuccess === false) {
-                setSelectedEnterpriseMessage("Invalid email. Please provide a valid email address.");
+                setSelectedEnterpriseMessage(`${t('invalidEmail')}`);
             }
         } catch (error) {
-            setSnackbarMessage('Error sending email:', error);
+            setSnackbarMessage(`${t('errorSendingEmailEnterprise')}`, error);
             setSnackbarOpen(true);
         }
     };
@@ -49,7 +50,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
         if (phoneNumber && phoneNumber.trim() !== "") {
             window.location.href = `tel:${phoneNumber}`;
         } else {
-            setSnackbarMessage("Phone number is not valid or empty.", phoneNumber);
+            setSnackbarMessage(`${t('invalidPhoneNumber')}`, phoneNumber);
             setSnackbarOpen(true);
         }
     };
@@ -70,7 +71,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
                                 <Grid item xs={12} sm={6} md={6} key={enterprise.id}>
                                     <Box className="enterprise-info-box">
                                         <div>
-                                            {enterprise.enterpriseName && <div>Enterprise Name: {enterprise.enterpriseName}</div>}
+                                            {enterprise.enterpriseName && <div>{t('enterpriseName')} {enterprise.enterpriseName}</div>}
                                             {enterprise.enterpriseEmail && <div>
                                                 Enterprise Email:{" "}
                                                 <span className='email-click'
@@ -79,22 +80,22 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
                                                     {enterprise.enterpriseEmail}
                                                 </span>
                                             </div>}
-                                            {enterprise.enterpriseAddress && <div>Enterprise Address: {enterprise.enterpriseAddress}</div>}
+                                            {enterprise.enterpriseAddress && <div>{t('enterpriseAddress')} {enterprise.enterpriseAddress}</div>}
                                             {enterprise.enterprisePhoneNumber && <div>
-                                                Enterprise Phone:{" "}
+                                                {t('enterprisePhone')}{" "}
                                                 <span className='email-click'
                                                     onClick={() => handleCall(enterprise.enterprisePhoneNumber)}
                                                 >
                                                     {enterprise.enterprisePhoneNumber}
                                                 </span>
                                             </div>}
-                                            {enterprise.departmentName && <div>Department Name: {enterprise.departmentName}</div>}
+                                            {enterprise.departmentName && <div>{t('departmentName')} {enterprise.departmentName}</div>}
                                             {enterprise.departmentEmail && <div>
-                                                Department Email:{" "}
+                                                {t('departmentEmail')}{" "}
                                                 <span className='email-click'
                                                     onClick={handleOpenEmailClient}>{enterprise.departmentEmail}</span>
                                             </div>}
-                                            {enterprise.departmentHeadName && <div>Department Head Name: {enterprise.departmentHeadName}</div>}
+                                            {enterprise.departmentHeadName && <div>{t('departmentHeadName')} {enterprise.departmentHeadName}</div>}
                                             {(answer?.isMail === true || selectedEnterpriseMessage !== "") ? <Button className="enterprise-info-button" onClick={() => {
                                                 setSelectedEnterprise(enterprise.enterpriseName);
                                                 handleSendEmail(enterprise);
@@ -107,7 +108,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
                         </Grid>
                     </List>
                     {answer.enterpriseSelections && answer.enterpriseSelections.length >=1 && <Typography className='demo-enterprise-Typography enterprise-prompt-msg'>
-                        Use the prompt: “Connect” to engage contact with this enterprise
+                        {t('connectPrompt')}
                     </Typography>}
                     {selectedEnterprise && (
                         <Typography className="send-email-message">

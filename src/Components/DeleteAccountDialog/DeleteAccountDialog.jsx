@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { Box, CircularProgress } from '@mui/material';
 import './DeleteAccountConfirmDialog.scss';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { useTranslation } from 'react-i18next';
 
 const DeleteAccountConfirmDialog = ({
     open,
@@ -16,35 +17,37 @@ const DeleteAccountConfirmDialog = ({
     loading,
     confirmationTitle,
 }) => {
+    const { t } = useTranslation();
+
     return (
         <Box className="Delete-account-MuiDialog-container">
             <Dialog open={open} onClose={handleClose} className="confirm-dialog account-delete-confirm-dialog">
                 <DialogTitle className="confirm-dialog-title">
-                    {!confirmationTitle ? 'Confirm Deletion' : confirmationTitle}
+                    {!confirmationTitle ? t('confirmDeletionTitle') : confirmationTitle}
                 </DialogTitle>
                 <DialogContent className="confirm-dialog-content">
                     <DialogContentText className="confirm-dialog-text confirm-dialog-text-heading ">
-                        Before You Go:
+                    {t('beforeYouGo')}
                     </DialogContentText>
                     <DialogContentText className="confirm-dialog-text">
-                        If there's anything we can do to improve or if you have any feedback, please let us know. Your input is valuable and helps us make Yanki better for everyone.
+                    {t('feedbackRequest')}
                     </DialogContentText>
                     <DialogContentText className="confirm-dialog-text confirm-dialog-text-heading">
-                        Account Deletion Details:
+                    {t('accountDeletionDetailsTitle')}
                     </DialogContentText>
                     <div className="confirm-dialog-text">
                         <ul>
-                            <li><FiberManualRecordIcon fontSize="small" /> Your account and all associated data, including your subscription, will be permanently deleted.</li>
-                            <li><FiberManualRecordIcon fontSize="small" /> This action cannot be undone.</li>
+                            <li><FiberManualRecordIcon fontSize="small" /> {t('accountDeletionDetail1')}</li>
+                            <li><FiberManualRecordIcon fontSize="small" /> {t('accountDeletionDetail2')}</li>
                         </ul>
                     </div>
                 </DialogContent>
                 <DialogActions className="confirm-dialog-actions">
                     <Button className="confirm-delete-button" onClick={handleConfirm} color="error" disabled={loading}>
-                        {loading ? <CircularProgress size={24} className="loading-spinner" /> : 'Delete'}
+                        {loading ? <CircularProgress size={24} className="loading-spinner" /> : `${t('deleteButton')}`}
                     </Button>
                     <Button className="confirm-cancel-button" onClick={handleClose}>
-                        Cancel
+                        {t('cancelButton')}
                     </Button>
                 </DialogActions>
             </Dialog>

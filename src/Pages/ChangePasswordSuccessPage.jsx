@@ -7,9 +7,11 @@ import { useContext } from "react";
 import { ThemeModeContext } from "../App";
 import "./Style.scss";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
 
 const ChangePasswordSuccessPage = () => {
   const { themeMode } = useContext(ThemeModeContext);
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -41,10 +43,10 @@ const ChangePasswordSuccessPage = () => {
               component="h1"
               className="change-password-success"
             >
-              Change password successful
+              {t('changePasswordSuccessful')}
             </Typography>
             <Button variant="contained" fullWidth onClick={onGoToLogin}>
-              Go to login
+            {t('goToLogin')}
             </Button>
           </Box>
         </Box>

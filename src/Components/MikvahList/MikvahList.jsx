@@ -40,8 +40,10 @@ import {
     DirectionsRenderer,
     Marker,
 } from "@react-google-maps/api";
+import { useTranslation } from "react-i18next";
 
 const MikvahAnswer = ({ answer }) => {
+    const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const { activeTab, userLatitude, userLongitude } = useContext(Context);
@@ -72,7 +74,7 @@ const MikvahAnswer = ({ answer }) => {
                 const response = await axios.get(apiUrls.mikvahDetails, { params: { mikvahId: row.id } });
                 setMikvahDetails(response.data);
             } catch (error) {
-                setSnackbarMessage(messages.mikvahDetailsError);
+                setSnackbarMessage(`${t('errorFetchingMikvahDetails')}`);
                 setSnackbarOpen(true);
             } finally {
                 setLoadingDetails(false);
@@ -90,10 +92,10 @@ const MikvahAnswer = ({ answer }) => {
     
                     const handleGeolocationError = (error) => {
                         if (error.code === error.PERMISSION_DENIED) {
-                            setSnackbarMessage(messages.errorFetchingLocation);
+                            setSnackbarMessage(`${t('enableLocationAccess')}`);
                             setIsLocationAllowed(false);
                         } else {
-                            setSnackbarMessage(messages.errorFetchingLocation);
+                            setSnackbarMessage(`${t('enableLocationAccess')}`);
                         }
                         setSnackbarOpen(true);
                     };
@@ -105,7 +107,7 @@ const MikvahAnswer = ({ answer }) => {
                         } else if (result.state === messages.promptText) {
                             navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                         } else {
-                            setSnackbarMessage(messages.errorFetchingLocation);
+                            setSnackbarMessage(`${t('enableLocationAccess')}`);
                             setIsLocationAllowed(false);
                             setSnackbarOpen(true);
                         }
@@ -114,7 +116,7 @@ const MikvahAnswer = ({ answer }) => {
                             if (result.state === messages.grantedText) {
                                 navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else {
-                                setSnackbarMessage(messages.errorFetchingLocation);
+                                setSnackbarMessage(`${t('enableLocationAccess')}`);
                                 setIsLocationAllowed(false);
                                 setSnackbarOpen(true);
                             }
@@ -137,7 +139,7 @@ const MikvahAnswer = ({ answer }) => {
                 setSnackbarOpen(true);
                 setResponse(null);
             } else {
-                setSnackbarMessage(messages.errorFetchingDirections);
+                setSnackbarMessage(`${t('routeNotAvailable')}`);
                 setSnackbarOpen(true);
                 setResponse(null);
             }
@@ -210,7 +212,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Address:</strong>
+                                                        <strong>{t('address')}:</strong>
                                                     </Typography>
                                                     <Typography>
                                                         {mikvahDetails.result.address.trim() ? mikvahDetails.result.address : messages.notAvailable}
@@ -223,7 +225,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Phone:</strong>
+                                                        <strong>{t('phone')}</strong>
                                                     </Typography>
                                                     {mikvahDetails.result.phone1.trim() ? <div><Typography>{mikvahDetails.result.phone1}</Typography>
                                                         <Typography>{mikvahDetails.result.phone2}</Typography></div> : <Typography>NA</Typography>}
@@ -235,7 +237,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Contact:</strong>
+                                                        <strong>{t('contact')}</strong>
                                                     </Typography>
                                                     <Typography>{mikvahDetails.result.contact ? mikvahDetails.result.contact : messages.notAvailable}</Typography>
                                                 </Box>
@@ -248,7 +250,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Shul:</strong>
+                                                        <strong>{t('shul')}</strong>
                                                     </Typography>
                                                     <Typography>{mikvahDetails.result.shul.trim() ? mikvahDetails.result.shul : messages.notAvailable}</Typography>
                                                 </Box>
@@ -259,7 +261,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Type:</strong>
+                                                        <strong>{t('type')}</strong>
                                                     </Typography>
                                                     <Typography>{mikvahDetails.result.type.trim() ? mikvahDetails.result.type : messages.notAvailable}</Typography>
                                                 </Box>
@@ -270,7 +272,7 @@ const MikvahAnswer = ({ answer }) => {
                                                 </Typography>
                                                 <Box className={messages.mikvahDetailInfoContent}>
                                                     <Typography>
-                                                        <strong>Schedule:</strong>
+                                                        <strong>{t('schedule')}</strong>
                                                     </Typography>
                                                     <Typography>{mikvahDetails.result.schedule.trim() ? mikvahDetails.result.schedule : messages.notAvailable}</Typography>
                                                 </Box>
@@ -279,7 +281,7 @@ const MikvahAnswer = ({ answer }) => {
                                         </Grid>
                                     </Grid>
                                 ) : loadingDetails ? (
-                                    <Typography>Loading...</Typography>
+                                    <Typography>{t('loading')}</Typography>
                                 ) : (
                                     <Typography>{messages.mikvahDetailsNotFound}</Typography>
                                 )}
@@ -348,9 +350,9 @@ const MikvahAnswer = ({ answer }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            <TableCell>{messages.nameText}</TableCell>
-                            <TableCell>{messages.addressText}</TableCell>
-                            <TableCell>{messages.locationText}</TableCell>
+                            <TableCell>{t('name')}</TableCell>
+                            <TableCell>{t('address')}</TableCell>
+                            <TableCell>{t('location')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

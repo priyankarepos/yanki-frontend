@@ -6,8 +6,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { ThemeModeContext } from "../../App";
 import "./PaymentSuccessPage.scss";
+import { useTranslation } from "react-i18next";
 
 const SubscriptionCreatedPage = () => {
+    const { t } = useTranslation();
     const { themeMode } = useContext(ThemeModeContext);
     const navigate = useNavigate();
 
@@ -39,42 +41,42 @@ const SubscriptionCreatedPage = () => {
                         component="h1"
                         className="title"
                     >
-                        Welcome to Yanki!
+                        {t('welcomeToYanki')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="message"
                     >
-                        Your account has been successfully created.
+                        {t('accountCreated')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="subscribe-model-question"
                     >
-                        What's Next?
+                        {t('whatsNext')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="subscribe-model-ans"
                     >
-                        To tailor your Yanki experience to your needs, please complete our optional AI questionnaire. Your answers will help us provide you with highly accurate and personalized services.
+                        {t('aiQuestionnaire')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="subscribe-model-question"
                     >
-                        Get Started with AI Customization
+                        {t('startAICustomization')}
                     </Typography>
                     <Typography className="subscribe-link">
                         <span onClick={onClickAICustomization}>
-                            AI Customization
+                        {t('aiCustomization')}
                         </span>
                     </Typography>
                     <Typography
                         variant="body1"
                         className="subscribe-model-question"
                     >
-                        Not Now, Continue to Home
+                        {t('notNowContinueHome')}
                     </Typography>
                     <Button
                         variant="contained"
@@ -82,7 +84,7 @@ const SubscriptionCreatedPage = () => {
                         onClick={onGoToHome}
                         className="button"
                     >
-                        Continue to Home
+                        {t('continueToHome')}
                     </Button>
                 </Box>
             </Box>

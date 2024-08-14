@@ -71,7 +71,7 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
       setAdditionalMessage("");
       fetchRemainingMessage();
     } catch (error) {
-      setSnackbarMessage("API Error:", error);
+      setSnackbarMessage(error);
       setSnackbarOpen(true);
     } finally {
       setLoadingButtonIndex(null);

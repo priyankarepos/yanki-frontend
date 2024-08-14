@@ -42,9 +42,11 @@ import ChangeLanguage from "../Assets/images/language-square.svg"
 import AccountDelete from "../Assets/images/delete-02.svg"
 import BackArrowIcon from "../Assets/images/back-arrow.svg"
 import { classNames, messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from "react-i18next";
 
 
 export default function ProfielCircle({ chatId }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const location = useLocation();
@@ -58,6 +60,7 @@ export default function ProfielCircle({ chatId }) {
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
   const emailBody = "Email body";
+  const isChatRoute = location.pathname.startsWith(`/${chatId}`);
 
   const yankiUser = window.localStorage.getItem(
     import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN
@@ -184,7 +187,7 @@ export default function ProfielCircle({ chatId }) {
 
   return (
     <React.Fragment>
-      <Container className={classNames.muiContainerUserMenu} maxWidth={classNames.xLWidth}>
+      <Container className={isChatRoute ? classNames.muiContainerUserMenu : ''} maxWidth={classNames.xLWidth}>
         <Box className="user-top-header" sx={{ py: 2 }}>
           <Typography className="profile-logo" onClick={() => navigate("/")}>
             {showLogo && (
@@ -263,7 +266,7 @@ export default function ProfielCircle({ chatId }) {
                 {activeTab === 0 ? <img src={AccountSettingIcon} alt='AccountSettingIcon' /> :
                   <ManageAccountsIcon fontSize="small" />}
               </ListItemIcon>
-              Account Settings
+              {t('accountSettingsTxt')}
               <ListItemIcon className="account-setting-menu">
                 {activeTab === 0 ? <img src={RightArrowIcon} alt='EmailIcon' /> :
                   <KeyboardArrowRightIcon fontSize="small" />}
@@ -275,7 +278,7 @@ export default function ProfielCircle({ chatId }) {
                 <ListItemIcon>
                   <AdminPanelSettingsIcon className={activeTab === 0 && "go-to-admin-icon"} fontSize="small" />
                 </ListItemIcon>
-                Go To Admin Panel
+                {t('goToAdminPanelTxt')}
               </MenuItem>
             )}
             {userRoles === "Enterprise" && activeTab === 1 && (
@@ -283,7 +286,7 @@ export default function ProfielCircle({ chatId }) {
                 <ListItemIcon>
                   <Diversity2Icon className={activeTab === 0 && "go-to-admin-icon"} fontSize="small" />
                 </ListItemIcon>
-                Networking Interface
+                {t('networkingInterfaceTxt')}
               </MenuItem>
             )}
             {userRoles !== "Enterprise" && (
@@ -293,14 +296,14 @@ export default function ProfielCircle({ chatId }) {
                     {activeTab === 0 ? <img src={NotificationIcon} alt='LogoutIcon' /> :
                       <NotificationsNoneIcon />}
                   </ListItemIcon>
-                  Notification Settings
+                  {t('notificationSettingsTxt')}
                 </MenuItem>
                 <MenuItem onClick={onClickAICustomization}>
                   <ListItemIcon>
                     {activeTab === 0 ? <img src={AiCustomizationIcon} alt='LogoutIcon' /> :
                       <TuneIcon />}
                   </ListItemIcon>
-                  AI Customization
+                  {t('aICustomizationTxt')}
                 </MenuItem>
               </div>
             )}
@@ -311,7 +314,7 @@ export default function ProfielCircle({ chatId }) {
                   {activeTab === 0 ? <img src={SubscriptionIcon} alt='SubscriptionIcon' /> :
                     <SubscriptionsIcon fontSize="small" />}
                 </ListItemIcon>
-                Subscription Plan
+                {t('subscriptionPlanTxt')}
               </MenuItem>
             )}
             <Divider sx={{ mx: 2 }} />
@@ -320,7 +323,7 @@ export default function ProfielCircle({ chatId }) {
                 {activeTab === 0 ? <img src={LogoutIcon} alt='LogoutIcon' /> :
                   <Logout fontSize="small" />}
               </ListItemIcon>
-              Logout
+              {t('logoutTxt')}
             </MenuItem>
           </Menu>
         ) : (
@@ -357,7 +360,7 @@ export default function ProfielCircle({ chatId }) {
                 {activeTab === 0 ? <img src={BackArrowIcon} alt='BackArrowIcon' /> :
                   <KeyboardArrowLeftIcon fontSize="small" />}
               </ListItemIcon>
-              Account Settings
+              {t('accountSettingsTxt')}
             </MenuItem>
             <Divider sx={{ mx: 2 }} />
             <MenuItem onClick={onClickChangePassword}>
@@ -365,28 +368,28 @@ export default function ProfielCircle({ chatId }) {
                 {activeTab === 0 ? <img src={ChangePassword} alt='ChangePassword' /> :
                   <LockOutlinedIcon fontSize="small" />}
               </ListItemIcon>
-              Change Password
+              {t('changePasswordTxt')}
             </MenuItem>
             <MenuItem onClick={onClickChangeNumber}>
               <ListItemIcon>
                 {activeTab === 0 ? <img src={ChangePhone} alt='ChangePhone' /> :
                   <PhoneMissedIcon fontSize="small" />}
               </ListItemIcon>
-              Change Phone Number
+              {t('changePhoneNumberTxt')}
             </MenuItem>
             <MenuItem onClick={onClickChangeLanguage}>
               <ListItemIcon>
                 {activeTab === 0 ? <img src={ChangeLanguage} alt='ChangeLanguage' /> :
                   <TranslateIcon fontSize="small" />}
               </ListItemIcon>
-              Change Language
+              {t('changeLanguageTxt')}
             </MenuItem>
             <MenuItem onClick={handleDeleteAccount}>
               <ListItemIcon>
                 {activeTab === 0 ? <img src={AccountDelete} alt='AccountDelete' /> :
                   <DeleteOutlineIcon fontSize="small" />}
               </ListItemIcon>
-              Delete Your Account
+              {t('deleteYourAccountTxt')}
             </MenuItem>
           </Menu>
         )}
@@ -412,13 +415,13 @@ export default function ProfielCircle({ chatId }) {
       >
         <Box className="admin-faq-model-content delete-account-content">
           <Typography sx={{ mb: 1 }}>
-            Your account has been successfully deleted.
+            {t('accountDeletedMessage')}
           </Typography>
           <Typography sx={{ mb: 1 }}>
-            You will be redirected to the homepage. <strong>{timer}</strong>
+            {t('redirectMessage')} <strong>{timer}</strong>
           </Typography>
           <Typography sx={{ mb: 3 }}>
-            If you have any questions or need further assistance, please contact our support team at&nbsp;
+            {t('contactSupportMessage')}&nbsp;
             <a
               className="linkStyle new-title-email"
               href={`mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`}
@@ -429,7 +432,7 @@ export default function ProfielCircle({ chatId }) {
             </a>
           </Typography>
           <Typography>
-            Thank you for being part of Yanki. We hope to serve you again in the future.
+            {t('thankYouMessage')}
           </Typography>
         </Box>
       </Modal>

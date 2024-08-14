@@ -2,8 +2,10 @@ import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHe
 import React, { useCallback, useEffect, useState } from 'react';
 import "./ReminderNotification.scss"
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
-const ReminderNotification = ({ answer }) => {
+const ReminderNotification = () => {
+    const { t } = useTranslation();
     const [reminders, setReminders] = useState([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -14,7 +16,7 @@ const ReminderNotification = ({ answer }) => {
             const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`);
             setReminders(response.data);
         } catch (error) {
-            setSnackbarMessage('Error fetching reminders:', error);
+            setSnackbarMessage(`${t('errorFetchingReminders')}: ${error}`);
             setSnackbarOpen(true);
         }
     }, [userId]);
@@ -27,11 +29,11 @@ const ReminderNotification = ({ answer }) => {
         try {
             await axios.delete(`${import.meta.env.VITE_APP_API_HOST}/api/reminder/delete-reminder?reminderId=${id}&messageServiceId=${messageServiceId}`);
             setReminders(reminders.filter(reminder => reminder.id !== id));
-            setSnackbarMessage('Reminder cancelled successfully');
+            setSnackbarMessage(t('reminderCancelledSuccessfully'));
             setSnackbarOpen(true);
             fetchReminders();
         } catch (error) {
-            setSnackbarMessage('Error cancelling reminder:', error.message);
+            setSnackbarMessage(`${t('errorCancellingReminder')}: ${error.message}`);
             setSnackbarOpen(true);
         }
     };
@@ -39,21 +41,21 @@ const ReminderNotification = ({ answer }) => {
     return (
         <Paper className='ReminderNotificationUser' sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
-            Below are your upcoming reminders.
+                {t('belowAreYourUpcomingReminders')}
             </Typography>
             <TableContainer>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Message</TableCell>
-                            <TableCell>Time</TableCell>
-                            <TableCell>Action</TableCell>
+                            <TableCell>{t('messageText')}</TableCell>
+                            <TableCell>{t('timeText')}</TableCell>
+                            <TableCell>{t('actionText')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {reminders.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={3} align="center">No reminders available</TableCell>
+                                <TableCell colSpan={3} align="center">{t('noRemindersAvailable')}</TableCell>
                             </TableRow>
                         ) : (
                             reminders.map((reminder) => (
@@ -61,7 +63,7 @@ const ReminderNotification = ({ answer }) => {
                                     <TableCell>{reminder.reminderMessage}</TableCell>
                                     <TableCell>{new Date(reminder.reminderTime).toLocaleString()}</TableCell>
                                     <TableCell>
-                                        <Typography className='Custom-Button' onClick={() => handleCancel(reminder?.reminderId, reminder?.messageServiceId)}>Cancel</Typography>
+                                        <Typography className='Custom-Button' onClick={() => handleCancel(reminder?.reminderId, reminder?.messageServiceId)}>{t('cancelReminder')}</Typography>
                                     </TableCell>
                                 </TableRow>
                             ))

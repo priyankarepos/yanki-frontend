@@ -9,8 +9,10 @@ import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
 import { Button } from '@mui/base';
 import "./AnswerStyle.scss"
 import { Box } from '@mui/system';
+import { useTranslation } from "react-i18next";
 
 const PdfAnswers = ({ answer }) => {
+    const { t } = useTranslation();
     const [selectedPdf, setSelectedPdf] = useState(null);
     const [pdfLoadError, setPdfLoadError] = useState(false);
     const [visiblePdfCount, setVisiblePdfCount] = useState(2);
@@ -51,7 +53,7 @@ const PdfAnswers = ({ answer }) => {
                         <CloseIcon />
                     </IconButton>
                     {pdfLoadError ? (
-                        <div>Error loading PDF. Please try again.</div>
+                        <div>{t('errorLoadingPDF')}</div>
                     ) : (
                         <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                             <Viewer fileUrl={selectedPdf} />
@@ -132,7 +134,7 @@ const PdfAnswers = ({ answer }) => {
                         fullWidth
                         onClick={handleLoadMore}
                     >
-                        Load More
+                        {t('loadMore')}
                     </Button>
                 )}
             </Box>
