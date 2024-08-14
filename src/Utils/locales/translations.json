@@ -328,7 +328,7 @@
             "publicLinkCreated": "A public link to your chat has been created.",
             "copyLink": "Copy Link",
             "createLink": "Create Link",
-             "sharePublicLinkToChat": "Share public link to chat",
+            "sharePublicLinkToChat": "Click on 'Create Link,' and a unique link will be generated for easy sharing.",
             "initialQuestions1": [
                 "Find me a baby sitter in the community",
                 "What time is candle lighting?",
@@ -708,7 +708,7 @@
             "publicLinkCreated": "נוצר קישור ציבורי לצ'אט שלך.",
             "copyLink": "העתק קישור",
             "createLink": "צור קישור",
-            "sharePublicLinkToChat": "שתף קישור ציבורי לצ'אט",
+            "sharePublicLinkToChat": "לחץ על 'צור קישור', וקישור ייחודי ייווצר לשיתוף קל.",
             "initialQuestions1": [
                 "מצא לי שמרטף בקהילה",
                 "מתי הדלקת נרות?",
@@ -1088,7 +1088,7 @@
             "publicLinkCreated": "Se ha creado un enlace público a tu chat.",
             "copyLink": "Copiar enlace",
             "createLink": "Crear enlace",
-            "sharePublicLinkToChat": "Compartir enlace público al chat",
+            "sharePublicLinkToChat": "Haz clic en 'Crear enlace' y se generará un enlace único para compartir fácilmente.",
             "initialQuestions1": [
                 "Encuéntrame una niñera en la comunidad",
                 "¿A qué hora es el encendido de velas?",
@@ -1468,7 +1468,7 @@
             "publicLinkCreated": "אַ פּובליק לינק צו דיין שמועס איז געשאַפֿן געוואָרן.",
             "copyLink": "קאָפּי לינק",
             "createLink": "שאַפֿן לינק",
-            "sharePublicLinkToChat": "שער דעם פּובליק לינק צו שמועס",
+            "sharePublicLinkToChat": "קליקט אויף 'קרעאַט לינק', און אַ איינציק לינק וועט געשאַפן ווערן פֿאַר גרינגער שאַרעווען.",
             "initialQuestions1": [
                 "געפֿינען מיר אַ קינדער-היטערין אין דער קהילה",
                 "וואָס איז די צייט פון ליכט צינדן?",

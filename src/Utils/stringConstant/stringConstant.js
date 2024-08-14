@@ -114,6 +114,8 @@ export const apiUrls = {
     smsShareUrl: 'sms:?&body=',
     instagramShareUrl: 'https://www.instagram.com/?url=',
     messengerShareUrl: (chatLink, appId) => `https://www.facebook.com/dialog/send?link=${encodeURIComponent(chatLink)}&app_id=${appId}`,
+    getUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`,
+    updateUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/update-user-language`,
 };
 
 export const mapContainerStyle = {
