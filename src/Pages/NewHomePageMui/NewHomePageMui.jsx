@@ -669,12 +669,12 @@ const NewHomePageMui = () => {
   }, [chatId, navigate]);
   const getTranslationKey = (arrayName, index) => `${arrayName}.${index}`;
 
-  const allQuestions = [
-    { questions: initialQuestions1, name: messages.languageInitialQuestions1 },
-    { questions: initialQuestions2, name: messages.languageInitialQuestions2 },
-    { questions: initialQuestions3, name: messages.languageInitialQuestions3 },
-    { questions: initialQuestions4, name: messages.languageIinitialQuestions4 },
-  ];
+const allQuestions = [
+  { questions: initialQuestions1, name: classNames.languageInitialQuestions1 },
+  { questions: initialQuestions2, name: classNames.languageInitialQuestions2 },
+  { questions: initialQuestions3, name: classNames.languageInitialQuestions3 },
+  { questions: initialQuestions4, name: classNames.languageInitialQuestions4 }, 
+];
 
   return (
     <Box className="ya-home-wrapper">
@@ -1071,7 +1071,7 @@ const NewHomePageMui = () => {
                           onClick={() => handleQuestionClick(question.text)}
                           className={`ya-home-table-btn ${activeTab === 0
                             ? 'ya-search-dark-theme'
-                            : 'ya-search-light-theme'
+                            : 'ya-search-light-theme' 
                             }`}
                         >
                           <Tooltip title={<span>{t(getTranslationKey(group.name, index), { defaultValue: question.text })}</span>}>
