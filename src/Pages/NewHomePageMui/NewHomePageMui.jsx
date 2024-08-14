@@ -1042,9 +1042,6 @@ const allQuestions = [
 
             {agentChatSessionId && showChatSession && (
               <SearchHistoryItem
-              ref={(el) =>
-                (itemRefs.current[entry.response.response.id] = el)
-              }
                 key={agentChatSessionId}
                 AgentChatSessionId={agentChatSessionId}
                 AgentChatSession={true}
