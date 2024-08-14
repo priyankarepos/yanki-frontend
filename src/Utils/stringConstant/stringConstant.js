@@ -96,6 +96,7 @@ export const classNames = {
     languageInitialQuestions2: "initialQuestions2",
     languageInitialQuestions3: "initialQuestions3",
     languageIinitialQuestions4: "initialQuestions4",
+    copyButton: ".copy-btn"
 };
 
 export const apiUrls = {
