@@ -43,17 +43,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                 const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
                 setChatLink(newChatLink);
                 setLinkGenerated(true);
-                if (window.ClipboardItem && navigator.clipboard.write) {
-                    const clipboardItem = new ClipboardItem({
-                        'text/plain': new Promise(async (resolve) => {
-                            const copyText = newChatLink;
-                            resolve(new Blob([copyText], { type: 'text/plain' }));
-                        }),
-                    });
-                    await navigator.clipboard.write([clipboardItem]);
-                } else {
-                    await navigator.clipboard.writeText(newChatLink);
-                }
+                await navigator.clipboard.writeText(chatLink);
                 setSnackbarOpen(false);
                 setButtonText(t('copiedToClipboard'));
                 setTimeout(() => {
@@ -61,7 +51,6 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                 }, 2000);
             } else {
                 setSnackbarMessage(messages.failedToGenerateShareChatId);
-                setSnackbarOpen(true);
             }
         } catch (error) {
             setSnackbarMessage(messages.errorMessagePrefix + error.message);
@@ -69,10 +58,10 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
         }
     };
 
-
     const handleCopyLink = async () => {
         try {
             await navigator.clipboard.writeText(chatLink);
+
             setButtonText(t('copiedToClipboard'));
             setTimeout(() => {
                 setButtonText(t('copyLink'));
