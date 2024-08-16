@@ -37,18 +37,36 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             const response = await axios.post(
                 apiUrls.generateShareChatIdApiUrl(selectedChatId)
             );
-
+    
             if (response.status === 200 && response.data.isSuccess) {
                 const generatedShareChatId = response.data.generatedShareChatId;
                 const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
                 setChatLink(newChatLink);
                 setLinkGenerated(true);
-                await navigator.clipboard.writeText(`${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`);
-                setSnackbarOpen(false);
-                setButtonText(t('copiedToClipboard'));
-                setTimeout(() => {
-                    setButtonText(t('copyLink'));
-                }, 2000);
+    
+                const someAsyncMethod = async () => {
+                    try {
+                        return new Blob([newChatLink], { type: messages.textPlain });
+                    } catch (error) {
+                        return new Blob([''], { type: messages.textPlain });
+                    }
+                };
+    
+                const clipboardItem = new ClipboardItem({
+                    [messages.textPlain] : await someAsyncMethod()
+                });
+    
+                try {
+                    await navigator.clipboard.write([clipboardItem]);
+                    setSnackbarOpen(false);
+                    setButtonText(t('copiedToClipboard'));
+                    setTimeout(() => {
+                        setButtonText(t('copyLink'));
+                    }, 2000);
+                } catch (clipboardError) {
+                    setSnackbarMessage(messages.clipboardWriteFailed);
+                    setSnackbarOpen(true);
+                }
             } else {
                 setSnackbarMessage(messages.failedToGenerateShareChatId);
             }
@@ -57,6 +75,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             setSnackbarOpen(true);
         }
     };
+    
 
     const handleCopyLink = async () => {
         try {
