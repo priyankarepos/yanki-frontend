@@ -43,7 +43,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                 const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
                 setChatLink(newChatLink);
                 setLinkGenerated(true);
-                await navigator.clipboard.writeText(chatLink);
+                await navigator.clipboard.writeText(`${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`);
                 setSnackbarOpen(false);
                 setButtonText(t('copiedToClipboard'));
                 setTimeout(() => {
