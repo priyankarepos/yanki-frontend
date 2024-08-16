@@ -9,8 +9,6 @@ import shareChatIcon5 from "../../Assets/images/share-chat5.svg";
 import "./ShareChatLink.scss";
 import { apiUrls, classNames, messages } from '../../Utils/stringConstant/stringConstant';
 import { useTranslation } from "react-i18next";
-import Clipboard from 'clipboard';
-
 
 const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     const { t } = useTranslation();
@@ -18,47 +16,53 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [linkGenerated, setLinkGenerated] = useState(false);
+    const [buttonText, setButtonText] = useState(t('createLink'));
 
     useEffect(() => {
         if (selectedChatId) {
-            setLinkGenerated(false);
-            setChatLink('');
+            resetState();
         }
     }, [selectedChatId]);
 
-    const handleCreateLink = async () => {
-        try {
-            const response = await axios.post(
-                apiUrls.generateShareChatIdApiUrl(selectedChatId) 
-            );
+    const resetState = () => {
+        setLinkGenerated(false);
+        setChatLink('');
+        setButtonText(t('createLink'));
+        setSnackbarMessage('');
+        setSnackbarOpen(false);
+    };
 
-            if (response.status === 200 && response.data.isSuccess) {
-                const generatedShareChatId = response.data.generatedShareChatId;
-                const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
-                setChatLink(newChatLink);
-                setLinkGenerated(true);
-                new Clipboard(classNames.copyButton, {
-                    text: () => newChatLink
-                });
-                setSnackbarMessage(`${t('copiedToClipboard')}`);
-            } else {
-                setSnackbarMessage(`${t('failedToGenerateShareChatId')}`);
-            }
-        } catch (error) {
-            setSnackbarMessage(error.message);
-        } finally {
-            setSnackbarOpen(true);
+    const handleCreateLink = async () => {
+        const response = await axios.post(
+            apiUrls.generateShareChatIdApiUrl(selectedChatId)
+        );
+
+        if (response.status === 200 && response.data.isSuccess) {
+            const generatedShareChatId = response.data.generatedShareChatId;
+            const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
+            setChatLink(newChatLink);
+            setLinkGenerated(true);
+            await navigator.clipboard.writeText(newChatLink);
+            setSnackbarOpen(false);
+            setButtonText(t('copiedToClipboard'));
+            setTimeout(() => {
+                setButtonText(t('copyLink'));
+            }, 2000);
+        } else {
+            setSnackbarMessage(messages.failedToGenerateShareChatId);
         }
     };
 
     const handleCopyLink = async () => {
         try {
             await navigator.clipboard.writeText(chatLink);
-            setSnackbarMessage(`${t('copiedToClipboard')}`);
+
+            setButtonText(t('copiedToClipboard'));
+            setTimeout(() => {
+                setButtonText(t('copyLink'));
+            }, 2000);
         } catch (error) {
-            setSnackbarMessage(error.message);
-        } finally {
-            setSnackbarOpen(true);
+            setSnackbarMessage(messages.errorMessagePrefix + error.message);
         }
     };
 
@@ -87,14 +91,14 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     return (
         <Modal open={open} onClose={onClose} aria-labelledby={`${classNames.shareChatLinkModel}`}>
             <Box className={classNames.shareLinkModal}
-                sx={{bgcolor: `${classNames.backgroundPaper}`,}}
+                sx={{ bgcolor: `${classNames.backgroundPaper}`, }}
             >
                 <Box mb={2}>
                     <Typography className={classNames.sharedChatMsgTitle}>
-                    {t('sharePublicLinkToChat')}
+                        {t('sharePublicLinkToChat')}
                     </Typography>
                     <Typography className={classNames.sharedChatMsgTxt}>
-                        {!linkGenerated ? `${t('yourNameAndMessagesStayPrivate')}` : `${t('publicLinkCreated')}`}
+                        {linkGenerated ? t('publicLinkCreated') : t('yourNameAndMessagesStayPrivate')}
                     </Typography>
                 </Box>
                 {linkGenerated && <Box className={classNames.sharedChatLinkIcons} mt={2}>
@@ -116,25 +120,14 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
                         margin={messages.normal}
                         className={classNames.sharedChatInput}
                     />
-                    {linkGenerated ? (
-                        <Button
-                            variant={messages.buttonContainedVarient}
-                            color={messages.primaryColor}
-                            onClick={handleCopyLink}
-                            className={classNames?.sharedChatButton}
-                        >
-                            {t('copyLink')}
-                        </Button>
-                    ) : (
-                        <Button
-                            variant={messages.buttonContainedVarient}
-                            color={messages.primaryColor}
-                            onClick={handleCreateLink}
-                            className={classNames?.sharedChatButton}
-                        >
-                            {t('createLink')}
-                        </Button>
-                    )}
+                    <Button
+                        variant={messages.buttonContainedVariant}
+                        color={messages.primaryColor}
+                        onClick={linkGenerated ? handleCopyLink : handleCreateLink}
+                        className={classNames.sharedChatButton}
+                    >
+                        {buttonText}
+                    </Button>
                 </Box>
                 <Snackbar
                     open={snackbarOpen}
