@@ -69,6 +69,7 @@ export const messages = {
     imgSize60: "60px",
     imgSize250: "250px",
     imgSize80: "80px",
+    textPlain: 'text/plain',
 };
 
 export const classNames = {
