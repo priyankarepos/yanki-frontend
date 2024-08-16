@@ -33,36 +33,53 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     };
 
     const handleCreateLink = async () => {
-        const response = await axios.post(
-            apiUrls.generateShareChatIdApiUrl(selectedChatId)
-        );
+        try {
+            const response = await axios.post(
+                apiUrls.generateShareChatIdApiUrl(selectedChatId)
+            );
 
-        if (response.status === 200 && response.data.isSuccess) {
-            const generatedShareChatId = response.data.generatedShareChatId;
-            const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
-            setChatLink(newChatLink);
-            setLinkGenerated(true);
-            await navigator.clipboard.writeText(newChatLink);
-            setSnackbarOpen(false);
-            setButtonText(t('copiedToClipboard'));
-            setTimeout(() => {
-                setButtonText(t('copyLink'));
-            }, 2000);
-        } else {
-            setSnackbarMessage(messages.failedToGenerateShareChatId);
+            if (response.status === 200 && response.data.isSuccess) {
+                const generatedShareChatId = response.data.generatedShareChatId;
+                const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
+                setChatLink(newChatLink);
+                setLinkGenerated(true);
+                if (window.ClipboardItem && navigator.clipboard.write) {
+                    const clipboardItem = new ClipboardItem({
+                        'text/plain': new Promise(async (resolve) => {
+                            const copyText = newChatLink;
+                            resolve(new Blob([copyText], { type: 'text/plain' }));
+                        }),
+                    });
+                    await navigator.clipboard.write([clipboardItem]);
+                } else {
+                    await navigator.clipboard.writeText(newChatLink);
+                }
+                setSnackbarOpen(false);
+                setButtonText(t('copiedToClipboard'));
+                setTimeout(() => {
+                    setButtonText(t('copyLink'));
+                }, 2000);
+            } else {
+                setSnackbarMessage(messages.failedToGenerateShareChatId);
+                setSnackbarOpen(true);
+            }
+        } catch (error) {
+            setSnackbarMessage(messages.errorMessagePrefix + error.message);
+            setSnackbarOpen(true);
         }
     };
+
 
     const handleCopyLink = async () => {
         try {
             await navigator.clipboard.writeText(chatLink);
-
             setButtonText(t('copiedToClipboard'));
             setTimeout(() => {
                 setButtonText(t('copyLink'));
             }, 2000);
         } catch (error) {
             setSnackbarMessage(messages.errorMessagePrefix + error.message);
+            setSnackbarOpen(true);
         }
     };
 
