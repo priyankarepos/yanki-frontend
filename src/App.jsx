@@ -63,7 +63,7 @@ import ChangeLanguage from "./Pages/ChangeLanguage";
 import UserChatList from "./Admin/AdminChat/UserChatList";
 import SharedChat from "./Pages/ShareModel/SharedChat";
 import { messages } from "./Utils/stringConstant/stringConstant";
-import { startConnection, stopConnection } from "./SignalR/signalRService";
+import { startConnection } from "./SignalR/signalRService";
 
 // Exporting context
 export const Context = createContext("");

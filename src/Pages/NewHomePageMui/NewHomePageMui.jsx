@@ -51,7 +51,7 @@ import {
 } from "../../Utils/stringConstant/stringConstant";
 import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg";
 import ShareLinkModal from "../ShareModel/ShareModal";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   agentChatResponse,
   apiUrls,
@@ -103,7 +103,7 @@ const NewHomePageMui = () => {
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
-    "{}"
+      "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
   const currentUserId = yankiUser?.userObject?.userId || "";
@@ -122,7 +122,8 @@ const NewHomePageMui = () => {
   const fetchRemainingMessage = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST
+        `${
+          import.meta.env.VITE_APP_API_HOST
         }/api/stripe/get-remaining-message-task`
       );
 
@@ -212,7 +213,8 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST
+        `${
+          import.meta.env.VITE_APP_API_HOST
         }/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
         { prompt: searchQuery },
         {
@@ -308,7 +310,8 @@ const NewHomePageMui = () => {
     if (hasMore) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST
+          `${
+            import.meta.env.VITE_APP_API_HOST
           }/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
         );
         if (response.status === 200) {
@@ -344,7 +347,8 @@ const NewHomePageMui = () => {
     async (chatId) => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST
+          `${
+            import.meta.env.VITE_APP_API_HOST
           }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
         );
         if (response.status === 200) {
@@ -379,7 +383,8 @@ const NewHomePageMui = () => {
       navigate(`/${chatId}`);
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST
+          `${
+            import.meta.env.VITE_APP_API_HOST
           }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
         );
         if (response.status === 200) {
@@ -467,7 +472,8 @@ const NewHomePageMui = () => {
   const fetchChatHistory = async (chatId) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST
+        `${
+          import.meta.env.VITE_APP_API_HOST
         }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
       );
 
@@ -537,7 +543,8 @@ const NewHomePageMui = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST
+        `${
+          import.meta.env.VITE_APP_API_HOST
         }/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
       );
 
@@ -668,7 +675,7 @@ const NewHomePageMui = () => {
       const resetTimer = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-          resetPage();
+          resetPage(false);
         }, 3600000);
       };
 
@@ -691,13 +698,56 @@ const NewHomePageMui = () => {
       };
     }
   }, [chatId, navigate]);
+
+  useEffect(() => {
+    const handleActivity = () => {
+      const currentTime = new Date().toISOString();
+      localStorage.setItem(messages.lastActiveTime, currentTime);
+    };
+
+    const checkInactivity = () => {
+      const savedTime = localStorage.getItem(messages.lastActiveTime);
+      if (savedTime) {
+        const elapsedTime = new Date() - new Date(savedTime);
+        if (elapsedTime > 60 * 60 * 1000) {
+          resetPage(false);
+        }
+      }
+    };
+
+    window.addEventListener(messages.mouseMove, handleActivity);
+    window.addEventListener(messages.keydown, handleActivity);
+    window.addEventListener(messages.touchstart, handleActivity);
+
+    const intervalId = setInterval(checkInactivity, 1000);
+
+    return () => {
+      window.removeEventListener(messages.mouseMove, handleActivity);
+      window.removeEventListener(messages.keydown, handleActivity);
+      window.removeEventListener(messages.touchstart, handleActivity);
+      clearInterval(intervalId);
+    };
+  }, [navigate]);
+
   const getTranslationKey = (arrayName, index) => `${arrayName}.${index}`;
 
   const allQuestions = [
-    { questions: initialQuestions1, name: classNames.languageInitialQuestions1 },
-    { questions: initialQuestions2, name: classNames.languageInitialQuestions2 },
-    { questions: initialQuestions3, name: classNames.languageInitialQuestions3 },
-    { questions: initialQuestions4, name: classNames.languageInitialQuestions4 },
+    {
+      questions: initialQuestions1,
+      name: classNames.languageInitialQuestions1,
+    },
+    {
+      questions: initialQuestions2,
+      name: classNames.languageInitialQuestions2,
+    },
+    {
+      questions: initialQuestions3,
+      name: classNames.languageInitialQuestions3,
+    },
+    {
+      questions: initialQuestions4,
+      name: classNames.languageInitialQuestions4,
+    },
   ];
 
   useEffect(() => {
@@ -722,13 +772,13 @@ const NewHomePageMui = () => {
             return prevData.map((item) =>
               item.id === message.agentChatSessionId
                 ? {
-                  ...item,
-                  content: item.content,
-                  unseenMessageCount:
-                    message.agentChatSessionId === item.id
-                      ? 0
-                      : item.unseenMessageCount + 1,
-                }
+                    ...item,
+                    content: item.content,
+                    unseenMessageCount:
+                      message.agentChatSessionId === item.id
+                        ? 0
+                        : item.unseenMessageCount + 1,
+                  }
                 : item
             );
           } else {
@@ -762,10 +812,11 @@ const NewHomePageMui = () => {
     <Box className="ya-home-wrapper">
       <CssBaseline />
       <AppBar
-        className={`ya-home-header ${activeTab === 0
-          ? "ya-home-darkblue-background"
-          : "ya-home-white-background"
-          } `}
+        className={`ya-home-header ${
+          activeTab === 0
+            ? "ya-home-darkblue-background"
+            : "ya-home-white-background"
+        } `}
       >
         <Toolbar>
           {!drawerOpen && (
@@ -788,10 +839,11 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
+                className={`${
+                  activeTab === 1
+                    ? "ya-home-lightblue-color"
+                    : "ya-home-white-color"
+                }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -844,10 +896,11 @@ const NewHomePageMui = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
+                className={`${
+                  activeTab === 1
+                    ? "ya-home-lightblue-color"
+                    : "ya-home-white-color"
+                }`}
               >
                 <MenuIcon />
               </IconButton>
@@ -856,18 +909,20 @@ const NewHomePageMui = () => {
           <Box className="chat-session-conteriner">
             <Box className="ya-new-assistant-chat">
               <span
-                className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-                  }`}
+                className={`${
+                  activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                }`}
               >
                 Recent Assistant Chat
               </span>
 
               <IconButton
                 color="primary"
-                className={`ya-new-chat-btn ${activeTab === 0
-                  ? "ya-home-new-chat-dark-theme"
-                  : "ya-home-new-chat-light-theme"
-                  }`}
+                className={`ya-new-chat-btn ${
+                  activeTab === 0
+                    ? "ya-home-new-chat-dark-theme"
+                    : "ya-home-new-chat-light-theme"
+                }`}
                 onClick={() => resetPage(true)}
               >
                 <AddIcon />
@@ -878,12 +933,13 @@ const NewHomePageMui = () => {
                 {agentChatSession.map((agentChatSession) => (
                   <div key={agentChatSession.id}>
                     <Button
-                      className={`ya-chat-session-btn ${agentChatSession.id === agentChatSessionId
-                        ? "ya-home-active-session-btn"
-                        : activeTab === 0
+                      className={`ya-chat-session-btn ${
+                        agentChatSession.id === agentChatSessionId
+                          ? "ya-home-active-session-btn"
+                          : activeTab === 0
                           ? "ya-home-new-chat-dark-theme"
                           : "ya-home-new-chat-light-theme"
-                        }`}
+                      }`}
                       color="primary"
                       onClick={() =>
                         handleAgentChatSessionClick(agentChatSession.id)
@@ -906,18 +962,20 @@ const NewHomePageMui = () => {
 
             <Box className="ya-new-chat-box" onScroll={handleScroll}>
               <span
-                className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
-                  }`}
+                className={`${
+                  activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
+                }`}
               >
                 {t("recentChatTxt")}
               </span>
 
               <IconButton
                 color="primary"
-                className={`ya-new-chat-btn ${activeTab === 0
-                  ? "ya-home-new-chat-dark-theme"
-                  : "ya-home-new-chat-light-theme"
-                  }`}
+                className={`ya-new-chat-btn ${
+                  activeTab === 0
+                    ? "ya-home-new-chat-dark-theme"
+                    : "ya-home-new-chat-light-theme"
+                }`}
                 onClick={() => resetPage(false)}
               >
                 <AddIcon />
@@ -928,12 +986,13 @@ const NewHomePageMui = () => {
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
                     <Button
-                      className={`ya-chat-session-btn ${chatSession.id === selectedChatId
-                        ? "ya-home-active-session-btn"
-                        : activeTab === 0
+                      className={`ya-chat-session-btn ${
+                        chatSession.id === selectedChatId
+                          ? "ya-home-active-session-btn"
+                          : activeTab === 0
                           ? "ya-home-new-chat-dark-theme"
                           : "ya-home-new-chat-light-theme"
-                        }`}
+                      }`}
                       color="primary"
                       onClick={() => handleChatSessionClick(chatSession.id)}
                       onMouseEnter={() => handleMouseEnter(chatSession.id)}
@@ -945,12 +1004,13 @@ const NewHomePageMui = () => {
                       </Typography>
                       {chatSession.id === hoverChatId && (
                         <span
-                          className={`ya-home-delete-btn ${chatSession.id === selectedChatId
-                            ? "ya-home-active-session-btn"
-                            : activeTab === 0
+                          className={`ya-home-delete-btn ${
+                            chatSession.id === selectedChatId
+                              ? "ya-home-active-session-btn"
+                              : activeTab === 0
                               ? "ya-home-new-chat-dark-theme"
                               : "ya-home-new-chat-light-theme"
-                            }`}
+                          }`}
                           onClick={(event) => {
                             event.stopPropagation();
                             handleDeleteClick(chatSession.id);
@@ -969,30 +1029,36 @@ const NewHomePageMui = () => {
       </Drawer>
 
       <Box
-        className={`ya-answer-wrapper ${activeTab === 0
-          ? "ya-answer-wrapper-dark-theme"
-          : "ya-answer-wrapper-light-theme"
-          } ${drawerOpen && !isSmallScreen
+        className={`ya-answer-wrapper ${
+          activeTab === 0
+            ? "ya-answer-wrapper-dark-theme"
+            : "ya-answer-wrapper-light-theme"
+        } ${
+          drawerOpen && !isSmallScreen
             ? "ya-answer-drawn-close"
             : "ya-answer-drawn-open"
-          }`}
+        }`}
       >
         <Box
-          className={`ya-answer-container ${agentChatSessionId ? "" : "ya-answer-container-chat-yanki"
-            } ${activeTab === 0
+          className={`ya-answer-container ${
+            agentChatSessionId ? "" : "ya-answer-container-chat-yanki"
+          } ${
+            activeTab === 0
               ? "ya-answer-container-dark-theme"
               : "ya-answer-container-light-theme"
-            } ${isSmallScreen
+          } ${
+            isSmallScreen
               ? "ya-answer-container-smallScreen-border"
               : "ya-answer-container-border"
-            } `}
+          } `}
           sx={{
             width: { xs: "100%", sm: "96%" },
           }}
         >
           <Box
-            className={`${agentChatSessionId ? "ya-answer-agent-chat" : "ya-answer"
-              }`}
+            className={`${
+              agentChatSessionId ? "ya-answer-agent-chat" : "ya-answer"
+            }`}
             ref={agentChatSessionId ? null : chatContainerRef}
             onScroll={handleScrollTop}
           >
@@ -1035,16 +1101,18 @@ const NewHomePageMui = () => {
                   <Box sx={{ p: 2 }} className="ya-question-box-flex">
                     <ChatBubbleOutlineIcon
                       fontSize="small"
-                      className={`ya-ChatBubbleOutlineIcon ${activeTab === 0
-                        ? "ya-home-white-color"
-                        : "ya-home-lightblue-color"
-                        }`}
+                      className={`ya-ChatBubbleOutlineIcon ${
+                        activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                      }`}
                     />
                     <Typography
-                      className={`ya-question-box-text ${activeTab === 0
-                        ? "ya-home-white-color"
-                        : "ya-home-lightblue-color"
-                        }`}
+                      className={`ya-question-box-text ${
+                        activeTab === 0
+                          ? "ya-home-white-color"
+                          : "ya-home-lightblue-color"
+                      }`}
                     >
                       {storedSearchQuery}
                     </Typography>
@@ -1073,10 +1141,11 @@ const NewHomePageMui = () => {
           {!agentChatSessionId && !showChatSession && (
             <Box className="ya-search-container">
               <Box
-                className={`fixed-search-Box ${drawerOpen && !isSmallScreen
-                  ? "ya-answer-drawn-close"
-                  : "ya-answer-container-question"
-                  }`}
+                className={`fixed-search-Box ${
+                  drawerOpen && !isSmallScreen
+                    ? "ya-answer-drawn-close"
+                    : "ya-answer-container-question"
+                }`}
               >
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
@@ -1098,14 +1167,27 @@ const NewHomePageMui = () => {
                         {initialQuestions1.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() => handleQuestionClick(`initialQuestions1.${question.id - 1}`)}
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() =>
+                                handleQuestionClick(
+                                  `initialQuestions1.${question.id - 1}`
+                                )
+                              }
                             >
-                              <Tooltip title={<span>{t(`initialQuestions1.${question.id - 1}`)}</span>}>
-                                <span>{t(`initialQuestions1.${question.id - 1}`)}</span>
+                              <Tooltip
+                                title={
+                                  <span>
+                                    {t(`initialQuestions1.${question.id - 1}`)}
+                                  </span>
+                                }
+                              >
+                                <span>
+                                  {t(`initialQuestions1.${question.id - 1}`)}
+                                </span>
                               </Tooltip>
                             </Button>
                           </div>
@@ -1127,14 +1209,27 @@ const NewHomePageMui = () => {
                         {initialQuestions2.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() => handleQuestionClick(`initialQuestions2.${question.id - 11}`)}
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() =>
+                                handleQuestionClick(
+                                  `initialQuestions2.${question.id - 11}`
+                                )
+                              }
                             >
-                              <Tooltip title={<span>{t(`initialQuestions2.${question.id - 11}`)}</span>}>
-                                <span>{t(`initialQuestions2.${question.id - 11}`)}</span>
+                              <Tooltip
+                                title={
+                                  <span>
+                                    {t(`initialQuestions2.${question.id - 11}`)}
+                                  </span>
+                                }
+                              >
+                                <span>
+                                  {t(`initialQuestions2.${question.id - 11}`)}
+                                </span>
                               </Tooltip>
                             </Button>
                           </div>
@@ -1156,14 +1251,27 @@ const NewHomePageMui = () => {
                         {initialQuestions3.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                                onClick={() => handleQuestionClick(`initialQuestions3.${question.id - 21}`)}
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() =>
+                                handleQuestionClick(
+                                  `initialQuestions3.${question.id - 21}`
+                                )
+                              }
                             >
-                              <Tooltip title={<span>{t(`initialQuestions3.${question.id - 21}`)}</span>}>
-                                <span>{t(`initialQuestions3.${question.id - 21}`)}</span>
+                              <Tooltip
+                                title={
+                                  <span>
+                                    {t(`initialQuestions3.${question.id - 21}`)}
+                                  </span>
+                                }
+                              >
+                                <span>
+                                  {t(`initialQuestions3.${question.id - 21}`)}
+                                </span>
                               </Tooltip>
                             </Button>
                           </div>
@@ -1185,14 +1293,27 @@ const NewHomePageMui = () => {
                         {initialQuestions4.map((question, index) => (
                           <div key={question.id} className="carousel-item">
                             <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                                onClick={() => handleQuestionClick(`initialQuestions4.${question.id - 31}`)}
+                              className={`ya-slider-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
+                              onClick={() =>
+                                handleQuestionClick(
+                                  `initialQuestions4.${question.id - 31}`
+                                )
+                              }
                             >
-                              <Tooltip title={<span>{t(`initialQuestions4.${question.id - 31}`)}</span>}>
-                                <span>{t(`initialQuestions4.${question.id - 31}`)}</span>
+                              <Tooltip
+                                title={
+                                  <span>
+                                    {t(`initialQuestions4.${question.id - 31}`)}
+                                  </span>
+                                }
+                              >
+                                <span>
+                                  {t(`initialQuestions4.${question.id - 31}`)}
+                                </span>
                               </Tooltip>
                             </Button>
                           </div>
@@ -1205,18 +1326,36 @@ const NewHomePageMui = () => {
                   !isSubmitting && (
                     <div className="home-table-scroll">
                       {allQuestions.map((group, groupIndex) => (
-                        <Typography className="ya-mobile-prompt" key={groupIndex}>
+                        <Typography
+                          className="ya-mobile-prompt"
+                          key={groupIndex}
+                        >
                           {group.questions.map((question, index) => (
                             <span
                               key={question.id}
-                              onClick={() => handleQuestionClick(getTranslationKey(group.name, index))}
-                              className={`ya-home-table-btn ${activeTab === 0
-                                ? 'ya-search-dark-theme'
-                                : 'ya-search-light-theme'
-                                }`}
+                              onClick={() =>
+                                handleQuestionClick(
+                                  getTranslationKey(group.name, index)
+                                )
+                              }
+                              className={`ya-home-table-btn ${
+                                activeTab === 0
+                                  ? "ya-search-dark-theme"
+                                  : "ya-search-light-theme"
+                              }`}
                             >
-                              <Tooltip title={<span>{t(getTranslationKey(group.name, index), { defaultValue: question.text })}</span>}>
-                                {t(getTranslationKey(group.name, index), { defaultValue: question.text })}
+                              <Tooltip
+                                title={
+                                  <span>
+                                    {t(getTranslationKey(group.name, index), {
+                                      defaultValue: question.text,
+                                    })}
+                                  </span>
+                                }
+                              >
+                                {t(getTranslationKey(group.name, index), {
+                                  defaultValue: question.text,
+                                })}
                               </Tooltip>
                             </span>
                           ))}
@@ -1228,15 +1367,15 @@ const NewHomePageMui = () => {
                   {userRoles !== "Admin" && (
                     <Box className="ya-task-msg-text">
                       <Typography>
-                        {t('messagesLeft')}{" "}
+                        {t("messagesLeft")}{" "}
                         {remainingMsgData?.totalMessageLeft > 1200
-                          ? `${t('unlimited')}`
+                          ? `${t("unlimited")}`
                           : remainingMsgData?.totalMessageLeft}{" "}
-                        {t('taskLeft')} {remainingMsgData?.totalTaskLeft}
+                        {t("taskLeft")} {remainingMsgData?.totalTaskLeft}
                       </Typography>
                       <Typography>
                         <span onClick={onClickMembershipPortal}>
-                          {t('upgradePlan')}
+                          {t("upgradePlan")}
                         </span>
                       </Typography>
                     </Box>
@@ -1259,18 +1398,20 @@ const NewHomePageMui = () => {
                         startAdornment: (
                           <InputAdornment position="start">
                             <SearchIcon
-                              className={`${activeTab === 1
-                                ? "ya-home-lightblue-color"
-                                : "ya-home-white-color"
-                                }`}
+                              className={`${
+                                activeTab === 1
+                                  ? "ya-home-lightblue-color"
+                                  : "ya-home-white-color"
+                              }`}
                             />
                           </InputAdornment>
                         ),
                       }}
-                      className={`ya-search-query-container ${activeTab === 0
-                        ? "ya-search-query-container-dark-theme"
-                        : "ya-search-query-container-light-theme"
-                        }`}
+                      className={`ya-search-query-container ${
+                        activeTab === 0
+                          ? "ya-search-query-container-dark-theme"
+                          : "ya-search-query-container-light-theme"
+                      }`}
                       sx={{
                         fontSize,
                       }}
