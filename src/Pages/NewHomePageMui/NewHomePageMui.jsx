@@ -577,7 +577,7 @@ const NewHomePageMui = () => {
     setShowChatSession(false);
     setAgentChatSessionId(null);
     setSearchQuery(
-      isAssistantChat ? agentChatResponse.askForPersonalAssistant : ""
+      isAssistantChat ? `${t('askForPersonalAssistant')}` : ""
     );
     setSearchHistory([]);
     setSelectedChatId(null);
@@ -859,7 +859,7 @@ const NewHomePageMui = () => {
                 className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
                   }`}
               >
-                Recent Assistant Chat
+                {t('recentAssistantChat')}
               </span>
 
               <IconButton
@@ -871,7 +871,7 @@ const NewHomePageMui = () => {
                 onClick={() => resetPage(true)}
               >
                 <AddIcon />
-                &nbsp; New Assistant Chat
+                &nbsp; {t('newAssistantChat')}
               </IconButton>
 
               <Box className="agent-chat-session-list">
