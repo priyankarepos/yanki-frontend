@@ -70,6 +70,10 @@ export const messages = {
     imgSize250: "250px",
     imgSize80: "80px",
     textPlain: 'text/plain',
+    lastActiveTime: "lastActiveTime",
+    mouseMove: "mousemove",
+    keydown: "keydown",
+    touchstart: "touchstart",
 };
 
 export const classNames = {
