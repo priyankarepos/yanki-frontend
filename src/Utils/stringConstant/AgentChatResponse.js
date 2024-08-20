@@ -143,7 +143,6 @@ export const agentChatResponse = {
     jumpToUserChatComponetId: "#jumpToUserChatComponet",
     agentChatSessionContainer: "agent-chat-session-container",
     chatFinishedTitle: "chat-finished-title",
-    askForPersonalAssistant: "ask for personal assistant",
     valueNotProvided: "Value not provided",
     orthodoxJudaism: "Which branch of Orthodox Judaism do you identify with?",
     ageRange: "What is your age range?",

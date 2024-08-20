@@ -234,7 +234,7 @@ const UserChatSession = () => {
                         disabled={!searchQuery.trim()}
                       >
                         <span className={agentChatResponse.sendButtonMessage}>
-                          Send
+                          {t('send')}
                         </span>
                         <img src={SendIcon} alt={agentChatResponse.userAvtar} />
                       </IconButton>
@@ -244,7 +244,7 @@ const UserChatSession = () => {
               </Box>
             </form>
           ) : (
-            <Typography className={agentChatResponse.chatFinishedTitle}>The chat has been finished by the admin. If you need further assistance, feel free to start a new assistant chat.</Typography>
+            <Typography className={agentChatResponse.chatFinishedTitle}>{t('chatFinishedByAdmin')}</Typography>
           ) }
         </Box>
       </Box>
