@@ -27,23 +27,45 @@ import { Context } from "../App";
 import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useMediaQuery } from "@mui/material";
+import { Snackbar, useMediaQuery } from "@mui/material";
 import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 import { startConnection } from "../SignalR/signalRService";
+import { useTranslation } from 'react-i18next';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [loginErrorMsg, setLoginErrorMsg] = useState(false);
-
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const { activeTab } = useContext(Context);
+  const { t, i18n } = useTranslation();
+  const languages = [
+    { code: 'en', lang: 'English' },
+    { code: 'he', lang: 'עברית' },
+    { code: 'es', lang: 'Español' },
+    { code: 'yi', lang: 'ייִדיש' },
+  ];
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
   const emailBody = "Email body";
 
-  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+  const handleChangeLanguage = async () => {
+    try {
+      const response = await axios.get(apiUrls.getUserLanguage);
+      const languageName = response.data.language;
+      const languageObj = languages.find(lang => lang.name === languageName);
+      i18n.changeLanguage(languageObj.code);
+    } catch (err) {
+      setSnackbarMessage(err)
+    }
+  }
 
-  const { activeTab } = useContext(Context);
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const navigate = useNavigate();
 
@@ -86,6 +108,7 @@ const LoginPage = () => {
           JSON.stringify(response.data.contentResponse)
         );
         startConnection();
+        handleChangeLanguage();
         navigate("/");
       }
     } catch (e) {
@@ -96,7 +119,7 @@ const LoginPage = () => {
       } else {
         if (
           e?.response?.data?.message ===
-            "This email isn't registered. Please sign up." &&
+          `${t('emailNotRegistered')}` &&
           activeTab === 1
         ) {
           setLoginErrorMsg(
@@ -109,7 +132,7 @@ const LoginPage = () => {
             </span>
           );
         } else {
-          setLoginErrorMsg("Something went wrong");
+          setLoginErrorMsg(`${activeTab === 0 ? `${t('somethingWentWrong')}` : "Something went wrong"}`);
           setLoginErrorMsg(e?.response?.data?.message);
         }
       }
@@ -126,15 +149,16 @@ const LoginPage = () => {
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
+        handleChangeLanguage();
         startConnection();
         navigate("/");
       } else {
         setLoginError(true);
-        setLoginErrorMsg("Authentication failed.");
+        setLoginErrorMsg(`${activeTab === 0 ? `${t('authenticationFailed')}` : "Authentication failed."}`);
       }
     } catch (error) {
       setLoginError(true);
-      setLoginErrorMsg("Something went wrong.");
+      setLoginErrorMsg(`${activeTab === 0 ? `${t('somethingWentWrong')}` : "Something went wrong"}`);
     } finally {
       setLoginLoading(false);
     }
@@ -171,7 +195,7 @@ const LoginPage = () => {
               variant="h5"
               className="text-center marginBottom-34 login-page-title"
             >
-              Login your account
+              {activeTab === 0 ? `${t('loginToYourAccount')}` : "Login your account"},
             </Typography>
             <Controller
               control={control}
@@ -179,21 +203,20 @@ const LoginPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Email address is required.",
+                  message: `${activeTab === 0 ? `${t('emailRequired')}` : "Email address is required."}`,
                 },
                 pattern: {
                   value: emailRegex,
-                  message: "Enter valid email address.",
+                  message: `${activeTab === 0 ? `${t('enterValidEmailAddress')}` : "Enter valid email address."}`,
                 },
               }}
               render={({ field }) => (
                 <TextField
-                  className={`marginBottom-10 ${
-                    activeTab === 1 ? "InputFieldColor" : ""
-                  }`}
+                  className={`marginBottom-10 ${activeTab === 1 ? "InputFieldColor" : ""
+                    }`}
                   {...field}
                   type="outlined"
-                  placeholder="Email address"
+                  placeholder={t('emailAddress')}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -221,7 +244,7 @@ const LoginPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Password is required",
+                  message: `${activeTab === 0 ? `${t('passwordRequired')}` : "Password is required"}`,
                 },
               }}
               render={({ field }) => (
@@ -232,7 +255,7 @@ const LoginPage = () => {
                     color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
                   }}
                   type="outlined"
-                  placeholder="Password"
+                  placeholder={activeTab === 0 ? `${t('password')}` : "Password"}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -297,7 +320,7 @@ const LoginPage = () => {
                     render={({ field }) => <Checkbox {...field} />}
                   />
                 }
-                label="Remember me"
+                label={activeTab === 0 ? `${t('rememberMe')}` : "Remember me"}
               />
               <Link
                 to="/forgot-password"
@@ -308,7 +331,7 @@ const LoginPage = () => {
                   color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
                 }}
               >
-                Forgot Password?
+                {activeTab === 0 ? `${t('forgotPassword')}` : "Forgot Password?"}
               </Link>
             </Box>
 
@@ -325,9 +348,9 @@ const LoginPage = () => {
               disabled={loginLoading}
               className="login-page-login-button"
             >
-              {loginLoading ? <CircularProgress size="0.875rem" /> : "Login"}
+              {loginLoading ? <CircularProgress size="0.875rem" /> : `${activeTab === 0 ? `${t('login')}` : "Login"}`}
             </Button>
-            <Divider className="marginY-28">or</Divider>
+            <Divider className="marginY-28">{activeTab === 0 ? `${t('or')}` : "Or"}</Divider>
             {activeTab === 0 && (
               <Button
                 onClick={() => login()}
@@ -336,7 +359,7 @@ const LoginPage = () => {
                 fullWidth
               >
                 <GoogleIcon className="googleIcon" />
-                &nbsp;Google
+                &nbsp;{activeTab === 0 ? `${t('google')}` : "Google"}
               </Button>
             )}
             <Box className="text-center marginTop-28">
@@ -348,7 +371,7 @@ const LoginPage = () => {
                   color: activeTab === 1 ? "#8bbae5" : "defaultIconColor",
                 }}
               >
-                Don't have an account?{" "}
+                {activeTab === 0 ? `${t('dontHaveAnAccount')}` : "Don't have an account?"}{" "}
                 <Link
                   to={activeTab === 1 ? "/enterprise-signup" : "/signup"}
                   component={LinkBehavior}
@@ -360,13 +383,25 @@ const LoginPage = () => {
                       color: activeTab === 1 ? "#13538b" : "defaultIconColor",
                     }}
                   >
-                    SignUp
+                    {activeTab === 0 ? t('signup') : 'Signup'}
                   </span>
                 </Link>
               </Typography>
             </Box>
           </Box>
         </Box>
+        {activeTab === 0 && <Box className="Home-Page-Language-Btn">
+          {languages.map(({ code, lang }) => (
+            <a
+              key={code}
+              onClick={() => changeLanguage(code)}
+              variant="text"
+              className="language-switcher-button"
+            >
+              {lang}
+            </a>
+          ))}
+        </Box>}
         <Box
           className="text-center"
           sx={{ marginY: isLargeScreen ? "20px" : "10px" }}
@@ -376,14 +411,14 @@ const LoginPage = () => {
             className="linkStyle"
             component={LinkBehavior}
           >
-            Terms of Use
+            {activeTab === 0 ? `${t('termsOfUse')}` : "Terms of Use"}
           </Link>
           <Link
             to="/privacy-policy"
             className="linkStyle marginX-10"
             component={LinkBehavior}
           >
-            Privacy Policy
+            {activeTab === 0 ? t('privacyPolicy') : "Privacy Policy"}
           </Link>
           <Typography variant="caption">
             <a
@@ -397,6 +432,12 @@ const LoginPage = () => {
           </Typography>
         </Box>
       </Container>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </>
   );
 };

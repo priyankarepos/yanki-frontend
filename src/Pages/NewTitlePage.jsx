@@ -21,10 +21,23 @@ import partnershipLogoLightTen from "../Assets/images/partnet-logo10.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
 
 const NewTitlePage = () => {
   const { themeMode } = useContext(ThemeModeContext);
   const { setActiveTab, activeTab } = useContext(Context);
+  const { t, i18n } = useTranslation();
+
+  const languages = [
+    { code: 'en', lang: 'English'},
+    { code: 'he', lang: 'עברית'},
+    { code: 'es', lang: 'Español'},
+    { code: 'yi', lang: 'ייִדיש'},
+  ];
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
 
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
@@ -79,7 +92,15 @@ const NewTitlePage = () => {
               width={messages.imgSize250}
               height={messages.imgSize80}
             />
-            <Typography
+            {activeTab === 0 ? <Typography
+              variant="body1"
+              component="h1"
+              className="new-title-heading"
+            >
+              {t('mainTagline')}
+              <br />
+              {t('findData')}
+            </Typography> : <Typography
               variant="body1"
               component="h1"
               className="new-title-heading"
@@ -88,7 +109,7 @@ const NewTitlePage = () => {
               <br />
               Find useful data and have your AI-powered personal Jewish
               assistant
-            </Typography>
+            </Typography>}
             <Box sx={{ marginTop: isLargeScreen ? "30px" : "20px" }}>
               <Tabs
                 value={activeTab}
@@ -98,8 +119,8 @@ const NewTitlePage = () => {
                 centered
                 className="tabStyle"
               >
-                <Tab label="User" className="new-title-tab" />
-                <Tab label="Enterprise" className="new-title-tab" />
+                <Tab label={activeTab === 0 ? t('user') : 'User'} className="new-title-tab" />
+                <Tab label={activeTab === 0 ? t('enterprise') : 'Enterprise'} className="new-title-tab" />
               </Tabs>
               {activeTab === 0 && (
                 <Box className="new-title-active-tab-container">
@@ -109,7 +130,7 @@ const NewTitlePage = () => {
                     onClick={onLoginClick}
                     className="new-title-dark-theme"
                   >
-                    Login
+                    {t('login')}
                   </Button>
                   <Button
                     variant="outlined"
@@ -117,7 +138,7 @@ const NewTitlePage = () => {
                     onClick={onSignupClick}
                     className="new-title-dark-theme"
                   >
-                    Sign up
+                    {t('signup')}
                   </Button>
                 </Box>
               )}
@@ -151,7 +172,7 @@ const NewTitlePage = () => {
                   fontSize: isLargeScreen ? "1rem" : "0.9rem",
                 }}
               >
-                In Partnership With :
+                {activeTab === 0 ? t('inPartnershipWith') : 'In Partnership With :'}
               </Typography>
               <Box className="partnership-logos-container">
                 {partnershipLogos.map((partner) => (
@@ -168,15 +189,27 @@ const NewTitlePage = () => {
             </Box>
           </Box>
         </Box>
+        {activeTab===0 &&<Box className="Home-Page-Language-Btn">
+          {languages.map(({ code, lang }) => (
+            <a
+              key={code}
+              onClick={() => changeLanguage(code)}
+              variant="text"
+              className="language-switcher-button"
+            >
+              {lang}
+            </a>
+          ))}
+        </Box>}
         <Box
           className="text-center"
           sx={{ marginY: isLargeScreen ? "20px" : "10px" }}
         >
           <Link to="/terms-of-use" className="linkStyle">
-            Terms of Use
+          {activeTab===0 ? `${t('termsOfUse')}` : "Terms of Use"}
           </Link>
           <Link to="/privacy-policy" className="linkStyle marginX-10">
-            Privacy Policy
+            {activeTab === 0 ? t('privacyPolicy') : "Privacy Policy"}
           </Link>
           <Typography variant="caption">
             <a
