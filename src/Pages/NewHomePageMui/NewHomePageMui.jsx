@@ -101,6 +101,7 @@ const NewHomePageMui = () => {
   const itemRefs = useRef({});
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
+  const isXLScreen = useMediaQuery(agentChatResponse.isXLScreen);
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
@@ -944,7 +945,7 @@ const NewHomePageMui = () => {
             </Box>
           )}
           <Box className="chat-session-conteriner">
-            <Box className="ya-new-assistant-chat">
+            <Box className={`${ agentChatSession.length > 0 ? classNames.yaNewAssistantChat : classNames.yaNewAssistantEmptyChat}`}>
               <span
                 className={`${
                   activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
@@ -997,7 +998,7 @@ const NewHomePageMui = () => {
               </Box>
             </Box>
 
-            <Box className="ya-new-chat-box" onScroll={handleScroll}>
+            <Box className={`${classNames.yaNewChatBox} ${ agentChatSession.length > 0 ? classNames.yaNewChatBoxFilled : classNames.yaNewChatBoxEmpty}`} onScroll={handleScroll}>
               <span
                 className={`${
                   activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
@@ -1019,7 +1020,7 @@ const NewHomePageMui = () => {
                 &nbsp; {t("newChatTxt")}
               </IconButton>
 
-              <Box className="ya-chat-session-list">
+              <Box className={`${ agentChatSession.length > 0 ? isSmallScreen ? classNames.chatSessionListSmallScreen :  classNames.chatSessionList : isXLScreen ? classNames.chatSessionListXLScreen : messages.chatSessionList }`}>
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
                     <Button

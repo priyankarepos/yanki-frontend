@@ -162,7 +162,8 @@ export const agentChatResponse = {
     ideaToEnhanceReligiousExperience: "What types of ideas or resources would you find most valuable to enhance your religious experience?",
     religiousStudies: "If yes, what topics are you most interested in?",
     notAddDataAICustomization : "User has not added data in AI customization.",
-    generalInformation : "General Information"
+    generalInformation : "General Information",
+    isXLScreen: "(min-width:1200px)" 
 }
 
 export const apiUrls = {

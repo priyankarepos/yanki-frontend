@@ -331,7 +331,14 @@
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
+}
+
+.ya-new-chat-box-filled {
     height: 65%;
+}
+
+.ya-new-chat-box-empty {
+    height: 80%;
 }
 
 .ya-chat-session-btn {
@@ -477,6 +484,10 @@
     margin-top: 10px;
 }
 
+.ya-new-assistant-empty-chat {
+    margin-top: 10px;
+}
+
 .chat-session-conteriner {
     height: 100%;
     overflow: hidden;
@@ -491,6 +502,18 @@
 .ya-chat-session-list {
     min-height: calc(100% - 160px);
     max-height: calc(100% - 160px);
+    overflow-y: auto;
+}
+
+.ya-chat-session-list-small-screen {
+    min-height: calc(100% - 290px);
+    max-height: calc(100% - 290px);
+    overflow-y: auto;
+}
+
+.ya-chat-session-list-XLScreen {
+    min-height: calc(100% - 100px);
+    max-height: calc(100% - 100px);
     overflow-y: auto;
 }
 
