@@ -583,9 +583,7 @@ const NewHomePageMui = () => {
     setQueryAnswer(null);
     setShowChatSession(false);
     setAgentChatSessionId(null);
-    setSearchQuery(
-      isAssistantChat ? `${t('askForPersonalAssistant')}` : ""
-    );
+    setSearchQuery(isAssistantChat ? `${t('askForPersonalAssistant')}` : "");
     setSearchHistory([]);
     setSelectedChatId(null);
     setIsLoading(false);
@@ -1456,11 +1454,13 @@ const NewHomePageMui = () => {
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
-      <ShareLinkModal
-        open={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-        selectedChatId={selectedChatId}
-      />
+      {shareModalOpen && (
+        <ShareLinkModal
+          open={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          selectedChatId={selectedChatId}
+        />
+      )}
     </Box>
   );
 };
