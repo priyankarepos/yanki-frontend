@@ -104,6 +104,14 @@ export const classNames = {
     languageInitialQuestions3: "initialQuestions3",
     languageInitialQuestions4: "initialQuestions4",
     shareLinkInputButton : ".Sharelink-input-btn",
+    yaNewAssistantChat: "ya-new-assistant-chat", 
+    yaNewAssistantEmptyChat: "ya-new-assistant-empty-chat",
+    yaNewChatBoxFilled: "ya-new-chat-box-filled",
+    yaNewChatBox: "ya-new-chat-box",
+    yaNewChatBoxEmpty: 'ya-new-chat-box-empty',
+    chatSessionListSmallScreen: "ya-chat-session-list-small-screen",
+    chatSessionList: "ya-chat-session-list",
+    chatSessionListXLScreen: "ya-chat-session-list-XLScreen"
 };
 
 export const apiUrls = {
