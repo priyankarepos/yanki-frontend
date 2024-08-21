@@ -2,7 +2,7 @@ import { Box, Typography, List, Button, Paper, Grid, CircularProgress, Snackbar 
 import React, { useState } from 'react';
 import axios from 'axios';
 import "./AnswerStyle.scss";
-import { messages } from '../Utils/stringConstant/stringConstant';
+import { apiUrls, messages } from '../Utils/stringConstant/stringConstant';
 import { useTranslation } from "react-i18next";
 
 const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
@@ -21,8 +21,7 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
                 departmentEmail: enterprise?.departmentEmail,
             };
 
-            const response = await axios.post(`${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
-                requestData);
+            const response = await axios.post(apiUrls.sendMailToEnterprise, requestData);
             if (response.status === 200) {
                 const message = `${t('messageSent')}`;
                 setChatMessages([...chatMessages, message]);

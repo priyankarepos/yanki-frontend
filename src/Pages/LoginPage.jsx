@@ -28,7 +28,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useMediaQuery } from "@mui/material";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 import { startConnection } from "../SignalR/signalRService";
 
 const LoginPage = () => {
@@ -68,10 +68,7 @@ const LoginPage = () => {
         password: data.logInPassword,
         userType: activeTab === 0 ? "User" : "Enterprise",
       };
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/login`,
-        dataToSend
-      );
+      const response = await axios.post(apiUrls.login, dataToSend);
 
       if (response.status === 200) {
         if (!data.logInRemeber) {
@@ -123,12 +120,7 @@ const LoginPage = () => {
     try {
       setLoginLoading(true);
       const { access_token } = codeResponse;
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_APP_API_HOST
-        }/api/auth/verify-google-access-token`,
-        { access_token }
-      );
+      const response = await axios.post(apiUrls.verifyGoogleAccessToken, { access_token });
       if (response.status === 200) {
         window.localStorage.setItem(
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,

@@ -12,6 +12,7 @@ import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import { useTranslation } from 'react-i18next';
+import { apiUrls, messages } from '../../Utils/stringConstant/stringConstant';
 
 const EventPublicationForm = ({ answer, clickableOff }) => {
     const { t } = useTranslation();
@@ -50,7 +51,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(apiUrls.getEventsLocations);
                 setEventLocations(response.data);
             } catch (error) {
                 setSnackbarMessage(`${t('errorFetchingLocations')}`, error);
@@ -63,7 +64,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(apiUrls.getEventsPublicationAreas);
                 setPublicationArea(response.data);
             } catch (error) {
                 setSnackbarMessage(`${t('errorFetchingPublicationArea')}`, error);
@@ -76,7 +77,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(apiUrls.getEventsTypes);
                 setEventTypes(response.data);
             } catch (error) {
                 setSnackbarMessage(`${t('errorFetchingEventTypes')}`, error);
@@ -99,7 +100,6 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
-            const addEventUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
                 eventAddress: data.EventLocationAddress,
@@ -109,7 +109,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                 eventDetails: data.eventDetails,
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
-            const addEventResponse = await axios.post(addEventUrl, addEventData);
+            const addEventResponse = await axios.post(apiUrls.addEventUrl, addEventData);
 
             // Upload files if any
             if (data.uploadedFiles && data.uploadedFiles.length > 0) {
@@ -118,8 +118,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     formData.append('imageFiles', file);
                 });
                 const eventId = addEventResponse.data;
-                const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
-                const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                const imageUploadResponse = await axios.post(apiUrls.imageUploadUrl(eventId), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import "./ReminderNotification.scss"
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { apiUrls } from '../../Utils/stringConstant/stringConstant';
 
 const ReminderNotification = () => {
     const { t } = useTranslation();
@@ -13,7 +14,7 @@ const ReminderNotification = () => {
     const userId = yankiUser?.userObject?.userId || '';
     const fetchReminders = useCallback(async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`);
+            const response = await axios.get(apiUrls.getUpcomingReminders(userId));
             setReminders(response.data);
         } catch (error) {
             setSnackbarMessage(`${t('errorFetchingReminders')}: ${error}`);

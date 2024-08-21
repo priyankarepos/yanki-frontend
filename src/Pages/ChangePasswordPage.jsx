@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import "./Style.scss";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from 'react-i18next';
 
 const ChangePasswordPage = () => {
@@ -57,7 +57,7 @@ const ChangePasswordPage = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-password`,
+        apiUrls.changePassword,
         {
           currentPassword: data.currentPassword,
           newPassword: data.newPassword,
