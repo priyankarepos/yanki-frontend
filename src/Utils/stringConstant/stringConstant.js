@@ -74,6 +74,8 @@ export const messages = {
     mouseMove: "mousemove",
     keydown: "keydown",
     touchstart: "touchstart",
+    success: "success",
+    error: "error",
 };
 
 export const classNames = {
@@ -101,7 +103,7 @@ export const classNames = {
     languageInitialQuestions2: "initialQuestions2",
     languageInitialQuestions3: "initialQuestions3",
     languageIinitialQuestions4: "initialQuestions4",
-    copyButton: ".copy-btn"
+    shareLinkInputButton : ".Sharelink-input-btn"
 };
 
 export const apiUrls = {
