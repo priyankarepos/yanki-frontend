@@ -364,7 +364,23 @@
     font-size: 16px !important;
 }
 
-.minus-margin{
+.minus-margin {
     margin-bottom: -10px !important;
     margin-top: -10px !important;
+}
+
+.Home-Page-Language-Btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #72a9de;
+    text-transform: capitalize;
+    font-size: 14px;
+    flex-wrap: wrap;
+
+    a {
+        text-decoration: underline;
+        margin: 10px 5px 0px;
+        cursor: pointer;
+    }
 }

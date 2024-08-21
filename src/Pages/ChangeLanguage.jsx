@@ -54,7 +54,6 @@ const ChangeLanguage = () => {
                 language: selectedLang,
             });
             i18n.changeLanguage(selectedLanguage);
-            localStorage.setItem('userLanguage', selectedLanguage);
             setSnackbarMessage(t('languageChangedSuccess'));
             setSnackbarOpen(true);
             navigate('/');
