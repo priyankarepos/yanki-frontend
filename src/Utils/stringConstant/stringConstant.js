@@ -102,7 +102,7 @@ export const classNames = {
     languageInitialQuestions1: "initialQuestions1",
     languageInitialQuestions2: "initialQuestions2",
     languageInitialQuestions3: "initialQuestions3",
-    languageIinitialQuestions4: "initialQuestions4",
+    languageInitialQuestions4: "initialQuestions4",
     shareLinkInputButton : ".Sharelink-input-btn",
 };
 
