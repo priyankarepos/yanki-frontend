@@ -18,6 +18,7 @@ import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useTranslation } from "react-i18next";
+import { membershipApiUrls } from "../../Utils/stringConstant/stringConstant";
 
 const MembershipPage = () => {
   const { t } = useTranslation();
@@ -35,9 +36,7 @@ const MembershipPage = () => {
 
   const fetchRemainingMessage = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-remaining-message-task`
-      );
+      const response = await axios.get(membershipApiUrls.getRemainingMessageTask);
 
       if (response.status === 200) {
         setRemainingMsgData(response.data);
@@ -84,9 +83,7 @@ const MembershipPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-all-products`
-        );
+        const response = await axios.get(membershipApiUrls.getAllProducts);
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -102,12 +99,12 @@ const MembershipPage = () => {
     try {
       setLoadingProductId(priceId);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/create-customer?userId=${userId}`,
+        membershipApiUrls.createCustomer(userId),
         { priceId }
       );
       const customerId = response.data;
       const paymentResponse = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/subscribe-product-plan`,
+        membershipApiUrls.subscribeProductPlan,
         { priceId, customerId }
       );
       const paymentUrl = paymentResponse.data;
@@ -120,9 +117,7 @@ const MembershipPage = () => {
   useEffect(() => {
     const fetchUpdateCustomerId = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-customer-id`
-        );
+        const response = await axios.get(membershipApiUrls.getCustomerId);
         setUpdateCustomerId(response.data);
       } catch (error) {
         setSnackbarMessage("Error fetching data:", error);
@@ -138,7 +133,7 @@ const MembershipPage = () => {
       setLoadingProductId(priceId);
       const queryString = `?customerId=${updateCustomerId.customerId}`;
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`
+        membershipApiUrls.createCustomerPortal(queryString)
       );
       const paymentUrl = response.data;
       window.location.href = paymentUrl;
@@ -156,7 +151,7 @@ const MembershipPage = () => {
       setLoadingProductId(priceId);
       const queryString = `?customerId=${updateCustomerId.customerId}`;
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/create-customer-portal${queryString}`
+        membershipApiUrls.createCustomerPortal(queryString)
       );
       const paymentUrl = response.data;
       window.location.href = paymentUrl;
@@ -173,7 +168,7 @@ const MembershipPage = () => {
     try {
       setLoadingProductId(priceId);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/upgrade-subscription?newPriceId=${priceId}`
+        membershipApiUrls.upgradeSubscription(priceId)
       );
       const paymentUrl = response.data;
       window.location.href = paymentUrl;
@@ -189,7 +184,7 @@ const MembershipPage = () => {
     try {
       setLoadingProductId(priceId);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/stripe/downgrade-subscription?newPriceId=${priceId}`
+        membershipApiUrls.downgradeSubscription(priceId)
       );
       const paymentUrl = response.data;
       setSnackbarMessage(paymentUrl);
@@ -227,13 +222,12 @@ const MembershipPage = () => {
           );
           return acc + price;
         }, 0);
-      const buyTaskUrl = `${import.meta.env.VITE_APP_API_HOST}/api/stripe/payment-for-additional-task`;
       const buyTaskBody = {
         customerId: updateCustomerId.customerId,
         price: price,
         quantity: quantity,
       };
-      const response = await axios.post(buyTaskUrl, buyTaskBody);
+      const response = await axios.post(membershipApiUrls.paymentForAdditionalTask, buyTaskBody);
       if (response.status === 200) {
         const taskPaymentUrl = response.data;
         window.location.href = taskPaymentUrl;

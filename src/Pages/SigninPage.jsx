@@ -32,7 +32,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FormHelperText, Snackbar } from "@mui/material";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -80,10 +80,7 @@ const SigninPage = () => {
         userType: "User",
       };
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
-        dataToSend
-      );
+      const response = await axios.post(apiUrls.registerUser, dataToSend);
 
       if (response.status === 200) {
         navigate("/signin-success");
@@ -104,10 +101,7 @@ const SigninPage = () => {
       setSigninLoading(true);
       const { access_token } = codeResponse;
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-google-access-token`,
-        { access_token }
-      );
+      const response = await axios.post(apiUrls.verifyGoogleAccessToken, { access_token });
 
       if (response.status === 200) {
         navigate("/login");

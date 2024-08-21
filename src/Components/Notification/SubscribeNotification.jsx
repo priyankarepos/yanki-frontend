@@ -6,6 +6,7 @@ import axios from 'axios';
 import "./SubscribeNotification.scss";
 import ReminderNotification from '../ReminderNotification/ReminderNotification';
 import { useTranslation } from 'react-i18next';
+import { apiUrls } from '../../Utils/stringConstant/stringConstant';
 
 const SubscribeNotification = ({ answer }) => {
     const { t } = useTranslation();
@@ -33,7 +34,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(apiUrls.getEventsLocations);
                 setEventLocations(response.data);
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingEventLocation') + error);
@@ -46,7 +47,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(apiUrls.getEventsPublicationAreas);
                 setPublicationArea(response.data);
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingPublicationArea') + error);
@@ -59,7 +60,7 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(apiUrls.getEventsTypes);
                 setEventTypes(response.data);
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingEventTypes') + error);
@@ -81,7 +82,7 @@ const SubscribeNotification = ({ answer }) => {
                     userId = parsedUserObject?.userObject?.userId || '';
                 }
 
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
+                const response = await axios.get(apiUrls.getUserSubscriptionById(userId));
 
                 setSubscribeNotification(response.data);
             } catch (error) {
@@ -105,8 +106,7 @@ const SubscribeNotification = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 isSubscribeToEvent: true
             };
-            const addSubscriptionUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/add-subscription`;
-            const addSubscriptionResponse = await axios.post(addSubscriptionUrl, addSubscriptionData);
+            const addSubscriptionResponse = await axios.post(apiUrls.addSubscriptionUrl, addSubscriptionData);
 
             if (addSubscriptionResponse.status === 200) {
                 setSnackbarMessage(t('yourSubscriptionHasBeenAddedSuccessfully'));
@@ -142,9 +142,7 @@ const SubscribeNotification = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 isSubscribeToEvent: true
             };
-
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-            const updateSubscriptionResponse = await axios.put(apiUrl, updateSubscriptionData);
+            const updateSubscriptionResponse = await axios.put(apiUrls.updateEventSubscription(subscribeNotification?.subscriptionId), updateSubscriptionData);
 
             if (updateSubscriptionResponse.status === 200) {
                 setSnackbarMessage(t('yourSubscriptionHasBeenUpdatedSuccessfully'));
@@ -191,7 +189,7 @@ const SubscribeNotification = ({ answer }) => {
     const handleUnsubscribe = async (data) => {
         try {
             setIsLoading(true);
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
+            const apiUrl = apiUrls.deleteSubscription(subscribeNotification?.subscriptionId);
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
             if (deleteSubscriptionResponse.status === 200) {
                 setSnackbarMessage(t('yourRequestHasBeenUnsubscribedSuccessfully'));

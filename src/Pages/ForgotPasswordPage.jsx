@@ -17,7 +17,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Context, ThemeModeContext } from "../App";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,9 +44,7 @@ const ForgotPasswordPage = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/forgot-password?email=${
-          data.emailAddress
-        }&userType=${activeTab === 0 ? "User" : "Enterprise"}`
+        apiUrls.forgotPassword(data.emailAddress, activeTab === 0 ? "User" : "Enterprise")
       );
 
       if (response.status === 200) {

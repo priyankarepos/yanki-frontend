@@ -47,6 +47,7 @@ import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
 import {
   classNames,
+  membershipApiUrls,
   messages,
 } from "../../Utils/stringConstant/stringConstant";
 import shareChatLinkIcon from "../../Assets/images/share-chatlink.svg";
@@ -121,11 +122,8 @@ const NewHomePageMui = () => {
 
   const fetchRemainingMessage = async () => {
     try {
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_APP_API_HOST
-        }/api/stripe/get-remaining-message-task`
-      );
+
+      const response = await axios.get(membershipApiUrls.getRemainingMessageTask);
 
       if (response.status === 200) {
         setRemainingMsgData(response.data);
@@ -141,9 +139,7 @@ const NewHomePageMui = () => {
   useEffect(() => {
     const fetchUpdateCustomerId = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-customer-id`
-        );
+        const response = await axios.get(membershipApiUrls.getCustomerId);
         setUpdateCustomerId(response.data);
       } catch (error) {
         setSnackbarMessage("Error fetching data:", error);
@@ -213,9 +209,9 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-        `${
-          import.meta.env.VITE_APP_API_HOST
-        }/api/yanki-ai/all-answers?chatId=${chatIdToUse}`,
+
+        membershipApiUrls.allAnswers(chatIdToUse),
+
         { prompt: searchQuery },
         {
           headers: {
@@ -309,11 +305,8 @@ const NewHomePageMui = () => {
   const fetchChatSessions = useCallback(async () => {
     if (hasMore) {
       try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`
-        );
+
+        const response = await axios.get(membershipApiUrls.chatSessionList(pageNumber));
         if (response.status === 200) {
           if (response.data.chatList.length > 0) {
             if (pageNumber === 1) {
@@ -346,11 +339,8 @@ const NewHomePageMui = () => {
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${chatHistoryPageNumber}&pageSize=${defulatSizePageSize}`
-        );
+
+        const response = await axios.get(membershipApiUrls.chatHistory(chatId, chatHistoryPageNumber, defulatSizePageSize));
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -382,11 +372,8 @@ const NewHomePageMui = () => {
       setSelectedChatId(chatId);
       navigate(`/${chatId}`);
       try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${defulatSizePageSize}`
-        );
+
+        const response = await axios.get(membershipApiUrls.chatHistoryData(chatId, defulatSizePageSize));
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -471,11 +458,8 @@ const NewHomePageMui = () => {
 
   const fetchChatHistory = async (chatId) => {
     try {
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_APP_API_HOST
-        }/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=20`
-      );
+
+      const response = await axios.get(membershipApiUrls.chatHistoryFetch(chatId, 20));
 
       if (response.status === 200) {
         setShouldScroll(true);
@@ -542,11 +526,8 @@ const NewHomePageMui = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(
-        `${
-          import.meta.env.VITE_APP_API_HOST
-        }/api/yanki-ai/delete-chat-session?chatId=${selectedChatId}`
-      );
+
+      const response = await axios.delete(membershipApiUrls.deleteChatSession(selectedChatId));
 
       if (response.status === 200) {
         const updatedChatSessions = chatSessions.filter(
@@ -777,6 +758,64 @@ const NewHomePageMui = () => {
                         ? 0
                         : item.unseenMessageCount + 1,
                   }
+                : item
+            );
+          } else {
+            return [
+              ...prevData,
+              {
+                id: message.agentChatSessionId,
+                content: message.content,
+                unseenMessageCount: 0,
+              },
+            ];
+          }
+        });
+      }
+    };
+
+    const initializeConnection = async () => {
+      const connection = await getConnectionPromise();
+
+      if (connection) {
+        connection.on(agentChatResponse.receiveMessage, (message) => {
+          handleReceivedMessage(message);
+        });
+      }
+    };
+
+    initializeConnection();
+  }, []);
+
+  useEffect(() => {
+    const handleReceivedMessage = (message) => {
+      if (message.senderId === currentUserId) {
+        setAgentChatSession((prevData) => {
+          if (!prevData) {
+            return [
+              {
+                id: message.agentChatSessionId,
+                content: data.content,
+                unseenMessageCount: 0,
+              },
+            ];
+          }
+
+          const isDataPresent = prevData.some(
+            (item) => item.id === message.agentChatSessionId
+          );
+
+          if (isDataPresent) {
+            return prevData.map((item) =>
+              item.id === message.agentChatSessionId
+                ? {
+                  ...item,
+                  content: item.content,
+                  unseenMessageCount:
+                    message.agentChatSessionId === item.id
+                      ? 0
+                      : item.unseenMessageCount + 1,
+                }
                 : item
             );
           } else {

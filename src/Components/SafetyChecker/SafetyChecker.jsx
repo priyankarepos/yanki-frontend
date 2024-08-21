@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 import "./SafetyChecker.scss"
 import { useTranslation } from 'react-i18next';
+import { apiUrls } from '../../Utils/stringConstant/stringConstant';
 
 const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
     const { t } = useTranslation();
@@ -18,7 +19,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
     const handleSafetyCheck = async () => {
         try {
             setLoading(true);
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/safety-checker-email`;
+            const apiUrl = apiUrls.safetyCheckerEmail;
             const response = await axios.post(apiUrl, { content });
             if (response.status === 200) {
                 setMailMessage(response?.data?.message)

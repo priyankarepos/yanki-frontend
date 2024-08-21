@@ -10,7 +10,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { ThemeModeContext } from "../App";
 import "./Style.scss";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const ActiveAccountPage = () => {
   const [activating, setActivating] = useState(false);
@@ -31,7 +31,7 @@ const ActiveAccountPage = () => {
     try {
       setActivating(true);
       const queryParamsObj = Object.fromEntries([...searchParams]);
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-email`;
+      const url = apiUrls.verifyEmail;
       const configs = {
         method: "get",
         url,

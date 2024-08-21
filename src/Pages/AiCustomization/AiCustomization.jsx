@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./AiCustomization.scss";
 import { useTranslation } from 'react-i18next';
+import { apiUrls } from "../../Utils/stringConstant/stringConstant";
 
 const AiCustomization = () => {
   const { t } = useTranslation();
@@ -46,9 +47,7 @@ const AiCustomization = () => {
   useEffect(() => {
     const fetchCurrentAiCustomizeData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/get-custom-prompt`
-        );
+        const response = await axios.get(apiUrls.getCustomPrompt);
 
         if (response.status === 200) {
           setCustomizeMessage(response.data);
@@ -99,7 +98,7 @@ const AiCustomization = () => {
         };
 
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/add-custom-prompt`,
+          apiUrls.addCustomPrompt,
           requestBody,
           {
             headers: {
@@ -122,9 +121,7 @@ const AiCustomization = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/delete-custom-prompt`
-      );
+      const response = await axios.delete(apiUrls.deleteCustomPrompt);
 
       if (response.status === 200) {
         setSnackbarMessage(`${t('promptDeletedSuccessfully')}`);
@@ -172,7 +169,7 @@ const AiCustomization = () => {
       };
 
       const response = await axios.put(
-        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/update-custom-prompt`,
+        apiUrls.updateCustomPrompt,
         requestBody,
         {
           headers: {

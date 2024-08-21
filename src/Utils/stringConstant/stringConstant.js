@@ -103,7 +103,7 @@ export const classNames = {
     languageInitialQuestions2: "initialQuestions2",
     languageInitialQuestions3: "initialQuestions3",
     languageIinitialQuestions4: "initialQuestions4",
-    shareLinkInputButton : ".Sharelink-input-btn"
+    shareLinkInputButton : ".Sharelink-input-btn",
 };
 
 export const apiUrls = {
@@ -124,7 +124,56 @@ export const apiUrls = {
     messengerShareUrl: (chatLink, appId) => `https://www.facebook.com/dialog/send?link=${encodeURIComponent(chatLink)}&app_id=${appId}`,
     getUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`,
     updateUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/update-user-language`,
+    getEventsPublicationAreas: `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`,
+    getEventsLocations: `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`,
+    getEventsTypes: `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`,
+    addEventUrl: `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`,
+    imageUploadUrl: (eventId) => `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`,
+    getUserSubscriptionById: (userId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`,
+    addSubscriptionUrl : `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/add-subscription`,
+    updateEventSubscription: (subscriptionId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscriptionId}`,
+    deleteSubscription: (subscriptionId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscriptionId}`,
+    getUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`,
+    updateUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/update-user-language`,
+    getUpcomingReminders: (userId) => `${import.meta.env.VITE_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`,
+    safetyCheckerEmail: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/safety-checker-email`,
+    sendMailToEnterprise: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-enterprise`,
+    sendMailToRabbi: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-rabbi`,
+    getCustomPrompt: `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/get-custom-prompt`,
+    addCustomPrompt: `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/add-custom-prompt`,
+    deleteCustomPrompt: `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/delete-custom-prompt`,
+    updateCustomPrompt: `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/update-custom-prompt`,
+    verifyEmail: `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-email`,
+    changePassword: `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-password`,
+    currentPhoneNumber: `${import.meta.env.VITE_APP_API_HOST}/api/auth/current-phoneNumber`,
+    getEnterprisesCategories: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`, 
+    registerUser: `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
+    forgotPassword: (email, userType) => `${import.meta.env.VITE_APP_API_HOST}/api/auth/forgot-password?email=${email}&userType=${userType}`,
+    login: `${import.meta.env.VITE_APP_API_HOST}/api/auth/login`, 
+    verifyGoogleAccessToken: `${import.meta.env.VITE_APP_API_HOST}/api/auth/verify-google-access-token`, 
+    resetPassword: `${import.meta.env.VITE_APP_API_HOST}/api/auth/reset-password`,
+    registerUser: `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
+    changePhoneNumber: `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
 };
+
+export const membershipApiUrls = {
+    getRemainingMessageTask: `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-remaining-message-task`,
+    getAllProducts: `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-all-products`,
+    createCustomer: (userId) => `${import.meta.env.VITE_APP_API_HOST}/api/stripe/create-customer?userId=${userId}`,
+    subscribeProductPlan: `${import.meta.env.VITE_APP_API_HOST}/api/stripe/subscribe-product-plan`,
+    getCustomerId: `${import.meta.env.VITE_APP_API_HOST}/api/stripe/get-customer-id`,
+    createCustomerPortal: (queryString) => `${import.meta.env.VITE_APP_API_HOST}/api/stripe/create-customer-portal?customerId=${queryString}`,
+    upgradeSubscription: (priceId) => `${import.meta.env.VITE_APP_API_HOST}/api/stripe/upgrade-subscription?newPriceId=${priceId}`,
+    downgradeSubscription: (priceId) => `${import.meta.env.VITE_APP_API_HOST}/api/stripe/downgrade-subscription?newPriceId=${priceId}`,
+    paymentForAdditionalTask: `${import.meta.env.VITE_APP_API_HOST}/api/stripe/payment-for-additional-task`,
+    allAnswers: (chatId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/all-answers?chatId=${chatId}`,
+    chatSessionList: (pageNumber) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-session-list?pageNumber=${pageNumber}&pageSize=30`,
+    chatHistory: (chatId, pageNumber, pageSize) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    chatHistoryData: (chatId, pageSize) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${pageSize}`,
+    chatHistoryFetch: (chatId, pageSize = 20) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${pageSize}`,
+    deleteChatSession: (chatId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${chatId}`,
+
+}
 
 export const mapContainerStyle = {
     width: '100%',

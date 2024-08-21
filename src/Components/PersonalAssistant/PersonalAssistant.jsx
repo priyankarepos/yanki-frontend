@@ -37,7 +37,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
   const handlePersonalAssistant = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${apiUrls.personalAssistantEmail}`
+      const apiUrl = apiUrls.personalAssistantEmail;
       const response = await axios.post(apiUrl, { content });
       if (response.status === 200) {
         const sendMessage = await axios.post(`${apiUrls.sendMessage}`, {

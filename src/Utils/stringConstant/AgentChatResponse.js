@@ -179,5 +179,4 @@ export const apiUrls = {
     getAgentChatSession: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-agent-chat-session`,
     getUserGeneralInformation: (Id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-custom-prompt-id?userId=${Id}`,
     personalAssistantEmail: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`,
-
 }

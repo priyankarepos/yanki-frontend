@@ -23,7 +23,7 @@ import {
   Link as RouterLink,
 } from "react-router-dom";
 import { ThemeModeContext } from "../App";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const ResetPasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -63,10 +63,7 @@ const ResetPasswordPage = () => {
         userId: queryParamsObj.userId,
         token: queryParamsObj.token.split(":")[0],
       };
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/reset-password`,
-        dataToSend
-      );
+      const response = await axios.post(apiUrls.resetPassword, dataToSend);
 
       if (response.status === 200) {
         setIsSubmitting(false);

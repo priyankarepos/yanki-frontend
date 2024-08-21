@@ -15,7 +15,7 @@ import { FormHelperText } from "@mui/material";
 import "./Style.scss";
 import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from 'react-i18next';
 
 const ChangePhoneNumber = () => {
@@ -30,9 +30,7 @@ const ChangePhoneNumber = () => {
   useEffect(() => {
     const fetchCurrentPhoneNumber = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/auth/current-phoneNumber`
-        );
+        const response = await axios.get(apiUrls.currentPhoneNumber);
 
         if (response.status === 200) {
           setCurrentPhoneNumber(response.data.phoneNumber);
@@ -70,7 +68,7 @@ const ChangePhoneNumber = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
+        apiUrls.changePhoneNumber,
         {
           newPhoneNumber: data.signInPhone,
         }
