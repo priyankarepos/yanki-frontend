@@ -44,11 +44,11 @@ const SigninPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const { t, i18n } = useTranslation();
   const languages = [
-    { code: 'en', lang: 'English'},
-    { code: 'he', lang: 'עברית'},
-    { code: 'es', lang: 'Español'},
-    { code: 'yi', lang: 'ייִדיש'},
-  ];
+    { code: 'en', lang: 'English', name: 'English' },
+    { code: 'he', lang: 'עברית', name: 'Hebrew' },
+    { code: 'es', lang: 'Español', name: 'Spanish' },
+    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
+];
 
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);

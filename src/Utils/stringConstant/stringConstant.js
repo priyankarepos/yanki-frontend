@@ -141,7 +141,6 @@ export const apiUrls = {
     addSubscriptionUrl : `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/add-subscription`,
     updateEventSubscription: (subscriptionId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscriptionId}`,
     deleteSubscription: (subscriptionId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscriptionId}`,
-    getUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`,
     updateUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/update-user-language`,
     getUpcomingReminders: (userId) => `${import.meta.env.VITE_APP_API_HOST}/api/reminder/get-upcoming-reminder-userId?userId=${userId}`,
     safetyCheckerEmail: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/safety-checker-email`,
