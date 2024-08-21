@@ -5,6 +5,7 @@ import Carousel from "react-multi-carousel";
 import Vimeo from "@u-wave/react-vimeo";
 import { styled } from "@mui/system";
 import "react-multi-carousel/lib/styles.css";
+import { useTranslation } from 'react-i18next';
 
 const StyledCarouselItem = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
@@ -25,6 +26,7 @@ const HatzalahVideo = ({ video }) => {
   const [videoDetails, setVideoDetails] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const playerRefs = useRef([]);
+  const { t } = useTranslation();
 
   const handleCPRContentClick = (e) => {
     e.stopPropagation();
@@ -141,43 +143,38 @@ const HatzalahVideo = ({ video }) => {
         <Box>
           <Typography
             onClick={handleCPRContentClick}
-            className={`switch-button ${
-              selectedClass === "CPR" ? "selected" : ""
-            }`}
+            className={`switch-button ${selectedClass === "CPR" ? "selected" : ""
+              }`}
           >
-            CPR
+            {t('cpr')}
           </Typography>
           <Typography
-            className={`switch-button ${
-              selectedClass === "AED" ? "selected" : ""
-            }`}
+            className={`switch-button ${selectedClass === "AED" ? "selected" : ""
+              }`}
             onClick={handleAEDContentClick}
           >
-            AED
+            {t('aed')}
           </Typography>
           <Typography
-            className={`switch-button ${
-              selectedClass === "Choking" ? "selected" : ""
-            }`}
+            className={`switch-button ${selectedClass === "Choking" ? "selected" : ""
+              }`}
             onClick={handleChokingContentClick}
           >
-            Choking
+            {t('choking')}
           </Typography>
           <Typography
-            className={`switch-button ${
-              selectedClass === "Allergies" ? "selected" : ""
-            }`}
+            className={`switch-button ${selectedClass === "Allergies" ? "selected" : ""
+              }`}
             onClick={handleAllergiesContentClick}
           >
-            Allergies
+            {t('allergies')}
           </Typography>
           <Typography
-            className={`switch-button ${
-              selectedClass === "Bleeding" ? "selected" : ""
-            }`}
+            className={`switch-button ${selectedClass === "Bleeding" ? "selected" : ""
+              }`}
             onClick={handleBleedingContentClick}
           >
-            Bleeding
+            {t('bleeding')}
           </Typography>
         </Box>
 

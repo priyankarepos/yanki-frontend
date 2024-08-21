@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { questions } from '../../Utils/promptData/InterectiveQuestions';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import "./InteractiveQuestionnaire.scss";
+import { useTranslation } from 'react-i18next';
 
 const InteractiveQuestionnaire = ({clickableOff}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [responses, setResponses] = useState(Array(questions.length).fill(""));
     const [showThankYou, setShowThankYou] = useState(false);
+    const { t } = useTranslation();
+    const questionAKey = `question${currentQuestionIndex + 1}_A`;
+    const questionBKey = `question${currentQuestionIndex + 1}_B`;
 
     const handleNext = () => {
         if (currentQuestionIndex < questions.length - 1) {
@@ -24,16 +28,16 @@ const InteractiveQuestionnaire = ({clickableOff}) => {
 
     return (
         <Paper sx={{ p: 2 }} className='Interactive-Questionnaire-Wrapper'>
-            <Typography variant='h6' sx={{ pb: 2 }}>Lashon Hara Awareness Questionnaire</Typography>
+            <Typography variant='h6' sx={{ pb: 2 }}>{t('lashonHaraQuestionnaire')}</Typography>
             {currentQuestionIndex === 0 && (
                 <Typography sx={{ pb: 2 }} className='Interactive-Questionnaire-Msg'>
-                    This questionnaire is designed to help you gain a better understanding of your situation and take the best decision. Your responses have no impact on the context, and are not stored.
+                    {t('questionnaireDescription')}
                 </Typography>
             )}
             {!showThankYou && <Box className='Interactive-Questionnaire-Content'>
                 <Box className='Interactive-Questionnaire'>
-                    <Typography className='Interactive-Questionnaire-A'>{currentQuestionIndex + 1}. {questions[currentQuestionIndex].Question_A}</Typography>
-                    <Typography className='Interactive-Questionnaire-B'>{questions[currentQuestionIndex].Question_B}</Typography>
+                    <Typography className='Interactive-Questionnaire-A'>{currentQuestionIndex + 1}. {t(questionAKey)}</Typography>
+                    <Typography className='Interactive-Questionnaire-B'>{t(questionBKey)}</Typography>
                     <TextField
                         type="text"
                         value={responses[currentQuestionIndex]}
@@ -51,14 +55,14 @@ const InteractiveQuestionnaire = ({clickableOff}) => {
                             onClick={handleNext}
                             disabled={!responses[currentQuestionIndex]}
                         >
-                            Next
+                            {t('nextButton')}
                         </Button>
                     </Box>
                 )}
             </Box>}
             {showThankYou && (
                 <Typography className="Interactive-Questionnaire-margin">
-                    You’ve completed the Lashon Hara awareness questionnaire. Remember, striving to speak positively and refraining from Lashon Hara is a significant mitzvah that strengthens our community and personal integrity. If you need halachic guidance or support, use the prompt “Ask a Rabbi”.
+                    {t('completionMessage')}
                 </Typography>
             )}
         </Paper>

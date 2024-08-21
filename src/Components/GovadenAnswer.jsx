@@ -15,19 +15,21 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import "../Pages/NewHomePageMui/NewHomePageStyle.scss";
+import { useTranslation } from "react-i18next";
 
 const GovadenAnswer = ({ answer }) => {
   const rows = answer.godavenPrayerDetails;
+  const { t } = useTranslation();
 
   // Define a mapping object for day abbreviations to full day names
   const dayNameMapping = {
-    sun: "Sunday",
-    mon: "Monday",
-    tues: "Tuesday",
-    wed: "Wednesday",
-    thurs: "Thursday",
-    fri: "Friday",
-    sat: "Shabbos",
+    sun: t("sun"),
+    mon: t("mon"),
+    tues: t("tues"),
+    wed: t("wed"),
+    thurs: t("thurs"),
+    fri: t("fri"),
+    sat: t("sat"),
   };
 
   const Row = ({ row }) => {
@@ -68,7 +70,7 @@ const GovadenAnswer = ({ answer }) => {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Prayer Times
+                {t('prayerTimes')}
                 </Typography>
                 <Table size="small" aria-label="prayer-times">
                   <TableHead>
@@ -76,16 +78,16 @@ const GovadenAnswer = ({ answer }) => {
                       sx={{ "& > *": { borderBottom: "1px solid #3f7baf" } }}
                     >
                       <TableCell>
-                        <Typography>Day</Typography>
+                        <Typography>{t('day')}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography>Shacharis</Typography>
+                        <Typography>{t('shacharis')}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography>Mincha</Typography>
+                        <Typography>{t('mincha')}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography>Maariv</Typography>
+                        <Typography>{t('maariv')}</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -147,9 +149,9 @@ const GovadenAnswer = ({ answer }) => {
           <TableHead>
             <TableRow sx={{ "& > *": { borderBottom: "1px solid #3f7baf" } }}>
               <TableCell />
-              <TableCell>Name</TableCell>
-              <TableCell>Address</TableCell>
-              <TableCell>Phone</TableCell>
+              <TableCell>{t('name')}</TableCell>
+              <TableCell>{t('address')}</TableCell>
+              <TableCell>{t('phone')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

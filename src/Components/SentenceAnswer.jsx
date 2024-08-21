@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./AnswerStyle.scss";
 import Markdown from "react-markdown";
+import { apiUrls } from "../Utils/stringConstant/stringConstant";
 
 const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
@@ -53,7 +54,7 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
       setLoadingButtonIndex(index);
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/send-mail-to-rabbi`,
+        apiUrls.sendMailToRabbi,
         {
           additionalMessage,
           userType,
@@ -71,7 +72,7 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
       setAdditionalMessage("");
       fetchRemainingMessage();
     } catch (error) {
-      setSnackbarMessage("API Error:", error);
+      setSnackbarMessage(error);
       setSnackbarOpen(true);
     } finally {
       setLoadingButtonIndex(null);

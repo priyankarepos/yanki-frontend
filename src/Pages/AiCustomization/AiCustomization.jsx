@@ -19,11 +19,14 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./AiCustomization.scss";
+import { useTranslation } from 'react-i18next';
+import { apiUrls } from "../../Utils/stringConstant/stringConstant";
 
 const AiCustomization = () => {
+  const { t } = useTranslation();
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
-      "{}"
+    "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -44,15 +47,13 @@ const AiCustomization = () => {
   useEffect(() => {
     const fetchCurrentAiCustomizeData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/get-custom-prompt`
-        );
+        const response = await axios.get(apiUrls.getCustomPrompt);
 
         if (response.status === 200) {
           setCustomizeMessage(response.data);
         }
       } catch (error) {
-        setSnackbarMessage("Error fetching current phone number:", error);
+        setSnackbarMessage(`${t('errorFetchingPhoneNumber')}: ${error}`);
         setSnackbarOpen(true);
       }
     };
@@ -97,7 +98,7 @@ const AiCustomization = () => {
         };
 
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/add-custom-prompt`,
+          apiUrls.addCustomPrompt,
           requestBody,
           {
             headers: {
@@ -109,31 +110,29 @@ const AiCustomization = () => {
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        setSnackbarMessage("Error: religiousPractices is not an array");
+        setSnackbarMessage(`${t('errorReligiousPracticesNotArray')}`);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error: please fill the data");
+      setSnackbarMessage(`${t('errorPleaseFillData')}`);
       setSnackbarOpen(true);
     }
   };
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/delete-custom-prompt`
-      );
+      const response = await axios.delete(apiUrls.deleteCustomPrompt);
 
       if (response.status === 200) {
-        setSnackbarMessage("Prompt deleted successfully");
+        setSnackbarMessage(`${t('promptDeletedSuccessfully')}`);
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        setSnackbarMessage("Failed to delete prompt");
+        setSnackbarMessage(`${t('failedToDeletePrompt')}`);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error: Failed to delete prompt", error);
+      setSnackbarMessage(`${t('errorFailedToDeletePrompt')}: ${error}`);
       setSnackbarOpen(true);
     }
   };
@@ -170,7 +169,7 @@ const AiCustomization = () => {
       };
 
       const response = await axios.put(
-        `${import.meta.env.VITE_APP_API_HOST}/api/CustomPrompt/update-custom-prompt`,
+        apiUrls.updateCustomPrompt,
         requestBody,
         {
           headers: {
@@ -180,30 +179,28 @@ const AiCustomization = () => {
       );
 
       if (response.status === 200) {
-        setSnackbarMessage("Prompt updated successfully");
+        setSnackbarMessage(`${t('promptUpdatedSuccessfully')}`);
         setSnackbarOpen(true);
         window.location.reload();
       } else {
-        setSnackbarMessage("Failed to update prompt");
+        setSnackbarMessage(`${t('failedToUpdatePrompt')}`);
         setSnackbarOpen(true);
       }
     } catch (error) {
-      setSnackbarMessage("Error: Failed to update prompt", error);
+      setSnackbarMessage(`${t('errorFailedToUpdatePrompt')}: ${error}`);
       setSnackbarOpen(true);
     }
   };
-  
+
   return (
     <Container>
       <Box my={4}>
         <Typography variant="h4" align="center" className="Ai-Heading">
-          AI Customization
+          {t('aICustomizationTxt')}
         </Typography>
         <Typography variant="body1" gutterBottom>
           <strong>
-            Your information helps us grasp your preferences. This understanding
-            will enable our systems to develop personalized resources and
-            solutions that enhance your experience.
+          {t('aiCustomizationInfo')}
           </strong>
         </Typography>
         <form
@@ -218,13 +215,12 @@ const AiCustomization = () => {
             <Grid item xl={6} lg={6} md={6} xs={12}>
               <Box>
                 <Grid item xs={12}>
-                  <Typography variant="h6">General Information:</Typography>
+                  <Typography variant="h6">{t('generalInformation')}</Typography>
                 </Grid>
 
                 <Grid item xs={12} mt={2}>
                   <InputLabel className="ai-input-label">
-                    Which branch of Orthodox Judaism do you identify with?
-                    (Haredi, Yeshivish, Chabad, Hasidic, Modern Orthodox, etc.)
+                    {t('judaismBranchLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -234,14 +230,14 @@ const AiCustomization = () => {
                         className="Ai-TextField"
                         {...field}
                         type="text"
-                        placeholder="Enter here..."
+                        placeholder={t('enterHerePlaceholder')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    What is your age range?
+                  {t('ageRangeLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -253,17 +249,17 @@ const AiCustomization = () => {
                           {...field}
                           fullWidth
                           variant="outlined"
-                          placeholder="Enter your age range"
+                          placeholder={t('enterAgeRangePlaceholder')}
                           type="number"
                         />
                         {errors.ageRange && errors.ageRange.type === "min" && (
                           <FormHelperText className="error-message">
-                            Minimum age is 1
+                            {t('minimumAgeIs1')}
                           </FormHelperText>
                         )}
                         {errors.ageRange && errors.ageRange.type === "max" && (
                           <FormHelperText className="error-message">
-                            Maximum age is 200
+                            {t('maximumAgeIs200')}
                           </FormHelperText>
                         )}
                       </div>
@@ -272,7 +268,7 @@ const AiCustomization = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Marital status?
+                  {t('maritalStatusLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -283,22 +279,22 @@ const AiCustomization = () => {
                         <FormControlLabel
                           value="single"
                           control={<Radio />}
-                          label="Single"
+                          label={t('singleAIRadioLabel')}
                         />
                         <FormControlLabel
                           value="married"
                           control={<Radio />}
-                          label="Married"
+                          label={t('marriedAIRadioLabel')}
                         />
                         <FormControlLabel
                           value="divorced"
                           control={<Radio />}
-                          label="Divorced"
+                          label={t('divorcedAIRadioLabel')}
                         />
                         <FormControlLabel
                           value="widowed"
                           control={<Radio />}
-                          label="Widowed"
+                          label={t('widowedAIRadioLabel')}
                         />
                       </RadioGroup>
                     )}
@@ -306,8 +302,7 @@ const AiCustomization = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Do you have children? If so, how many, what are their ages
-                    and schools?
+                    {t('childrenLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -317,14 +312,14 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
-                        placeholder="Enter your children's information"
+                        placeholder={t('enterChildInfoPlaceholder')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Where do you live?
+                    {t('locationLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -334,11 +329,11 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
-                        placeholder="Enter your location"
+                        placeholder={t('enterLocationPlaceholder')}
                         error={!!field.value && !field.value.trim()}
                         helperText={
                           !!field.value && !field.value.trim()
-                            ? "This field is required."
+                            ? `${t('thisFieldIsRequired')}`
                             : ""
                         }
                       />
@@ -347,7 +342,7 @@ const AiCustomization = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    What is your level of religious observance?
+                    {t('levelOfReligiousObservanceLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -357,11 +352,11 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
-                        placeholder="Enter your religious observance"
+                        placeholder={t('enterReligiousObservancePlaceholder')}
                         error={!!field.value && !field.value.trim()}
                         helperText={
                           !!field.value && !field.value.trim()
-                            ? "This field is required."
+                            ? `${t('thisFieldIsRequired')}`
                             : ""
                         }
                       />
@@ -370,13 +365,12 @@ const AiCustomization = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Which Jewish practices and rituals do you regularly observe?
-                    Check all that apply.
+                    {t('religiousPracticesLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
                     name="religiousPractices"
-                    defaultValue={customizeMessage?.religiousPractices || []} // Set default value based on existing data
+                    defaultValue={customizeMessage?.religiousPractices || []} 
                     render={({ field }) => (
                       <FormGroup>
                         <FormControlLabel
@@ -397,13 +391,13 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                             />
                           }
-                          label="Kosher dietary laws"
+                          label={t('kosherDietaryLaws')}
                         />
                         <FormControlLabel
                           control={
@@ -413,7 +407,7 @@ const AiCustomization = () => {
                               checked={
                                 (field.value &&
                                   field.value.includes("chalabYisroel")) ||
-                                  false 
+                                false
                               }
                               onChange={(e) => {
                                 const isChecked = e.target.checked;
@@ -424,13 +418,13 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                             />
                           }
-                          label="Chalab Yisroel, Pas Yisroel, etc."
+                          label={t('chalabYisroelPasYisroelEtc')}
                         />
                         <FormControlLabel
                           control={
@@ -446,8 +440,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={
@@ -455,7 +449,7 @@ const AiCustomization = () => {
                               }
                             />
                           }
-                          label="Shabbat"
+                          label={t('shabbatPlaceholder')}
                         />
                         <FormControlLabel
                           control={
@@ -471,8 +465,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={
@@ -481,7 +475,7 @@ const AiCustomization = () => {
                               }
                             />
                           }
-                          label="Jewish holidays"
+                          label={t('jewishHolidays')}
                         />
                         <FormControlLabel
                           control={
@@ -497,8 +491,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={
@@ -507,7 +501,7 @@ const AiCustomization = () => {
                               }
                             />
                           }
-                          label="Daily prayers"
+                          label={t('dailyPrayers')}
                         />
                         <FormControlLabel
                           control={
@@ -523,8 +517,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={
@@ -533,7 +527,7 @@ const AiCustomization = () => {
                               }
                             />
                           }
-                          label="Family purity laws"
+                          label={t('familyPurityLaws')}
                         />
                         <FormControlLabel
                           control={
@@ -549,8 +543,8 @@ const AiCustomization = () => {
                                 const updatedPractices = isChecked
                                   ? [...currentValue, value]
                                   : currentValue.filter(
-                                      (practice) => practice !== value
-                                    );
+                                    (practice) => practice !== value
+                                  );
                                 field.onChange(updatedPractices);
                               }}
                               checked={
@@ -559,7 +553,7 @@ const AiCustomization = () => {
                               }
                             />
                           }
-                          label="Dress/modesty requirements"
+                          label={t('dressModestyRequirements')}
                         />
                       </FormGroup>
                     )}
@@ -568,8 +562,7 @@ const AiCustomization = () => {
 
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Which synagogue or community do you primarily associate
-                    with?
+                    {t('synagogueCommunityLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -579,14 +572,14 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
-                        placeholder="Enter your synagogue or community"
+                        placeholder={t('enterYourSynagogueOrCommunity')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Are you looking to be updated with your community events?
+                    {t('communityEventsLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -596,15 +589,14 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
-                        placeholder="Enter your response"
+                        placeholder={t('enterYourResponse')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    Are you interested in volunteering within the community?
-                    [Yes] [No]
+                    {t('interestInVolunteerLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -617,12 +609,12 @@ const AiCustomization = () => {
                             customizeMessage?.isInterestInVolunteer || true
                           }
                           control={<Radio />}
-                          label="Yes"
+                          label={t('yes')}
                         />
                         <FormControlLabel
                           value={false}
                           control={<Radio />}
-                          label="No"
+                          label={t('no')}
                         />
                       </RadioGroup>
                     )}
@@ -630,46 +622,43 @@ const AiCustomization = () => {
                 </Grid>
                 {(watch("isInterestInVolunteer") === "true" ||
                   watch("isInterestInVolunteer") === true) && (
-                  <Grid item xs={12}>
-                    <InputLabel className="ai-input-label">
-                      If yes, what type of volunteering interests you?
-                    </InputLabel>
-                    <Controller
-                      control={control}
-                      name="volunteerInterests"
-                      defaultValue={customizeMessage?.volunteerInterests || ""}
-                      rules={{ required: "This field is required." }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          fullWidth
-                          variant="outlined"
-                          placeholder="Enter your interests"
-                        />
+                    <Grid item xs={12}>
+                      <InputLabel className="ai-input-label">
+                        {t('volunteerInterestsLabel')}
+                      </InputLabel>
+                      <Controller
+                        control={control}
+                        name="volunteerInterests"
+                        defaultValue={customizeMessage?.volunteerInterests || ""}
+                        rules={{ required: `${t('thisFieldIsRequired')}` }}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            fullWidth
+                            variant="outlined"
+                            placeholder={t('enterYourInterests')}
+                          />
+                        )}
+                      />
+                      {errors["volunteerInterests"] && (
+                        <FormHelperText className="error-message">
+                          {errors["volunteerInterests"].message}
+                        </FormHelperText>
                       )}
-                    />
-                    {errors["volunteerInterests"] && (
-                      <FormHelperText className="error-message">
-                        {errors["volunteerInterests"].message}
-                      </FormHelperText>
-                    )}
-                  </Grid>
-                )}
+                    </Grid>
+                  )}
               </Box>
             </Grid>
             <Grid item xl={6} lg={6} md={6} xs={12}>
               <Box>
                 <Grid item xs={12}>
                   <Typography variant="h6">
-                    Religious Needs and Challenges:
+                    {t('religiousNeedsAndChallengesTitle')}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} mt={2}>
                   <InputLabel className="ai-input-label">
-                    What are the biggest challenges you face in maintaining your
-                    religious observance in daily life? (Time constraints,
-                    access to kosher food, finding stuff and services for
-                    Shabbat, etc.)
+                    {t('religiousChallengesLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -681,15 +670,14 @@ const AiCustomization = () => {
                         multiline
                         rows={4}
                         variant="outlined"
-                        placeholder="Enter your challenges"
+                        placeholder={t('enterYourChallenges')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    What resources or tools would be most helpful to you in
-                    overcoming these challenges?
+                    {t('toolForOvercomeChallengesLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -701,17 +689,14 @@ const AiCustomization = () => {
                         multiline
                         rows={4}
                         variant="outlined"
-                        placeholder="Enter your resources or tools"
+                        placeholder={t('enterYourResourcesOrTools')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    What types of ideas or resources would you find most
-                    valuable to enhance your religious experience? (Educational
-                    resources, Shabbat meal planning tools, prayer reminders,
-                    job listings for people observing Shabbat, etc.)
+                    {t('ideaToEnhanceReligiousExperienceLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -723,15 +708,14 @@ const AiCustomization = () => {
                         multiline
                         rows={4}
                         variant="outlined"
-                        placeholder="Enter your valuable ideas or resources"
+                        placeholder={t('enterYourValuableIdeasOrResources')}
                       />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
-                    If yes, what topics are you most interested in? (e.g.,
-                    Talmud study, Jewish philosophy, Halacha) [Yes] [No]
+                    {t('interestInReligiousStudiesLabel')}
                   </InputLabel>
                   <Controller
                     control={control}
@@ -744,12 +728,12 @@ const AiCustomization = () => {
                         <FormControlLabel
                           value={true}
                           control={<Radio />}
-                          label="Yes"
+                          label={t('yes')}
                         />
                         <FormControlLabel
                           value={false}
                           control={<Radio />}
-                          label="No"
+                          label={t('no')}
                         />
                       </RadioGroup>
                     )}
@@ -757,37 +741,36 @@ const AiCustomization = () => {
                 </Grid>
                 {(watch("isInterestInReligiousStudies") === "true" ||
                   watch("isInterestInReligiousStudies") === true) && (
-                  <Grid item xs={12}>
-                    <InputLabel className="ai-input-label">
-                      If yes, what topics are you most interested in? (e.g.,
-                      Talmud study, Jewish philosophy, Halacha)
-                    </InputLabel>
-                    <Controller
-                      control={control}
-                      name="religiousStudies"
-                      defaultValue={customizeMessage?.religiousStudies || ""}
-                      rules={{ required: "This field is required." }}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          value={
-                            watch("isInterestInReligiousStudies") === false
-                              ? ""
-                              : field.value
-                          }
-                          fullWidth
-                          variant="outlined"
-                          placeholder="Enter your interests"
-                        />
+                    <Grid item xs={12}>
+                      <InputLabel className="ai-input-label">
+                        {t('religiousStudiesLabel')}
+                      </InputLabel>
+                      <Controller
+                        control={control}
+                        name="religiousStudies"
+                        defaultValue={customizeMessage?.religiousStudies || ""}
+                        rules={{ required: `${t('thisFieldIsRequired')}` }}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            value={
+                              watch("isInterestInReligiousStudies") === false
+                                ? ""
+                                : field.value
+                            }
+                            fullWidth
+                            variant="outlined"
+                            placeholder={t('enterYourInterests')}
+                          />
+                        )}
+                      />
+                      {errors["religiousStudies"] && (
+                        <FormHelperText className="error-message">
+                          {errors["religiousStudies"].message}
+                        </FormHelperText>
                       )}
-                    />
-                    {errors["religiousStudies"] && (
-                      <FormHelperText className="error-message">
-                        {errors["religiousStudies"].message}
-                      </FormHelperText>
-                    )}
-                  </Grid>
-                )}
+                    </Grid>
+                  )}
               </Box>
             </Grid>
           </Grid>
@@ -799,7 +782,7 @@ const AiCustomization = () => {
               className="ai-customization-button"
               disabled={!customizeMessage?.isSuccess}
             >
-              Update
+              {t('updateButton')}
             </Button>
             <Button
               onClick={handleDelete}
@@ -808,14 +791,14 @@ const AiCustomization = () => {
               className="ai-customization-button"
               disabled={!customizeMessage?.isSuccess}
             >
-              Delete
+              {t('deleteButton')}
             </Button>
             <Button
               variant="contained"
               className="ai-customization-button"
               onClick={() => navigate("/")}
             >
-              Cancel
+              {t('cancelButton')}
             </Button>
             <Button
               variant="contained"
@@ -823,14 +806,13 @@ const AiCustomization = () => {
               type="submit"
               disabled={customizeMessage?.isSuccess}
             >
-              Save
+              {t('saveButton')}
             </Button>
           </Box>
         </form>
         <Box mt={2}>
           <Typography variant="body1" gutterBottom>
-            The responses can be used to determine priority needs, appropriate
-            tech capabilities, and suggestions to make your Jewish life easier.
+            {t('responseUsageText')}
           </Typography>
         </Box>
       </Box>

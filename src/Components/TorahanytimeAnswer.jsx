@@ -6,6 +6,7 @@ import { styled } from "@mui/system";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Vimeo from "@u-wave/react-vimeo";
+import { useTranslation } from 'react-i18next';
 
 const StyledCarouselItem = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
@@ -22,6 +23,7 @@ const StyledCarouselItem = styled("div")(({ theme }) => ({
 }));
 
 const TorahanytimeAnswer = ({ answer }) => {
+  const { t } = useTranslation();
   const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
   const rawData = answer?.torahAnytimeLectures?.hits?.hits || [];
   const validData = rawData.filter(item => item._source.vimeo_video_links !== null);
@@ -129,7 +131,7 @@ const TorahanytimeAnswer = ({ answer }) => {
                   disabled={switchDisabled}
                 />
               }
-              label={`Choose Your Experience: ${!showAudioAndVideo ? "Audio Available" : "Video Available"}`}
+              label={`${t('chooseYourExperience')} ${!showAudioAndVideo ? `${t('audioAvailable')}` : `${t('videoAvailable')}`}`}
             />
           </div>
         )}

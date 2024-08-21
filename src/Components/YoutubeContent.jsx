@@ -6,6 +6,7 @@ import "react-multi-carousel/lib/styles.css";
 import Vimeo from "@u-wave/react-vimeo";
 import { styled } from "@mui/system";
 import "./AnswerStyle.scss";
+import { useTranslation } from 'react-i18next';
 
 const StyledCarouselItem = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
@@ -30,6 +31,7 @@ const YoutubeContent = ({ answer }) => {
   const [videoData, setVideoData] = useState(null);
   const playerRefs = useRef([]);
   const isVideo = answer?.torahAnytimeLectures?.isVideo || false;
+  const { t } = useTranslation();
 
   const videoRefs = useRef({});
   const vimeoRefs = useRef({});
@@ -142,22 +144,21 @@ const YoutubeContent = ({ answer }) => {
           answer?.vimeoVideoDetails.length > 0 && (
             <Box className="youtube-container">
               <Typography className="marginBottom-10">
-                We have found data on multiple sources. Please select a source
-                to give you the most accurate result
+                {t('selectSourceMessage')}
               </Typography>
               <Typography
                 onClick={handleExclusiveContentClick}
                 className={`switch-button ${showYouTubeVideos ? "selected" : ""
                   }`}
               >
-                Exclusive Content
+                {t('exclusiveContent')}
               </Typography>
               <Typography
                 onClick={handleTorahanytimeClick}
                 className={`switch-button ${showYouTubeVideos === false ? "selected" : ""
                   }`}
               >
-                TorahAnytime
+                {t('torahAnytime')}
               </Typography>
             </Box>
           )}

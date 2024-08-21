@@ -5,8 +5,11 @@ import Multiselect from 'multiselect-react-dropdown';
 import axios from 'axios';
 import "./SubscribeNotification.scss";
 import ReminderNotification from '../ReminderNotification/ReminderNotification';
+import { useTranslation } from 'react-i18next';
+import { apiUrls } from '../../Utils/stringConstant/stringConstant';
 
 const SubscribeNotification = ({ answer }) => {
+    const { t } = useTranslation();
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [subscribeNotification, setSubscribeNotification] = useState(null);
@@ -31,10 +34,10 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(apiUrls.getEventsLocations);
                 setEventLocations(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarMessage(t('errorFetchingEventLocation') + error);
                 setSnackbarOpen(true);
             }
         };
@@ -44,10 +47,10 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(apiUrls.getEventsPublicationAreas);
                 setPublicationArea(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarMessage(t('errorFetchingPublicationArea') + error);
                 setSnackbarOpen(true);
             }
         };
@@ -57,10 +60,10 @@ const SubscribeNotification = ({ answer }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(apiUrls.getEventsTypes);
                 setEventTypes(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarMessage(t('errorFetchingEventTypes') + error);
                 setSnackbarOpen(true);
             }
         };
@@ -79,11 +82,11 @@ const SubscribeNotification = ({ answer }) => {
                     userId = parsedUserObject?.userObject?.userId || '';
                 }
 
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/get-user-subscriptionById?userId=${userId}`);
+                const response = await axios.get(apiUrls.getUserSubscriptionById(userId));
 
                 setSubscribeNotification(response.data);
             } catch (error) {
-                setSnackbarMessage('No data available', error);
+                setSnackbarMessage(t('noDataAvailable'));
                 setSnackbarOpen(true);
             }
         };
@@ -103,20 +106,19 @@ const SubscribeNotification = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 isSubscribeToEvent: true
             };
-            const addSubscriptionUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/add-subscription`;
-            const addSubscriptionResponse = await axios.post(addSubscriptionUrl, addSubscriptionData);
+            const addSubscriptionResponse = await axios.post(apiUrls.addSubscriptionUrl, addSubscriptionData);
 
             if (addSubscriptionResponse.status === 200) {
-                setSnackbarMessage('Your subscription has been added successfully');
+                setSnackbarMessage(t('yourSubscriptionHasBeenAddedSuccessfully'));
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                setSnackbarMessage('Failed to add subscription');
+                setSnackbarMessage(t('failedToAddSubscription'));
                 setSnackbarOpen(true);
             }
 
         } catch (error) {
-            setSnackbarMessage('Error adding subscription:', error);
+            setSnackbarMessage(t('errorAddingSubscription'), error);
             setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
@@ -140,21 +142,19 @@ const SubscribeNotification = ({ answer }) => {
                 eventType: data.eventTypes.map(item => item.name),
                 isSubscribeToEvent: true
             };
-
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/update-event-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-            const updateSubscriptionResponse = await axios.put(apiUrl, updateSubscriptionData);
+            const updateSubscriptionResponse = await axios.put(apiUrls.updateEventSubscription(subscribeNotification?.subscriptionId), updateSubscriptionData);
 
             if (updateSubscriptionResponse.status === 200) {
-                setSnackbarMessage('Your subscription has been updated successfully');
+                setSnackbarMessage(t('yourSubscriptionHasBeenUpdatedSuccessfully'));
                 setSnackbarOpen(true);
                 window.location.reload();
             } else {
-                setSnackbarMessage('Failed to update subscription');
+                setSnackbarMessage(t('failedToUpdateSubscription'));
                 setSnackbarOpen(true);
             }
 
         } catch (error) {
-            setSnackbarMessage('Error updating subscription:', error);
+            setSnackbarMessage(t('errorUpdatingSubscription') + error);
             setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
@@ -189,25 +189,19 @@ const SubscribeNotification = ({ answer }) => {
     const handleUnsubscribe = async (data) => {
         try {
             setIsLoading(true);
-
-            // Define the API URL with the subscriptionId as a query parameter
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-subscription/delete-subscription?subscriptionId=${subscribeNotification?.subscriptionId}`;
-
-            // Make the DELETE request
+            const apiUrl = apiUrls.deleteSubscription(subscribeNotification?.subscriptionId);
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
-
-            // Check if the request was successful
             if (deleteSubscriptionResponse.status === 200) {
-                setSnackbarMessage('Your request has been unsubscribed successfully');
+                setSnackbarMessage(t('yourRequestHasBeenUnsubscribedSuccessfully'));
                 setSnackbarOpen(true);
                 reset();
                 window.location.reload();
             } else {
-                setSnackbarMessage('Failed to delete subscription');
+                setSnackbarMessage(t('failedToDeleteSubscription'));
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            setSnackbarMessage('Error deleting subscription:', error);
+            setSnackbarMessage(t('errorDeletingSubscription'), error);
             setSnackbarOpen(true);
         } finally {
             setIsLoading(false);
@@ -223,10 +217,10 @@ const SubscribeNotification = ({ answer }) => {
                 <form onSubmit={subscribeNotification !== null ? handleSubmit(handleUpdate) : handleSubmit(onSubmit)}>
                     <div container spacing={3}>
                         <div sx={{ mt: 2 }}>
-                            <Typography variant="h6">Select Your Notifications Preferences</Typography>
+                            <Typography variant="h6">{t('selectYourNotificationsPreferences')}</Typography>
                         </div>
                         <div className='notification-margin-bottom'>
-                            <InputLabel>Location</InputLabel>
+                            <InputLabel>{t('location')}</InputLabel>
                             <Controller
                                 control={control}
                                 name="locations"
@@ -250,13 +244,14 @@ const SubscribeNotification = ({ answer }) => {
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
+                                            placeholder={t('selectText')}
                                         />
                                     </div>
                                 )}
                             />
                         </div>
                         <div className='notification-margin-bottom'>
-                            <InputLabel>Publication Area</InputLabel>
+                            <InputLabel>{t('publicationArea')}</InputLabel>
                             <Controller
                                 control={control}
                                 name="publicationArea"
@@ -280,13 +275,14 @@ const SubscribeNotification = ({ answer }) => {
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
+                                            placeholder={t('selectText')}
                                         />
                                     </div>
                                 )}
                             />
                         </div>
                         <div className='notification-margin-bottom'>
-                            <InputLabel>Event Type</InputLabel>
+                            <InputLabel>{t('eventType')}</InputLabel>
                             <Controller
                                 control={control}
                                 name="eventTypes"
@@ -310,6 +306,7 @@ const SubscribeNotification = ({ answer }) => {
                                                 field.onChange(selectedList);
                                             }}
                                             displayValue="name"
+                                            placeholder={t('selectText')}
                                         />
                                     </div>
                                 )}
@@ -325,7 +322,7 @@ const SubscribeNotification = ({ answer }) => {
                                 {isLoading ? (
                                     <CircularProgress size={24} className='notification-button-loader'/>
                                 ) : (
-                                    subscribeNotification ? "Update" : "Subscribe"
+                                    subscribeNotification ? t('update') : t('subscribe')
                                 )}
                             </Button>
 
@@ -333,7 +330,7 @@ const SubscribeNotification = ({ answer }) => {
                                 {isLoading ? (
                                     <CircularProgress size={24} className='notification-button-loader'/>
                                 ) : (
-                                   "Unsubscribe"
+                                    t('unsubscribe')
                                 )}
                             </Button>
                             

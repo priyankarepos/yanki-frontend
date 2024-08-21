@@ -28,8 +28,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import "./KosherMapComponent.scss";
 import { mapContainerStyle, messages } from '../../Utils/stringConstant/stringConstant';
 import { Context } from '../../App';
+import { useTranslation } from 'react-i18next';
 
 const KosherMapComponent = ({ answer }) => {
+    const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const { userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
@@ -54,7 +56,7 @@ const KosherMapComponent = ({ answer }) => {
                         setOrigin(`${latitude},${longitude}`);
                     },
                     (error) => {
-                        setSnackbarMessage(messages.errorFetchingLocation, error);
+                        setSnackbarMessage(`${t('enableLocationAccess')}`, error);
                         setSnackbarOpen(true);
                     }
                 );
@@ -65,7 +67,7 @@ const KosherMapComponent = ({ answer }) => {
             if (status === messages.statusOk) {
                 setResponse(result);
             } else {
-                setSnackbarMessage(`${messages.errorFetchingDirections} ${status}`);
+                setSnackbarMessage(`${t('routeNotAvailable')} ${status}`);
                 setSnackbarOpen(true);
                 setResponse(null);
             }
@@ -172,9 +174,9 @@ const KosherMapComponent = ({ answer }) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell />
-                                {showEnterpriseName && <TableCell>{messages.nameText}</TableCell>}
-                                <TableCell>{messages.addressText}</TableCell>
-                                <TableCell>{messages.locationText}</TableCell>
+                                {showEnterpriseName && <TableCell>{t('name')}</TableCell>}
+                                <TableCell>{t('address')}</TableCell>
+                                <TableCell>{t('location')}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

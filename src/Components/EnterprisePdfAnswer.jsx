@@ -9,8 +9,10 @@ import { Box, Grid, Paper, Typography } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import "./AnswerStyle.scss";
 import Tooltip from '@mui/material/Tooltip';
+import { useTranslation } from "react-i18next";
 
 const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
+  const { t } = useTranslation();
   const [pdfLoadError, setPdfLoadError] = useState(false);
   const closeModal = () => {
     setPdfLoadError(false);
@@ -46,7 +48,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
             )}
           </div>
         ) : (
-          <div>Error loading content. Please try again.</div>
+          <div>{t('errorLoadingContent')}</div>
         )}
       </div>
     </Modal>

@@ -2,8 +2,11 @@ import { Paper, TextField, Typography, CircularProgress, FormHelperText, Snackba
 import React, { useState } from 'react';
 import axios from "axios";
 import "./SafetyChecker.scss"
+import { useTranslation } from 'react-i18next';
+import { apiUrls } from '../../Utils/stringConstant/stringConstant';
 
 const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
+    const { t } = useTranslation();
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [touched, setTouched] = useState(false);
@@ -16,7 +19,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
     const handleSafetyCheck = async () => {
         try {
             setLoading(true);
-            const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/safety-checker-email`;
+            const apiUrl = apiUrls.safetyCheckerEmail;
             const response = await axios.post(apiUrl, { content });
             if (response.status === 200) {
                 setMailMessage(response?.data?.message)
@@ -25,11 +28,11 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
                 setTouched(false)
                 fetchRemainingMessage();
             } else {
-                setSnackbarMessage('Failed to send safety check email');
+                setSnackbarMessage(`${t('failedToSendSafetyCheckEmail')}`);
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            setSnackbarMessage('Error sending safety check email:', error);
+            setSnackbarMessage(`${t('errorSendingSafetyCheckEmail')}`, error);
             setSnackbarOpen(true);
         }
     };
@@ -42,7 +45,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
         <>
             <Paper sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom>
-                    Safety Checker
+                {t('safetyChecker')}
                 </Typography>
                 <Typography>
                     {answer?.message}
@@ -53,7 +56,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
                     variant="outlined"
                     fullWidth
                     margin="normal"
-                    placeholder="Enter the website URL or content here"
+                    placeholder={t('enterWebsiteURLOrContentHere')}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     onBlur={handleBlur}
@@ -61,16 +64,16 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff}) => {
                     disabled={mailMessage !== "" || !answer?.safetyChecker === true || clickableOff}
                 />
                 <FormHelperText className="error-message">
-                    {touched && !content.trim() && 'This field is required.'}
+                    {touched && !content.trim() && `${t('fieldRequired')}`}
                 </FormHelperText>
                 <Typography
                     className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
                     onClick={content.length === 0 ? null : handleSafetyCheck}
                     sx={{ mt: "8px", cursor: (content.length === 0 || loading || mailMessage !== "" || !answer?.safetyChecker === true) ? 'text' : 'pointer' }}
                 >
-                    {loading ? <CircularProgress size={24} className='dark-blur-color' /> : "Submit Safety Check"}
+                    {loading ? <CircularProgress size={24} className='dark-blur-color' /> : `${t('submitSafetyCheck')}`}
                 </Typography>
-                {mailMessage && <Typography sx={{ mt: 2 }}>Your Safety Check submission is now under review by our agents. You can expect to receive the results at the email address registered with us.</Typography>}
+                {mailMessage && <Typography sx={{ mt: 2 }}>{t('safetyCheckSubmissionReview')}</Typography>}
             </Paper>
 
             <Snackbar

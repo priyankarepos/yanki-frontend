@@ -11,9 +11,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import { messages } from '../../Utils/stringConstant/stringConstant';
+import { useTranslation } from 'react-i18next';
+import { apiUrls, messages } from '../../Utils/stringConstant/stringConstant';
 
 const EventPublicationForm = ({ answer, clickableOff }) => {
+    const { t } = useTranslation();
     const [eventLocations, setEventLocations] = useState([]);
     const [publicationArea, setPublicationArea] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
@@ -49,10 +51,10 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventLocations = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`);
+                const response = await axios.get(apiUrls.getEventsLocations);
                 setEventLocations(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching event location:', error);
+                setSnackbarMessage(`${t('errorFetchingLocations')}`, error);
                 setSnackbarOpen(true);
             }
         };
@@ -62,10 +64,10 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventPublicationArea = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`);
+                const response = await axios.get(apiUrls.getEventsPublicationAreas);
                 setPublicationArea(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching publication area:', error);
+                setSnackbarMessage(`${t('errorFetchingPublicationArea')}`, error);
                 setSnackbarOpen(true);
             }
         };
@@ -75,10 +77,10 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     useEffect(() => {
         const fetchEventTypes = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`);
+                const response = await axios.get(apiUrls.getEventsTypes);
                 setEventTypes(response.data);
             } catch (error) {
-                setSnackbarMessage('Error fetching event types:', error);
+                setSnackbarMessage(`${t('errorFetchingEventTypes')}`, error);
                 setSnackbarOpen(true);
             }
         };
@@ -98,7 +100,6 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
-            const addEventUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`;
             const addEventData = {
                 eventName: data.EventName,
                 eventAddress: data.EventLocationAddress,
@@ -108,7 +109,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                 eventDetails: data.eventDetails,
                 eventDateAndTime: `${data.date}T${data.time}`,
             };
-            const addEventResponse = await axios.post(addEventUrl, addEventData);
+            const addEventResponse = await axios.post(apiUrls.addEventUrl, addEventData);
 
             // Upload files if any
             if (data.uploadedFiles && data.uploadedFiles.length > 0) {
@@ -117,24 +118,23 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     formData.append('imageFiles', file);
                 });
                 const eventId = addEventResponse.data;
-                const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
-                const imageUploadResponse = await axios.post(imageUploadUrl, formData, {
+                const imageUploadResponse = await axios.post(apiUrls.imageUploadUrl(eventId), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                setSnackbarMessage("Image uploaded successfully:", imageUploadResponse.data);
+                setSnackbarMessage(`${t('imageUploadedSuccessfully')}`, imageUploadResponse.data);
                 setSnackbarOpen(true);
             }
 
             // Reset form and state
-            setResponseMessage("Your event publish request has been sent successfully");
+            setResponseMessage(`${t('eventPublishRequestSent')}`);
             setFormModalOpen(false);
             setIsLoading(false);
             setUploadedFiles([]);
             reset();
         } catch (error) {
-            setSnackbarMessage('Error submitting event:', error);
+            setSnackbarMessage(`${t('errorSubmittingEvent')}`, error);
             setSnackbarOpen(true);
             setIsLoading(false);
         }
@@ -168,7 +168,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
         const selectedFiles = Array.from(e.target.files);
         const invalidFiles = selectedFiles.filter(file => !["image/jpeg", "image/png"].includes(file.type));
         if (invalidFiles.length > 0) {
-            alert("Please select only JPG or PNG files.");
+            alert(`${t('selectOnlyJPGorPNG')}`);
             e.target.value = '';
             return;
         }
@@ -176,7 +176,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
         setValue('uploadedFiles', newFiles);
 
         if (newFiles.length > 3) {  // Check the total number of files
-            alert('You can upload up to 3 files.');
+            alert(`${t('uploadUpTo3Files')}`);
             e.target.value = '';
             return;
         }
@@ -209,7 +209,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     {answer?.message}
                 </Typography>
                 <Button className='Custom-Button' onClick={openFormModal} disabled={clickableOff}>
-                    {messages.openForm}
+                    {t('openForm')}
                 </Button>
                 {responseMessage && <Typography sx={{ mt: 2 }}>{responseMessage}</Typography>}
             </Paper>
@@ -230,22 +230,22 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Typography variant="h6">Event Submission Form</Typography>
+                                <Typography variant="h6">{t('eventSubmissionForm')}</Typography>
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Event Name</InputLabel>
+                                <InputLabel>{t('openForm')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="EventName"
                                     rules={{
-                                        required: "Event name is required.",
+                                        required: `${t('eventNameRequired')}`,
                                         minLength: {
                                             value: 3,
-                                            message: "Event name should be at least 3 characters long.",
+                                            message: `${t('eventNameMinLength')}`,
                                         },
                                         maxLength: {
                                             value: 50,
-                                            message: "Event name should not exceed 30 characters.",
+                                            message: `${t('eventNameMaxLength')}`,
                                         },
                                     }}
                                     render={({ field }) => (
@@ -253,7 +253,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                             <TextField
                                                 {...field}
                                                 type="outlined"
-                                                placeholder="Event name"
+                                                placeholder={t('eventName')}
                                                 fullWidth
                                             />
                                             {errors['EventName'] && (
@@ -264,12 +264,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Location</InputLabel>
+                                <InputLabel>{t('location')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="locations"
                                     defaultValue={[]}
-                                    rules={{ required: 'Location is required.' }}
+                                    rules={{ required: `${t('locationRequired')}` }}
                                     render={({ field }) => (
                                         <div>
                                             <Multiselect
@@ -300,19 +300,19 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Event Location Address</InputLabel>
+                                <InputLabel>{t('eventLocationAddress')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="EventLocationAddress"
                                     rules={{
-                                        required: "Event location address is required.",
+                                        required: `${t('eventLocationAddressRequired')}`,
                                     }}
                                     render={({ field }) => (
                                         <div>
                                             <TextField
                                                 {...field}
                                                 variant="outlined"
-                                                placeholder="Event location address"
+                                                placeholder={t('eventLocationAddressLabel')}
                                                 fullWidth
                                             />
                                             {errors['EventLocationAddress'] && (
@@ -323,12 +323,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Date</InputLabel>
+                                <InputLabel>{t('dateLabel')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="date"
                                     rules={{
-                                        required: 'Date is required',
+                                        required: `${t('dateRequired')}`,
                                     }}
                                     render={({ field }) => (
                                         <div>
@@ -345,12 +345,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Time</InputLabel>
+                                <InputLabel>{t('time')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="time"
                                     rules={{
-                                        required: 'Time is required',
+                                        required: `${t('timeRequired')}`,
                                     }}
                                     render={({ field }) => (
                                         <div>
@@ -367,12 +367,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Publication Area</InputLabel>
+                                <InputLabel>{t('publicationArea')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="publicationArea"
                                     defaultValue={[]}
-                                    rules={{ required: 'Publication area is required.' }}
+                                    rules={{ required: `${t('publicationAreaRequired')}` }}
                                     render={({ field }) => (
                                         <div>
                                             <Multiselect
@@ -403,12 +403,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Event Type</InputLabel>
+                                <InputLabel>{t('eventType')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="eventTypes"
                                     defaultValue={[]}
-                                    rules={{ required: 'Event type is required.' }}
+                                    rules={{ required: `${t('eventTypeRequired')}` }}
                                     render={({ field }) => (
                                         <div>
                                             <Multiselect
@@ -439,7 +439,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>Upload Files</InputLabel>
+                                <InputLabel>{t('uploadFiles')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="uploadedFiles"
@@ -464,7 +464,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                             ))}
                                             {uploadedFiles.length > 3 && (
                                                 <FormHelperText className='error-message'>
-                                                    {`Can not upload more than 3 files: ${field.value.length}/3`}
+                                                    {`${t('cannotUploadMoreThan3Files')} ${field.value.length}/3`}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -472,12 +472,12 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={12} md={12} sm={12} xs={12}>
-                                <InputLabel>Event Details</InputLabel>
+                                <InputLabel>{t('eventDetails')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="eventDetails"
                                     rules={{
-                                        required: 'Event Details are required',
+                                        required: `${t('eventDetailsRequired')}`,
                                     }}
                                     render={({ field }) => (
                                         <div>
@@ -496,7 +496,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
-                                    {isLoading ? <CircularProgress size={24} className='event-submission-button-loader' /> : "Submit"}
+                                    {isLoading ? <CircularProgress size={24} className='event-submission-button-loader' /> : `${t('submit')}`}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -520,7 +520,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     {selectedPdf && (
                         <div>
                             {selectedPdf.type.startsWith('image/') ? (
-                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} className='event-submission-image'/>
+                                <img src={URL.createObjectURL(selectedPdf)} alt={selectedPdf.name} className='event-submission-image' />
                             ) : (
                                 <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
                                     <Viewer fileUrl={URL.createObjectURL(selectedPdf)} />

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import TorahanytimeAnswer from "../Components/TorahanytimeAnswer";
 import GovadenAnswer from "../Components/GovadenAnswer";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -22,11 +22,23 @@ import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/Int
 import MikvahAnswer from "../Components/MikvahList/MikvahList";
 import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
+import UserChatSession from "../Components/PersonalAssistant/UserChatSesion";
 
 const SearchHistoryItem = forwardRef(
-  ({ query, response, fetchRemainingMessage, remainingMsgData, clickableOff }, ref) => {
+  (
+    {
+      query,
+      response,
+      fetchRemainingMessage,
+      remainingMsgData,
+      AgentChatSessionId,
+      AgentChatSession,
+      clickableOff,
+    },
+    ref
+  ) => {
     const [direction, setDirection] = useState("ltr");
-    const { activeTab } = React.useContext(Context);
+    const { activeTab } = React.useContext(Context);    
 
     React.useEffect(() => {
       const containsHebrew = /[\u0590-\u05FF]/.test(query);
@@ -45,40 +57,67 @@ const SearchHistoryItem = forwardRef(
     }, [query]);
 
     const isTorahAnswer =
+      AgentChatSessionId == null &&
       response?.isSuccess &&
       response?.torahAnytimeLectures?.hits?.hits?.length > 0;
     const isGovadenAnswer =
-      response?.isSuccess && response?.godavenPrayerDetails?.length;
+      AgentChatSessionId == null &&
+      response?.isSuccess &&
+      response?.godavenPrayerDetails?.length;
     const isDataAvailable =
+      AgentChatSessionId == null &&
       response?.isItKosher?.isSuccess &&
       response?.isItKosher?.products?.data.length > 0;
     const isHatzalah =
+      AgentChatSessionId == null &&
       response.isSuccess &&
       response.message &&
       response?.globalAssist?.isSuccess;
     const isPersonalAssistant =
-      response.isSuccess && response.message && response.isPersonalAssistant;
-    const isHelpAgent = response.contentResponse && response.isHelpAgent;
+      AgentChatSessionId == null &&
+      response.isSuccess &&
+      response.message &&
+      response.isPersonalAssistant;
+    const isHelpAgent =
+      AgentChatSessionId == null &&
+      response.contentResponse &&
+      response.isHelpAgent;
+
+    const defaultRef = useRef(null);
+
     return (
       <div
-        ref={ref}
-        className={`search-history-item ${isTorahAnswer || isGovadenAnswer ? "with-response" : ""
-          }`}
+        ref={ref || defaultRef}
+        className={`search-history-item ${
+          isTorahAnswer || isGovadenAnswer ? "with-response" : ""
+        } ${
+          AgentChatSessionId && AgentChatSession
+            ? "agent-chat-session-container"
+            : ""
+        }`}
       >
-        <Paper elevation={3} className="search-query" dir={direction}>
-          <Box className="search-query-container">
-            <ChatBubbleOutlineIcon
-              fontSize="small"
-              className={`marginX-8 ${activeTab === 0 ? "white-color" : "sky-blue-color"
+        {AgentChatSessionId == null && !AgentChatSession && (
+          <Paper elevation={3} className="search-query" dir={direction}>
+            <Box className="search-query-container">
+              <ChatBubbleOutlineIcon
+                fontSize="small"
+                className={`marginX-8 ${
+                  activeTab === 0 ? "white-color" : "sky-blue-color"
                 }`}
-            />
-            <Typography
-              className={activeTab === 0 ? "white-color" : "sky-blue-color"}
-            >
-              {query}
-            </Typography>
-          </Box>
-        </Paper>
+              />
+              <Typography
+                className={activeTab === 0 ? "white-color" : "sky-blue-color"}
+              >
+                {query}
+              </Typography>
+            </Box>
+          </Paper>
+        )}
+        {AgentChatSessionId && AgentChatSession && (
+          <div className="chat-bubble assistant-bubble agent-chat-session-container">
+            <UserChatSession />
+          </div>
+        )}
         {isTorahAnswer && !response?.isExclusiveContent && (
           <Paper id="abcd" elevation={3} className="marginBottom-10">
             <div className="chat-bubble assistant-bubble">
@@ -174,7 +213,7 @@ const SearchHistoryItem = forwardRef(
           )}
 
         <Paper elevation={3} className="marginBottom-10">
-          {response.isSuccess === false &&
+          {response?.isSuccess === false &&
             !response.isHelpAgent &&
             (response?.message || response?.contentResponse) && (
               <div className="response">
@@ -191,17 +230,20 @@ const SearchHistoryItem = forwardRef(
           </Paper>
         )}
 
-        {response?.isSuccess && response?.safetyChecker && (
-          <Paper elevation={3} className="marginBottom-10">
-            <div className="chat-bubble assistant-bubble">
-              <SafetyChecker
-                fetchRemainingMessage={fetchRemainingMessage}
-                answer={response}
-                clickableOff={clickableOff}
-              />
-            </div>
-          </Paper>
-        )}
+        {AgentChatSessionId == null &&
+          response?.isSuccess &&
+          response?.safetyChecker && (
+            <Paper elevation={3} className="marginBottom-10">
+              <div className="chat-bubble assistant-bubble">
+                <SafetyChecker
+                  fetchRemainingMessage={fetchRemainingMessage}
+                  answer={response}
+                  clickableOff={clickableOff}
+                />
+              </div>
+            </Paper>
+          )}
+
         {isHatzalah && (
           <Paper elevation={3} className="marginBottom-10">
             <div>
@@ -241,16 +283,22 @@ const SearchHistoryItem = forwardRef(
             </div>
           </Paper>
         )}
-        {response?.isSuccess && response?.isLashonHara && (<Paper elevation={3} className="marginBottom-10">
-          <div className="chat-bubble assistant-bubble">
-            <InteractiveQuestionnaire clickableOff={clickableOff} />
-          </div>
-        </Paper>)}
-        {response?.isSuccess && response?.mikvahSearchResponse && (<Paper elevation={3} sx={{ mb: 2 }}>
-          <div>
-            <MikvahAnswer answer={response} />
-          </div>
-        </Paper>)}
+
+        {response?.isSuccess && response?.isLashonHara && (
+          <Paper elevation={3} className="marginBottom-10">
+            <div className="chat-bubble assistant-bubble">
+              <InteractiveQuestionnaire clickableOff={clickableOff} />
+            </div>
+          </Paper>
+        )}
+        {response?.isSuccess && response?.mikvahSearchResponse && (
+          <Paper elevation={3} sx={{ mb: 2 }}>
+            <div>
+              <MikvahAnswer answer={response} />
+            </div>
+          </Paper>
+        )}
+
         {response?.isSuccess && response?.enterpriseLocation?.length > 0 && (
           <Paper elevation={3} className={messages.marginBottom10}>
             <div>

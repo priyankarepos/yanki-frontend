@@ -42,6 +42,7 @@ import "react-phone-input-2/lib/style.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./PagesStyle.scss";
+import { apiUrls } from "../Utils/stringConstant/stringConstant";
 
 const EnterpriseSignup = () => {
   const { themeMode } = useContext(ThemeModeContext);
@@ -83,9 +84,7 @@ const EnterpriseSignup = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
-        );
+        const response = await axios.get(apiUrls.getEnterprisesCategories);
         if (response.status === 200) {
           setEnterpriseCategories(response.data);
         } else {
@@ -118,7 +117,7 @@ const EnterpriseSignup = () => {
 
       // Make the POST request
       const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
+        apiUrls.registerUser,
         dataToSend
       );
 

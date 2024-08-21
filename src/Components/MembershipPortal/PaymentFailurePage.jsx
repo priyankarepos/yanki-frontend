@@ -5,9 +5,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { ThemeModeContext } from "../../App";
-import "./PaymentFailurePage.scss"; // Import the CSS file
+import "./PaymentFailurePage.scss"; 
+import { useTranslation } from "react-i18next";
 
 const PaymentFailurePage = () => {
+    const { t } = useTranslation();
     const { themeMode } = useContext(ThemeModeContext);
     const navigate = useNavigate();
 
@@ -35,13 +37,13 @@ const PaymentFailurePage = () => {
                         component="h1"
                         className="title"
                     >
-                        Payment Failed
+                        {t('paymentFailed')}
                     </Typography>
                     <Typography
                         variant="body1"
                         className="message"
                     >
-                        Oops! Something went wrong with your payment. Please try again.
+                        {t('paymentErrorMessage')}
                     </Typography>
                     <Button
                         variant="contained"
@@ -49,7 +51,7 @@ const PaymentFailurePage = () => {
                         onClick={onGoToHome}
                         className="button"
                     >
-                        Go to Home
+                        {t('goToHome')}
                     </Button>
                 </Box>
             </Box>

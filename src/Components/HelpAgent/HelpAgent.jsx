@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../SafetyChecker/SafetyChecker.scss";
 import { apiUrls } from "../../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
+
 const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableOff }) => {
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
@@ -23,6 +25,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
     "{}"
   );
   const userRoles = yankiUser?.userObject?.userRoles || "";
+  const { t } = useTranslation();
 
   const handlePersonalAssistant = async () => {
     try {
@@ -35,14 +38,14 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
         setTouched(false);
         fetchRemainingMessage();
       } else {
-        setSnackbarMessage("Failed to send personal assistant email");
+        setSnackbarMessage(`${t('failedToSendEmail')}`);
         setSnackbarOpen(true);
         setLoading(false);
         setContent("");
       }
     } catch (error) {
       setShowMsg(true)
-      setSnackbarMessage("Error sending personal assistant email:", error);
+      setSnackbarMessage(`${t('errorSendingEmail')}`, error);
       setSnackbarOpen(true);
       setLoading(false);
       setContent("");
@@ -57,7 +60,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
     <>
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Help Agent
+          {t('helpAgent')}
         </Typography>
         <Typography>{answer?.contentResponse}</Typography>
         <TextField
@@ -66,7 +69,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
           variant="outlined"
           fullWidth
           margin="normal"
-          placeholder="Enter the content here"
+          placeholder={t('enterContentHere')}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
@@ -74,7 +77,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
           disabled={mailMessage !== "" || !answer?.isHelpAgent === true || clickableOff}
         />
         <FormHelperText className="error-message">
-          {touched && !content.trim() && "This field is required."}
+          {touched && !content.trim() && `${t('fieldRequired')}`}
         </FormHelperText>
         <Typography
           className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
@@ -94,19 +97,16 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
           {loading ? (
             <CircularProgress size={24} className="dark-blur-color" />
           ) : (
-            "Submit"
+            `${t('submit')}`
           )}
         </Typography>
         {mailMessage && (
           <Typography sx={{ mt: 2 }}>
-            Your request has been received and is currently being reviewed by
-            our YankiAl agents. Depending on your subscription you can expect to
-            receive a response via the email address or SMS number registered
-            with us
+            {t('requestReceived')}
           </Typography>
         )}
         {showMsg && remainingMsgData?.totalTaskLeft === 0 && <Typography sx={{ mt: 2 }}>
-          You have no task left. Please upgrade your plan to continue perform task
+          {t('noTaskLeft')}
         </Typography>}
       </Paper>
 
