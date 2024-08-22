@@ -7,7 +7,7 @@ import YankiLogo from '../Assets/images/yanki-logo2.png';
 import CheckCircleIcon from '../Assets/images/Checkbox.svg';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import { apiUrls } from '../Utils/stringConstant/stringConstant';
+import { apiUrls, messages } from '../Utils/stringConstant/stringConstant';
 
 const ChangeLanguage = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const ChangeLanguage = () => {
                 if (matchedLanguage) {
                     setSelectedLanguage(matchedLanguage.code);
                 }
-                localStorage.setItem(messages.i18nextLng, matchedLanguage.code);
+                localStorage.setItem('i18nextLng', matchedLanguage.code);
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingLanguage'));
                 setSnackbarOpen(true);
@@ -55,6 +55,7 @@ const ChangeLanguage = () => {
                 language: selectedLang,
             });
             i18n.changeLanguage(selectedLanguage);
+            localStorage.setItem(messages.userLanguage, selectedLanguage);
             localStorage.setItem(messages.i18nextLng, selectedLanguage);
             setSnackbarMessage(t('languageChangedSuccess'));
             setSnackbarOpen(true);
