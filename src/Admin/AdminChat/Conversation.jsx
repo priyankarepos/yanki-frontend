@@ -168,7 +168,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
         });
 
         connection.on(agentChatResponse.newUser, (senderUser) => {
-          if (senderUser.userId === id) {            
+          if (senderUser.userId === id) {   
             setUserStatus(senderUser);
           }
         });
