@@ -20,7 +20,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { useForm, Controller } from "react-hook-form";
 import { emailRegex } from "../Utils/validations/validation";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { Context } from "../App";
@@ -54,6 +54,7 @@ const LoginPage = () => {
 
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
+    localStorage.setItem(messages.i18nextLng, code);
   };
 
   const handleChangeLanguage = async () => {
@@ -62,12 +63,20 @@ const LoginPage = () => {
       const languageName = response.data.language;
       const languageObj = languages.find((lang) => lang.name === languageName);
       i18n.changeLanguage(languageObj.code);
-      localStorage.setItem("i18nextLng", languageObj.code);
+      localStorage.setItem(messages.i18nextLng, languageObj.code);
     } catch (err) {
       setSnackbarMessage(err.message);
       setSnackbarOpen(true);
     }
   };
+
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem(messages.i18nextLng);
+    if (storedLanguage) {
+      i18n.changeLanguage(storedLanguage);
+    }
+  }, [i18n]);
+
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const navigate = useNavigate();
@@ -402,12 +411,12 @@ const LoginPage = () => {
             </Box>
           </Box>
         </Box>
-        {activeTab === 0 && <Box className="Home-Page-Language-Btn">
+        {activeTab === 0 && <Box className={classNames.homePageLanguageBtn}>
           {languages.map(({ code, lang }) => (
             <a
               key={code}
               onClick={() => changeLanguage(code)}
-              variant="text"
+              variant={messages.text}
               className={`${classNames.languageSwitcherButton} ${
                 i18n.language === code ? classNames.activeLanguage : ""
               }`}

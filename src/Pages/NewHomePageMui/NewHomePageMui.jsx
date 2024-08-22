@@ -60,7 +60,7 @@ import {
 import { getConnectionPromise } from "../../SignalR/signalRService";
 
 const NewHomePageMui = () => {
-  const { t } = useTranslation();
+  const { t, i18n  } = useTranslation();
   const { chatId } = useParams();
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
@@ -112,6 +112,13 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
+
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem(messages.i18nextLng);
+    if (storedLanguage) {
+      i18n.changeLanguage(storedLanguage);
+    }
+  }, [i18n]);
 
   const handleOpenShareModal = (chatId) => {
     setSelectedChatId(chatId);

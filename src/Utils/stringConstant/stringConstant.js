@@ -76,6 +76,7 @@ export const messages = {
     touchstart: "touchstart",
     success: "success",
     error: "error",
+    i18nextLng: "i18nextLng",
 };
 
 export const classNames = {
@@ -114,6 +115,7 @@ export const classNames = {
     chatSessionListXLScreen: "ya-chat-session-list-XLScreen",
     languageSwitcherButton: "language-switcher-button",
     activeLanguage: "active-language",
+    homePageLanguageBtn: "Home-Page-Language-Btn",
 };
 
 export const apiUrls = {

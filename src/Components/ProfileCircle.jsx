@@ -135,7 +135,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
       import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
     );
     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
-    window.localStorage.removeItem('i18nextLng');
+    window.localStorage.removeItem(messages.i18nextLng);
     navigate("/auth");
 
   };

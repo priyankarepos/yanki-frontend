@@ -189,12 +189,12 @@ const NewTitlePage = () => {
             </Box>
           </Box>
         </Box>
-        {activeTab===0 &&<Box className="Home-Page-Language-Btn">
+        {activeTab===0 &&<Box className={classNames.homePageLanguageBtn}>
           {languages.map(({ code, lang }) => (
             <a
               key={code}
               onClick={() => changeLanguage(code)}
-              variant="text"
+              variant={messages.text}
               className={`${classNames.languageSwitcherButton} ${
                 i18n.language === code ? classNames.activeLanguage : ""
               }`}
