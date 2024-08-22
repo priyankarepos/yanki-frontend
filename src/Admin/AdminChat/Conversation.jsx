@@ -59,11 +59,24 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`${apiUrls.getUserListById(id)}`);
+        let finishChat = localStorage.getItem(agentChatResponse.finishChatId);
+        if (finishChat && response.data.userId === finishChat) {
+          setIsChatFinished(true);
+        } else {
+          setIsChatFinished(false);
+        }
         setUserList(response.data);
       } catch (err) {}
     };
     fetchUsers();
   }, [id]);
+
+  useEffect(() => {
+    var finishChat = localStorage.getItem(agentChatResponse.finishChatId);
+    if (finishChat) {
+      localStorage.removeItem(agentChatResponse.finishChatId);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUsersMessage = async () => {
@@ -78,7 +91,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
           };
           const localTimeString = date.toLocaleTimeString(undefined, options);
 
-          return { ...message, timestamp: localTimeString };
+          return { ...message, timestamplabel: localTimeString };
         });
 
         setMessageList(processedMessages);
@@ -93,7 +106,6 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    try {
       const response = await axios.post(`${apiUrls.sendMessage}`, {
         content: searchQuery,
         reciverId: id,
@@ -110,14 +122,17 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       };
       const localTimeString = date.toLocaleTimeString(undefined, options);
 
-      message.timestamp = localTimeString;
+      message.timestamplabel = localTimeString;
 
       onUserList(message);
 
       setMessageList((prevMessages) => [...prevMessages, message]);
 
       setSearchQuery("");
-    } catch {}
+  };
+
+  const handleChangeStatus = async () => {
+    await axios.put(apiUrls.changeStatus(id));
   };
 
   useEffect(() => {
@@ -131,27 +146,31 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       };
       const localTimeString = date.toLocaleTimeString(undefined, options);
 
-      message.timestamp = localTimeString;
+      message.timestamplabel = localTimeString;
 
       onUserList(message);
 
       if (message.senderId === id && message.senderId !== message.receiverId) {
         setMessageList((prevMessages) => [...prevMessages, message]);
       }
+
+      if (message.senderId === id) {
+        handleChangeStatus();
+      }
     };
 
     const initializeConnection = async () => {
-      const connection = await getConnectionPromise();      
+      const connection = await getConnectionPromise();
 
       if (connection) {
-        connection.on(agentChatResponse.receiveMessage, (message) => {          
+        connection.on(agentChatResponse.receiveMessage, (message) => {
           handleReceivedMessage(message);
         });
 
         connection.on(agentChatResponse.newUser, (senderUser) => {
-          if(senderUser.userId === id ) {
-            setUserStatus(senderUser)
-          } 
+          if (senderUser.userId === id) {            
+            setUserStatus(senderUser);
+          }
         });
       }
     };
@@ -172,9 +191,11 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
   useEffect(() => {
     const fetchUserStatus = async () => {
-        var response = await axios.get(`${apiUrls.getUserStatus}`);
-        const currentUserDetails = response.data.find(user => user.userId === id);
-        setUserStatus(currentUserDetails)
+      var response = await axios.get(`${apiUrls.getUserStatus}`);
+      const currentUserDetails = response.data.find(
+        (user) => user.userId === id
+      );
+      setUserStatus(currentUserDetails);
     };
     fetchUserStatus();
   }, []);
@@ -183,6 +204,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
     try {
       var response = axios.put(apiUrls.finishChat(id));
       if (response) {
+        localStorage.setItem(agentChatResponse.finishChatId, id);
         setIsChatFinished(true);
         setSnackbarMessage(agentChatResponse.chatFinished);
         setSnackbarOpen(true);
@@ -239,7 +261,11 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                   ? agentChatResponse.userListHideImage
                   : agentChatResponse.userListShowImage
               }`}
-              src={ userStatus.status === "online" ? OnlineUserAvatar : OfflineUserAvtar}
+              src={
+                userStatus.status === agentChatResponse.online
+                  ? OnlineUserAvatar
+                  : OfflineUserAvtar
+              }
               alt={userList.email}
             />
             <Box
@@ -266,7 +292,9 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                   onClick={handleFinishedChat}
                 >
                   <img src={messageIcon} alt={agentChatResponse.messageIcon} />
-                  <span className={agentChatResponse.finishChat}>Finish Chat</span>
+                  <span className={agentChatResponse.finishChat}>
+                    Finish Chat
+                  </span>
                 </IconButton>
               )}
               {!isModalOpen ? (
@@ -274,7 +302,10 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                   className={agentChatResponse.currentUserInformation}
                   onClick={handleUserInfo}
                 >
-                  <img src={threedotIcon} alt={agentChatResponse.threedotIcon} />
+                  <img
+                    src={threedotIcon}
+                    alt={agentChatResponse.threedotIcon}
+                  />
                 </IconButton>
               ) : (
                 <IconButton
@@ -293,14 +324,19 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                     className={agentChatResponse.currentUserInformation}
                     onClick={handleClick}
                   >
-                    <img src={threedotIcon} alt={agentChatResponse.threedotIcon} />
+                    <img
+                      src={threedotIcon}
+                      alt={agentChatResponse.threedotIcon}
+                    />
                   </IconButton>
                   <Menu
                     anchorEl={openMenu}
                     open={Boolean(openMenu)}
                     onClose={handleClose}
                     className={agentChatResponse.chatMenuDropdown}
-                    MenuListProps={{ className: agentChatResponse.chatMenuDropdownList }}
+                    MenuListProps={{
+                      className: agentChatResponse.chatMenuDropdownList,
+                    }}
                   >
                     {!isChatFinished && (
                       <MenuItem onClick={handleFinishedChat}>
@@ -311,7 +347,9 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                             alt={agentChatResponse.messageIcon}
                           />
                         </ListItemIcon>
-                        <ListItemText primary={agentChatResponse.finishChatTitle} />
+                        <ListItemText
+                          primary={agentChatResponse.finishChatTitle}
+                        />
                       </MenuItem>
                     )}
                     <MenuItem onClick={handleUserInfo}>
@@ -366,7 +404,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                     : agentChatResponse.timestampIncoming
                 }`}
               >
-                {message.timestamp}
+                {message.timestamplabel}
               </span>
             </React.Fragment>
           ))}
@@ -405,6 +443,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                       <IconButton
                         type={agentChatResponse.submit}
                         onClick={onSubmit}
+                        disabled={!searchQuery.trim()}
                       >
                         <img src={SendIcon} alt={SendIcon} />
                       </IconButton>

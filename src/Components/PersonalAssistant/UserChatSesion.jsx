@@ -42,8 +42,12 @@ const UserChatSession = () => {
   );
   const currentUserId = yankiUser?.userObject?.userId || "";
 
+  const handleChangeStatus = async (receiverId) => {
+    await axios.put(apiUrls.changeStatusByUser(receiverId));
+  } 
+
   useEffect(() => {
-    const handleReceivedMessage = (message) => {
+    const handleReceivedMessage = (message) => {      
       if (message.receiverId === currentUserId) {
         const date = new Date(message.timestamp);
 
@@ -54,9 +58,13 @@ const UserChatSession = () => {
         };
         const localTimeString = date.toLocaleTimeString(undefined, options);
 
-        message.timestamp = localTimeString;
-
+        message.timestamplabel = localTimeString;
+        
         setMessageList((prevMessages) => [...prevMessages, message]);
+      }
+
+      if(message.receiverId != null) {
+        handleChangeStatus(message.receiverId)
       }
     };
 
@@ -90,7 +98,7 @@ const UserChatSession = () => {
         };
         const localTimeString = date.toLocaleTimeString(undefined, options);
 
-        return { ...message, timestamp: localTimeString };
+        return { ...message, timestamplabel: localTimeString };
       });
 
       setMessageList(processedMessages);
@@ -121,7 +129,7 @@ const UserChatSession = () => {
     };
     const localTimeString = date.toLocaleTimeString(undefined, options);
 
-    message.timestamp = localTimeString;
+    message.timestamplabel = localTimeString;
 
     setMessageList((prevMessages) => [...prevMessages, message]);
 
@@ -192,7 +200,7 @@ const UserChatSession = () => {
                           : agentChatResponse.incomingTime
                       }`}
                     >
-                      {message.timestamp}
+                      {message.timestamplabel}
                     </span>
                   </Box>
                   {message.userType === agentChatResponse.user && (

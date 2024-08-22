@@ -52,62 +52,61 @@ const UserChatList = () => {
       lastMessageTime: localTimeString,
       unseenMessageCount: id ? 0 : 1,
     };
-
     setUserList([newUser]);
   }, []);
 
-  const initializeConnection = useCallback(async () => {
-    const connection = await getConnectionPromise();
+  const initializeConnection = useCallback(() => {
+    const connection = getConnectionPromise();
 
     if (connection) {
       connection.on(agentChatResponse.receiveMessage, (message) => {
         handleReceivedMessage(message);
       });
 
-      connection.on(agentChatResponse.newUser, (senderUser) => {
-        
-        setUserStatus(prevStatus => {
+      connection.on(agentChatResponse.newUser, (senderUser) => {                
+        setUserStatus((prevStatus) => {
           if (prevStatus[senderUser.userId]) {
             return {
               ...prevStatus,
-              [senderUser.userId]: senderUser.status
+              [senderUser.userId]: senderUser.status,
             };
           } else {
             return {
               ...prevStatus,
-              [senderUser.userId]: senderUser.status
+              [senderUser.userId]: senderUser.status,
             };
           }
         });
-        
-      })
+      });
     }
-  }, [handleReceivedMessage]);
+  }, []);
+
+  useEffect(() => {
+    initializeConnection();
+  }, [initializeConnection])
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${apiUrls.userChatList}`);
-        if (response.data.length === 0) {
-          setUserList([]);
-          await initializeConnection();
-        } else {
-          const processedMessages = response.data.map((message) => {
-            const date = new Date(message.lastMessageTime);
-            const options = {
-              hour: agentChatResponse.numeric,
-              minute: agentChatResponse.numeric,
-              hour12: true,
-            };
-            const localTimeString = date.toLocaleTimeString(undefined, options);
+      const response = await axios.get(`${apiUrls.userChatList}`);
+      if (response.data.length === 0) {
+        setUserList([]);
+        initializeConnection();
+      } else {
+        const processedMessages = response.data.map((message) => {
+          const date = new Date(message.lastMessageTime);
+          const options = {
+            hour: agentChatResponse.numeric,
+            minute: agentChatResponse.numeric,
+            hour12: true,
+          };
+          const localTimeString = date.toLocaleTimeString(undefined, options);
 
-            return { ...message, lastMessageTime: localTimeString };
-          });
+          return { ...message, lastMessageTime: localTimeString };
+        });
 
-          setUserList(processedMessages);
-        }
-        setIsLoading(true);
-      } catch (err) {}
+        setUserList(processedMessages);
+      }
+      setIsLoading(true);
     };
     fetchUsers();
   }, [initializeConnection]);
@@ -126,7 +125,7 @@ const UserChatList = () => {
       updatedUserList[userIndex] = {
         ...updatedUserList[userIndex],
         lastMessage: message.content,
-        lastMessageTime: message.timestamp,
+        lastMessageTime: message.timestamplabel,
         unseenMessageCount: message.receiverId
           ? 0
           : id === message.senderId
@@ -146,7 +145,7 @@ const UserChatList = () => {
         userId: response.data.userId,
         email: response.data.email,
         lastMessage: message.content,
-        lastMessageTime: message.timestamp,
+        lastMessageTime: message.timestamplabel,
         unseenMessageCount: 1,
       };
 
@@ -196,12 +195,12 @@ const UserChatList = () => {
 
   useEffect(() => {
     const fetchUserStatus = async () => {
-        var response = await axios.get(`${apiUrls.getUserStatus}`);
-        const statusDict = response.data.reduce((acc, status) => {
-          acc[status.userId] = status.status;
-          return acc;
-        }, {});
-        setUserStatus(statusDict);
+      var response = await axios.get(`${apiUrls.getUserStatus}`);
+      const statusDict = response.data.reduce((acc, status) => {
+        acc[status.userId] = status.status;
+        return acc;
+      }, {});
+      setUserStatus(statusDict);
     };
     fetchUserStatus();
   }, []);
@@ -225,7 +224,7 @@ const UserChatList = () => {
         <AdminDashboard />
       </Box>
       <Box
-        className={`${ agentChatResponse.agentChatBackground } 
+        className={`${agentChatResponse.agentChatBackground} 
           ${agentChatResponse.enterpriseFormBox}
         } ${
           isLargeScreen
@@ -286,7 +285,11 @@ const UserChatList = () => {
                           >
                             <img
                               className={agentChatResponse.userImage}
-                              src={userStatus[user.userId] === "online" ? OnlineUserAvatar : OfflineUserAvtar}
+                              src={
+                                userStatus[user.userId] === agentChatResponse.online
+                                  ? OnlineUserAvatar
+                                  : OfflineUserAvtar
+                              }
                               alt={user.email}
                             />
 
