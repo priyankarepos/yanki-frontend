@@ -32,7 +32,8 @@ import GoogleIcon from "@mui/icons-material/Google";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FormHelperText, Snackbar } from "@mui/material";
-import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
+import { useTranslation } from 'react-i18next';
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +42,17 @@ const SigninPage = () => {
   const [signinErrorMsg, setSigninErrorMsg] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { t, i18n } = useTranslation();
+  const languages = [
+    { code: 'en', lang: 'English', name: 'English' },
+    { code: 'he', lang: 'עברית', name: 'Hebrew' },
+    { code: 'es', lang: 'Español', name: 'Spanish' },
+    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
+];
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
 
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
@@ -91,7 +103,7 @@ const SigninPage = () => {
       if (e?.response?.data?.message) {
         setSigninErrorMsg(e?.response?.data?.message);
       } else {
-        setSigninErrorMsg("Something went wrong");
+        setSigninErrorMsg(`${'somethingWentWrong'}`);
       }
     }
   };
@@ -107,14 +119,14 @@ const SigninPage = () => {
         navigate("/login");
       } else {
         setSigninError(true);
-        setSigninErrorMsg("Authentication failed.");
+        setSigninErrorMsg(`${'authenticationFailed'}`);
       }
     } catch (error) {
       setSnackbarMessage("Error:", error);
       setSnackbarOpen(false);
 
       setSigninError(true);
-      setSigninErrorMsg("Something went wrong.");
+      setSigninErrorMsg(`${'somethingWentWrong'}`);
     } finally {
       setSigninLoading(false);
     }
@@ -154,7 +166,7 @@ const SigninPage = () => {
               variant="h5"
               className="text-center marginBottom-34"
             >
-              Create your account
+              {t('createYourAccount')}
             </Typography>
             <Controller
               control={control}
@@ -162,22 +174,22 @@ const SigninPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Full name is required.",
+                  message: `${t('fullNameRequired')}`,
                 },
                 minLength: {
                   value: 3,
-                  message: "Full name should be at least 3 characters long.",
+                  message: `${t('fullNameMinLength')}`,
                 },
                 maxLength: {
                   value: 50,
-                  message: "Full name should not exceed 50 characters.",
+                  message: `${t('fullNameMaxLength')}`,
                 },
               }}
               render={({ field }) => (
                 <TextField
                   {...field}
                   type="outlined"
-                  placeholder="Full name"
+                  placeholder={t('fullName')}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -201,7 +213,7 @@ const SigninPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Phone number is required.",
+                  message: `${t('phoneNumberRequired')}`,
                 },
               }}
               render={({ field }) => (
@@ -240,18 +252,18 @@ const SigninPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Email address is required.",
+                  message: `${t('emailRequired')}`,
                 },
                 pattern: {
                   value: emailRegex,
-                  message: "Enter valid email address.",
+                  message: `${t('enterValidEmailAddress')}`,
                 },
               }}
               render={({ field }) => (
                 <TextField
                   {...field}
                   type="outlined"
-                  placeholder="Email address"
+                  placeholder={t('emailAddress')}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -275,19 +287,19 @@ const SigninPage = () => {
               rules={{
                 required: {
                   value: true,
-                  message: "Password is required",
+                  message: `${t('passwordRequired')}`,
                 },
                 pattern: {
                   value: passwordRegex,
                   message:
-                    "Password must have length of atleast 8 characters. It must contain uppercase letter, lowercase letter, special character and digit.",
+                    `${t('passwordLength')}`,
                 },
               }}
               render={({ field }) => (
                 <TextField
                   {...field}
                   type="outlined"
-                  placeholder="Password"
+                  placeholder={t('password')}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -334,21 +346,21 @@ const SigninPage = () => {
               }}
             >
               <Typography className="white-color">
-                By signing up, I accept the Yanki{" "}
+              {t('acceptTerms')}{" "}
                 <Link
                   to="/terms-of-use"
                   className="signinpage-terms"
                   component={LinkBehavior}
                 >
-                  Terms of Use
+                  {t('termsOfUse')}
                 </Link>{" "}
-                and acknowledge the{" "}
+                {t('acknowledge')}{" "}
                 <Link
                   to="/privacy-policy"
                   className="signinpage-terms"
                   component={LinkBehavior}
                 >
-                  Privacy Policy
+                  {t('privacyPolicy')}
                 </Link>
               </Typography>
             </Box>
@@ -358,9 +370,9 @@ const SigninPage = () => {
               onClick={handleSubmit(onSubmit)}
               disabled={signinLoading}
             >
-              {signinLoading ? <CircularProgress size="0.875rem" /> : "Sign up"}
+              {signinLoading ? <CircularProgress size="0.875rem" /> : `${t('signup')}`}
             </Button>
-            <Divider className="marginY-28">or</Divider>
+            <Divider className="marginY-28">{t('or')}</Divider>
             <Button
               variant="outlined"
               fullWidth
@@ -369,17 +381,31 @@ const SigninPage = () => {
               className="google-button"
             >
               <GoogleIcon className="googleIcon" />
-              &nbsp;Google
+              &nbsp;{t('google')}
             </Button>
             <Box className="text-center marginTop-25">
               <Typography variant="subtitle1" display="block" gutterBottom>
-                Already have an account?&nbsp;
+                {t('alreadyHaveAnAccount')}&nbsp;
                 <Link to="/login" component={LinkBehavior} underline="none">
-                  <span className="font-bold cursor-pointer">Login</span>
+                  <span className="font-bold cursor-pointer">{t('login')}</span>
                 </Link>
               </Typography>
             </Box>
           </Box>
+        </Box>
+        <Box className={classNames.homePageLanguageBtn}>
+          {languages.map(({ code, lang }) => (
+            <a
+              key={code}
+              onClick={() => changeLanguage(code)}
+              variant={messages.text}
+              className={`${classNames.languageSwitcherButton} ${
+                i18n.language === code ? classNames.activeLanguage : ""
+              }`}
+            >
+              {lang}
+            </a>
+          ))}
         </Box>
         <Box className="text-center marginY-10">
           <Link
@@ -387,14 +413,14 @@ const SigninPage = () => {
             className="linkStyle"
             component={LinkBehavior}
           >
-            Terms of Use
+            {t('termsOfUse')}
           </Link>
           <Link
             to="/privacy-policy"
             className="linkStyle marginX-10"
             component={LinkBehavior}
           >
-            Privacy Policy
+            {t('privacyPolicy')}
           </Link>
           <Typography variant="caption">
             <a

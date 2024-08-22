@@ -60,8 +60,8 @@ import {
 import { getConnectionPromise } from "../../SignalR/signalRService";
 
 const NewHomePageMui = () => {
-  const { t } = useTranslation();
-  const { chatId } = useParams();
+  const { t, i18n  } = useTranslation();
+  const { chatId, chatSessionId } = useParams();
   const navigate = useNavigate();
   const { activeTab } = React.useContext(Context);
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -99,6 +99,7 @@ const NewHomePageMui = () => {
     useContext(Context);
   const chatContainerRef = useRef(null);
   const itemRefs = useRef({});
+  const chatSessionIdRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const isXLScreen = useMediaQuery(agentChatResponse.isXLScreen);
@@ -113,18 +114,60 @@ const NewHomePageMui = () => {
     navigate("/membership");
   };
 
+  const languages = [
+    { code: 'en', lang: 'English', name: 'English' },
+    { code: 'he', lang: 'עברית', name: 'Hebrew' },
+    { code: 'es', lang: 'Español', name: 'Spanish' },
+    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
+  ];
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
+
+  const handleChangeLanguage = async () => {
+    setIsSubmitting(true);
+    try {
+        const response = await axios.get(membershipApiUrls.getUserLanguage);
+        const languageName = response.data.language;
+        const languageObj = languages.find((lang) => lang.name === languageName);
+        
+        if (languageObj) {
+            i18n.changeLanguage(languageObj.code);
+            localStorage.setItem(messages.i18nextLng, languageObj.code);
+        } else {
+            setSnackbarMessage(t('languageNotFound')); 
+            setSnackbarOpen(true);
+        }
+    } catch (err) {
+        setSnackbarMessage(err.message);
+        setSnackbarOpen(true);
+    } finally {
+        setIsSubmitting(false);
+    }
+};
+
+  useEffect(() => {
+    changeLanguage();
+    handleChangeLanguage();
+  }, []);
+
   const handleOpenShareModal = (chatId) => {
     setSelectedChatId(chatId);
     setShareModalOpen(true);
   };
-  const { chatSessionId } = useParams();
+
+  useEffect(() => {
+    chatSessionIdRef.current = chatSessionId;
+  }, [chatSessionId])
 
   const defulatSizePageSize = 20;
 
   const fetchRemainingMessage = async () => {
     try {
-
-      const response = await axios.get(membershipApiUrls.getRemainingMessageTask);
+      const response = await axios.get(
+        membershipApiUrls.getRemainingMessageTask
+      );
 
       if (response.status === 200) {
         setRemainingMsgData(response.data);
@@ -210,7 +253,6 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const response = await axios.post(
-
         membershipApiUrls.allAnswers(chatIdToUse),
 
         { prompt: searchQuery },
@@ -306,8 +348,9 @@ const NewHomePageMui = () => {
   const fetchChatSessions = useCallback(async () => {
     if (hasMore) {
       try {
-
-        const response = await axios.get(membershipApiUrls.chatSessionList(pageNumber));
+        const response = await axios.get(
+          membershipApiUrls.chatSessionList(pageNumber)
+        );
         if (response.status === 200) {
           if (response.data.chatList.length > 0) {
             if (pageNumber === 1) {
@@ -340,8 +383,13 @@ const NewHomePageMui = () => {
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
-
-        const response = await axios.get(membershipApiUrls.chatHistory(chatId, chatHistoryPageNumber, defulatSizePageSize));
+        const response = await axios.get(
+          membershipApiUrls.chatHistory(
+            chatId,
+            chatHistoryPageNumber,
+            defulatSizePageSize
+          )
+        );
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -371,10 +419,12 @@ const NewHomePageMui = () => {
       setAgentChatSessionId(null);
       setShowChatSession(false);
       setSelectedChatId(chatId);
+
       navigate(`/${chatId}`);
       try {
-
-        const response = await axios.get(membershipApiUrls.chatHistoryData(chatId, defulatSizePageSize));
+        const response = await axios.get(
+          membershipApiUrls.chatHistoryData(chatId, defulatSizePageSize)
+        );
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -400,6 +450,8 @@ const NewHomePageMui = () => {
     setIsError(false);
     setErrorMsg("");
     navigate(`/chat/${chatSessionId}`);
+    
+
     setAgentChatSession((prevData) => {
       if (!prevData) return prevData;
 
@@ -459,8 +511,9 @@ const NewHomePageMui = () => {
 
   const fetchChatHistory = async (chatId) => {
     try {
-
-      const response = await axios.get(membershipApiUrls.chatHistoryFetch(chatId, 20));
+      const response = await axios.get(
+        membershipApiUrls.chatHistoryFetch(chatId, 20)
+      );
 
       if (response.status === 200) {
         setShouldScroll(true);
@@ -527,8 +580,9 @@ const NewHomePageMui = () => {
 
   const handleConfirmDelete = async () => {
     try {
-
-      const response = await axios.delete(membershipApiUrls.deleteChatSession(selectedChatId));
+      const response = await axios.delete(
+        membershipApiUrls.deleteChatSession(selectedChatId)
+      );
 
       if (response.status === 200) {
         const updatedChatSessions = chatSessions.filter(
@@ -730,109 +784,51 @@ const NewHomePageMui = () => {
     },
   ];
 
-  useEffect(() => {
     const handleReceivedMessage = (message) => {
-      if (message.senderId === currentUserId) {
-        setAgentChatSession((prevData) => {
-          if (!prevData) {
-            return [
-              {
-                id: message.agentChatSessionId,
-                content: data.content,
-                unseenMessageCount: 0,
-              },
-            ];
-          }
+      setAgentChatSession((prevData) => {
+        if (!prevData) {
+          return [
+            {
+              id: message.agentChatSessionId,
+              content: data.content,
+              unseenMessageCount: 0,
+            },
+          ];
+        }
 
-          const isDataPresent = prevData.some(
-            (item) => item.id === message.agentChatSessionId
-          );
+        const isDataPresent = prevData.some(
+          (item) => item.id === message.agentChatSessionId
+        );        
 
-          if (isDataPresent) {
-            return prevData.map((item) =>
-              item.id === message.agentChatSessionId
-                ? {
-                    ...item,
-                    content: item.content,
-                    unseenMessageCount:
-                      message.agentChatSessionId === item.id
-                        ? 0
-                        : item.unseenMessageCount + 1,
-                  }
-                : item
-            );
-          } else {
-            return [
-              ...prevData,
-              {
-                id: message.agentChatSessionId,
-                content: message.content,
-                unseenMessageCount: 0,
-              },
-            ];
-          }
-        });
-      }
-    };
+        if (isDataPresent) {
 
-    const initializeConnection = async () => {
-      const connection = await getConnectionPromise();
-
-      if (connection) {
-        connection.on(agentChatResponse.receiveMessage, (message) => {
-          handleReceivedMessage(message);
-        });
-      }
-    };
-
-    initializeConnection();
-  }, []);
-
-  useEffect(() => {
-    const handleReceivedMessage = (message) => {
-      if (message.senderId === currentUserId) {
-        setAgentChatSession((prevData) => {
-          if (!prevData) {
-            return [
-              {
-                id: message.agentChatSessionId,
-                content: data.content,
-                unseenMessageCount: 0,
-              },
-            ];
-          }
-
-          const isDataPresent = prevData.some(
-            (item) => item.id === message.agentChatSessionId
-          );
-
-          if (isDataPresent) {
-            return prevData.map((item) =>
-              item.id === message.agentChatSessionId
-                ? {
+          return prevData.map((item) =>
+            item.id === message.agentChatSessionId
+              ? {
                   ...item,
                   content: item.content,
                   unseenMessageCount:
-                    message.agentChatSessionId === item.id
+                  chatSessionIdRef.current === item.id ||
+                    message.senderId === currentUserId
                       ? 0
                       : item.unseenMessageCount + 1,
                 }
-                : item
-            );
-          } else {
-            return [
-              ...prevData,
-              {
-                id: message.agentChatSessionId,
-                content: message.content,
-                unseenMessageCount: 0,
-              },
-            ];
-          }
-        });
-      }
+              : item
+          );
+        } else {
+          return [
+            ...prevData,
+            {
+              id: message.agentChatSessionId,
+              content: message.content,
+              unseenMessageCount: 0,
+            },
+          ];
+        }
+      });
     };
 
+  useEffect(() => {
     const initializeConnection = async () => {
       const connection = await getConnectionPromise();
 
@@ -945,7 +941,13 @@ const NewHomePageMui = () => {
             </Box>
           )}
           <Box className="chat-session-conteriner">
-            <Box className={`${ agentChatSession.length > 0 ? classNames.yaNewAssistantChat : classNames.yaNewAssistantEmptyChat}`}>
+            <Box
+              className={`${
+                agentChatSession.length > 0
+                  ? classNames.yaNewAssistantChat
+                  : classNames.yaNewAssistantEmptyChat
+              }`}
+            >
               <span
                 className={`${
                   activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
@@ -998,7 +1000,14 @@ const NewHomePageMui = () => {
               </Box>
             </Box>
 
-            <Box className={`${classNames.yaNewChatBox} ${ agentChatSession.length > 0 ? classNames.yaNewChatBoxFilled : classNames.yaNewChatBoxEmpty}`} onScroll={handleScroll}>
+            <Box
+              className={`${classNames.yaNewChatBox} ${
+                agentChatSession.length > 0
+                  ? classNames.yaNewChatBoxFilled
+                  : classNames.yaNewChatBoxEmpty
+              }`}
+              onScroll={handleScroll}
+            >
               <span
                 className={`${
                   activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
@@ -1020,7 +1029,17 @@ const NewHomePageMui = () => {
                 &nbsp; {t("newChatTxt")}
               </IconButton>
 
-              <Box className={`${ agentChatSession.length > 0 ? isSmallScreen ? classNames.chatSessionListSmallScreen :  classNames.chatSessionList : isXLScreen ? classNames.chatSessionListXLScreen : messages.chatSessionList }`}>
+              <Box
+                className={`${
+                  agentChatSession.length > 0
+                    ? isSmallScreen
+                      ? classNames.chatSessionListSmallScreen
+                      : classNames.chatSessionList
+                    : isXLScreen
+                    ? classNames.chatSessionListXLScreen
+                    : messages.chatSessionList
+                }`}
+              >
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
                     <Button
