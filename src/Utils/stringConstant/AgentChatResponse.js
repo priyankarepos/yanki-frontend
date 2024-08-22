@@ -154,8 +154,6 @@ export const agentChatResponse = {
     synagogueCommunity: "Which synagogue or community do you primarily associate with?",
     updatedWithCommunityEvents: "Are you looking to be updated with your community events?",
     volunteerInterests: "Are you interested in volunteering within the community?",
-    yes: "Yes",
-    no: "No",
     religiousNeedsAndChallenges: "Religious Needs and Challenges:",
     religiousChallenges: "What are the biggest challenges you face in maintaining your religious observance in daily life?",
     toolForOvercomeChallenges : "What resources or tools would be most helpful to you in overcoming these challenges?",
@@ -163,7 +161,9 @@ export const agentChatResponse = {
     religiousStudies: "If yes, what topics are you most interested in?",
     notAddDataAICustomization : "User has not added data in AI customization.",
     generalInformation : "General Information",
-    isXLScreen: "(min-width:1200px)" 
+    isXLScreen: "(min-width:1200px)",
+    finishChatId: "FinishChatId",
+    online: "online",
 }
 
 export const apiUrls = {
@@ -180,4 +180,6 @@ export const apiUrls = {
     getAgentChatSession: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-agent-chat-session`,
     getUserGeneralInformation: (Id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-custom-prompt-id?userId=${Id}`,
     personalAssistantEmail: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`,
+    changeStatus: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/changeStatus?userId=${id}`,
+    changeStatusByUser: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/changeStatus?receiverId=${id}`,
 }
