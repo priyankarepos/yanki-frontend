@@ -113,12 +113,34 @@ const NewHomePageMui = () => {
     navigate("/membership");
   };
 
-  useEffect(() => {
-    const storedLanguage = localStorage.getItem(messages.i18nextLng);
-    if (storedLanguage) {
-      i18n.changeLanguage(storedLanguage);
+  const languages = [
+    { code: 'en', lang: 'English', name: 'English' },
+    { code: 'he', lang: 'עברית', name: 'Hebrew' },
+    { code: 'es', lang: 'Español', name: 'Spanish' },
+    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
+  ];
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
+
+  const handleChangeLanguage = async () => {
+    try {
+      const response = await axios.get(membershipApiUrls.getUserLanguage);
+      const languageName = response.data.language;
+      const languageObj = languages.find((lang) => lang.name === languageName);
+      i18n.changeLanguage(languageObj.code);
+      localStorage.setItem(messages.i18nextLng, languageObj.code);
+    } catch (err) {
+      setSnackbarMessage(err.message);
+      setSnackbarOpen(true);
     }
-  }, [i18n]);
+  };
+
+  useEffect(() => {
+    changeLanguage();
+    handleChangeLanguage();
+  }, []);
 
   const handleOpenShareModal = (chatId) => {
     setSelectedChatId(chatId);

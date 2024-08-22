@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Container, Typography, Snackbar, Alert } from '@mui/material';
+import { Box, Button, Container, Typography, Snackbar, CircularProgress  } from '@mui/material';
 import './Style.scss';
 import LinkBehavior from '../Components/Helpers/LinkBehavior';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import YankiLogo from '../Assets/images/yanki-logo2.png';
 import CheckCircleIcon from '../Assets/images/Checkbox.svg';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import { apiUrls, messages } from '../Utils/stringConstant/stringConstant';
+import { apiUrls, classNames, messages } from '../Utils/stringConstant/stringConstant';
 
 const ChangeLanguage = () => {
     const navigate = useNavigate();
@@ -23,6 +23,7 @@ const ChangeLanguage = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0].code);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [loading, setLoading] = useState(true); 
 
     useEffect(() => {
         const fetchUserLanguage = async () => {
@@ -37,6 +38,8 @@ const ChangeLanguage = () => {
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingLanguage'));
                 setSnackbarOpen(true);
+            } finally {
+                setLoading(false); 
             }
         };
 
@@ -55,7 +58,6 @@ const ChangeLanguage = () => {
                 language: selectedLang,
             });
             i18n.changeLanguage(selectedLanguage);
-            localStorage.setItem(messages.userLanguage, selectedLanguage);
             localStorage.setItem(messages.i18nextLng, selectedLanguage);
             setSnackbarMessage(t('languageChangedSuccess'));
             setSnackbarOpen(true);
@@ -67,42 +69,51 @@ const ChangeLanguage = () => {
     };
 
     return (
-        <Container maxWidth="xl">
-            <Box className="flex justify-center items-center min-h-70-screen">
-                <Box className="change-language-box" sx={{ maxWidth: '360px', width: { sm: '360px' } }}>
-                    <Typography className="profile-logo text-center minus-margin" onClick={() => navigate('/')}>
-                        <img src={YankiLogo} className="profile-yanki-logo" alt="logo" />
+        <Container>
+            <Box className={classNames.flexCenter}>
+                <Box className={classNames.changeLanguageBox}>
+                    <Typography className={`${classNames.profileLogo} ${classNames.textCenter} ${classNames.minusMargin}`} onClick={() => navigate('/')}>
+                        <img src={YankiLogo} className={classNames.profileYankiLogo} alt={classNames.language} />
                     </Typography>
-                    <Typography component="h1" variant="h5" className="text-center marginBottom-34">
-                        {t('selectLanguage')}
-                    </Typography>
-                    {languages.map((language) => (
-                        <Button
-                            className="bold"
-                            variant="outlined"
-                            key={language.code}
-                            onClick={() => handleLanguageSelect(language)}
-                        >
-                            {language.lang}{' '}
-                            {selectedLanguage === language.code && (
-                                <span>
-                                    <img src={CheckCircleIcon} alt="language" />
-                                </span>
-                            )}
-                        </Button>
-                    ))}
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        className="marginBottom-20 text-center bold"
-                        type="submit"
-                        onClick={handleChangeLanguage}
-                    >
-                        <strong>{t('changeLanguage')}</strong>
-                    </Button>
-                    <Link to="/" component={LinkBehavior} underline="none" variant="body1">
-                        <div className="text-center cursor-pointer color-white">{t('cancelButton')}</div>
-                    </Link>
+                    {loading ? ( 
+                        <Box className={classNames.loaderContainer}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <>
+                            <h2 className={`${classNames.marginBottom34} ${classNames.textCenter}`}>
+                                {t('selectLanguage')}
+                            </h2>
+                            {languages.map((language) => (
+                                <Button
+                                    className={classNames.bold}
+                                    variant={messages.outlined}
+                                    key={language.code}
+                                    disableRipple 
+                                    onClick={() => handleLanguageSelect(language)}
+                                >
+                                    {language.lang}{' '}
+                                    {selectedLanguage === language.code && (
+                                        <span>
+                                            <img src={CheckCircleIcon} alt={classNames.language} />
+                                        </span>
+                                    )}
+                                </Button>
+                            ))}
+                            <Button
+                                variant={messages.buttonContainedVarient}
+                                fullWidth
+                                className={`${classNames.marginBottom20} ${classNames.textCenter} ${classNames.bold}`}
+                                type={classNames.submit}
+                                onClick={handleChangeLanguage}
+                            >
+                                <strong>{t('changeLanguage')}</strong>
+                            </Button>
+                            <Link to="/" component={LinkBehavior} underline="none" variant="body1">
+                                <div className= {`${classNames.colorWhite} ${classNames.textCenter} ${classNames.cursorPointer}`}>{t('cancelButton')}</div>
+                            </Link>
+                        </>
+                    )}
                 </Box>
             </Box>
             <Snackbar
