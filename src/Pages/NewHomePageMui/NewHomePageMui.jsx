@@ -125,17 +125,26 @@ const NewHomePageMui = () => {
   };
 
   const handleChangeLanguage = async () => {
+    setIsSubmitting(true);
     try {
-      const response = await axios.get(membershipApiUrls.getUserLanguage);
-      const languageName = response.data.language;
-      const languageObj = languages.find((lang) => lang.name === languageName);
-      i18n.changeLanguage(languageObj.code);
-      localStorage.setItem(messages.i18nextLng, languageObj.code);
+        const response = await axios.get(membershipApiUrls.getUserLanguage);
+        const languageName = response.data.language;
+        const languageObj = languages.find((lang) => lang.name === languageName);
+        
+        if (languageObj) {
+            i18n.changeLanguage(languageObj.code);
+            localStorage.setItem(messages.i18nextLng, languageObj.code);
+        } else {
+            setSnackbarMessage(t('languageNotFound')); 
+            setSnackbarOpen(true);
+        }
     } catch (err) {
-      setSnackbarMessage(err.message);
-      setSnackbarOpen(true);
+        setSnackbarMessage(err.message);
+        setSnackbarOpen(true);
+    } finally {
+        setIsSubmitting(false);
     }
-  };
+};
 
   useEffect(() => {
     changeLanguage();
