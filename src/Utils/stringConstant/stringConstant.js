@@ -77,6 +77,7 @@ export const messages = {
     success: "success",
     error: "error",
     i18nextLng: "i18nextLng",
+
 };
 
 export const classNames = {
@@ -116,6 +117,20 @@ export const classNames = {
     languageSwitcherButton: "language-switcher-button",
     activeLanguage: "active-language",
     homePageLanguageBtn: "Home-Page-Language-Btn",
+    changeLanguageBox: "change-language-box",
+    profileLogo: "profile-logo",
+    profileYankiLogo: "profile-yanki-logo",
+    minusMargin: "minus-margin",
+    marginBottom34: "marginBottom-34",
+    bold: "bold",
+    marginBottom20: "marginBottom-20",
+    textCenter: "text-center",
+    cursorPointer: "cursor-pointer",
+    colorWhite: "color-white",
+    submit: "submit",
+    language: "language",
+    loaderContainer: "loader-container",
+    flexCenter: "flex justify-center items-center min-h-70-screen",
 };
 
 export const apiUrls = {
@@ -183,7 +198,7 @@ export const membershipApiUrls = {
     chatHistoryData: (chatId, pageSize) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${pageSize}`,
     chatHistoryFetch: (chatId, pageSize = 20) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/chat-history?chatId=${chatId}&pageNumber=1&pageSize=${pageSize}`,
     deleteChatSession: (chatId) => `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-chat-session?chatId=${chatId}`,
-
+    getUserLanguage: `${import.meta.env.VITE_APP_API_HOST}/api/language-selection/get-user-language`,
 }
 
 export const mapContainerStyle = {
