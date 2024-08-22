@@ -32,7 +32,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { FormHelperText, Snackbar } from "@mui/material";
-import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from 'react-i18next';
 
 const SigninPage = () => {
@@ -393,12 +393,12 @@ const SigninPage = () => {
             </Box>
           </Box>
         </Box>
-        <Box className="Home-Page-Language-Btn">
+        <Box className={classNames.homePageLanguageBtn}>
           {languages.map(({ code, lang }) => (
             <a
               key={code}
               onClick={() => changeLanguage(code)}
-              variant="text"
+              variant={messages.text}
               className={`${classNames.languageSwitcherButton} ${
                 i18n.language === code ? classNames.activeLanguage : ""
               }`}

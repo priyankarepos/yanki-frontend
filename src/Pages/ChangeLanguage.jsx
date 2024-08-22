@@ -33,7 +33,7 @@ const ChangeLanguage = () => {
                 if (matchedLanguage) {
                     setSelectedLanguage(matchedLanguage.code);
                 }
-                localStorage.setItem('i18nextLng', matchedLanguage.code);
+                localStorage.setItem(messages.i18nextLng, matchedLanguage.code);
             } catch (error) {
                 setSnackbarMessage(t('errorFetchingLanguage'));
                 setSnackbarOpen(true);
@@ -55,7 +55,7 @@ const ChangeLanguage = () => {
                 language: selectedLang,
             });
             i18n.changeLanguage(selectedLanguage);
-            localStorage.setItem('i18nextLng', selectedLanguage);
+            localStorage.setItem(messages.i18nextLng, selectedLanguage);
             setSnackbarMessage(t('languageChangedSuccess'));
             setSnackbarOpen(true);
             navigate('/');
