@@ -1,5 +1,11 @@
 import { Box, useMediaQuery, Typography } from "@mui/material";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../App";
 import AdminDashboard from "../AdminDashboard";
@@ -23,6 +29,7 @@ const UserChatList = () => {
   const { drawerOpen } = useContext(Context);
   const navigate = useNavigate();
   const { id } = useParams();
+  const userListRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
   );
@@ -55,6 +62,26 @@ const UserChatList = () => {
     setUserList([newUser]);
   }, []);
 
+  useEffect(() => {
+    userListRef.current = userList;
+  }, [userList]);
+
+  const handleUserStatus = (senderUser) => {
+    setUserStatus((prevStatus) => {
+      if (prevStatus[senderUser.userId]) {
+        return {
+          ...prevStatus,
+          [senderUser.userId]: senderUser.status,
+        };
+      } else {
+        return {
+          ...prevStatus,
+          [senderUser.userId]: senderUser.status,
+        };
+      }
+    });
+  };
+
   const initializeConnection = useCallback(() => {
     const connection = getConnectionPromise();
 
@@ -63,27 +90,11 @@ const UserChatList = () => {
         handleReceivedMessage(message);
       });
 
-      connection.on(agentChatResponse.newUser, (senderUser) => {                
-        setUserStatus((prevStatus) => {
-          if (prevStatus[senderUser.userId]) {
-            return {
-              ...prevStatus,
-              [senderUser.userId]: senderUser.status,
-            };
-          } else {
-            return {
-              ...prevStatus,
-              [senderUser.userId]: senderUser.status,
-            };
-          }
-        });
+      connection.on(agentChatResponse.newUser, (senderUser) => {
+        handleUserStatus(senderUser);
       });
     }
   }, []);
-
-  useEffect(() => {
-    initializeConnection();
-  }, [initializeConnection])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -155,8 +166,9 @@ const UserChatList = () => {
   };
 
   const handleUserList = async (message) => {
-    const prevUserList = userList;
+    const prevUserList = userListRef.current;
     const updatedUserList = await updateUserMessage(prevUserList, message);
+    fetchUserStatus();
     setUserList(updatedUserList);
   };
 
@@ -193,17 +205,18 @@ const UserChatList = () => {
     setIsModalOpen(res);
   };
 
+  const fetchUserStatus = async () => {
+    var response = await axios.get(`${apiUrls.getUserStatus}`);
+    const statusDict = response.data.reduce((acc, status) => {
+      acc[status.userId] = status.status;
+      return acc;
+    }, {});
+    setUserStatus(statusDict);
+  };
+
   useEffect(() => {
-    const fetchUserStatus = async () => {
-      var response = await axios.get(`${apiUrls.getUserStatus}`);
-      const statusDict = response.data.reduce((acc, status) => {
-        acc[status.userId] = status.status;
-        return acc;
-      }, {});
-      setUserStatus(statusDict);
-    };
     fetchUserStatus();
-  }, []);
+  }, [fetchUserStatus]);
 
   return (
     <Box
@@ -286,7 +299,8 @@ const UserChatList = () => {
                             <img
                               className={agentChatResponse.userImage}
                               src={
-                                userStatus[user.userId] === agentChatResponse.online
+                                userStatus[user.userId] ===
+                                agentChatResponse.online
                                   ? OnlineUserAvatar
                                   : OfflineUserAvtar
                               }
