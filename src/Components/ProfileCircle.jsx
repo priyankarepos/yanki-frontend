@@ -130,14 +130,14 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
 
   const onClickLogout = () => {
     stopConnection();
-    
+
     window.localStorage.removeItem(
       import.meta.env.VITE_APP_LOCALSTORAGE_REMEMBER
     );
     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
-
+    window.localStorage.removeItem('i18nextLng');
     navigate("/auth");
-    
+
   };
 
   const onClickNetworkingInterface = () => {
@@ -435,7 +435,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
               </ListItemIcon>
               {t('changePhoneNumberTxt')}
             </MenuItem>
-            <MenuItem onClick={onClickChangeLanguage}>
+            {activeTab === 0 &&<MenuItem onClick={onClickChangeLanguage}>
               <ListItemIcon>
                 {activeTab === 0 ? (
                   <img src={ChangeLanguage} alt="ChangeLanguage" />
@@ -444,7 +444,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
                 )}
               </ListItemIcon>
               {t('changeLanguageTxt')}
-            </MenuItem>
+            </MenuItem>}
             <MenuItem onClick={handleDeleteAccount}>
               <ListItemIcon>
                 {activeTab === 0 ? (

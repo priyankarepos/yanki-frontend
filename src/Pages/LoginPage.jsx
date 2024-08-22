@@ -28,11 +28,17 @@ import { useGoogleLogin } from "@react-oauth/google";
 import "./Style.scss";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Snackbar, useMediaQuery } from "@mui/material";
-import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
 import { startConnection } from "../SignalR/signalRService";
 import { useTranslation } from 'react-i18next';
 
 const LoginPage = () => {
+  const languages = [
+    { code: 'en', lang: 'English', name: 'English' },
+    { code: 'he', lang: 'עברית', name: 'Hebrew' },
+    { code: 'es', lang: 'Español', name: 'Spanish' },
+    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
+  ];
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -41,30 +47,27 @@ const LoginPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const { activeTab } = useContext(Context);
   const { t, i18n } = useTranslation();
-  const languages = [
-    { code: 'en', lang: 'English' },
-    { code: 'he', lang: 'עברית' },
-    { code: 'es', lang: 'Español' },
-    { code: 'yi', lang: 'ייִדיש' },
-  ];
-  const changeLanguage = (code) => {
-    i18n.changeLanguage(code);
-  };
+
   const recipientEmail = "hello@yanki.ai";
   const emailSubject = "Email subject";
   const emailBody = "Email body";
+
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code);
+  };
 
   const handleChangeLanguage = async () => {
     try {
       const response = await axios.get(apiUrls.getUserLanguage);
       const languageName = response.data.language;
-      const languageObj = languages.find(lang => lang.name === languageName);
+      const languageObj = languages.find((lang) => lang.name === languageName);
       i18n.changeLanguage(languageObj.code);
+      localStorage.setItem("i18nextLng", languageObj.code);
     } catch (err) {
-      setSnackbarMessage(err)
+      setSnackbarMessage(err.message);
+      setSnackbarOpen(true);
     }
-  }
-
+  };
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const navigate = useNavigate();
@@ -108,8 +111,15 @@ const LoginPage = () => {
           JSON.stringify(response.data.contentResponse)
         );
         startConnection();
-        handleChangeLanguage();
-        navigate("/");
+        if (activeTab === 0) {
+          handleChangeLanguage();
+        }
+        if (activeTab === 1) {
+          window.location.reload();
+          navigate("/");
+        } else {
+          navigate("/");
+        }
       }
     } catch (e) {
       setLoginLoading(false);
@@ -149,7 +159,9 @@ const LoginPage = () => {
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
-        handleChangeLanguage();
+        if (activeTab === 0) {
+          handleChangeLanguage();
+        }
         startConnection();
         navigate("/");
       } else {
@@ -396,7 +408,9 @@ const LoginPage = () => {
               key={code}
               onClick={() => changeLanguage(code)}
               variant="text"
-              className="language-switcher-button"
+              className={`${classNames.languageSwitcherButton} ${
+                i18n.language === code ? classNames.activeLanguage : ""
+              }`}
             >
               {lang}
             </a>

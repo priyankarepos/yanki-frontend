@@ -111,7 +111,9 @@ export const classNames = {
     yaNewChatBoxEmpty: 'ya-new-chat-box-empty',
     chatSessionListSmallScreen: "ya-chat-session-list-small-screen",
     chatSessionList: "ya-chat-session-list",
-    chatSessionListXLScreen: "ya-chat-session-list-XLScreen"
+    chatSessionListXLScreen: "ya-chat-session-list-XLScreen",
+    languageSwitcherButton: "language-switcher-button",
+    activeLanguage: "active-language",
 };
 
 export const apiUrls = {

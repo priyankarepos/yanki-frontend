@@ -20,7 +20,7 @@ import partnershipLogoLightNine from "../Assets/images/partnet-logo9.png";
 import partnershipLogoLightTen from "../Assets/images/partnet-logo10.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import "./Style.scss";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { classNames, messages } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from 'react-i18next';
 
 const NewTitlePage = () => {
@@ -195,7 +195,9 @@ const NewTitlePage = () => {
               key={code}
               onClick={() => changeLanguage(code)}
               variant="text"
-              className="language-switcher-button"
+              className={`${classNames.languageSwitcherButton} ${
+                i18n.language === code ? classNames.activeLanguage : ""
+              }`}
             >
               {lang}
             </a>

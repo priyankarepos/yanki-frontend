@@ -166,7 +166,7 @@ const SigninPage = () => {
               variant="h5"
               className="text-center marginBottom-34"
             >
-              Create your account
+              {t('createYourAccount')}
             </Typography>
             <Controller
               control={control}
@@ -399,7 +399,9 @@ const SigninPage = () => {
               key={code}
               onClick={() => changeLanguage(code)}
               variant="text"
-              className="language-switcher-button"
+              className={`${classNames.languageSwitcherButton} ${
+                i18n.language === code ? classNames.activeLanguage : ""
+              }`}
             >
               {lang}
             </a>
