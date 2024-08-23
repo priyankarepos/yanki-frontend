@@ -16,9 +16,15 @@ import {
   agentChatResponse,
   apiUrls,
 } from "../../Utils/stringConstant/AgentChatResponse";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { messages } from "../../Utils/stringConstant/stringConstant";
 
-const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
+const PersonalAssistant = ({
+  answer,
+  fetchRemainingMessage,
+  clickableOff,
+  remainingMsgData,
+}) => {
   const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [touched, setTouched] = useState(false);
@@ -27,6 +33,7 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isChatStarted, setIsChatStarted] = useState(false);
+  const [taskLimitReachedMessage, setTaskLimitReachedMessage] = useState("");
 
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
@@ -36,25 +43,31 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
 
   const handlePersonalAssistant = async () => {
     try {
-      setLoading(true);
-      const apiUrl = apiUrls.personalAssistantEmail;
-      const response = await axios.post(apiUrl, { content });
-      if (response.status === 200) {
-        const sendMessage = await axios.post(`${apiUrls.sendMessage}`, {
-          content,
-          userType: agentChatResponse.user,
-        });
-        if (sendMessage.status === 200) {
-          let res = sendMessage.data;
-          setMailMessage(response?.data?.message);
-          setLoading(false);
-          setContent("");
-          setTouched(false);
-          fetchRemainingMessage();      
-        }
+      if (remainingMsgData.totalTaskLeft === 0) {
+        setTaskLimitReachedMessage(messages.taskLeftZero);
+        setContent("");
+        setTouched(false);
       } else {
+        setLoading(true);
+        const response = await axios.post(apiUrls.personalAssistantEmail, {
+          content,
+        });
+        if (response.status === 200) {
+          const sendMessage = await axios.post(`${apiUrls.sendMessage}`, {
+            content,
+            userType: agentChatResponse.user,
+          });
+          if (sendMessage.status === 200) {
+            setMailMessage(response?.data?.message);
+            setLoading(false);
+            setContent("");
+            setTouched(false);
+            fetchRemainingMessage();
+          }
+        } else {
         setSnackbarMessage(`${t('errorSendingPersonalAssistantEmail')}`);
-        setSnackbarOpen(true);
+          setSnackbarOpen(true);
+        }
       }
     } catch (error) {
       setSnackbarMessage(`${t('errorSendingPersonalAssistantEmail')}`, error);
@@ -88,7 +101,12 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
           onChange={(e) => setContent(e.target.value)}
           onBlur={handleBlur}
           error={touched && !content.trim()}
-          disabled={mailMessage !== "" || !answer?.isPersonalAssistant === true || clickableOff}
+          disabled={
+            mailMessage !== "" ||
+            taskLimitReachedMessage !== "" ||
+            !answer?.isPersonalAssistant === true ||
+            clickableOff
+          }
         />
         <FormHelperText className="error-message">
           {touched && !content.trim() && `${t('fieldRequired')}`}
@@ -115,27 +133,32 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
             `${t('submit')}`
           )}
         </Typography>
-        {mailMessage && (
-        <div>
-          <Typography sx={{ mt: 2 }}>
-          {t('personalAssistanceRequestReceived')}
-            <span className={agentChatResponse.emailSentMessageClass}>
-            {t('startingChat')}
-            </span>
-          </Typography>
-          <Box className={agentChatResponse.startChatContainer}>
-            <a href={agentChatResponse.jumpToUserChatComponetId}
-              className={`${agentChatResponse.startChat} ${
-                userRoles === agentChatResponse.enterprise
-                  ? agentChatResponse.customDisableLight
-                  : ""
-              }`}
-              onClick={handleStartChat}
-            >
-              {t('startChat')}
+        {mailMessage ? (
+          <div>
+            <Typography sx={{ mt: 2 }}>
+              {t('personalAssistanceRequestReceived')}
+              <span className={agentChatResponse.emailSentMessageClass}>
+                {t('startingChat')}
+              </span>
+            </Typography>
+            <Box className={agentChatResponse.startChatContainer}>
+              <a
+                href={agentChatResponse.jumpToUserChatComponetId}
+                className={`${agentChatResponse.startChat} ${
+                  userRoles === agentChatResponse.enterprise
+                    ? agentChatResponse.customDisableLight
+                    : ""
+                }`}
+                onClick={handleStartChat}
+              >
+                {t('startChat')}
               </a>
-          </Box>
-        </div>
+            </Box>
+          </div>
+        ) : (
+          taskLimitReachedMessage && (
+            <Typography sx={{ mt: 2 }}>{taskLimitReachedMessage}</Typography>
+          )
         )}
       </Paper>
       <Snackbar
@@ -146,7 +169,10 @@ const PersonalAssistant = ({ answer, fetchRemainingMessage, clickableOff }) => {
       />
 
       {isChatStarted && (
-        <Box id={agentChatResponse.jumpToUserChatComponet} className={agentChatResponse.userChatSession}>
+        <Box
+          id={agentChatResponse.jumpToUserChatComponet}
+          className={agentChatResponse.userChatSession}
+        >
           <UserChatSession />
         </Box>
       )}
