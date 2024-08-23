@@ -239,6 +239,7 @@ const SearchHistoryItem = forwardRef(
                   fetchRemainingMessage={fetchRemainingMessage}
                   answer={response}
                   clickableOff={clickableOff}
+                  remainingMsgData={remainingMsgData}
                 />
               </div>
             </Paper>
@@ -258,6 +259,7 @@ const SearchHistoryItem = forwardRef(
                 fetchRemainingMessage={fetchRemainingMessage}
                 answer={response}
                 clickableOff={clickableOff}
+                remainingMsgData={remainingMsgData}
               />
             </div>
           </div>
