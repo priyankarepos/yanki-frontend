@@ -184,6 +184,18 @@ p.kosher-text strong {
   }
 }
 
+.pdf-button-style {
+  min-width: 130px;
+  height: 45px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  background: #13538b;
+  color: lightblue;
+}
+
 .pdf-modal {
   width: 90vw;
   height: 88vh;
@@ -346,4 +358,10 @@ ul {
 .Mui-Container-UserMenu {
   padding-right: 0 !important;
   padding-left: 0 !important;
+}
+.pdf-loader-container{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
 }

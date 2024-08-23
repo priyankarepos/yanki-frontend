@@ -77,6 +77,7 @@ export const messages = {
     success: "success",
     error: "error",
     i18nextLng: "i18nextLng",
+    isLargeScreen: "(min-width: 600px)",
 
 };
 
@@ -131,6 +132,8 @@ export const classNames = {
     language: "language",
     loaderContainer: "loader-container",
     flexCenter: "flex justify-center items-center min-h-70-screen",
+    pdfLoaderContainer: "pdf-loader-container",
+    pdfButtonStyle: "pdf-button-style",
 };
 
 export const apiUrls = {
