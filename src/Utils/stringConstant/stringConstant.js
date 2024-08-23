@@ -77,6 +77,8 @@ export const messages = {
     success: "success",
     error: "error",
     i18nextLng: "i18nextLng",
+    isLargeScreen: "(min-width: 600px)",
+    taskLeftZero: "Your current limit of tasks has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset. Thank you for using Yanki."
 
 };
 
@@ -131,6 +133,8 @@ export const classNames = {
     language: "language",
     loaderContainer: "loader-container",
     flexCenter: "flex justify-center items-center min-h-70-screen",
+    pdfLoaderContainer: "pdf-loader-container",
+    pdfButtonStyle: "pdf-button-style",
 };
 
 export const apiUrls = {

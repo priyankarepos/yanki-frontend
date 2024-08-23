@@ -131,7 +131,7 @@ const MembershipPage = () => {
   const handleUpdateSubscriptionPlan = async (priceId) => {
     try {
       setLoadingProductId(priceId);
-      const queryString = `?customerId=${updateCustomerId.customerId}`;
+      const queryString = `${updateCustomerId.customerId}`;
       const response = await axios.post(
         membershipApiUrls.createCustomerPortal(queryString)
       );
@@ -149,7 +149,7 @@ const MembershipPage = () => {
   const handleDeclinedPayment = async (priceId) => {
     try {
       setLoadingProductId(priceId);
-      const queryString = `?customerId=${updateCustomerId.customerId}`;
+      const queryString = `${updateCustomerId.customerId}`;
       const response = await axios.post(
         membershipApiUrls.createCustomerPortal(queryString)
       );
@@ -189,9 +189,9 @@ const MembershipPage = () => {
       const paymentUrl = response.data;
       setSnackbarMessage(paymentUrl);
       setSnackbarOpen(true);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
     } catch (error) {
       setSnackbarMessage("Error downgrade subscription plan:", error);
       setSnackbarOpen(true);

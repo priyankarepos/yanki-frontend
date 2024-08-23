@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { pdfjs } from 'react-pdf';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-import { Grid, Paper, Typography, useMediaQuery } from '@mui/material';
+import { Grid, Paper, Typography, useMediaQuery, CircularProgress } from '@mui/material';
 import { Button } from '@mui/base';
-import "./AnswerStyle.scss"
+import "./AnswerStyle.scss";
 import { Box } from '@mui/system';
 import { useTranslation } from "react-i18next";
+import { classNames, messages } from '../Utils/stringConstant/stringConstant';
 
 const PdfAnswers = ({ answer }) => {
     const { t } = useTranslation();
@@ -17,10 +18,14 @@ const PdfAnswers = ({ answer }) => {
     const [pdfLoadError, setPdfLoadError] = useState(false);
     const [visiblePdfCount, setVisiblePdfCount] = useState(2);
     const [thumbnailUrls, setThumbnailUrls] = useState([]);
+    const [loadingThumbnails, setLoadingThumbnails] = useState([]);
 
     const pdfNames = useMemo(() => answer?.pdfNames || [], [answer?.pdfNames]);
-
     const s3BaseUrl = import.meta.env.VITE_APP_S3_BASE_URL;
+
+    useEffect(() => {
+        setVisiblePdfCount(2);
+    }, [pdfNames]);
 
     const openPdfModal = (pdfName) => {
         const cleanPdfName = pdfName.replace(/%27/g, '');
@@ -33,7 +38,7 @@ const PdfAnswers = ({ answer }) => {
         setSelectedPdf(null);
     };
 
-    const isLargeScreen = useMediaQuery("(min-width: 600px)");
+    const isLargeScreen = useMediaQuery(messages.isLargeScreen);
 
     const renderPdfModal = () => {
         return (
@@ -55,7 +60,7 @@ const PdfAnswers = ({ answer }) => {
                     {pdfLoadError ? (
                         <div>{t('errorLoadingPDF')}</div>
                     ) : (
-                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                        <Worker workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`}>
                             <Viewer fileUrl={selectedPdf} />
                         </Worker>
                     )}
@@ -68,76 +73,89 @@ const PdfAnswers = ({ answer }) => {
         setVisiblePdfCount((prevCount) => prevCount + 2);
     };
 
+    const generateThumbnail = useCallback(async (pdfName) => {
+        const pdfUrl = `${s3BaseUrl}${pdfName}`;
+        try {
+            const pdf = await pdfjs.getDocument(pdfUrl).promise;
+            const page = await pdf.getPage(1);
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            const viewport = page.getViewport({ scale: 1.0 });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport,
+            };
+            await page.render(renderContext).promise;
+            return canvas.toDataURL();
+        } catch (error) {
+            console.error(`Failed to generate thumbnail for ${pdfName}:`, error);
+            return null;
+        }
+    }, [s3BaseUrl]);
+
     useEffect(() => {
-        setVisiblePdfCount(2);
-    }, [answer]);
-    
-    useEffect(() => {
-        pdfjs.GlobalWorkerOptions.workerSrc = pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-    const promises = pdfNames.slice(0, visiblePdfCount).map(async (pdfName) => {
-      const pdfUrl = `${s3BaseUrl}${pdfName}`;
-      return pdfjs.getDocument(pdfUrl).promise.then((pdf) => {
-        return pdf.getPage(1).then((page) => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          const viewport = page.getViewport({ scale: 1.0 });
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-          const renderContext = {
-            canvasContext: context,
-            viewport: viewport,
-          };
-          return page.render(renderContext).promise.then(() => {
-            const imageDataUrl = canvas.toDataURL();
-            return imageDataUrl;
-          });
-        });
-      });
-    });
+        const loadThumbnails = async () => {
+            const newThumbnails = await Promise.all(
+                pdfNames.slice(thumbnailUrls.length, visiblePdfCount).map(async (pdfName) => {
+                    setLoadingThumbnails((prev) => [...prev, true]);
+                    const thumbnailUrl = await generateThumbnail(pdfName);
+                    return { thumbnailUrl, index: thumbnailUrls.length };
+                })
+            );
 
-    Promise.all(promises).then((thumbnails) => {
-      setThumbnailUrls(thumbnails);
-    });
-  }, [pdfNames, visiblePdfCount, s3BaseUrl]);
+            setThumbnailUrls((prev) => [
+                ...prev,
+                ...newThumbnails.map(({ thumbnailUrl }) => thumbnailUrl),
+            ]);
+            setLoadingThumbnails((prev) => [
+                ...prev.slice(0, thumbnailUrls.length),
+                ...newThumbnails.map(() => false),
+            ]);
+        };
 
+        if (pdfNames.length > thumbnailUrls.length) {
+            loadThumbnails();
+        }
+    }, [pdfNames, visiblePdfCount, generateThumbnail, thumbnailUrls.length]);
 
     return (
-        <Paper sx={{
-            p: 2,
-        }}>
-            <Grid
-                container
-                spacing={2}
-            >
+        <Paper sx={{ p: 2 }}>
+            <Grid container spacing={2}>
                 {pdfNames.slice(0, visiblePdfCount).map((pdfName, index) => (
-
-                    <Grid item lg={4} md={6} sm={6} xs={12}>
+                    <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
                         <div
-                        className='pdf-box'
-                            key={index}
+                            className='pdf-box'
                             onClick={() => openPdfModal(pdfName)}
                         >
-                            <img
-                                src={thumbnailUrls[index]}
-                                alt={`${pdfName.replace('.pdf', '')} thumbnail`}
-                            />
+                            {loadingThumbnails[index] ? (
+                                <Box className={classNames.pdfLoaderContainer}>
+                                    <CircularProgress />
+                                </Box>
+                            ) : (
+                                <img
+                                    src={thumbnailUrls[index]}
+                                    alt={`${pdfName.replace('.pdf', '')} thumbnail`}
+                                />
+                            )}
                             <Typography className='enterprise-pdf-name marginTop-10'> {pdfName}</Typography>
                         </div>
                     </Grid>
                 ))}
             </Grid>
-            <Box className='button-style'>
-                {pdfNames.length > visiblePdfCount && (
-                    <Button
-                        variant="outlined"
-                        fullWidth
-                        onClick={handleLoadMore}
-                    >
-                        {t('loadMore')}
-                    </Button>
-                )}
-            </Box>
+            {pdfNames.length > visiblePdfCount && (
+                <Button
+                    className={classNames.pdfButtonStyle}
+                    variant="contained"
+                    fullWidth
+                    onClick={handleLoadMore}
+                >
+                    {t('loadMore')}
+                </Button>
+            )}
             {renderPdfModal()}
         </Paper>
     );
