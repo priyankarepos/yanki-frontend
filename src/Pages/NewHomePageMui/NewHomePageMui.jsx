@@ -1480,7 +1480,7 @@ const NewHomePageMui = () => {
                       <IconButton
                         variant="contained"
                         type="submit"
-                        disabled={!searchQuery || isSubmitting}
+                        disabled={!searchQuery.trim() || isSubmitting}
                         onClick={onSubmit}
                         className="ya-send-icon"
                         sx={{
