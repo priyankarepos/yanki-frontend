@@ -61,7 +61,6 @@ const TorahanytimeAnswer = ({ answer }) => {
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 1,
-      swipeable: false,
     },
   };
 
@@ -138,7 +137,8 @@ const TorahanytimeAnswer = ({ answer }) => {
           </div>
         )}
 
-        <Carousel responsive={responsive}>
+        <Carousel responsive={responsive} swipeable={false}
+          draggable={false}>
           {data?.length > 0 &&
             data.map((item) => (
               <StyledCarouselItem key={item._id} className="marginRight-5">
