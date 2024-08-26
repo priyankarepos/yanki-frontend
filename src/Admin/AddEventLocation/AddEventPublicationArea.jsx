@@ -23,6 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
+import { classNames } from "../../Utils/stringConstant/stringConstant";
 
 const AdminAddEventPublicationArea = () => {
   const [publicationArea, setPublicationArea] = useState([]);
@@ -241,7 +242,7 @@ const AdminAddEventPublicationArea = () => {
             </Table>
           </TableContainer>
         ) : (
-          <Typography variant="body1" className="no-data-found">
+          <Typography variant="body1" className={classNames.noDataFoundClass}>
             No event location available. Please add a location.
           </Typography>
         )}

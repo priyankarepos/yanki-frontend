@@ -6,13 +6,12 @@ import {
   Button,
   TextField,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import shareChatIcon1 from "../../Assets/images/share-chat1.svg";
 import shareChatIcon2 from "../../Assets/images/share-chat2.svg";
-import shareChatIcon3 from "../../Assets/images/share-chat3.svg";
-import shareChatIcon4 from "../../Assets/images/share-chat4.svg";
-import shareChatIcon5 from "../../Assets/images/share-chat5.svg";
+import EmailIcon from '@mui/icons-material/Email';
 import "./ShareChatLink.scss";
 import {
   apiUrls,
@@ -29,6 +28,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [linkGenerated, setLinkGenerated] = useState(false);
   const [buttonText, setButtonText] = useState(t('createLink'));
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (selectedChatId) {
@@ -46,75 +46,84 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          apiUrls.generateShareChatIdApiUrl(selectedChatId)
-        );
+      const storedLink = localStorage.getItem(messages.generatedChatLink);
+      if (storedLink) {
+        setButtonText(t('copyLink'));
+        setChatLink(storedLink);
+        setLinkGenerated(true);
+        setCreateChatLink(storedLink);
+      } else {
+        try {
+          const response = await axios.post(
+            apiUrls.generateShareChatIdApiUrl(selectedChatId)
+          );
 
-        if (response.status === 200 && response.data.isSuccess) {
-          const generatedShareChatId = response.data.generatedShareChatId;
-          const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
-          setChatLink(newChatLink);
+          if (response.status === 200 && response.data.isSuccess) {
+            const generatedShareChatId = response.data.generatedShareChatId;
+            const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
+            setChatLink(newChatLink);
+            const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
+              text: () => newChatLink,
+              container: document.getElementsByClassName(classNames.shareLinkModal)[0],
+            });
 
-          const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
-            text: () => newChatLink,
-            container: document.getElementsByClassName(classNames.shareLinkModal)[0],
-          });
+            clipboard.on(messages.success, (e) => {
+              setButtonText(t('copiedToClipboard'));
+              setTimeout(() => {
+                setButtonText(t('copyLink'));
+              }, 3000);
 
-          clipboard.on(messages.success, (e) => {
-            setButtonText(t('copiedToClipboard'));
-            setTimeout(() => {
-              setButtonText(t('copyLink'));
-            }, 2000);
+              e.clearSelection();
+            });
 
-            e.clearSelection();
-          });
+            clipboard.on(messages.error, (e) => {
+              setSnackbarMessage(messages.errorMessagePrefix + e.action);
+              setSnackbarOpen(true);
+            });
 
-          clipboard.on(messages.error, (e) => {
-            setSnackbarMessage(messages.errorMessagePrefix + e.action);
-            setSnackbarOpen(true);
-          });
-
-          return () => {
-            clipboard.destroy();
-          };
-        } else {
-          setSnackbarMessage(messages.failedToGenerateShareChatId);
+            return () => {
+              clipboard.destroy();
+            };
+          } else {
+            setSnackbarMessage(messages.failedToGenerateShareChatId);
+          }
+        } catch (error) {
+          setSnackbarMessage(messages.errorMessagePrefix + error.message);
+          setSnackbarOpen(true);
         }
-      } catch (error) {
-        setSnackbarMessage(messages.errorMessagePrefix + error.message);
-        setSnackbarOpen(true);
       }
     };
     fetchData();
   }, []);
 
   const handleCreateLink = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setLinkGenerated(true);
     setCreateChatLink(chatLink);
+    localStorage.setItem(messages.generatedChatLink, chatLink);
+    setIsLoading(false);
   };
 
   const handleShareWhatsApp = () => {
     window.open(`${apiUrls.whatsappShareUrl}${encodeURIComponent(chatLink)}`);
   };
 
-  const handleShareTwitter = () => {
-    window.open(`${apiUrls.twitterShareUrl}${encodeURIComponent(chatLink)}`);
-  };
-
   const handleShareMessage = () => {
     window.open(`${apiUrls.smsShareUrl}${encodeURIComponent(chatLink)}`);
   };
 
-  const handleShareInstagram = () => {
-    window.open(`${apiUrls.instagramShareUrl}${encodeURIComponent(chatLink)}`);
+  const handleShareEmail = () => {
+    window.open(`mailto:?subject=${encodeURIComponent(t('shareSubject'))}&body=${encodeURIComponent(chatLink)}`);
   };
 
-  const handleShareMessenger = () => {
-    const appId = messages.messengerAppIdPlaceholder;
-    const messengerUrl = apiUrls.messengerShareUrl(chatLink, appId);
-    window.open(messengerUrl);
-  };
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(createChatLink);
+    setButtonText(t('copiedToClipboard'));
+    setTimeout(() => {
+      setButtonText(t('copyLink'));
+    }, 2000);
+  }
 
   return (
     <Modal
@@ -144,14 +153,8 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             <Button onClick={handleShareWhatsApp}>
               <img src={shareChatIcon2} alt={messages.shareLinkIconAlt} />
             </Button>
-            <Button onClick={handleShareInstagram}>
-              <img src={shareChatIcon3} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button onClick={handleShareTwitter}>
-              <img src={shareChatIcon4} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button onClick={handleShareMessenger}>
-              <img src={shareChatIcon5} alt={messages.shareLinkIconAlt} />
+            <Button className="sharechat-mail-icon" onClick={handleShareEmail}>
+              <EmailIcon />
             </Button>
           </Box>
         )}
@@ -171,9 +174,14 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             variant={messages.buttonContainedVariant}
             color={messages.primaryColor}
             className={classNames.sharedChatButton}
-            onClick={handleCreateLink}
+            onClick={linkGenerated ? handleCopyLink :  handleCreateLink}
+            disabled={isLoading}
           >
-            {buttonText}
+             {isLoading ? (
+              <CircularProgress size={24} className={classNames.copyLinkLoader} />
+            ) : (
+              buttonText
+            )}
           </Button>
         </Box>
         <Snackbar

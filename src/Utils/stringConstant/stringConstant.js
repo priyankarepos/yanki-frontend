@@ -80,6 +80,11 @@ export const messages = {
     isLargeScreen: "(min-width: 600px)",
     taskLeftZero: "Your current limit of tasks has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset. Thank you for using Yanki.",
     audioText: "audio",
+    videoText: "video",
+    loginYourAccountTitle : "Login your account",
+    activeTab: "activeTab",
+    generatedChatLink: "generatedChatLink",
+    locationAllowed : "Location allowed",
 
 };
 
@@ -136,6 +141,11 @@ export const classNames = {
     flexCenter: "flex justify-center items-center min-h-70-screen",
     pdfLoaderContainer: "pdf-loader-container",
     pdfButtonStyle: "pdf-button-style",
+    copyLinkLoader: "copy-link-loader",
+    chatSessionListEmptySmallScreen: "ya-chat-session-list-empty-small-screen",
+    noDataFoundClass: "no-data-found",
+    fixedSearchBox: "fixed-search-Box",
+    hiddenFixedBox: "hidden",
 };
 
 export const apiUrls = {
@@ -185,6 +195,8 @@ export const apiUrls = {
     resetPassword: `${import.meta.env.VITE_APP_API_HOST}/api/auth/reset-password`,
     registerUser: `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
     changePhoneNumber: `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
+    getAllEvents: (pageNumber) =>
+        `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`,
 };
 
 export const membershipApiUrls = {
@@ -210,3 +222,22 @@ export const mapContainerStyle = {
     width: '100%',
     height: '400px',
 };
+
+export const sourceSelectionStrings = {
+    small : "small",
+    defaultOption: "YankiAIChoice",
+    anchorOriginHorizontal: "right",
+    anchorOriginVertical: "bottom",
+    transformOriginHorizontal: "right",
+    transformOriginVertical: "top",
+    menuClassName: "source-selection-menu",
+    selectedClass: "selected",
+    disabledClass: "disabled",
+    menuItemClass: "menu-item",
+    localStorageKey: 'selectedOption',
+    defaultOption2: "PersonalAssistant",
+    sourceSelectioniconBox: "source-selectionicon",
+    sourceSelectionTitle : "Source Selection",
+    accountMenu: "account-menu",
+    true: "true",
+}

@@ -10,6 +10,7 @@ import {
   Pagination,
   CircularProgress,
 } from '@mui/material';
+import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
 
 const AdminSearchRepostPage = () => {
   const { drawerOpen } = useContext(Context);
@@ -104,8 +105,19 @@ const AdminSearchRepostPage = () => {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   return (
     <Box className="event-request-container">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><AdminDashboard /></Box>
-      <Box className="enterpriseFormBox" sx={{ width: drawerOpen ? 'calc(100% - 270px)' : "100%" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}><AdminDashboard /></Box>
+      <Box className={agentChatResponse.enterpriseFormBox}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}>
         <Box className="event-content">
           <Typography variant="h6" sx={{ pb: 2 }}>Search Query Report</Typography>
           <Paper sx={{ p: 2 }}>

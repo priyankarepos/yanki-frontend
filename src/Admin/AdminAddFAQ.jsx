@@ -18,6 +18,8 @@ import axios from "axios";
 import { Context } from "../App";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import "./AdminStyle.css";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { classNames } from "../Utils/stringConstant/stringConstant";
 
 const AdminAddFaq = () => {
   const { drawerOpen } = useContext(Context);
@@ -162,12 +164,21 @@ const AdminAddFaq = () => {
 
   return (
     <div className="admin-faq-wrapper">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,}}>
         <AdminDashboard />
       </Box>
       <Box
         className="event-content"
-        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}
       >
         <Box className="admin-faq-heading">
           <Typography variant="h6" sx={{ pb: 2 }}>
@@ -215,7 +226,7 @@ const AdminAddFaq = () => {
             <CircularProgress />
           </Typography>
         ) : (
-          <Typography variant="body1" className="no-data-found">
+          <Typography variant="body1" className={classNames.noDataFoundClass}>
             No FAQs available
           </Typography>
         )}

@@ -23,6 +23,7 @@ import ConfirmDialog from './ConfirmDialog';
 import ReactPhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { messages, apiUrls } from "../Utils/stringConstant/EnterpriseProfileString";
+import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
 
 const EnterpriseProfile = () => {
   const [tags, setTags] = useState([]);
@@ -540,10 +541,20 @@ const EnterpriseProfile = () => {
 
   return (
     <Box className="enterprise-box">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,}}>
         <EnterpriseDashboard />
       </Box>
-      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content"}`} >
+      <Box className={agentChatResponse.enterpriseFormBox}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
+        }} >
         <Typography variant="h6" className='enterprise-heading'>
           {messages.myEnterpriseProfileHeading}
         </Typography>

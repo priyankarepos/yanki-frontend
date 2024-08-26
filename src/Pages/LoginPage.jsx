@@ -119,16 +119,11 @@ const LoginPage = () => {
           import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN,
           JSON.stringify(response.data.contentResponse)
         );
-        startConnection();
         if (activeTab === 0) {
           handleChangeLanguage();
         }
-        if (activeTab === 1) {
-          window.location.reload();
-          navigate("/");
-        } else {
-          navigate("/");
-        }
+        startConnection();
+        navigate("/");
       }
     } catch (e) {
       setLoginLoading(false);
@@ -216,7 +211,7 @@ const LoginPage = () => {
               variant="h5"
               className="text-center marginBottom-34 login-page-title"
             >
-              {activeTab === 0 ? `${t('loginToYourAccount')}` : "Login your account"},
+              {activeTab === 0 ? `${t('loginToYourAccount')}` : messages.loginYourAccountTitle}
             </Typography>
             <Controller
               control={control}

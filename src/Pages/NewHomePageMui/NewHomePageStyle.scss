@@ -6,6 +6,7 @@
 .ya-home-header {
     position: sticky !important;
     box-shadow: none !important;
+    z-index: 99999 !important;
 }
 
 .ya-home-darkblue-background {
@@ -136,6 +137,12 @@
     left: 40px;
     right: 40px;
     max-width: 100%;
+    transition: left 0.3s ease;
+}
+
+.fixed-search-Box.hidden {
+    position: fixed;
+    left: 300px !important; 
 }
 
 .ya-answer-container-question {
@@ -299,6 +306,7 @@
     padding-left: 15px;
     overflow-y: hidden;
     height: 100%;
+    margin-top: 50px;
 
     .ya-sidebar-styles-box {
         display: flex;
@@ -460,6 +468,7 @@
         cursor: pointer;
         width: 35px;
     }
+
     @media (max-width: 600px) {
         margin-right: 60px;
     }
@@ -511,10 +520,30 @@
     overflow-y: auto;
 }
 
-.ya-chat-session-list-XLScreen {
+.ya-chat-session-list-empty-small-screen {
     min-height: calc(100% - 100px);
     max-height: calc(100% - 100px);
     overflow-y: auto;
+}
+
+.ya-chat-session-list-XLScreen {
+    min-height: calc(100% - 130px);
+    max-height: calc(100% - 130px);
+    overflow-y: auto;
+}
+
+.source-selectionicon {
+    margin-top: -15px;
+    margin-right: 5px;
+    button {
+        margin: 0px !important;
+    }
+
+    .MuiAvatar-circular {
+        background-color: #063762;
+        width: 50px !important;
+        height: 50px !important;
+    }
 }
 
 @media (max-width: 600px) {
@@ -571,6 +600,11 @@
     .ya-new-chat-box {
         min-height: calc(100vh - 250px);
         max-height: calc(100vh - 250px);
+    }
+
+    .ya-new-chat-box-empty {
+        min-height: calc(100vh - 320px);
+        max-height: calc(100vh - 320px);
     }
 
     .ya-task-msg-text {

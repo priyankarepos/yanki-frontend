@@ -38,30 +38,6 @@ const UserChatList = () => {
   );
   const latestUser = userList[0]?.userId;
 
-  const handleReceivedMessage = useCallback(async (message) => {
-    const response = await axios.get(
-      `${apiUrls.getUserListById(message.senderId)}`
-    );
-
-    const date = new Date(message.timestamp);
-
-    const options = {
-      hour: agentChatResponse.numeric,
-      minute: agentChatResponse.numeric,
-      hour12: true,
-    };
-    const localTimeString = date.toLocaleTimeString(undefined, options);
-
-    const newUser = {
-      userId: response.data.userId,
-      email: response.data.email,
-      lastMessage: message.content,
-      lastMessageTime: localTimeString,
-      unseenMessageCount: id ? 0 : 1,
-    };
-    setUserList([newUser]);
-  }, []);
-
   useEffect(() => {
     userListRef.current = userList;
   }, [userList]);
@@ -86,15 +62,15 @@ const UserChatList = () => {
     const connection = getConnectionPromise();
 
     if (connection) {
-      connection.on(agentChatResponse.receiveMessage, (message) => {
-        handleReceivedMessage(message);
-      });
-
       connection.on(agentChatResponse.newUser, (senderUser) => {
         handleUserStatus(senderUser);
       });
     }
   }, []);
+
+  useEffect(() => {
+    initializeConnection();
+  }, [])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -197,8 +173,15 @@ const UserChatList = () => {
 
   const handleListItemClick = (id) => {
     updateUserList(id);
-
     navigate(`${apiUrls.chatNavigateUrlById(id)}`);
+    let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);  
+    if(finishChatId) {
+      setUserList(prevUserList => 
+        prevUserList.filter(user => user.userId !== finishChatId)
+      );
+    } 
+
+    localStorage.removeItem(agentChatResponse.finishChatId);
   };
 
   const handleUserInfoModalOpen = (res) => {
@@ -216,7 +199,7 @@ const UserChatList = () => {
 
   useEffect(() => {
     fetchUserStatus();
-  }, [fetchUserStatus]);
+  }, []);
 
   return (
     <Box
@@ -237,7 +220,8 @@ const UserChatList = () => {
         <AdminDashboard />
       </Box>
       <Box
-        className={`${agentChatResponse.agentChatBackground} 
+        className={`${ userList.length > 0 && 
+          agentChatResponse.agentChatBackground} 
           ${agentChatResponse.enterpriseFormBox}
         } ${
           isLargeScreen
@@ -247,7 +231,7 @@ const UserChatList = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth,
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         {isLoading && (
@@ -352,7 +336,7 @@ const UserChatList = () => {
                     )}
                   </Box>
                 )}
-                {isModalOpen && <UserInformations />}
+                {isModalOpen && <UserInformations userInfoModalOpen={handleUserInfoModalOpen} />}
               </Box>
             )}
           </React.Fragment>

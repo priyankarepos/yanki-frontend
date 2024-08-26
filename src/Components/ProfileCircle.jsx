@@ -41,7 +41,7 @@ import ChangePhone from "../Assets/images/arrow-reload-vertical.svg";
 import ChangeLanguage from "../Assets/images/language-square.svg";
 import AccountDelete from "../Assets/images/delete-02.svg";
 import BackArrowIcon from "../Assets/images/back-arrow.svg";
-import { classNames, messages } from "../Utils/stringConstant/stringConstant";
+import { classNames, messages, sourceSelectionStrings } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from "react-i18next";
 import { stopConnection } from "../SignalR/signalRService";
 
@@ -136,6 +136,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
     );
     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
     window.localStorage.removeItem(messages.i18nextLng);
+    sessionStorage.removeItem(sourceSelectionStrings.localStorageKey);
     navigate("/auth");
 
   };

@@ -168,7 +168,7 @@ function App() {
 
   const [themeMode, setThemeMode] = useState("dark");
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const localStorageTab = sessionStorage.getItem("activeTab");
+  const localStorageTab = localStorage.getItem(messages.activeTab);
   const initialTab = localStorageTab ? parseInt(localStorageTab, 10) : 0;
 
   const [activeTab, setActiveTab] = useState(initialTab);

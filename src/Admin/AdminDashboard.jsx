@@ -84,13 +84,6 @@ const AdminDashboard = () => {
         variant="persistent"
       >
         <div className="admin-dashboard-sidebar">
-          <Link to="/" >
-            <img
-              src={DarkYankilogo}
-              className="admin-dashboard-image"
-              alt="Yanki logo"
-            />
-          </Link>
           <List>
             <NavLink
               to="/admin/search-query-report"

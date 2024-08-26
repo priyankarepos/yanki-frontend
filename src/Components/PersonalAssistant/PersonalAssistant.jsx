@@ -113,7 +113,7 @@ const PersonalAssistant = ({
         </FormHelperText>
         <Typography
           className={`${
-            content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
+            content.trim().length === 0 ? "Custom-disabled-Button" : "Custom-Button"
           } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
           onClick={content.length === 0 ? null : handlePersonalAssistant}
           sx={{

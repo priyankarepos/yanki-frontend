@@ -13,6 +13,7 @@ import { pdfjs } from 'react-pdf';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import CloseIcon from '@mui/icons-material/Close';
 import EnterpriseDashboard from './EnterpriseDashboard';
+import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
 
 const EnterpriseFileUpload = () => {
     const { drawerOpen } = useContext(Context);
@@ -151,47 +152,53 @@ const EnterpriseFileUpload = () => {
 
     const renderPdfModal = () => {
         return (
-          <Modal
-            open={Boolean(selectedPdf)}
-            onClose={closePdfModal}
-            className='enterprise-profile-modal'
-          >
-            <div className="enterprise-profile-pdf-modal">
-              <IconButton
-                className='enterprise-profile-pdf-modal-icon-button'
-                style={{ top: !isLargeScreen ? '40px' : '20px' }}
-                onClick={closePdfModal}
-                aria-label="close"
-              >
-                <CloseIcon className='enterprise-white-color' />
-              </IconButton>
-              {!pdfLoadError ? (
-                selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
-                  <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                    <Viewer fileUrl={selectedPdf?.pdfUrl} />
-                  </Worker>
-                ) : (
-                  <img
-                    src={selectedPdf?.pdfUrl}
-                    alt=""
-                    className='enterprise-profile-image'
-                    onError={() => setPdfLoadError(true)}
-                  />
-                )
-              ) : (
-                <div>Error loading content. Please try again.</div>
-              )}
-            </div>
-          </Modal>
+            <Modal
+                open={Boolean(selectedPdf)}
+                onClose={closePdfModal}
+                className='enterprise-profile-modal'
+            >
+                <div className="enterprise-profile-pdf-modal">
+                    <IconButton
+                        className='enterprise-profile-pdf-modal-icon-button'
+                        style={{ top: !isLargeScreen ? '40px' : '20px' }}
+                        onClick={closePdfModal}
+                        aria-label="close"
+                    >
+                        <CloseIcon className='enterprise-white-color' />
+                    </IconButton>
+                    {!pdfLoadError ? (
+                        selectedPdf?.pdfUrl.toLowerCase().endsWith('.pdf') ? (
+                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
+                                <Viewer fileUrl={selectedPdf?.pdfUrl} />
+                            </Worker>
+                        ) : (
+                            <img
+                                src={selectedPdf?.pdfUrl}
+                                alt=""
+                                className='enterprise-profile-image'
+                                onError={() => setPdfLoadError(true)}
+                            />
+                        )
+                    ) : (
+                        <div>Error loading content. Please try again.</div>
+                    )}
+                </div>
+            </Modal>
         );
-      };
+    };
 
     const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
     return (
         <Box className='enterprise-box'>
-            <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}><EnterpriseDashboard /></Box>
-            <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`}>
+            <Box sx={{
+                width:
+                    drawerOpen && !isSmallScreen
+                        ? agentChatResponse.drawerOpenWidth
+                        : agentChatResponse.zeroWidth,
+                transition: agentChatResponse.transitionStyle,
+            }}><EnterpriseDashboard /></Box>
+            <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content"}`}>
                 <Box className='enterprise-upload-box'>
                     <Typography variant="h6" className='enterprise-upload-modal-title' >Upload Files</Typography >
                     <Button

@@ -35,7 +35,6 @@ import { Context } from "../../App";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
     GoogleMap,
-    LoadScriptNext,
     DirectionsService,
     DirectionsRenderer,
     Marker,
@@ -46,8 +45,7 @@ const MikvahAnswer = ({ answer }) => {
     const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const { activeTab, userLatitude, userLongitude } = useContext(Context);
-    const [isLocationAllowed, setIsLocationAllowed] = useState(false);
+    const { activeTab, userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
     });
@@ -63,11 +61,11 @@ const MikvahAnswer = ({ answer }) => {
         const [loadingDetails, setLoadingDetails] = useState(false);
 
         useEffect(() => {
-            if (isLocationAllowed && open) {
+            if (isLocationAllowed === messages.locationAllowed && open && !origin) {
                 checkPermissionsAndFetchLocation();
             }
-        }, [isLocationAllowed, open]);
-    
+        }, [isLocationAllowed, open, origin]);
+
         const fetchMikvahDetails = async () => {
             setLoadingDetails(true);
             try {
@@ -80,26 +78,28 @@ const MikvahAnswer = ({ answer }) => {
                 setLoadingDetails(false);
             }
         };
-    
+
         const checkPermissionsAndFetchLocation = async () => {
             if (navigator.geolocation) {
                 try {
                     const handleGeolocationSuccess = (position) => {
                         const { latitude, longitude } = position.coords;
                         setOrigin(`${latitude},${longitude}`);
-                        setIsLocationAllowed(true);
+                        if (shouldFetchDirections) {
+                            fetchDirections();
+                        }
                     };
-    
+
                     const handleGeolocationError = (error) => {
                         if (error.code === error.PERMISSION_DENIED) {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
-                            setIsLocationAllowed(false);
+
                         } else {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
                         }
                         setSnackbarOpen(true);
                     };
-    
+
                     if (navigator.permissions && navigator.permissions.query) {
                         const result = await navigator.permissions.query({ name: messages.geolocationText });
                         if (result.state === messages.grantedText) {
@@ -108,16 +108,16 @@ const MikvahAnswer = ({ answer }) => {
                             navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                         } else {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
-                            setIsLocationAllowed(false);
+
                             setSnackbarOpen(true);
                         }
-    
+
                         result.onchange = () => {
                             if (result.state === messages.grantedText) {
                                 navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else {
                                 setSnackbarMessage(`${t('enableLocationAccess')}`);
-                                setIsLocationAllowed(false);
+
                                 setSnackbarOpen(true);
                             }
                         };
@@ -130,7 +130,13 @@ const MikvahAnswer = ({ answer }) => {
                 }
             }
         };
-    
+
+        const fetchDirections = () => {
+            if (origin && destination) {
+                setShouldFetchDirections(true);
+            }
+        };
+
         const directionsCallback = (result, status) => {
             if (status === messages.statusOk) {
                 setResponse(result);
@@ -145,14 +151,21 @@ const MikvahAnswer = ({ answer }) => {
             }
             setShouldFetchDirections(false);
         };
-    
+
         const handleSetDestination = () => {
             setDestination(`${row.latitude},${row.longitude}`);
             setShouldFetchDirections(true);
             setShowMap(true);
-            checkPermissionsAndFetchLocation();
+            if (origin) {
+                fetchDirections();
+            } else {
+                checkPermissionsAndFetchLocation();
+            }
+            if(isLocationAllowed === messages.locationAllowed){
+                handleShowDetails();
+            }
         };
-        
+
         const handleShowDetails = () => {
             setOpen(prevOpen => {
                 const newOpen = !prevOpen;
@@ -164,13 +177,22 @@ const MikvahAnswer = ({ answer }) => {
                 return newOpen;
             });
         };
-    
+        const handleLocationIconClick = () => {
+            if (isLocationAllowed === messages.locationAllowed) {
+                handleSetDestination();
+            }else {
+                setSnackbarMessage(`${t('enableLocationAccess')}`);
+                setSnackbarOpen(true); 
+                handleShowDetails(); 
+            }
+        };
+
         const handleCloseMap = () => {
             setShowMap(false);
             setResponse(null);
             setDestination('');
         };
-    
+
         const center = { lat: userLatitude, lng: userLongitude };
 
         return (
@@ -191,9 +213,9 @@ const MikvahAnswer = ({ answer }) => {
                             </div>
                         </Tooltip>
                     </TableCell>
-                    <TableCell onClick={handleShowDetails}>
+                    <TableCell>
                         <Box className={messages.mikvahDetailInfo}>
-                            <Button variant={messages.buttonContainedVarient} onClick={handleSetDestination} >
+                            <Button variant={messages.buttonContainedVarient} onClick={handleLocationIconClick} >
                                 <LocationOnIcon />
                             </Button>
                         </Box>
@@ -215,7 +237,7 @@ const MikvahAnswer = ({ answer }) => {
                                                         <strong>{t('address')}:</strong>
                                                     </Typography>
                                                     <Typography>
-                                                        {mikvahDetails.result.address.trim() ? mikvahDetails.result.address : messages.notAvailable}
+                                                        {mikvahDetails?.result?.address?.trim() ? mikvahDetails.result.address : messages.notAvailable}
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -227,7 +249,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('phone')}</strong>
                                                     </Typography>
-                                                    {mikvahDetails.result.phone1.trim() ? <div><Typography>{mikvahDetails.result.phone1}</Typography>
+                                                    {mikvahDetails?.result?.phone1?.trim() ? <div><Typography>{mikvahDetails.result.phone1}</Typography>
                                                         <Typography>{mikvahDetails.result.phone2}</Typography></div> : <Typography>NA</Typography>}
                                                 </Box>
                                             </Box>
@@ -239,7 +261,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('contact')}</strong>
                                                     </Typography>
-                                                    <Typography>{mikvahDetails.result.contact ? mikvahDetails.result.contact : messages.notAvailable}</Typography>
+                                                    <Typography>{mikvahDetails?.result?.contact ? mikvahDetails.result.contact : messages.notAvailable}</Typography>
                                                 </Box>
                                             </Box>
                                         </Grid>
@@ -252,7 +274,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('shul')}</strong>
                                                     </Typography>
-                                                    <Typography>{mikvahDetails.result.shul.trim() ? mikvahDetails.result.shul : messages.notAvailable}</Typography>
+                                                    <Typography>{mikvahDetails?.result?.shul?.trim() ? mikvahDetails.result.shul : messages.notAvailable}</Typography>
                                                 </Box>
                                             </Box>
                                             <Box className={messages.mikvahDetailInfo}>
@@ -263,7 +285,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('type')}</strong>
                                                     </Typography>
-                                                    <Typography>{mikvahDetails.result.type.trim() ? mikvahDetails.result.type : messages.notAvailable}</Typography>
+                                                    <Typography>{mikvahDetails?.result?.type?.trim() ? mikvahDetails.result.type : messages.notAvailable}</Typography>
                                                 </Box>
                                             </Box>
                                             <Box className={messages.mikvahDetailInfo}>
@@ -274,7 +296,7 @@ const MikvahAnswer = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('schedule')}</strong>
                                                     </Typography>
-                                                    <Typography>{mikvahDetails.result.schedule.trim() ? mikvahDetails.result.schedule : messages.notAvailable}</Typography>
+                                                    <Typography>{mikvahDetails?.result?.schedule?.trim() ? mikvahDetails.result.schedule : messages.notAvailable}</Typography>
                                                 </Box>
                                             </Box>
 
@@ -295,39 +317,37 @@ const MikvahAnswer = ({ answer }) => {
                                     )}
                                 </Box>
                                 {isLoaded && showMap && (
-                                    <LoadScriptNext googleMapsApiKey={import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY}>
-                                        <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={15}>
-                                            {response && (
-                                                <DirectionsRenderer
-                                                    directions={response}
-                                                    options={{
-                                                        polylineOptions: {
-                                                            strokeColor: messages.colorBlue,
-                                                            strokeOpacity: 0.7,
-                                                            strokeWeight: 5,
-                                                        }
-                                                    }}
-                                                />
-                                            )}
-                                            {shouldFetchDirections && origin && destination && (
-                                                <DirectionsService
-                                                    options={{
-                                                        destination: destination,
-                                                        origin: origin,
-                                                        travelMode: messages.travelMode,
-                                                        provideRouteAlternatives: true
-                                                    }}
-                                                    callback={directionsCallback}
-                                                />
-                                            )}
-                                            {origin && (
-                                                <Marker position={{ lat: parseFloat(origin.split(',')[0]), lng: parseFloat(origin.split(',')[1]) }} />
-                                            )}
-                                            {destination && (
-                                                <Marker position={{ lat: parseFloat(destination.split(',')[0]), lng: parseFloat(destination.split(',')[1]) }} />
-                                            )}
-                                        </GoogleMap>
-                                    </LoadScriptNext>
+                                    <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={15}>
+                                        {response && (
+                                            <DirectionsRenderer
+                                                directions={response}
+                                                options={{
+                                                    polylineOptions: {
+                                                        strokeColor: messages.colorBlue,
+                                                        strokeOpacity: 0.7,
+                                                        strokeWeight: 5,
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                        {shouldFetchDirections && origin && destination && (
+                                            <DirectionsService
+                                                options={{
+                                                    destination: destination,
+                                                    origin: origin,
+                                                    travelMode: messages.travelMode,
+                                                    provideRouteAlternatives: true
+                                                }}
+                                                callback={directionsCallback}
+                                            />
+                                        )}
+                                        {origin && (
+                                            <Marker position={{ lat: parseFloat(origin.split(',')[0]), lng: parseFloat(origin.split(',')[1]) }} />
+                                        )}
+                                        {destination && (
+                                            <Marker position={{ lat: parseFloat(destination.split(',')[0]), lng: parseFloat(destination.split(',')[1]) }} />
+                                        )}
+                                    </GoogleMap>
                                 )}
                             </Box>
                         </Collapse>
