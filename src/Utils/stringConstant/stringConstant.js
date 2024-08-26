@@ -80,6 +80,7 @@ export const messages = {
     isLargeScreen: "(min-width: 600px)",
     taskLeftZero: "Your current limit of tasks has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset. Thank you for using Yanki.",
     audioText: "audio",
+    videoText: "video",
 
 };
 
