@@ -61,6 +61,7 @@ const TorahanytimeAnswer = ({ answer }) => {
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 1,
+      swipeable: false,
     },
   };
 
