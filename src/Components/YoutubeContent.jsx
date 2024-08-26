@@ -163,7 +163,8 @@ const YoutubeContent = ({ answer }) => {
             </Box>
           )}
 
-        <Carousel responsive={responsive}>
+        <Carousel responsive={responsive} swipeable={false}
+          draggable={false}>
           {showYouTubeVideos ||
             (answer.vimeoVideoDetails && !answer?.torahAnytimeLectures.isSuccess)
             ? answer?.vimeoVideoDetails.map((item, index) => (
