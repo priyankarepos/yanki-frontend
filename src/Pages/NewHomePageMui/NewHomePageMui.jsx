@@ -784,7 +784,8 @@ const NewHomePageMui = () => {
     },
   ];
 
-    const handleReceivedMessage = (message) => {
+  const handleReceivedMessage = (message) => {
+    if (message.senderId === currentUserId) {
       setAgentChatSession((prevData) => {
         if (!prevData) {
           return [
@@ -798,21 +799,21 @@ const NewHomePageMui = () => {
 
         const isDataPresent = prevData.some(
           (item) => item.id === message.agentChatSessionId
-        );        
+        );
 
         if (isDataPresent) {
 
           return prevData.map((item) =>
             item.id === message.agentChatSessionId
               ? {
-                  ...item,
-                  content: item.content,
-                  unseenMessageCount:
+                ...item,
+                content: item.content,
+                unseenMessageCount:
                   chatSessionIdRef.current === item.id ||
                     message.senderId === currentUserId
-                      ? 0
-                      : item.unseenMessageCount + 1,
-                }
+                    ? 0
+                    : item.unseenMessageCount + 1,
+              }
               : item
           );
         } else {
@@ -826,7 +827,8 @@ const NewHomePageMui = () => {
           ];
         }
       });
-    };
+    }
+  };
 
   useEffect(() => {
     const initializeConnection = async () => {
@@ -1478,7 +1480,7 @@ const NewHomePageMui = () => {
                       <IconButton
                         variant="contained"
                         type="submit"
-                        disabled={!searchQuery || isSubmitting}
+                        disabled={!searchQuery.trim() || isSubmitting}
                         onClick={onSubmit}
                         className="ya-send-icon"
                         sx={{

@@ -7,6 +7,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Vimeo from "@u-wave/react-vimeo";
 import { useTranslation } from 'react-i18next';
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const StyledCarouselItem = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
@@ -27,7 +28,7 @@ const TorahanytimeAnswer = ({ answer }) => {
   const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
   const rawData = answer?.torahAnytimeLectures?.hits?.hits || [];
   const validData = rawData.filter(item => item._source.vimeo_video_links !== null);
-  const data = validData; 
+  const data = validData;
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
   const fixedId = 23200;
 
@@ -70,7 +71,7 @@ const TorahanytimeAnswer = ({ answer }) => {
         audioRefs.current[currentlyPlayingMedia.itemId]
       ) {
         audioRefs.current[currentlyPlayingMedia.itemId].pause();
-      } else if (currentlyPlayingMedia.type === "video") {
+      } else if (currentlyPlayingMedia.type === messages.videoText) {
         const videoRef = videoRefs.current[currentlyPlayingMedia.itemId];
         if (videoRef && typeof videoRef.pause === "function") {
           videoRef.pause();
@@ -136,7 +137,8 @@ const TorahanytimeAnswer = ({ answer }) => {
           </div>
         )}
 
-        <Carousel responsive={responsive}>
+        <Carousel responsive={responsive} swipeable={false}
+          draggable={false}>
           {data?.length > 0 &&
             data.map((item) => (
               <StyledCarouselItem key={item._id} className="marginRight-5">
@@ -152,7 +154,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                           controls
                           width="100%"
                           height="150px"
-                          onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                          onPlay={() => {
+                            if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                              pauseCurrentlyPlayingMedia();
+                            }
+                            handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                          }}
+                          onPause={() => {
+                            if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                              handlePlayMedia(null, messages.videoText, item._id);
+                            }
+                          }}
                         />
                       ) : (
                         <Vimeo
@@ -179,7 +191,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                         controls
                         width="100%"
                         height="150px"
-                        onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                        onPlay={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                            pauseCurrentlyPlayingMedia();
+                          }
+                          handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                        }}
+                        onPause={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                            handlePlayMedia(null, messages.videoText, item._id);
+                          }
+                        }}
                       />
                     )}
                   </div>
@@ -191,9 +213,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                     ref={(ref) => (audioRefs.current[item._id] = ref)}
                     src={item._source.audio_url}
                     controls
-                    width="100%"
-                    height="30px"
-                    onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                    onPlay={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                        pauseCurrentlyPlayingMedia();
+                      }
+                      handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
+                    }}
+                    onPause={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                        handlePlayMedia(null, messages.audioText, item._id);
+                      }
+                    }}
                   />
                 )}
 
@@ -205,13 +235,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                         ref={(ref) => (audioRefs.current[item._id] = ref)}
                         src={item._source.audio_url}
                         controls
-                        style={{
-                          width: "100%",
-                          "@media (max-width: 600px)": {
-                            width: "220px !important",
-                          },
+                        onPlay={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                            pauseCurrentlyPlayingMedia();
+                          }
+                          handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
                         }}
-                        onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                        onPause={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                            handlePlayMedia(null, messages.audioText, item._id);
+                          }
+                        }}
                       />
                     ) : (
                       <Tooltip title="Click to switch to video">
@@ -225,7 +259,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 controls
                                 width="100%"
                                 height="150px"
-                                onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                                onPlay={() => {
+                                  if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                    pauseCurrentlyPlayingMedia();
+                                  }
+                                  handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                                }}
+                                onPause={() => {
+                                  if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                    handlePlayMedia(null, messages.videoText, item._id);
+                                  }
+                                }}
                               />
                             ) : (
                               <Vimeo
@@ -252,7 +296,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                               controls
                               width="100%"
                               height="150px"
-                              onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                              onPlay={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                  pauseCurrentlyPlayingMedia();
+                                }
+                                handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                              }}
+                              onPause={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                  handlePlayMedia(null, messages.videoText, item._id);
+                                }
+                              }}
                             />
                           )}
                         </div>
@@ -267,13 +321,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                     ref={(ref) => (audioRefs.current[item._id] = ref)}
                     src={item._source.audio_url}
                     controls
-                    style={{
-                      width: "100%",
-                      "@media (max-width: 600px)": {
-                        width: "220px !important",
-                      },
+                    onPlay={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                        pauseCurrentlyPlayingMedia();
+                      }
+                      handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
                     }}
-                    onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                    onPause={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                        handlePlayMedia(null, messages.audioText, item._id);
+                      }
+                    }}
                   />
                 )}
 
