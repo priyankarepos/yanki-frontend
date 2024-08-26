@@ -30,7 +30,6 @@ const TorahanytimeAnswer = ({ answer }) => {
   const validData = rawData.filter(item => item._source.vimeo_video_links !== null);
   const data = validData;
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
-  const [audioPlaybackStates, setAudioPlaybackStates] = useState({});
   const fixedId = 23200;
 
   const isAudio = answer?.torahAnytimeLectures?.isAudio || false;
@@ -72,7 +71,7 @@ const TorahanytimeAnswer = ({ answer }) => {
         audioRefs.current[currentlyPlayingMedia.itemId]
       ) {
         audioRefs.current[currentlyPlayingMedia.itemId].pause();
-      } else if (currentlyPlayingMedia.type === "video") {
+      } else if (currentlyPlayingMedia.type === messages.videoText) {
         const videoRef = videoRefs.current[currentlyPlayingMedia.itemId];
         if (videoRef && typeof videoRef.pause === "function") {
           videoRef.pause();
@@ -154,7 +153,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                           controls
                           width="100%"
                           height="150px"
-                          onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                          onPlay={() => {
+                            if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                              pauseCurrentlyPlayingMedia();
+                            }
+                            handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                          }}
+                          onPause={() => {
+                            if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                              handlePlayMedia(null, messages.videoText, item._id);
+                            }
+                          }}
                         />
                       ) : (
                         <Vimeo
@@ -181,7 +190,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                         controls
                         width="100%"
                         height="150px"
-                        onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                        onPlay={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                            pauseCurrentlyPlayingMedia();
+                          }
+                          handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                        }}
+                        onPause={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                            handlePlayMedia(null, messages.videoText, item._id);
+                          }
+                        }}
                       />
                     )}
                   </div>
@@ -239,7 +258,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                                 controls
                                 width="100%"
                                 height="150px"
-                                onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                                onPlay={() => {
+                                  if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                    pauseCurrentlyPlayingMedia();
+                                  }
+                                  handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                                }}
+                                onPause={() => {
+                                  if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                    handlePlayMedia(null, messages.videoText, item._id);
+                                  }
+                                }}
                               />
                             ) : (
                               <Vimeo
@@ -266,7 +295,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                               controls
                               width="100%"
                               height="150px"
-                              onPlay={() => handlePlayMedia(item._source.vimeo_video_links[0], "video", item._id)}
+                              onPlay={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                  pauseCurrentlyPlayingMedia();
+                                }
+                                handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                              }}
+                              onPause={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                  handlePlayMedia(null, messages.videoText, item._id);
+                                }
+                              }}
                             />
                           )}
                         </div>
