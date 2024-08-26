@@ -7,6 +7,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Vimeo from "@u-wave/react-vimeo";
 import { useTranslation } from 'react-i18next';
+import { messages } from "../Utils/stringConstant/stringConstant";
 
 const StyledCarouselItem = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
@@ -27,8 +28,9 @@ const TorahanytimeAnswer = ({ answer }) => {
   const [showAudioAndVideo, setShowAudioAndVideo] = useState(false);
   const rawData = answer?.torahAnytimeLectures?.hits?.hits || [];
   const validData = rawData.filter(item => item._source.vimeo_video_links !== null);
-  const data = validData; 
+  const data = validData;
   const [currentlyPlayingMedia, setCurrentlyPlayingMedia] = useState(null);
+  const [audioPlaybackStates, setAudioPlaybackStates] = useState({});
   const fixedId = 23200;
 
   const isAudio = answer?.torahAnytimeLectures?.isAudio || false;
@@ -191,9 +193,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                     ref={(ref) => (audioRefs.current[item._id] = ref)}
                     src={item._source.audio_url}
                     controls
-                    width="100%"
-                    height="30px"
-                    onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                    onPlay={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                        pauseCurrentlyPlayingMedia();
+                      }
+                      handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
+                    }}
+                    onPause={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                        handlePlayMedia(null, messages.audioText, item._id);
+                      }
+                    }}
                   />
                 )}
 
@@ -205,13 +215,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                         ref={(ref) => (audioRefs.current[item._id] = ref)}
                         src={item._source.audio_url}
                         controls
-                        style={{
-                          width: "100%",
-                          "@media (max-width: 600px)": {
-                            width: "220px !important",
-                          },
+                        onPlay={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                            pauseCurrentlyPlayingMedia();
+                          }
+                          handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
                         }}
-                        onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                        onPause={() => {
+                          if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                            handlePlayMedia(null, messages.audioText, item._id);
+                          }
+                        }}
                       />
                     ) : (
                       <Tooltip title="Click to switch to video">
@@ -267,13 +281,17 @@ const TorahanytimeAnswer = ({ answer }) => {
                     ref={(ref) => (audioRefs.current[item._id] = ref)}
                     src={item._source.audio_url}
                     controls
-                    style={{
-                      width: "100%",
-                      "@media (max-width: 600px)": {
-                        width: "220px !important",
-                      },
+                    onPlay={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                        pauseCurrentlyPlayingMedia();
+                      }
+                      handlePlayMedia(item._source.audio_url, messages.audioText, item._id);
                     }}
-                    onPlay={() => handlePlayMedia(item._source.audio_url, "audio", item._id)}
+                    onPause={() => {
+                      if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                        handlePlayMedia(null, messages.audioText, item._id);
+                      }
+                    }}
                   />
                 )}
 
