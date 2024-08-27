@@ -94,6 +94,7 @@ const NewHomePageMui = () => {
   const [agentChatSession, setAgentChatSession] = useState([]);
   const [showChatSession, setShowChatSession] = useState(false);
   const [agentChatSessionId, setAgentChatSessionId] = useState(null);
+  const [isHomeSubmitting, setIsHomeSubmitting] = useState(true);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -113,6 +114,14 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
+
+  useEffect(() => {
+    setIsHomeSubmitting(true);
+    const timer = setTimeout(() => {
+      setIsHomeSubmitting(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []); 
 
   const languages = [
     { code: 'en', lang: 'English', name: 'English' },
@@ -470,7 +479,8 @@ const NewHomePageMui = () => {
   }, [chatSessionId]);
 
   const parseChatHistory = (chatHistoryArray) => {
-    return chatHistoryArray.map((chatEntry) => {
+    setIsHomeSubmitting(true); // Start loader
+    const parsedHistory = chatHistoryArray.map((chatEntry) => {
       const gptResponse = chatEntry.gptResponse;
 
       return {
@@ -507,10 +517,14 @@ const NewHomePageMui = () => {
         },
       };
     });
+
+    setIsHomeSubmitting(false); // Stop loader once parsing is complete
+    return parsedHistory;
   };
 
   const fetchChatHistory = async (chatId) => {
     try {
+      setIsHomeSubmitting(true);
       const response = await axios.get(
         membershipApiUrls.chatHistoryFetch(chatId, 20)
       );
@@ -518,10 +532,12 @@ const NewHomePageMui = () => {
       if (response.status === 200) {
         setShouldScroll(true);
         sessionStorage.removeItem("searchQuery");
+        setIsHomeSubmitting(false);
       }
     } catch (error) {
       setSnackbarMessage("Error:", error);
       setSnackbarOpen(true);
+      setIsHomeSubmitting(true);
     }
   };
 
@@ -1188,7 +1204,7 @@ const NewHomePageMui = () => {
             )}
 
             {(agentChatSessionId && showChatSession) ||
-              (searchHistory.length <= 0 && !isSubmitting && (
+              (searchHistory.length <= 0 && !isSubmitting && isHomeSubmitting && (
                 <Box className="ya-answer-container-response">
                   <Typography className="ya-main-text-heading">
                     {t("homeMainCenterText")}
@@ -1208,7 +1224,7 @@ const NewHomePageMui = () => {
               >
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
-                  !isSubmitting && (
+                  !isSubmitting && isHomeSubmitting && (
                     <div>
                       <Carousel
                         responsive={responsive}
@@ -1382,7 +1398,7 @@ const NewHomePageMui = () => {
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
-                  !isSubmitting && (
+                  !isSubmitting && isHomeSubmitting && (
                     <div className="home-table-scroll">
                       {allQuestions.map((group, groupIndex) => (
                         <Typography
