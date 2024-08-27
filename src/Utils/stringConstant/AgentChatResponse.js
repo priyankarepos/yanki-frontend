@@ -164,6 +164,7 @@ export const agentChatResponse = {
     isXLScreen: "(min-width:1200px)",
     finishChatId: "FinishChatId",
     online: "online",
+    finishChatConnection: "FinishChat"
 }
 
 export const apiUrls = {

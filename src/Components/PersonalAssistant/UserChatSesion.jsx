@@ -75,6 +75,10 @@ const UserChatSession = () => {
         connection.on(agentChatResponse.receiveMessage, (message) => {          
           handleReceivedMessage(message);
         });
+
+        connection.on(agentChatResponse.finishChatConnection, () => {
+          setIsChatFinish(true);
+        });
       }
     };
 
