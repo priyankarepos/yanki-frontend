@@ -216,7 +216,7 @@ const LoginPage = () => {
               variant="h5"
               className="text-center marginBottom-34 login-page-title"
             >
-              {activeTab === 0 ? `${t('loginToYourAccount')}` : "Login your account"},
+              {activeTab === 0 ? `${t('loginToYourAccount')}` : messages.loginYourAccountTitle}
             </Typography>
             <Controller
               control={control}
