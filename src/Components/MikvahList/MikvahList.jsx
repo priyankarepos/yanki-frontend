@@ -131,6 +131,10 @@ const MikvahAnswer = ({ answer }) => {
             }
         };
 
+        useEffect(()=>{
+            checkPermissionsAndFetchLocation();
+        },[])
+
         const directionsCallback = (result, status) => {
             if (status === messages.statusOk) {
                 setResponse(result);
