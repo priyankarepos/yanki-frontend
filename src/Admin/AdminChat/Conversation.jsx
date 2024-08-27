@@ -41,6 +41,8 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const [isChatFinished, setIsChatFinished] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isChangeStatus, setIsChangeStatus] = useState(false);
+  const chatSessionIdRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
   );
@@ -69,6 +71,10 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       } catch (err) {}
     };
     fetchUsers();
+  }, [id]);
+
+  useEffect(() => {
+    chatSessionIdRef.current = id;
   }, [id]);
 
   useEffect(() => {
@@ -136,7 +142,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   };
 
   useEffect(() => {
-    const handleReceivedMessage = (message) => {
+    const handleReceivedMessage = (message) => {      
       const date = new Date(message.timestamp);
 
       const options = {
@@ -149,12 +155,12 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       message.timestamplabel = localTimeString;
 
       onUserList(message);
-
-      if (message.senderId === id && message.senderId !== message.receiverId) {
+      
+      if (message.senderId === chatSessionIdRef.current && message.senderId !== message.receiverId) {
         setMessageList((prevMessages) => [...prevMessages, message]);
       }
 
-      if (message.senderId === id) {
+      if (message.senderId === chatSessionIdRef.current) {
         handleChangeStatus();
       }
     };
@@ -168,8 +174,9 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
         });
 
         connection.on(agentChatResponse.newUser, (senderUser) => {
-          if (senderUser.userId === id) {   
+          if (senderUser.userId === chatSessionIdRef.current) {   
             setUserStatus(senderUser);
+            setIsChangeStatus(true);
           }
         });
       }
@@ -196,9 +203,10 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
         (user) => user.userId === id
       );
       setUserStatus(currentUserDetails);
+      setIsChangeStatus(true);
     };
     fetchUserStatus();
-  }, []);
+  }, [id]);
 
   const handleFinishedChat = () => {
     try {
@@ -239,7 +247,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
           : agentChatResponse.userListShow
       }`}
     >
-      {userList && (
+      {userList && isChangeStatus &&  (
         <Box
           className={`${agentChatResponse.chatHeader} ${
             isLargeScreen ? agentChatResponse.chatHeaderHideUserList : ""

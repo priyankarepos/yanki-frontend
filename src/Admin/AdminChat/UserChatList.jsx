@@ -216,7 +216,7 @@ const UserChatList = () => {
 
   useEffect(() => {
     fetchUserStatus();
-  }, [fetchUserStatus]);
+  }, []);
 
   return (
     <Box
