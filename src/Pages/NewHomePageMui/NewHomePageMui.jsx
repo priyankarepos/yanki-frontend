@@ -470,7 +470,7 @@ const NewHomePageMui = () => {
   }, [chatSessionId]);
 
   const parseChatHistory = (chatHistoryArray) => {
-    const parsedHistory = chatHistoryArray.map((chatEntry) => {
+    return chatHistoryArray.map((chatEntry) => {
       const gptResponse = chatEntry.gptResponse;
 
       return {
