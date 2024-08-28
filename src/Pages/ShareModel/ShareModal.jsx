@@ -10,9 +10,7 @@ import {
 import axios from "axios";
 import shareChatIcon1 from "../../Assets/images/share-chat1.svg";
 import shareChatIcon2 from "../../Assets/images/share-chat2.svg";
-import shareChatIcon3 from "../../Assets/images/share-chat3.svg";
-import shareChatIcon4 from "../../Assets/images/share-chat4.svg";
-import shareChatIcon5 from "../../Assets/images/share-chat5.svg";
+import EmailIcon from '@mui/icons-material/Email';
 import "./ShareChatLink.scss";
 import {
   apiUrls,
@@ -98,22 +96,12 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     window.open(`${apiUrls.whatsappShareUrl}${encodeURIComponent(chatLink)}`);
   };
 
-  const handleShareTwitter = () => {
-    window.open(`${apiUrls.twitterShareUrl}${encodeURIComponent(chatLink)}`);
-  };
-
   const handleShareMessage = () => {
     window.open(`${apiUrls.smsShareUrl}${encodeURIComponent(chatLink)}`);
   };
 
-  const handleShareInstagram = () => {
-    window.open(`${apiUrls.instagramShareUrl}${encodeURIComponent(chatLink)}`);
-  };
-
-  const handleShareMessenger = () => {
-    const appId = messages.messengerAppIdPlaceholder;
-    const messengerUrl = apiUrls.messengerShareUrl(chatLink, appId);
-    window.open(messengerUrl);
+  const handleShareEmail = () => {
+    window.open(`mailto:?subject=${encodeURIComponent(t('shareSubject'))}&body=${encodeURIComponent(chatLink)}`);
   };
 
   return (
@@ -144,14 +132,8 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             <Button onClick={handleShareWhatsApp}>
               <img src={shareChatIcon2} alt={messages.shareLinkIconAlt} />
             </Button>
-            <Button onClick={handleShareInstagram}>
-              <img src={shareChatIcon3} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button onClick={handleShareTwitter}>
-              <img src={shareChatIcon4} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button onClick={handleShareMessenger}>
-              <img src={shareChatIcon5} alt={messages.shareLinkIconAlt} />
+            <Button className="sharechat-mail-icon" onClick={handleShareEmail}>
+              <EmailIcon />
             </Button>
           </Box>
         )}
