@@ -137,7 +137,7 @@ const YoutubeContent = ({ answer }) => {
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Typography sx={{pb:2}}>
-          {messages.notTranslatedSourceMsg}
+          {t('promptInformation')}
         </Typography>
       <Paper sx={{ p: 2 }}>
         {isVideo &&

@@ -116,8 +116,8 @@ const TorahanytimeAnswer = ({ answer }) => {
   return (
     <Box onClick={(e) => e.stopPropagation()}>
       <Paper sx={{ p: 2 }}>
-        <Typography sx={{pb:2}}>
-          {messages.notTranslatedSourceMsg}
+        <Typography sx={{ pb: 2 }}>
+          {t('promptInformation')}
         </Typography>
         {isAudio && isVideo && hasValidVimeoLinks && isAudioLink?.length > 0 && (
           <div>

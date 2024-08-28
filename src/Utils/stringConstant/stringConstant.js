@@ -82,7 +82,6 @@ export const messages = {
     audioText: "audio",
     videoText: "video",
     loginYourAccountTitle : "Login your account",
-    notTranslatedSourceMsg : "For the information desired please provide your prompt in English. This helps me understand your request better and provide the most relevant information.",
 
 };
 
