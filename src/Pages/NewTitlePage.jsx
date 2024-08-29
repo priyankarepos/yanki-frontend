@@ -48,7 +48,7 @@ const NewTitlePage = () => {
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const handleChangeTab = (event, newValue) => {
-    sessionStorage.setItem("activeTab", newValue.toString());
+    localStorage.setItem(messages.activeTab, newValue.toString());
     setActiveTab(newValue);
   };
 

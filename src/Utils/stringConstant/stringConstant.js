@@ -82,6 +82,7 @@ export const messages = {
     audioText: "audio",
     videoText: "video",
     loginYourAccountTitle : "Login your account",
+    activeTab: "activeTab",
 
 };
 
