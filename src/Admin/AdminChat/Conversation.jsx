@@ -170,6 +170,12 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
       if (connection) {
         connection.on(agentChatResponse.receiveMessage, (message) => {
+          var finishChat = localStorage.getItem(agentChatResponse.finishChatId);
+          if (finishChat && message.senderId === finishChat) {
+            setMessageList([]);
+            setIsChatFinished(false);
+            localStorage.removeItem(agentChatResponse.finishChatId);
+          }
           handleReceivedMessage(message);
         });
 

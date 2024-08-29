@@ -72,7 +72,7 @@ const UserChatSession = () => {
       const connection = await getConnectionPromise();
 
       if(connection) {
-        connection.on(agentChatResponse.receiveMessage, (message) => {          
+        connection.on(agentChatResponse.receiveMessage, (message) => {                    
           handleReceivedMessage(message);
         });
 
