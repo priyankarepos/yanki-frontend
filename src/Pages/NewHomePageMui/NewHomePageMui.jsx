@@ -128,8 +128,8 @@ const NewHomePageMui = () => {
   };
 
   const handleChangeLanguage = async () => {
-    setIsSubmitting(true);
     try {
+      chatId ? setIsChatFetching(true) : setIsSubmitting(true)
         const response = await axios.get(membershipApiUrls.getUserLanguage);
         const languageName = response.data.language;
         const languageObj = languages.find((lang) => lang.name === languageName);
@@ -630,6 +630,7 @@ const NewHomePageMui = () => {
     setSelectedChatId(null);
     setIsLoading(false);
     setRemainingSearchHistory([]);
+    setIsChatFetching(false);
     navigate("/");
     if (!isLargeScreen) {
       setDrawerOpen(false);
