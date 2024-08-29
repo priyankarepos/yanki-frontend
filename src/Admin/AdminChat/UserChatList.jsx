@@ -86,15 +86,15 @@ const UserChatList = () => {
     const connection = getConnectionPromise();
 
     if (connection) {
-      connection.on(agentChatResponse.receiveMessage, (message) => {
-        handleReceivedMessage(message);
-      });
-
       connection.on(agentChatResponse.newUser, (senderUser) => {
         handleUserStatus(senderUser);
       });
     }
   }, []);
+
+  useEffect(() => {
+    initializeConnection();
+  }, [])
 
   useEffect(() => {
     const fetchUsers = async () => {
