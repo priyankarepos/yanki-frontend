@@ -88,6 +88,7 @@ const NewHomePageMui = () => {
   const [updateCustomerId, setUpdateCustomerId] = useState("");
   const [chatHistoryPageNumber, setChatHistoryPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChatFetching, setIsChatFetching] = useState(false);
   const [scrollToKey, setScrollToKey] = useState();
   const [remainingSearchHistory, setRemainingSearchHistory] = useState([]);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -113,6 +114,7 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
+
 
   const languages = [
     { code: 'en', lang: 'English', name: 'English' },
@@ -383,6 +385,7 @@ const NewHomePageMui = () => {
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
+        isChatFetching(true);
         const response = await axios.get(
           membershipApiUrls.chatHistory(
             chatId,
@@ -408,6 +411,7 @@ const NewHomePageMui = () => {
         setSnackbarOpen(true);
       } finally {
         setIsLoading(false);
+        setIsChatFetching(false);
       }
     },
     [chatHistoryPageNumber]
@@ -416,11 +420,13 @@ const NewHomePageMui = () => {
   const handleChatSessionClick = useCallback(
     async (chatId) => {
       setAgentChatSessionId(null);
+      setSearchHistory([]);
       setShowChatSession(false);
       setSelectedChatId(chatId);
-      setIsLoading(true);
+      setIsLoading(false);
       navigate(`/${chatId}`);
       try {
+        setIsChatFetching(true); 
         const response = await axios.get(
           membershipApiUrls.chatHistoryData(chatId, defulatSizePageSize)
         );
@@ -437,7 +443,7 @@ const NewHomePageMui = () => {
         setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
       } finally {
-        setIsLoading(false);
+        setIsChatFetching(false)
       }
     },
     [navigate]
@@ -1121,7 +1127,7 @@ const NewHomePageMui = () => {
             ref={agentChatSessionId ? null : chatContainerRef}
             onScroll={handleScrollTop}
           >
-            {isLoading && (
+            {isLoading || isChatFetching && (
               <Typography className="admin-faq-progressbar">
                 <CircularProgress />
               </Typography>
