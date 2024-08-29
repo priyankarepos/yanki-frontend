@@ -369,6 +369,7 @@
             "contactPersonLabel": "Enterprises person of contact",
             "websiteLabel": "Website",
             "enterpriseCategoryLabel": "Select an Enterprise Category",
+            "promptInformation": "For the information desired please provide your prompt in English. This helps me understand your request better and provide the most relevant information.",
             "initialQuestions1": [
                 "Find me a baby sitter in the community",
                 "What time is candle lighting?",
@@ -789,6 +790,7 @@
             "contactPersonLabel": "איש קשר ביישות",
             "websiteLabel": "אתר אינטרנט",
             "enterpriseCategoryLabel": "בחר קטגוריית יישות",
+            "promptInformation": "עבור המידע הרצוי, אנא ספק את הבקשה שלך באנגלית. זה עוזר לי להבין את הבקשה שלך טוב יותר ולספק את המידע הרלוונטי ביותר.",
             "initialQuestions1": [
                 "מצא לי שמרטף בקהילה",
                 "מתי הדלקת נרות?",
@@ -1209,6 +1211,7 @@
             "contactPersonLabel": "Persona de contacto de la empresa",
             "websiteLabel": "Sitio web",
             "enterpriseCategoryLabel": "Selecciona una categoría de empresa",
+            "promptInformation": "Para la información deseada, por favor proporciona tu solicitud en inglés. Esto me ayuda a entender mejor tu solicitud y proporcionar la información más relevante.",
             "initialQuestions1": [
                 "Encuéntrame una niñera en la comunidad",
                 "¿A qué hora es el encendido de velas?",
@@ -1629,6 +1632,7 @@
             "contactPersonLabel": "פּראָסטאָן פון דער שטאַטונג",
             "websiteLabel": "וועבזייטל",
             "enterpriseCategoryLabel": "מאַרקרע אַ שטאַטונג קאַטעגאָריע",
+            "promptInformation": "פֿאַר די געבעטן אינפֿאָרמאַציע, ביטע געבן דיין בעטן אויף ענגליש. דאָס העלפֿט מיר בעסער פֿאַרשטיין דיין בעטן און צושטעלן די מערסט באַטייליקטע אינפֿאָרמאַציע.",
             "initialQuestions1": [
                 "געפֿינען מיר אַ קינדער-היטערין אין דער קהילה",
                 "וואָס איז די צייט פון ליכט צינדן?",

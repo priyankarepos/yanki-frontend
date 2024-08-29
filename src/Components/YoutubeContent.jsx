@@ -136,6 +136,9 @@ const YoutubeContent = ({ answer }) => {
 
   return (
     <Box onClick={(e) => e.stopPropagation()}>
+      <Typography sx={{pb:2}}>
+          {t('promptInformation')}
+        </Typography>
       <Paper sx={{ p: 2 }}>
         {isVideo &&
           answer?.vimeoVideoDetails &&

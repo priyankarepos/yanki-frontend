@@ -88,6 +88,7 @@ const NewHomePageMui = () => {
   const [updateCustomerId, setUpdateCustomerId] = useState("");
   const [chatHistoryPageNumber, setChatHistoryPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChatFetching, setIsChatFetching] = useState(false);
   const [scrollToKey, setScrollToKey] = useState();
   const [remainingSearchHistory, setRemainingSearchHistory] = useState([]);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -114,6 +115,7 @@ const NewHomePageMui = () => {
     navigate("/membership");
   };
 
+
   const languages = [
     { code: 'en', lang: 'English', name: 'English' },
     { code: 'he', lang: 'עברית', name: 'Hebrew' },
@@ -126,8 +128,8 @@ const NewHomePageMui = () => {
   };
 
   const handleChangeLanguage = async () => {
-    setIsSubmitting(true);
     try {
+      chatId ? setIsChatFetching(true) : setIsSubmitting(true)
         const response = await axios.get(membershipApiUrls.getUserLanguage);
         const languageName = response.data.language;
         const languageObj = languages.find((lang) => lang.name === languageName);
@@ -383,6 +385,7 @@ const NewHomePageMui = () => {
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
+        isChatFetching(true);
         const response = await axios.get(
           membershipApiUrls.chatHistory(
             chatId,
@@ -408,6 +411,7 @@ const NewHomePageMui = () => {
         setSnackbarOpen(true);
       } finally {
         setIsLoading(false);
+        setIsChatFetching(false);
       }
     },
     [chatHistoryPageNumber]
@@ -415,13 +419,14 @@ const NewHomePageMui = () => {
 
   const handleChatSessionClick = useCallback(
     async (chatId) => {
-      setIsLoading(false);
       setAgentChatSessionId(null);
+      setSearchHistory([]);
       setShowChatSession(false);
       setSelectedChatId(chatId);
-
+      setIsLoading(false);
       navigate(`/${chatId}`);
       try {
+        setIsChatFetching(true); 
         const response = await axios.get(
           membershipApiUrls.chatHistoryData(chatId, defulatSizePageSize)
         );
@@ -437,6 +442,8 @@ const NewHomePageMui = () => {
       } catch (error) {
         setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
+      } finally {
+        setIsChatFetching(false)
       }
     },
     [navigate]
@@ -450,7 +457,6 @@ const NewHomePageMui = () => {
     setIsError(false);
     setErrorMsg("");
     navigate(`/chat/${chatSessionId}`);
-    
 
     setAgentChatSession((prevData) => {
       if (!prevData) return prevData;
@@ -624,6 +630,7 @@ const NewHomePageMui = () => {
     setSelectedChatId(null);
     setIsLoading(false);
     setRemainingSearchHistory([]);
+    setIsChatFetching(false);
     navigate("/");
     if (!isLargeScreen) {
       setDrawerOpen(false);
@@ -1121,7 +1128,7 @@ const NewHomePageMui = () => {
             ref={agentChatSessionId ? null : chatContainerRef}
             onScroll={handleScrollTop}
           >
-            {isLoading && (
+            {isLoading || isChatFetching && (
               <Typography className="admin-faq-progressbar">
                 <CircularProgress />
               </Typography>
@@ -1188,7 +1195,7 @@ const NewHomePageMui = () => {
             )}
 
             {(agentChatSessionId && showChatSession) ||
-              (searchHistory.length <= 0 && !isSubmitting && (
+              (!chatId && searchHistory.length <= 0 && !isSubmitting && (
                 <Box className="ya-answer-container-response">
                   <Typography className="ya-main-text-heading">
                     {t("homeMainCenterText")}
@@ -1208,6 +1215,7 @@ const NewHomePageMui = () => {
               >
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
+                  !chatId &&
                   !isSubmitting && (
                     <div>
                       <Carousel
@@ -1382,6 +1390,7 @@ const NewHomePageMui = () => {
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
+                  !chatId &&
                   !isSubmitting && (
                     <div className="home-table-scroll">
                       {allQuestions.map((group, groupIndex) => (

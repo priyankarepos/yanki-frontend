@@ -81,6 +81,8 @@ export const messages = {
     taskLeftZero: "Your current limit of tasks has been reached. To continue enjoying Yanki's services, please upgrade your subscription or wait for your limit to reset. Thank you for using Yanki.",
     audioText: "audio",
     videoText: "video",
+    loginYourAccountTitle : "Login your account",
+    activeTab: "activeTab",
 
 };
 
