@@ -415,11 +415,10 @@ const NewHomePageMui = () => {
 
   const handleChatSessionClick = useCallback(
     async (chatId) => {
-      setIsLoading(false);
       setAgentChatSessionId(null);
       setShowChatSession(false);
       setSelectedChatId(chatId);
-
+      setIsLoading(true);
       navigate(`/${chatId}`);
       try {
         const response = await axios.get(
@@ -437,6 +436,8 @@ const NewHomePageMui = () => {
       } catch (error) {
         setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
+      } finally {
+        setIsLoading(false);
       }
     },
     [navigate]
@@ -450,7 +451,6 @@ const NewHomePageMui = () => {
     setIsError(false);
     setErrorMsg("");
     navigate(`/chat/${chatSessionId}`);
-    
 
     setAgentChatSession((prevData) => {
       if (!prevData) return prevData;
@@ -1188,7 +1188,7 @@ const NewHomePageMui = () => {
             )}
 
             {(agentChatSessionId && showChatSession) ||
-              (searchHistory.length <= 0 && !isSubmitting && (
+              (!chatId && searchHistory.length <= 0 && !isSubmitting && (
                 <Box className="ya-answer-container-response">
                   <Typography className="ya-main-text-heading">
                     {t("homeMainCenterText")}
@@ -1208,6 +1208,7 @@ const NewHomePageMui = () => {
               >
                 {isLargeScreen &&
                   searchHistory.length <= 0 &&
+                  !chatId &&
                   !isSubmitting && (
                     <div>
                       <Carousel
@@ -1382,6 +1383,7 @@ const NewHomePageMui = () => {
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
+                  !chatId &&
                   !isSubmitting && (
                     <div className="home-table-scroll">
                       {allQuestions.map((group, groupIndex) => (
