@@ -44,7 +44,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const storedLink = sessionStorage.getItem(messages.generatedChatLink);
+      const storedLink = localStorage.getItem(messages.generatedChatLink);
       if (storedLink) {
         setButtonText(t('copyLink'));
         setChatLink(storedLink);
@@ -101,7 +101,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   const handleCreateLink = async () => {
     setLinkGenerated(true);
     setCreateChatLink(chatLink);
-    sessionStorage.setItem(messages.generatedChatLink, chatLink);
+    localStorage.setItem(messages.generatedChatLink, chatLink);
   };
 
   const handleShareWhatsApp = () => {

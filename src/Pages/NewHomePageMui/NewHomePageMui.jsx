@@ -852,9 +852,9 @@ const NewHomePageMui = () => {
   }, []);
 
   useEffect(() => {
-    const storedLink = sessionStorage.getItem(messages.generatedChatLink);
+    const storedLink = localStorage.getItem(messages.generatedChatLink);
     if (storedLink) {
-      sessionStorage.removeItem(messages.generatedChatLink)
+      localStorage.removeItem(messages.generatedChatLink)
     }
   }, [chatId])
 
