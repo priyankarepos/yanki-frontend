@@ -83,6 +83,7 @@ export const messages = {
     videoText: "video",
     loginYourAccountTitle : "Login your account",
     activeTab: "activeTab",
+    generatedChatLink: "generatedChatLink",
 
 };
 

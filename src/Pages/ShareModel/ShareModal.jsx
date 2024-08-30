@@ -44,50 +44,62 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          apiUrls.generateShareChatIdApiUrl(selectedChatId)
-        );
+      const storedLink = sessionStorage.getItem(messages.generatedChatLink);
+      if (storedLink) {
+        setButtonText(t('copyLink'));
+        setChatLink(storedLink);
+        setLinkGenerated(true);
+        setCreateChatLink(storedLink);
+      } else {
+        try {
+          const response = await axios.post(
+            apiUrls.generateShareChatIdApiUrl(selectedChatId)
+          );
 
-        if (response.status === 200 && response.data.isSuccess) {
-          const generatedShareChatId = response.data.generatedShareChatId;
-          const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
-          setChatLink(newChatLink);
-
-          const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
-            text: () => newChatLink,
-            container: document.getElementsByClassName(classNames.shareLinkModal)[0],
-          });
-
-          clipboard.on(messages.success, (e) => {
-            setButtonText(t('copiedToClipboard'));
-            setTimeout(() => {
-              setButtonText(t('copyLink'));
-            }, 2000);
-
-            e.clearSelection();
-          });
-
-          clipboard.on(messages.error, (e) => {
-            setSnackbarMessage(messages.errorMessagePrefix + e.action);
-            setSnackbarOpen(true);
-          });
-
-          return () => {
-            clipboard.destroy();
-          };
-        } else {
-          setSnackbarMessage(messages.failedToGenerateShareChatId);
+          if (response.status === 200 && response.data.isSuccess) {
+            const generatedShareChatId = response.data.generatedShareChatId;
+            const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
+            setChatLink(newChatLink);
+            copyClipboard(newChatLink);
+          } else {
+            setSnackbarMessage(messages.failedToGenerateShareChatId);
+          }
+        } catch (error) {
+          setSnackbarMessage(messages.errorMessagePrefix + error.message);
+          setSnackbarOpen(true);
         }
-      } catch (error) {
-        setSnackbarMessage(messages.errorMessagePrefix + error.message);
-        setSnackbarOpen(true);
       }
     };
     fetchData();
   }, []);
 
+  const copyClipboard = (newChatLink) => {
+    const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
+      text: () => newChatLink,
+      container: document.getElementsByClassName(classNames.shareLinkModal)[0],
+    });
+
+    clipboard.on(messages.success, (e) => {      
+      setButtonText(t('copiedToClipboard'));
+      setTimeout(() => {
+        setButtonText(t('copyLink'));
+      }, 2000);
+
+      e.clearSelection();
+    });
+
+    clipboard.on(messages.error, (e) => {
+      setSnackbarMessage(messages.errorMessagePrefix + e.action);
+      setSnackbarOpen(true);
+    });
+
+    return () => {
+      clipboard.destroy();
+    };
+  }
+
   const handleCreateLink = async () => {
+    sessionStorage.setItem(messages.generatedChatLink, chatLink)
     setLinkGenerated(true);
     setCreateChatLink(chatLink);
   };
@@ -103,6 +115,14 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   const handleShareEmail = () => {
     window.open(`mailto:?subject=${encodeURIComponent(t('shareSubject'))}&body=${encodeURIComponent(chatLink)}`);
   };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(createChatLink);
+    setButtonText(t('copiedToClipboard'));
+    setTimeout(() => {
+      setButtonText(t('copyLink'));
+    }, 2000);
+  }
 
   return (
     <Modal
@@ -153,7 +173,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             variant={messages.buttonContainedVariant}
             color={messages.primaryColor}
             className={classNames.sharedChatButton}
-            onClick={handleCreateLink}
+            onClick={linkGenerated ? handleCopyLink :  handleCreateLink}
           >
             {buttonText}
           </Button>

@@ -851,6 +851,13 @@ const NewHomePageMui = () => {
     initializeConnection();
   }, []);
 
+  useEffect(() => {
+    const storedLink = sessionStorage.getItem(messages.generatedChatLink);
+    if (storedLink) {
+      sessionStorage.removeItem(messages.generatedChatLink)
+    }
+  }, [chatId])
+
   return (
     <Box className="ya-home-wrapper">
       <CssBaseline />
