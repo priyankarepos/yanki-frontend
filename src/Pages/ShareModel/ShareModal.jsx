@@ -60,7 +60,28 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             const generatedShareChatId = response.data.generatedShareChatId;
             const newChatLink = `${apiUrls.chatLinkBaseUrl}${generatedShareChatId}`;
             setChatLink(newChatLink);
-            copyClipboard(newChatLink);
+            const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
+              text: () => newChatLink,
+              container: document.getElementsByClassName(classNames.shareLinkModal)[0],
+            });
+
+            clipboard.on(messages.success, (e) => {
+              setButtonText(t('copiedToClipboard'));
+              setTimeout(() => {
+                setButtonText(t('copyLink'));
+              }, 2000);
+
+              e.clearSelection();
+            });
+
+            clipboard.on(messages.error, (e) => {
+              setSnackbarMessage(messages.errorMessagePrefix + e.action);
+              setSnackbarOpen(true);
+            });
+
+            return () => {
+              clipboard.destroy();
+            };
           } else {
             setSnackbarMessage(messages.failedToGenerateShareChatId);
           }
@@ -72,31 +93,6 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
     };
     fetchData();
   }, []);
-
-  const copyClipboard = (newChatLink) => {
-    const clipboard = new ClipboardJS(classNames.shareLinkInputButton, {
-      text: () => newChatLink,
-      container: document.getElementsByClassName(classNames.shareLinkModal)[0],
-    });
-
-    clipboard.on(messages.success, (e) => {      
-      setButtonText(t('copiedToClipboard'));
-      setTimeout(() => {
-        setButtonText(t('copyLink'));
-      }, 2000);
-
-      e.clearSelection();
-    });
-
-    clipboard.on(messages.error, (e) => {
-      setSnackbarMessage(messages.errorMessagePrefix + e.action);
-      setSnackbarOpen(true);
-    });
-
-    return () => {
-      clipboard.destroy();
-    };
-  }
 
   const handleCreateLink = async () => {
     setLinkGenerated(true);
