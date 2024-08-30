@@ -99,9 +99,9 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   }
 
   const handleCreateLink = async () => {
-    sessionStorage.setItem(messages.generatedChatLink, chatLink)
     setLinkGenerated(true);
     setCreateChatLink(chatLink);
+    sessionStorage.setItem(messages.generatedChatLink, chatLink);
   };
 
   const handleShareWhatsApp = () => {
