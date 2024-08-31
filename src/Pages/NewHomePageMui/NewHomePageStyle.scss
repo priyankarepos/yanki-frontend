@@ -511,9 +511,15 @@
     overflow-y: auto;
 }
 
+.ya-chat-session-list-empty-small-screen {
+    min-height: calc(100% - 90px);
+    max-height: calc(100% - 90px);
+    overflow-y: auto;
+}
+
 .ya-chat-session-list-XLScreen {
-    min-height: calc(100% - 100px);
-    max-height: calc(100% - 100px);
+    min-height: calc(100% - 130px);
+    max-height: calc(100% - 130px);
     overflow-y: auto;
 }
 

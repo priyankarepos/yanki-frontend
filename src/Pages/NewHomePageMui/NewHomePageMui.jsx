@@ -1046,7 +1046,9 @@ const NewHomePageMui = () => {
                       : classNames.chatSessionList
                     : isXLScreen
                     ? classNames.chatSessionListXLScreen
-                    : messages.chatSessionList
+                      : isSmallScreen
+                      ? classNames.chatSessionListEmptySmallScreen
+                      : classNames.chatSessionList
                 }`}
               >
                 {chatSessions.map((chatSession) => (

@@ -139,6 +139,7 @@ export const classNames = {
     flexCenter: "flex justify-center items-center min-h-70-screen",
     pdfLoaderContainer: "pdf-loader-container",
     pdfButtonStyle: "pdf-button-style",
+    chatSessionListEmptySmallScreen: "ya-chat-session-list-empty-small-screen",
 };
 
 export const apiUrls = {
