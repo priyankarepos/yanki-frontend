@@ -215,3 +215,22 @@ export const mapContainerStyle = {
     width: '100%',
     height: '400px',
 };
+
+export const sourceSelectionStrings = {
+    small : "small",
+    defaultOption: "YankiAIChoice",
+    anchorOriginHorizontal: "right",
+    anchorOriginVertical: "bottom",
+    transformOriginHorizontal: "right",
+    transformOriginVertical: "top",
+    menuClassName: "source-selection-menu",
+    selectedClass: "selected",
+    disabledClass: "disabled",
+    menuItemClass: "menu-item",
+    localStorageKey: 'selectedOption',
+    defaultOption2: "PersonalAssistant",
+    sourceSelectioniconBox: "source-selectionicon",
+    sourceSelectionTitle : "Source Selection",
+    accountMenu: "account-menu",
+    true: "true",
+}

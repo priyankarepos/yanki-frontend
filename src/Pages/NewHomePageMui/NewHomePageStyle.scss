@@ -523,6 +523,13 @@
     overflow-y: auto;
 }
 
+.source-selectionicon {
+    margin-top: -10px;
+    .MuiAvatar-circular {
+        background-color: #063762;
+    }
+}
+
 @media (max-width: 600px) {
     .fixed-search-Box {
         right: 20px;

@@ -47,3 +47,12 @@ export const initialQuestions4 = [
     { id: 39, text: "Help me find an anniversary gift for my wife" },
     { id: 40, text: "Tell me everything you can do" }
 ];
+
+export const sourceSelectionOptions = [
+    { label: 'Search on:', value: 'search', clickable: false },
+    { label: 'Yanki’s AI Choice', value: 'YankiAIChoice', clickable: true },
+    { label: 'Personal Assistant', value: 'PersonalAssistant', clickable: true },
+    { label: 'GoDaven', value: 'Godaven', clickable: true },
+    { label: 'Torahanytime', value: 'Torahanytime', clickable: true },
+    { label: 'Is it kosher', value: 'IsItKosher', clickable: true },
+  ];
