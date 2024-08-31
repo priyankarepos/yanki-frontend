@@ -52,7 +52,10 @@ export const sourceSelectionOptions = [
     { label: 'Search on:', value: 'search', clickable: false },
     { label: 'Yanki’s AI Choice', value: 'YankiAIChoice', clickable: true },
     { label: 'Personal Assistant', value: 'PersonalAssistant', clickable: true },
+    { label: 'Directory', value: 'YankiDirectory', clickable: true },
+    { label: 'Library', value: 'YankiLibrary', clickable: true },
     { label: 'GoDaven', value: 'Godaven', clickable: true },
     { label: 'Torahanytime', value: 'Torahanytime', clickable: true },
     { label: 'Is it kosher', value: 'IsItKosher', clickable: true },
+    { label: 'Mikvah.org', value: 'Mikvah', clickable: true },
   ];
