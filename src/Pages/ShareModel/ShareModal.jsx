@@ -6,6 +6,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import shareChatIcon1 from "../../Assets/images/share-chat1.svg";
@@ -27,6 +28,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [linkGenerated, setLinkGenerated] = useState(false);
   const [buttonText, setButtonText] = useState(t('createLink'));
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (selectedChatId) {
@@ -95,9 +97,12 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   }, []);
 
   const handleCreateLink = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setLinkGenerated(true);
     setCreateChatLink(chatLink);
     localStorage.setItem(messages.generatedChatLink, chatLink);
+    setIsLoading(false);
   };
 
   const handleShareWhatsApp = () => {
@@ -170,8 +175,13 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             color={messages.primaryColor}
             className={classNames.sharedChatButton}
             onClick={linkGenerated ? handleCopyLink :  handleCreateLink}
+            disabled={isLoading}
           >
-            {buttonText}
+             {isLoading ? (
+              <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
+            ) : (
+              buttonText
+            )}
           </Button>
         </Box>
         <Snackbar
