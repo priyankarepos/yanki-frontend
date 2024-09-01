@@ -512,8 +512,8 @@
 }
 
 .ya-chat-session-list-empty-small-screen {
-    min-height: calc(100% - 90px);
-    max-height: calc(100% - 90px);
+    min-height: calc(100% - 100px);
+    max-height: calc(100% - 100px);
     overflow-y: auto;
 }
 
@@ -577,6 +577,11 @@
     .ya-new-chat-box {
         min-height: calc(100vh - 250px);
         max-height: calc(100vh - 250px);
+    }
+
+    .ya-new-chat-box-empty {
+        min-height: calc(100vh - 320px);
+        max-height: calc(100vh - 320px);
     }
 
     .ya-task-msg-text {
