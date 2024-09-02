@@ -141,6 +141,7 @@ export const classNames = {
     pdfLoaderContainer: "pdf-loader-container",
     pdfButtonStyle: "pdf-button-style",
     chatSessionListEmptySmallScreen: "ya-chat-session-list-empty-small-screen",
+    copyLinkLoader: "copy-link-loader"
 };
 
 export const apiUrls = {

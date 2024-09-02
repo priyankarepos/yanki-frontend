@@ -12,6 +12,11 @@
         justify-content: center;
         align-items: center;
         margin: 10px 0;
+
+        button {
+            background-color: transparent;
+            border: none;
+        }
     }
 
     @media (max-width: 576px) {
@@ -106,4 +111,8 @@
     svg {
         color: #3b6faa;
     }
+}
+
+.copy-link-loader {
+    color: #fff !important;
 }

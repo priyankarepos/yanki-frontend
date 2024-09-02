@@ -58,5 +58,5 @@ export const sourceSelectionOptions = [
     { label: 'GoDaven', value: 'Godaven', clickable: true },
     { label: 'Torahanytime', value: 'Torahanytime', clickable: true },
     { label: 'Is it kosher', value: 'IsItKosher', clickable: true },
-    { label: 'Mikvah.org', value: 'Mikvah', clickable: true },
+    { label: 'Mikvah .org', value: 'Mikvah', clickable: true },
   ];

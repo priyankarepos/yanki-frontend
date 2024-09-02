@@ -71,7 +71,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
               setButtonText(t('copiedToClipboard'));
               setTimeout(() => {
                 setButtonText(t('copyLink'));
-              }, 2000);
+              }, 3000);
 
               e.clearSelection();
             });
@@ -178,7 +178,7 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             disabled={isLoading}
           >
              {isLoading ? (
-              <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
+              <CircularProgress size={24} className={classNames.copyLinkLoader} />
             ) : (
               buttonText
             )}
