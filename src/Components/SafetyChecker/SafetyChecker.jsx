@@ -75,7 +75,7 @@ const SafetyChecker = ({ answer, fetchRemainingMessage, clickableOff, remainingM
             {touched && !content.trim() && `${t('fieldRequired')}`}
           </FormHelperText>
           <Typography
-            className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
+            className={`${content.trim().length === 0 ? "Custom-disabled-Button" : "Custom-Button"} ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
             onClick={content.length === 0 ? null : handleSafetyCheck}
             sx={{ mt: "8px", cursor: (content.length === 0 || loading || mailMessage !== "" || !answer?.safetyChecker === true) ? 'text' : 'pointer' }}
           >

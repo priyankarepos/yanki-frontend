@@ -80,7 +80,7 @@ const HelpAgent = ({ answer, fetchRemainingMessage, remainingMsgData, clickableO
           {touched && !content.trim() && `${t('fieldRequired')}`}
         </FormHelperText>
         <Typography
-          className={`${content.length === 0 ? "Custom-disabled-Button" : "Custom-Button"
+          className={`${content.trim().length === 0 ? "Custom-disabled-Button" : "Custom-Button"
             } ${userRoles === "Enterprise" ? "Custom-disable-light" : ""}`}
           onClick={content.length === 0 ? null : handlePersonalAssistant}
           sx={{
