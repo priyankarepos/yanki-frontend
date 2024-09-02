@@ -35,7 +35,6 @@ import { Context } from "../../App";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
     GoogleMap,
-    LoadScriptNext,
     DirectionsService,
     DirectionsRenderer,
     Marker,
@@ -46,8 +45,7 @@ const MikvahAnswer = ({ answer }) => {
     const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const { activeTab, userLatitude, userLongitude } = useContext(Context);
-    const [isLocationAllowed, setIsLocationAllowed] = useState(false);
+    const { activeTab, userLatitude, userLongitude, isLocationAllowed } = useContext(Context);
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY,
     });
@@ -63,10 +61,10 @@ const MikvahAnswer = ({ answer }) => {
         const [loadingDetails, setLoadingDetails] = useState(false);
 
         useEffect(() => {
-            if (isLocationAllowed && open) {
+            if (isLocationAllowed === messages.locationAllowed && open && !origin) {
                 checkPermissionsAndFetchLocation();
             }
-        }, [isLocationAllowed, open]);
+        }, [isLocationAllowed, open, origin]);
 
         const fetchMikvahDetails = async () => {
             setLoadingDetails(true);
@@ -87,13 +85,15 @@ const MikvahAnswer = ({ answer }) => {
                     const handleGeolocationSuccess = (position) => {
                         const { latitude, longitude } = position.coords;
                         setOrigin(`${latitude},${longitude}`);
-                        setIsLocationAllowed(true);
+                        if (shouldFetchDirections) {
+                            fetchDirections();
+                        }
                     };
 
                     const handleGeolocationError = (error) => {
                         if (error.code === error.PERMISSION_DENIED) {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
-                            setIsLocationAllowed(false);
+
                         } else {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
                         }
@@ -108,7 +108,7 @@ const MikvahAnswer = ({ answer }) => {
                             navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                         } else {
                             setSnackbarMessage(`${t('enableLocationAccess')}`);
-                            setIsLocationAllowed(false);
+
                             setSnackbarOpen(true);
                         }
 
@@ -117,7 +117,7 @@ const MikvahAnswer = ({ answer }) => {
                                 navigator.geolocation.getCurrentPosition(handleGeolocationSuccess, handleGeolocationError);
                             } else {
                                 setSnackbarMessage(`${t('enableLocationAccess')}`);
-                                setIsLocationAllowed(false);
+
                                 setSnackbarOpen(true);
                             }
                         };
@@ -131,9 +131,11 @@ const MikvahAnswer = ({ answer }) => {
             }
         };
 
-        useEffect(()=>{
-            checkPermissionsAndFetchLocation();
-        },[])
+        const fetchDirections = () => {
+            if (origin && destination) {
+                setShouldFetchDirections(true);
+            }
+        };
 
         const directionsCallback = (result, status) => {
             if (status === messages.statusOk) {
@@ -154,7 +156,14 @@ const MikvahAnswer = ({ answer }) => {
             setDestination(`${row.latitude},${row.longitude}`);
             setShouldFetchDirections(true);
             setShowMap(true);
-            checkPermissionsAndFetchLocation();
+            if (origin) {
+                fetchDirections();
+            } else {
+                checkPermissionsAndFetchLocation();
+            }
+            if(isLocationAllowed === messages.locationAllowed){
+                handleShowDetails();
+            }
         };
 
         const handleShowDetails = () => {
@@ -167,6 +176,15 @@ const MikvahAnswer = ({ answer }) => {
                 }
                 return newOpen;
             });
+        };
+        const handleLocationIconClick = () => {
+            if (isLocationAllowed === messages.locationAllowed) {
+                handleSetDestination();
+            }else {
+                setSnackbarMessage(`${t('enableLocationAccess')}`);
+                setSnackbarOpen(true); 
+                handleShowDetails(); 
+            }
         };
 
         const handleCloseMap = () => {
@@ -195,9 +213,9 @@ const MikvahAnswer = ({ answer }) => {
                             </div>
                         </Tooltip>
                     </TableCell>
-                    <TableCell onClick={handleShowDetails}>
+                    <TableCell>
                         <Box className={messages.mikvahDetailInfo}>
-                            <Button variant={messages.buttonContainedVarient} onClick={handleSetDestination} >
+                            <Button variant={messages.buttonContainedVarient} onClick={handleLocationIconClick} >
                                 <LocationOnIcon />
                             </Button>
                         </Box>
