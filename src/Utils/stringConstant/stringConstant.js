@@ -84,6 +84,7 @@ export const messages = {
     loginYourAccountTitle : "Login your account",
     activeTab: "activeTab",
     generatedChatLink: "generatedChatLink",
+    locationAllowed : "Location allowed",
 
 };
 
