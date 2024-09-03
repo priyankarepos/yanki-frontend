@@ -1206,7 +1206,7 @@ const NewHomePageMui = () => {
                 </div>
               </Paper>
             )}
-            {isSubmitting && (
+            {isSubmitting && !chatSessionId && (
               <Box className="ya-progress-bar-box">
                 <Typography className="text-center">
                   <CircularProgress />

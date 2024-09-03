@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  CircularProgress,
   IconButton,
   Paper,
   TextField,
@@ -11,7 +12,7 @@ import {
   agentChatResponse,
   apiUrls,
 } from "../../Utils/stringConstant/AgentChatResponse";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import AgentLogo from "../../Assets/images/AgentProfile.svg";
 import OfflineUserAvtar from "../../Assets/images/OfflineUserProfile.svg";
@@ -23,12 +24,15 @@ import {
 } from "../../SignalR/signalRService";
 import { useTranslation } from 'react-i18next';
 import { useParams } from "react-router-dom";
+import { classNames } from "../../Utils/stringConstant/stringConstant";
 
 const UserChatSession = () => {
   const { t } = useTranslation();
   const [messageList, setMessageList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isChatFinish, setIsChatFinish] = useState(null);
+  const [isChatFetched, setIsChatFinished] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const chatContainerRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -78,6 +82,7 @@ const UserChatSession = () => {
 
         connection.on(agentChatResponse.finishChatConnection, () => {
           setIsChatFinish(true);
+          setIsChatFinished(true);
         });
       }
     };
@@ -92,6 +97,7 @@ const UserChatSession = () => {
       );      
             
       setIsChatFinish(response.data.isChatSessionActive);
+      setIsChatFinished(true);
 
       const processedMessages = response.data.messages.map((message) => {
         const date = new Date(message.timestamp);
@@ -117,6 +123,7 @@ const UserChatSession = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
     const response = await axios.post(`${apiUrls.sendMessage}`, {
       content: searchQuery,
       userType: agentChatResponse.user,
@@ -138,6 +145,7 @@ const UserChatSession = () => {
     setMessageList((prevMessages) => [...prevMessages, message]);
 
     setSearchQuery("");
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -245,10 +253,16 @@ const UserChatSession = () => {
                         onClick={onSubmit}
                         disabled={!searchQuery.trim()}
                       >
-                        <span className={agentChatResponse.sendButtonMessage}>
-                          {t('send')}
-                        </span>
-                        <img src={SendIcon} alt={agentChatResponse.userAvtar} />
+                        {isLoading ? (
+                          <CircularProgress size={24} className={classNames.copyLinkLoader} />
+                        ) : (
+                          <React.Fragment>
+                            <span className={agentChatResponse.sendButtonMessage}>
+                              {t('send')}
+                            </span>
+                            <img src={SendIcon} alt={agentChatResponse.userAvtar} />
+                            </React.Fragment>
+                      )}
                       </IconButton>
                     ),
                   }}

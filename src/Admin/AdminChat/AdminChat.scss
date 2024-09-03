@@ -533,3 +533,21 @@
     font-weight: 600 !important;
     margin-top: 20px !important;
 }
+
+@media (min-width: 600px) and (max-width: 750px){
+    .chat-header-info-email {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 150px;
+    }
+}
+
+@media (max-width: 500px){
+    .chat-header-info-email {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 150px;
+    }
+}
