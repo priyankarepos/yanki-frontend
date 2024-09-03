@@ -126,6 +126,7 @@ export const agentChatResponse = {
     userGeneralInfoChatClose: "user-general-info-chat-close",
     userGeneralInfoChatOpen: "user-general-info-chat-open",
     userDetailsNotFound: "user-details-not-found",
+    userDetailsNotFoundCloseButton: "user-details-not-found-close-button",
     userGeneralInfoHeader: "user-general-info-header",
     userGeneralInfoHeaderTitle: "user-general-info-header-title",
     userGeneralInfoContent: "user-general-info-content",
@@ -164,7 +165,8 @@ export const agentChatResponse = {
     isXLScreen: "(min-width:1200px)",
     finishChatId: "FinishChatId",
     online: "online",
-    finishChatConnection: "FinishChat"
+    finishChatConnection: "FinishChat",
+    userGeneralInfoHeaderContainer: "user-general-info-header-container"
 }
 
 export const apiUrls = {

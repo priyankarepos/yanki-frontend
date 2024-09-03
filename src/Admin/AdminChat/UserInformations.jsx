@@ -1,4 +1,4 @@
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -6,8 +6,10 @@ import {
   apiUrls,
 } from "../../Utils/stringConstant/AgentChatResponse";
 import { useParams } from "react-router-dom";
+import CloseIcon from "../../Assets/images/closeIcon.svg";
 
-const UserInformations = () => {
+
+const UserInformations = ({userInfoModalOpen}) => {
   const [userDetails, setUserDetails] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const isLargeScreen = useMediaQuery((theme) =>
@@ -27,6 +29,10 @@ const UserInformations = () => {
     fetchDetails();
   }, [id]);
 
+  const handleClosModal = () => {
+    userInfoModalOpen(false);
+  }
+
   return (
     <React.Fragment>
       {isLoading && (
@@ -38,15 +44,35 @@ const UserInformations = () => {
           } `}
         >
           {!userDetails ? (
-            <Typography className={agentChatResponse.userDetailsNotFound}>
-              {agentChatResponse.notAddDataAICustomization}
-            </Typography>
+            <React.Fragment>
+              {isLargeScreen && (
+                <Box className={agentChatResponse.userDetailsNotFoundCloseButton}>
+                  <IconButton
+                    className={agentChatResponse.userInformationCloseIcon}
+                    onClick={handleClosModal}
+                  >
+                    <img src={CloseIcon} alt={agentChatResponse.closeIcon} />
+                  </IconButton>
+                </Box>
+              )}
+              <Typography className={agentChatResponse.userDetailsNotFound}>
+                {agentChatResponse.notAddDataAICustomization}
+              </Typography>
+            </React.Fragment>
           ) : (
             <React.Fragment>
-              <Box className={agentChatResponse.userGeneralInfoHeader}>
+              <Box className={`${agentChatResponse.userGeneralInfoHeader} ${isLargeScreen && agentChatResponse.userGeneralInfoHeaderContainer}`}>
                 <Typography className={agentChatResponse.userGeneralInfoHeaderTitle}>
                   {agentChatResponse.generalInformation}
                 </Typography>
+                {isLargeScreen && (
+                <IconButton
+                  className={agentChatResponse.userInformationCloseIcon}
+                  onClick={handleClosModal}
+                >
+                  <img src={CloseIcon} alt={agentChatResponse.closeIcon} />
+                </IconButton>
+                )}
               </Box>
               <Box className={agentChatResponse.userGeneralInfoContent}>
                 <Box className={agentChatResponse.userGeneralDetailsContent}>

@@ -352,7 +352,7 @@ const UserChatList = () => {
                     )}
                   </Box>
                 )}
-                {isModalOpen && <UserInformations />}
+                {isModalOpen && <UserInformations userInfoModalOpen={handleUserInfoModalOpen} />}
               </Box>
             )}
           </React.Fragment>
