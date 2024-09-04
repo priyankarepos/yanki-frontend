@@ -188,14 +188,14 @@ const UserChatSession = () => {
                       : agentChatResponse.messageIncomingContainer
                   }`}
                 >
-                  {message.userType !== agentChatResponse.user && (
+                  {message.userType !== agentChatResponse.user && !isSmallScreen &&(
                     <Avatar className={agentChatResponse.agentAvtar}>
                       <img src={AgentLogo} alt={agentChatResponse.agentLogo} />
                     </Avatar>
                   )}
                   <Box
                     key={message.id}
-                    className={`${agentChatResponse.message}
+                    className={`${ isSmallScreen ? agentChatResponse.messageSmallScreen : agentChatResponse.message}
                 ${
                   message.userType === agentChatResponse.user
                     ? agentChatResponse.outgoing
@@ -206,16 +206,15 @@ const UserChatSession = () => {
                     <Typography>{message.content}</Typography>
                     <img src={TickDouble} alt={TickDouble} />
                     <span
-                      className={`${agentChatResponse.userMessageTime} ${
-                        message.userType === agentChatResponse.user
+                      className={`${agentChatResponse.userMessageTime} ${isSmallScreen ? agentChatResponse.userMessageTimeSmallScreen : agentChatResponse.userMessageTimeLargeScreen} ${message.userType === agentChatResponse.user
                           ? agentChatResponse.outgoingTime
                           : agentChatResponse.incomingTime
-                      }`}
+                        }`}
                     >
                       {message.timestamplabel}
                     </span>
                   </Box>
-                  {message.userType === agentChatResponse.user && (
+                  {message.userType === agentChatResponse.user && !isSmallScreen && (
                     <Avatar className={agentChatResponse.userAvtar}>
                       <img
                         src={OfflineUserAvtar}

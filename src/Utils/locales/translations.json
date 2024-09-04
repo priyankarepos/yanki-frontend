@@ -268,7 +268,7 @@
             "personalAssistant": "Personal Assistant",
             "chatWithYankiAgent": "Chat With Yanki Agent",
             "describeNeedHelp": "Please describe what you need help with. (Note that the ability of Yanki to resolve your query may vary based on your current subscription.)",
-            "chatWithAgent": "Chat with Agent",
+            "chatWithAgent": "Chat with agent",
             "send": "Send",
             "failedToSendSafetyCheckEmail": "Failed to send safety check email",
             "errorSendingSafetyCheckEmail": "Error sending safety check email:",

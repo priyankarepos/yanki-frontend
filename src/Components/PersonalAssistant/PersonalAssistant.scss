@@ -46,10 +46,18 @@
 
 .message {
     padding: 15px 20px 15px 15px;
-    border-radius: 4px;
     max-width: 302px;
     position: relative;
     border-radius: 10px;
+    min-width: 55px;
+    word-wrap: break-word;
+}
+
+.message-small-screen {
+    padding: 8px 15px 8px 8px;
+    max-width: 302px;
+    position: relative;
+    border-radius: 5px;
     min-width: 55px;
     word-wrap: break-word;
 }
@@ -64,8 +72,9 @@
 
     img {
         position: absolute;
-        bottom: 5px;
-        right: 5px;
+        bottom: 2px;
+        right: 2px;
+        width: 12px;
     }
 }
 
@@ -79,8 +88,8 @@
 
     img {
         position: absolute;
-        bottom: 5px;
-        right: 10px;
+        bottom: 2px;
+        right: 2px;
     }
 }
 
@@ -97,6 +106,14 @@
     margin-bottom: 10px;
     background-color: transparent !important;
     position: absolute;
+
+}
+
+.user-message-time-small-screen {
+    margin-top: 10px;
+}
+
+.user-message-time-large-screen {
     margin-top: 20px;
 }
 

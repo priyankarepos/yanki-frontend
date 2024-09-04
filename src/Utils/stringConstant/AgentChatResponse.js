@@ -166,7 +166,10 @@ export const agentChatResponse = {
     finishChatId: "FinishChatId",
     online: "online",
     finishChatConnection: "FinishChat",
-    userGeneralInfoHeaderContainer: "user-general-info-header-container"
+    userGeneralInfoHeaderContainer: "user-general-info-header-container",
+    messageSmallScreen: "message-small-screen",
+    userMessageTimeSmallScreen: "user-message-time-small-screen",
+    userMessageTimeLargeScreen: "user-message-time-large-screen"
 }
 
 export const apiUrls = {

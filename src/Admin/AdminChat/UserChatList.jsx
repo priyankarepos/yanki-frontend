@@ -38,30 +38,6 @@ const UserChatList = () => {
   );
   const latestUser = userList[0]?.userId;
 
-  const handleReceivedMessage = useCallback(async (message) => {
-    const response = await axios.get(
-      `${apiUrls.getUserListById(message.senderId)}`
-    );
-
-    const date = new Date(message.timestamp);
-
-    const options = {
-      hour: agentChatResponse.numeric,
-      minute: agentChatResponse.numeric,
-      hour12: true,
-    };
-    const localTimeString = date.toLocaleTimeString(undefined, options);
-
-    const newUser = {
-      userId: response.data.userId,
-      email: response.data.email,
-      lastMessage: message.content,
-      lastMessageTime: localTimeString,
-      unseenMessageCount: id ? 0 : 1,
-    };
-    setUserList([newUser]);
-  }, []);
-
   useEffect(() => {
     userListRef.current = userList;
   }, [userList]);
@@ -197,8 +173,15 @@ const UserChatList = () => {
 
   const handleListItemClick = (id) => {
     updateUserList(id);
-
     navigate(`${apiUrls.chatNavigateUrlById(id)}`);
+    let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);  
+    if(finishChatId) {
+      setUserList(prevUserList => 
+        prevUserList.filter(user => user.userId !== finishChatId)
+      );
+    } 
+
+    localStorage.removeItem(agentChatResponse.finishChatId);
   };
 
   const handleUserInfoModalOpen = (res) => {

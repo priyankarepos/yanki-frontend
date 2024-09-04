@@ -174,13 +174,14 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
           if (finishChat && message.senderId === finishChat) {
             setMessageList([]);
             setIsChatFinished(false);
+            setSnackbarOpen(false);
             localStorage.removeItem(agentChatResponse.finishChatId);
           }
           handleReceivedMessage(message);
         });
 
         connection.on(agentChatResponse.newUser, (senderUser) => {
-          if (senderUser.userId === chatSessionIdRef.current) {   
+          if (senderUser.userId === chatSessionIdRef.current) {
             setUserStatus(senderUser);
             setIsChangeStatus(true);
           }
