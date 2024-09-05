@@ -1050,10 +1050,10 @@ const NewHomePageMui = () => {
                     : classNames.chatSessionList
                   : isXLScreen
                     ? classNames.chatSessionListXLScreen
-                    : isSmallScreen
+                      : isSmallScreen
                       ? classNames.chatSessionListEmptySmallScreen
                       : classNames.chatSessionList
-                  }`}
+                }`}
               >
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
