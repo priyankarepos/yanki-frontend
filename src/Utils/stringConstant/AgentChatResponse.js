@@ -169,7 +169,9 @@ export const agentChatResponse = {
     userGeneralInfoHeaderContainer: "user-general-info-header-container",
     messageSmallScreen: "message-small-screen",
     userMessageTimeSmallScreen: "user-message-time-small-screen",
-    userMessageTimeLargeScreen: "user-message-time-large-screen"
+    userMessageTimeLargeScreen: "user-message-time-large-screen",
+    transitionStyle: "width 0.3s ease-in-out",
+    enterpriseContent:"enterprise-content",
 }
 
 export const apiUrls = {

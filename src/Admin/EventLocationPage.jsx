@@ -7,6 +7,7 @@ import { Context } from "../App";
 import "../EnterpriseCollabration/EnterpriseStyle.scss";
 import AdminAddEventType from "./AddEventLocation/AddEventType";
 import "./AdminStyle.css";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 
 const EventLocationPage = () => {
   const { drawerOpen } = useContext(Context);
@@ -15,12 +16,22 @@ const EventLocationPage = () => {
 
   return (
     <Box className="event-request-container">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}>
         <AdminDashboard />
       </Box>
       <Box
-        className="enterpriseFormBox"
-        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+        className={agentChatResponse.enterpriseFormBox}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}
       >
         <div className="add-eventpadding">
           <AdminAddEventLocation />

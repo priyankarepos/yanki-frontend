@@ -26,6 +26,7 @@ import "./AdminStyle.css";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 
 const AdminEnterpriseRequest = () => {
   const { drawerOpen } = useContext(Context);
@@ -227,13 +228,21 @@ const AdminEnterpriseRequest = () => {
           }}
         />
       </Snackbar>
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}>
         <AdminDashboard />
       </Box>
       <Box
-        className="enterpriseFormBox"
+        className={agentChatResponse.enterpriseFormBox}
         sx={{
-          width: drawerOpen ? "calc(100% - 270px)" : "100%",
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="enterprise-content">

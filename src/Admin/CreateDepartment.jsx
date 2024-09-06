@@ -38,6 +38,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloseIcon from "@mui/icons-material/Close";
 import { pdfjs } from "react-pdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 
 const AdminCreateDepartment = () => {
   const { drawerOpen } = useContext(Context);
@@ -770,12 +771,22 @@ const AdminCreateDepartment = () => {
 
   return (
     <Box className="admin-faq-wrapper">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}>
         <AdminDashboard />
       </Box>
       <Box
-        className="event-content"
-        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+        className={agentChatResponse.enterpriseContent}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}
       >
         <Box className="admin-faq-heading">
           <Typography variant="h6">Add Departments</Typography>

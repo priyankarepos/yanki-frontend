@@ -141,8 +141,11 @@ export const classNames = {
     flexCenter: "flex justify-center items-center min-h-70-screen",
     pdfLoaderContainer: "pdf-loader-container",
     pdfButtonStyle: "pdf-button-style",
+    copyLinkLoader: "copy-link-loader",
     chatSessionListEmptySmallScreen: "ya-chat-session-list-empty-small-screen",
-    copyLinkLoader: "copy-link-loader"
+    noDataFoundClass: "no-data-found",
+    fixedSearchBox: "fixed-search-Box",
+    hiddenFixedBox: "hidden",
 };
 
 export const apiUrls = {
@@ -192,6 +195,8 @@ export const apiUrls = {
     resetPassword: `${import.meta.env.VITE_APP_API_HOST}/api/auth/reset-password`,
     registerUser: `${import.meta.env.VITE_APP_API_HOST}/api/auth/register`,
     changePhoneNumber: `${import.meta.env.VITE_APP_API_HOST}/api/auth/change-phoneNumber`,
+    getAllEvents: (pageNumber) =>
+        `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`,
 };
 
 export const membershipApiUrls = {

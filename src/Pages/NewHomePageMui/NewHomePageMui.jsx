@@ -448,6 +448,9 @@ const NewHomePageMui = () => {
       sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
       setSelectedOption(sourceSelectionStrings.defaultOption);
       navigate(`/${chatId}`);
+      if (isSmallScreen) {
+        setDrawerOpen(false);
+      }
       try {
         setIsChatFetching(true);
         const response = await axios.get(
@@ -481,6 +484,9 @@ const NewHomePageMui = () => {
     setIsError(false);
     setErrorMsg("");
     navigate(`/chat/${chatSessionId}`);
+    if (isSmallScreen) {
+      setDrawerOpen(false);
+    }
 
     setAgentChatSession((prevData) => {
       if (!prevData) return prevData;
@@ -658,6 +664,9 @@ const NewHomePageMui = () => {
     sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
     setSelectedOption(sourceSelectionStrings.defaultOption);
     navigate("/");
+    if (isSmallScreen) {
+      setDrawerOpen(false);
+    }
     if (!isLargeScreen) {
       setDrawerOpen(false);
     } else {
@@ -900,35 +909,33 @@ const NewHomePageMui = () => {
           } `}
       >
         <Toolbar>
-          {!drawerOpen && (
-            <Box className="ya-home-sidebar-box">
-              <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
-                <img
-                  src={
-                    activeTab === 0
-                      ? "/auth-logo-dark.svg"
-                      : "/auth-logo-light.svg"
-                  }
-                  width="160px"
-                  height="50px"
-                  className="ya-logo-img"
-                  alt="logo"
-                />
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
-              >
-                <MenuIcon />
-              </IconButton>
+          <Box className="ya-home-sidebar-box">
+            <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
+              <img
+                src={
+                  activeTab === 0
+                    ? "/auth-logo-dark.svg"
+                    : "/auth-logo-light.svg"
+                }
+                width="160px"
+                height="50px"
+                className="ya-logo-img"
+                alt="logo"
+              />
             </Box>
-          )}
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer}
+              className={`${activeTab === 1
+                ? "ya-home-lightblue-color"
+                : "ya-home-white-color"
+                }`}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
           {chatId && (
             <div className={classNames.shareChatLinkIcon}>
               <Tooltip
@@ -954,37 +961,6 @@ const NewHomePageMui = () => {
         className="sidebarStyle"
       >
         <div className="ya-sidebar-styles">
-          {drawerOpen && (
-            <Box className="ya-sidebar-styles-box">
-              <Box
-                sx={{ cursor: messages.cursorPointer }}
-                onClick={() => resetPage(false)}
-              >
-                <img
-                  src={
-                    activeTab === 0
-                      ? "/auth-logo-dark.svg"
-                      : "/auth-logo-light.svg"
-                  }
-                  width="160px"
-                  height="50px"
-                  alt="logo"
-                />
-              </Box>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleDrawer}
-                className={`${activeTab === 1
-                  ? "ya-home-lightblue-color"
-                  : "ya-home-white-color"
-                  }`}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          )}
           <Box className="chat-session-conteriner">
             <Box
               className={`${agentChatSession.length > 0
@@ -1227,9 +1203,8 @@ const NewHomePageMui = () => {
           {!agentChatSessionId && !showChatSession && (
             <Box className="ya-search-container">
               <Box
-                className={`fixed-search-Box ${drawerOpen && !isSmallScreen
-                  ? "ya-answer-drawn-close"
-                  : "ya-answer-container-question"
+                className={`${classNames.fixedSearchBox} ${drawerOpen && !isSmallScreen &&
+                  classNames.hiddenFixedBox
                   }`}
               >
                 {isLargeScreen &&

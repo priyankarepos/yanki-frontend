@@ -37,6 +37,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { FormControl } from "@mui/base";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { apiUrls, classNames } from "../Utils/stringConstant/stringConstant";
 
 const AdminEventRequest = () => {
   const {
@@ -66,6 +68,7 @@ const AdminEventRequest = () => {
   const [loadingRows, setLoadingRows] = useState([]);
   const [isApproving, setIsApproving] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [eventIdToDelete, setEventIdToDelete] = useState(null);
   const [editEventData, setEditEventData] = useState(null);
@@ -108,9 +111,8 @@ const AdminEventRequest = () => {
 
   const fetchEventRequest = async (pageNumber) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`
-      );
+      setIsDataLoading(true);
+      const response = await axios.get(apiUrls.getAllEvents(pageNumber));
 
       if (response.status === 200) {
         setEventRequests(response.data);
@@ -122,6 +124,8 @@ const AdminEventRequest = () => {
     } catch (error) {
       setSnackbarMessage("Error fetching event location", error);
       setSnackbarOpen(true);
+    } finally {
+      setIsDataLoading(false);
     }
   };
 
@@ -131,9 +135,7 @@ const AdminEventRequest = () => {
   useEffect(() => {
     const fetchEventLocations = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`
-        );
+        const response = await axios.get(apiUrls.getEventsLocations);
 
         if (response.status === 200) {
           setEventLocations(response.data);
@@ -152,9 +154,7 @@ const AdminEventRequest = () => {
   useEffect(() => {
     const fetchEventPublicationArea = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
-        );
+        const response = await axios.get(apiUrls.getEventsPublicationAreas);
 
         if (response.status === 200) {
           setPublicationArea(response.data);
@@ -173,9 +173,7 @@ const AdminEventRequest = () => {
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`
-        );
+        const response = await axios.get(apiUrls.getEventsTypes);
 
         if (response.status === 200) {
           setEventTypes(response.data);
@@ -261,24 +259,24 @@ const AdminEventRequest = () => {
         "locations",
         editEventData.eventLocation
           ? editEventData.eventLocation
-              .flatMap((location) => location.split(","))
-              .map((location) => ({ name: location }))
+            .flatMap((location) => location.split(","))
+            .map((location) => ({ name: location }))
           : []
       );
       setValue(
         "publicationArea",
         editEventData.eventPublicationArea
           ? editEventData.eventPublicationArea
-              .flatMap((area) => area.split(","))
-              .map((area) => ({ name: area }))
+            .flatMap((area) => area.split(","))
+            .map((area) => ({ name: area }))
           : []
       );
       setValue(
         "eventTypes",
         editEventData.eventType
           ? editEventData.eventType
-              .flatMap((area) => area.split(","))
-              .map((area) => ({ name: area }))
+            .flatMap((area) => area.split(","))
+            .map((area) => ({ name: area }))
           : []
       );
     }
@@ -557,13 +555,21 @@ const AdminEventRequest = () => {
 
   return (
     <Box className="event-request-container">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+        width:
+          drawerOpen && !isSmallScreen
+            ? agentChatResponse.drawerOpenWidth
+            : agentChatResponse.zeroWidth,
+        transition: agentChatResponse.transitionStyle,
+      }}>
         <AdminDashboard />
       </Box>
       <Box
-        className="enterpriseFormBox"
+        className={agentChatResponse.enterpriseFormBox}
         sx={{
-          width: drawerOpen ? "calc(100% - 270px)" : "100%",
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="event-content">
@@ -578,206 +584,156 @@ const AdminEventRequest = () => {
               <AddIcon /> Add
             </IconButton>
           </Box>
-          {Array.isArray(eventRequests.events) &&
-          eventRequests.events.length > 0 ? (
-            <TableContainer
-              component={Paper}
-              className="enterprise-request-table marginBottom-0"
-            >
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell className="event-headerCell">Name</TableCell>
-                    <TableCell className="event-headerCell">Location</TableCell>
-                    <TableCell className="event-headerCell">Address</TableCell>
-                    <TableCell className="event-headerCell">Date</TableCell>
-                    <TableCell className="event-headerCell">Time</TableCell>
-                    <TableCell className="event-headerCell">
-                      Event Detail
-                    </TableCell>
-                    <TableCell className="event-headerCell">
-                      Event Type
-                    </TableCell>
-                    <TableCell className="event-headerCell">
-                      Event Publication Area
-                    </TableCell>
-                    <TableCell className="event-headerCell">Images</TableCell>
-                    <TableCell className="event-headerCell">Status</TableCell>
-                    <TableCell className="event-headerCell text-right">
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {[
-                    ...eventRequests.events.filter(
-                      (event) => event.status === "Pending"
-                    ),
-                    ...eventRequests.events.filter(
-                      (event) => event.status !== "Pending"
-                    ),
-                  ].map((event, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="event-cell">
-                        {event.eventName}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.eventLocation.join(", ")}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.eventAddress}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {new Date(event.eventDateAndTime).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {new Date(event.eventDateAndTime).toLocaleTimeString()}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.eventDetails}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.eventType.join(", ")}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.eventPublicationArea.join(", ")}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.imageUrl && event.imageUrl.length > 0 ? (
-                          event.imageUrl.map((image, index) => (
-                            <p
-                              className="event-image-url"
-                              key={index}
-                              onClick={() => handleImageClick(image)}
-                            >
-                              {getImageFilename(image.imageUrl)}
-                            </p>
-                          ))
-                        ) : (
-                          <p>N/A</p>
-                        )}
-                      </TableCell>
-                      <TableCell className="event-cell">
-                        {event.status}
-                      </TableCell>
-                      <TableCell className="event-cell text-right">
-                        <div className="enterprise-cell-button-container">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            className="event-cell-button"
-                            disabled={
-                              loadingRows.includes(event.eventId) ||
-                              event.status === "Approved"
-                            }
-                            onClick={() => {
-                              setIsApproving(true);
-                              handleApprove(
-                                event.eventId,
-                                event.userId,
-                                event.eventName
-                              );
-                            }}
-                          >
-                            {isApproving &&
-                            loadingRows.includes(event.eventId) ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Approve"
-                            )}
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className="event-cell-button"
-                            disabled={
-                              loadingRows.includes(event.eventId) ||
-                              event.status === "Rejected"
-                            }
-                            onClick={async () => {
-                              setIsRejecting(true);
-                              await handleReject(
-                                event.eventId,
-                                event.userId,
-                                event.eventName
-                              );
-                              setIsRejecting(false);
-                            }}
-                          >
-                            {isRejecting &&
-                            loadingRows.includes(event.eventId) ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Reject"
-                            )}
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className="event-cell-button"
-                            disabled={loadingRows.includes(event.eventId)}
-                            onClick={async () => {
-                              setIsPending(true);
-                              await handlePending(
-                                event.eventId,
-                                event.userId,
-                                event.eventName
-                              );
-                              setIsPending(false);
-                            }}
-                          >
-                            {isPending &&
-                            loadingRows.includes(event.eventId) ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Ask for more info"
-                            )}
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className="event-cell-button"
-                            onClick={() =>
-                              handleEditClick(event, event.eventId)
-                            }
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className="event-cell-button"
-                            disabled={loadingRows.includes(event.eventId)}
-                            onClick={() => handleDeleteClick(event.eventId)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </TableCell>
+          {
+            isDataLoading ? (
+              <div className={classNames.noDataFoundClass}>
+                <CircularProgress />
+              </div>
+            ) : Array.isArray(eventRequests.events) && eventRequests.events.length > 0 ? (
+              <TableContainer component={Paper} className="enterprise-request-table marginBottom-0">
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className="event-headerCell">Name</TableCell>
+                      <TableCell className="event-headerCell">Location</TableCell>
+                      <TableCell className="event-headerCell">Address</TableCell>
+                      <TableCell className="event-headerCell">Date</TableCell>
+                      <TableCell className="event-headerCell">Time</TableCell>
+                      <TableCell className="event-headerCell">Event Detail</TableCell>
+                      <TableCell className="event-headerCell">Event Type</TableCell>
+                      <TableCell className="event-headerCell">Event Publication Area</TableCell>
+                      <TableCell className="event-headerCell">Images</TableCell>
+                      <TableCell className="event-headerCell">Status</TableCell>
+                      <TableCell className="event-headerCell text-right">Action</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {totalPages > 1 && (
-                <Pagination
-                  count={totalPages}
-                  page={pageNumber}
-                  onChange={handlePageChange}
-                  color="primary"
-                  className="enterprise-pagination"
-                />
-              )}
-            </TableContainer>
-          ) : (
-            <Typography variant="body1" className="no-data-found">
-              No event submission request available.
-            </Typography>
-          )}
+                  </TableHead>
+                  <TableBody>
+                    {[
+                      ...eventRequests.events.filter((event) => event.status === "Pending"),
+                      ...eventRequests.events.filter((event) => event.status !== "Pending"),
+                    ].map((event, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="event-cell">{event.eventName}</TableCell>
+                        <TableCell className="event-cell">{event.eventLocation.join(", ")}</TableCell>
+                        <TableCell className="event-cell">{event.eventAddress}</TableCell>
+                        <TableCell className="event-cell">
+                          {new Date(event.eventDateAndTime).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell className="event-cell">
+                          {new Date(event.eventDateAndTime).toLocaleTimeString()}
+                        </TableCell>
+                        <TableCell className="event-cell">{event.eventDetails}</TableCell>
+                        <TableCell className="event-cell">{event.eventType.join(", ")}</TableCell>
+                        <TableCell className="event-cell">{event.eventPublicationArea.join(", ")}</TableCell>
+                        <TableCell className="event-cell">
+                          {event.imageUrl && event.imageUrl.length > 0 ? (
+                            event.imageUrl.map((image, index) => (
+                              <p className="event-image-url" key={index} onClick={() => handleImageClick(image)}>
+                                {getImageFilename(image.imageUrl)}
+                              </p>
+                            ))
+                          ) : (
+                            <p>N/A</p>
+                          )}
+                        </TableCell>
+                        <TableCell className="event-cell">{event.status}</TableCell>
+                        <TableCell className="event-cell text-right">
+                          <div className="enterprise-cell-button-container">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              className="event-cell-button"
+                              disabled={loadingRows.includes(event.eventId) || event.status === "Approved"}
+                              onClick={() => {
+                                setIsApproving(true);
+                                handleApprove(event.eventId, event.userId, event.eventName);
+                              }}
+                            >
+                              {isApproving && loadingRows.includes(event.eventId) ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Approve"
+                              )}
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="event-cell-button"
+                              disabled={loadingRows.includes(event.eventId) || event.status === "Rejected"}
+                              onClick={async () => {
+                                setIsRejecting(true);
+                                await handleReject(event.eventId, event.userId, event.eventName);
+                                setIsRejecting(false);
+                              }}
+                            >
+                              {isRejecting && loadingRows.includes(event.eventId) ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Reject"
+                              )}
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="event-cell-button"
+                              disabled={loadingRows.includes(event.eventId)}
+                              onClick={async () => {
+                                setIsPending(true);
+                                await handlePending(event.eventId, event.userId, event.eventName);
+                                setIsPending(false);
+                              }}
+                            >
+                              {isPending && loadingRows.includes(event.eventId) ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Ask for more info"
+                              )}
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="event-cell-button"
+                              onClick={() => handleEditClick(event, event.eventId)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="event-cell-button"
+                              disabled={loadingRows.includes(event.eventId)}
+                              onClick={() => handleDeleteClick(event.eventId)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                {totalPages > 1 && (
+                  <Pagination
+                    count={totalPages}
+                    page={pageNumber}
+                    onChange={handlePageChange}
+                    color="primary"
+                    className="enterprise-pagination"
+                  />
+                )}
+              </TableContainer>
+            ) : (
+              <Typography variant="body1" className={classNames.noDataFoundClass}>
+                No event submission request available.
+              </Typography>
+            )
+          }
+
         </Box>
       </Box>
       <Modal
@@ -835,7 +791,7 @@ const AdminEventRequest = () => {
           >
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h6">Event Submission Form</Typography>
+                <Typography variant="h6" sx={{ pt: 2 }}>Event Submission Form</Typography>
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
                 <InputLabel>Event Name</InputLabel>
@@ -861,7 +817,7 @@ const AdminEventRequest = () => {
                         type="outlined"
                         placeholder="Event name"
                         fullWidth
-                        value={field.value} 
+                        value={field.value}
                         onChange={field.onChange}
                       />
                       {errors["EventName"] && (
@@ -881,8 +837,8 @@ const AdminEventRequest = () => {
                   defaultValue={
                     editEventData && editEventData.eventLocation
                       ? editEventData.eventLocation
-                          .flatMap((location) => location.split(","))
-                          .map((location) => ({ name: location }))
+                        .flatMap((location) => location.split(","))
+                        .map((location) => ({ name: location }))
                       : []
                   }
                   rules={{ required: "Location is required." }}
@@ -907,12 +863,12 @@ const AdminEventRequest = () => {
                         customArrow={
                           !isLocationDropdownOpen ? (
                             <ArrowDropDownCircleIcon
-                            className="cursor-pointer"
+                              className="cursor-pointer"
                               onClick={handleLocationDropdownToggle}
                             />
                           ) : (
                             <CancelIcon
-                            className="cursor-pointer"
+                              className="cursor-pointer"
                               onClick={handleLocationDropdownToggle}
                             />
                           )
@@ -950,7 +906,7 @@ const AdminEventRequest = () => {
                         variant="outlined"
                         placeholder="Event location address"
                         fullWidth
-                        value={field.value} 
+                        value={field.value}
                         onChange={field.onChange}
                       />
                       {errors["EventLocationAddress"] && (
@@ -970,8 +926,8 @@ const AdminEventRequest = () => {
                   defaultValue={
                     editEventData
                       ? new Date(editEventData.eventDateAndTime)
-                          .toISOString()
-                          .split("T")[0]
+                        .toISOString()
+                        .split("T")[0]
                       : ""
                   }
                   rules={{
@@ -997,12 +953,12 @@ const AdminEventRequest = () => {
                   defaultValue={
                     editEventData
                       ? new Date(
-                          editEventData.eventDateAndTime
-                        ).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })
+                        editEventData.eventDateAndTime
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })
                       : ""
                   }
                   rules={{
@@ -1028,8 +984,8 @@ const AdminEventRequest = () => {
                   defaultValue={
                     editEventData && editEventData.eventPublicationArea
                       ? editEventData.eventPublicationArea
-                          .flatMap((area) => area.split(","))
-                          .map((area) => ({ name: area }))
+                        .flatMap((area) => area.split(","))
+                        .map((area) => ({ name: area }))
                       : []
                   }
                   rules={{ required: "Publication area is required." }}
@@ -1090,8 +1046,8 @@ const AdminEventRequest = () => {
                   defaultValue={
                     editEventData && editEventData.eventType
                       ? editEventData.eventType
-                          .flatMap((type) => type.split(","))
-                          .map((type) => ({ name: type }))
+                        .flatMap((type) => type.split(","))
+                        .map((type) => ({ name: type }))
                       : []
                   }
                   rules={{ required: "Event type is required." }}
@@ -1273,7 +1229,7 @@ const AdminEventRequest = () => {
                 <img
                   src={URL.createObjectURL(selectedPdf)}
                   alt={selectedPdf.name}
-                className="event-select-img"
+                  className="event-select-img"
                 />
               ) : (
                 <Worker

@@ -1,6 +1,6 @@
 .active .highlightStyle {
   text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgb(13 65 111);
 }
 
 .enterprise-request-header {
@@ -477,6 +477,7 @@ span.react-tagsinput-tags,
   transition: margin-left 0.3s;
   align-items: center;
   justify-content: space-between;
+  padding: 0px 10px 0px 20px;
 }
 
 .admin-dashboard-container {
@@ -505,6 +506,7 @@ span.react-tagsinput-tags,
   width: 280px;
   padding: 16px;
   color: #fff;
+  margin-top: 35px;
 }
 
 .admin-dashboard-image {
@@ -513,8 +515,11 @@ span.react-tagsinput-tags,
 }
 
 .admin-dashboard-appbar {
-  background-color: #13538b !important;
+  background-color:  #022b4f !important;
   color: #fff !important;
+  z-index: 9999 !important;
+  box-shadow: none !important;
+  background-image: none !important;
 }
 
 .search-query-cell {

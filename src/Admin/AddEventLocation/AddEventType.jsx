@@ -23,6 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
+import { classNames } from "../../Utils/stringConstant/stringConstant";
 
 const AdminAddEventType = () => {
   const [eventTypes, setEventTypes] = useState([]);
@@ -228,7 +229,7 @@ const AdminAddEventType = () => {
             </Table>
           </TableContainer>
         ) : (
-          <Typography variant="body1" className="no-data-found">
+          <Typography variant="body1" className={classNames.noDataFoundClass}>
             No event type available. Please add event type.
           </Typography>
         )}

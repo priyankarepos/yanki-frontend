@@ -37,6 +37,7 @@ import ReactPhoneInput from "react-phone-input-2";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { messages, apiUrls } from "../Utils/stringConstant/EnterpriseProfileString";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 
 const AdminCreateEnterprise = () => {
   const { drawerOpen } = useContext(Context);
@@ -483,14 +484,21 @@ const AdminCreateEnterprise = () => {
 
   return (
     <Box className="admin-faq-wrapper">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}>
         <AdminDashboard />
       </Box>
       <Box
-        className="enterprise-content"
+        className={agentChatResponse.enterpriseContent}
         sx={{
-          width: drawerOpen ? "calc(100% - 270px)" : "100%",
-          padding: "16px",
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="admin-faq-heading">

@@ -12,6 +12,7 @@ import axios from "axios";
 import "./EnterpriseStyle.scss"
 import ConfirmDialog from './ConfirmDialog';
 import { emailRegex } from '../Utils/validations/validation';
+import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
 
 const Departments = () => {
   const [tags, setTags] = useState([]);
@@ -361,10 +362,20 @@ const Departments = () => {
 
   return (
     <Box className='enterprise-box'>
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? '270px' : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,}}>
         <EnterpriseDashboard />
       </Box>
-      <Box className={`enterpriseFormBox ${drawerOpen ? "sidebar-content" : "main-content" }`} >
+      <Box className={agentChatResponse.enterpriseFormBox}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
+        }}  >
         <Typography variant="h6" className='enterprise-heading'>
           Add Departments
         </Typography>

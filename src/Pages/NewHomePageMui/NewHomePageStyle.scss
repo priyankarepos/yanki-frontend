@@ -6,6 +6,7 @@
 .ya-home-header {
     position: sticky !important;
     box-shadow: none !important;
+    z-index: 99999 !important;
 }
 
 .ya-home-darkblue-background {
@@ -136,6 +137,12 @@
     left: 40px;
     right: 40px;
     max-width: 100%;
+    transition: left 0.3s ease;
+}
+
+.fixed-search-Box.hidden {
+    position: fixed;
+    left: 300px !important; 
 }
 
 .ya-answer-container-question {
@@ -299,6 +306,7 @@
     padding-left: 15px;
     overflow-y: hidden;
     height: 100%;
+    margin-top: 50px;
 
     .ya-sidebar-styles-box {
         display: flex;

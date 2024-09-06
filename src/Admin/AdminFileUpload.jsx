@@ -33,7 +33,8 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 
 const AdminFileUpload = () => {
   const { drawerOpen } = useContext(Context);
@@ -293,15 +294,24 @@ const AdminFileUpload = () => {
 
   return (
     <div className="admin-faq-wrapper">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,}}>
         <AdminDashboard />
       </Box>
       <Box
         className="admin-file-upload-content"
-        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}
       >
         <Box className="admin-faq-heading">
-          <Typography variant="h6" sx={{ pb: 2 }}>
+          <Typography variant="h6">
             Upload Files
           </Typography>
           <IconButton
@@ -312,17 +322,17 @@ const AdminFileUpload = () => {
             <AddIcon /> Add Files
           </IconButton>
         </Box>
-        {(tableData && tableData.length === 0) ? (
-          <Typography variant="h6" className="no-data-found">
-            No data available.
-          </Typography>
-        ) : (
-          <>
-            {loading ? (
-              <div className="no-data-found">
+        {loading ? (
+              <div className={classNames.noDataFoundClass}>
                 <CircularProgress />
               </div>
             ) : (
+          <>
+            {(tableData && tableData.length === 0) ? (
+          <Typography variant="h6" className={classNames.noDataFoundClass}>
+            No data available.
+          </Typography>
+        )  : (
               <TableContainer component={Paper} className="margin-top-20">
                 <Table>
                   <TableHead>

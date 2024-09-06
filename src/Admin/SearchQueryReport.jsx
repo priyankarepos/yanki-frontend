@@ -35,9 +35,9 @@ const SearchQueryReport = ({ queryAnswer }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {queryAnswer.data.map((item) => (
+                  {queryAnswer.data.map((item,index) => (
                     <TableRow key={item.id}>
-                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{index + 1 + (queryAnswer.pageNumber - 1) * queryAnswer.pageSize}</TableCell>
                       <TableCell>
                         <Tooltip title={item.query} arrow>
                           <div className="search-query-cell">{item.query}</div>

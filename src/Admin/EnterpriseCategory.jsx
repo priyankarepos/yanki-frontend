@@ -25,6 +25,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { Context } from "../App";
 import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
+import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { classNames } from "../Utils/stringConstant/stringConstant";
 
 const AdminEnterpriseCategory = () => {
   const { drawerOpen } = useContext(Context);
@@ -193,12 +195,22 @@ const AdminEnterpriseCategory = () => {
 
   return (
     <Box className="admin-faq-wrapper">
-      <Box sx={{ width: drawerOpen && !isSmallScreen ? "270px" : "0" }}>
+      <Box sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+              transition: agentChatResponse.transitionStyle,
+        }}>
         <AdminDashboard />
       </Box>
       <Box
         className="enterprise-content"
-        sx={{ width: drawerOpen ? "calc(100% - 270px)" : "100%" }}
+        sx={{
+          width: drawerOpen
+            ? agentChatResponse.drawerOpenCalcWidth
+            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+        }}
       >
         <Box className="admin-faq-heading">
           <Typography variant="h6" sx={{ pb: 2 }}>
@@ -243,7 +255,7 @@ const AdminEnterpriseCategory = () => {
             </Table>
           </TableContainer>
         ) : (
-          <Typography variant="body1" className="no-data-found">
+          <Typography variant="body1" className={classNames.noDataFoundClass}>
             No categories available. Please add a category.
           </Typography>
         )}

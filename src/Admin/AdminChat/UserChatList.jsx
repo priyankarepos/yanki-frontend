@@ -220,7 +220,8 @@ const UserChatList = () => {
         <AdminDashboard />
       </Box>
       <Box
-        className={`${agentChatResponse.agentChatBackground} 
+        className={`${ userList.length > 0 && 
+          agentChatResponse.agentChatBackground} 
           ${agentChatResponse.enterpriseFormBox}
         } ${
           isLargeScreen
@@ -230,7 +231,7 @@ const UserChatList = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth,
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         {isLoading && (
