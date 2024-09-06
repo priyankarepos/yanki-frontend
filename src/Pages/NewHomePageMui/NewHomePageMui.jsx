@@ -406,7 +406,7 @@ const NewHomePageMui = () => {
   const handleChatSessionScroll = useCallback(
     async (chatId) => {
       try {
-        isChatFetching(true);
+        setIsChatFetching(true);
         const response = await axios.get(
           membershipApiUrls.chatHistory(
             chatId,
@@ -414,6 +414,7 @@ const NewHomePageMui = () => {
             defulatSizePageSize
           )
         );
+
         if (response.status === 200) {
           const chatHistoryArray = response.data.chatHistory;
 
@@ -422,13 +423,13 @@ const NewHomePageMui = () => {
 
           setSearchHistory((prevData) => {
             const updatedData = [...allResponses.reverse(), ...prevData];
-            setScrollToKey(prevData[0].response.response.id);
+            setScrollToKey(prevData[0]?.response?.response?.id);
 
             return updatedData;
           });
         }
       } catch (error) {
-        setSnackbarMessage("Error:", error);
+        setSnackbarMessage(`${messages.errorMessagePrefix} ${error.message}`);
         setSnackbarOpen(true);
       } finally {
         setIsLoading(false);
@@ -1046,7 +1047,7 @@ const NewHomePageMui = () => {
               <Box
                 className={`${agentChatSession.length > 0
                   ? classNames.chatSessionList : classNames.chatSessionListEmptyScreen
-                }`}
+                  }`}
               >
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
