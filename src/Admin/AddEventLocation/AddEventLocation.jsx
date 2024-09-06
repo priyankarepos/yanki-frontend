@@ -36,10 +36,12 @@ const AdminAddEventLocation = () => {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [confirmationText, setConfirmationText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
     const fetchEventLocations = async () => {
       try {
+        setLoadingData(true);
         const response = await axios.get(
           `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`
         );
@@ -53,6 +55,8 @@ const AdminAddEventLocation = () => {
       } catch (error) {
         setSnackbarMessage("Error fetching event location", error);
         setSnackbarOpen(true);
+      } finally {
+        setLoadingData(false);
       }
     };
 
@@ -196,7 +200,9 @@ const AdminAddEventLocation = () => {
             <AddIcon /> Add
           </IconButton>
         </Box>
-        {eventLocations.length > 0 ? (
+        {loadingData ? <div className={classNames.noDataFoundClass}>
+          <CircularProgress />
+        </div> : eventLocations.length > 0 ? (
           <TableContainer component={Paper} className="marginBottom-0">
             <Table>
               <TableHead>

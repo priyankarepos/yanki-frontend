@@ -40,10 +40,12 @@ const AdminEnterpriseCategory = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [confirmationText, setConfirmationText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
+        setLoadingData(true);
         const response = await axios.get(
           `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
@@ -57,6 +59,8 @@ const AdminEnterpriseCategory = () => {
       } catch (error) {
         setSnackbarMessage("Error fetching enterprise categories");
         setSnackbarOpen(true);
+      } finally {
+        setLoadingData(false);
       }
     };
     fetchEnterpriseCategories();
@@ -196,12 +200,12 @@ const AdminEnterpriseCategory = () => {
   return (
     <Box className="admin-faq-wrapper">
       <Box sx={{
-          width:
-            drawerOpen && !isSmallScreen
-              ? agentChatResponse.drawerOpenWidth
-              : agentChatResponse.zeroWidth,
-              transition: agentChatResponse.transitionStyle,
-        }}>
+        width:
+          drawerOpen && !isSmallScreen
+            ? agentChatResponse.drawerOpenWidth
+            : agentChatResponse.zeroWidth,
+        transition: agentChatResponse.transitionStyle,
+      }}>
         <AdminDashboard />
       </Box>
       <Box
@@ -209,7 +213,7 @@ const AdminEnterpriseCategory = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="admin-faq-heading">
@@ -224,7 +228,9 @@ const AdminEnterpriseCategory = () => {
             <AddIcon /> Add
           </IconButton>
         </Box>
-        {enterpriseCategories.length > 0 ? (
+        {loadingData ? <div className={classNames.noDataFoundClass}>
+          <CircularProgress />
+        </div> : enterpriseCategories.length > 0 ? (
           <TableContainer component={Paper} className="marginBottom-0">
             <Table>
               <TableHead>

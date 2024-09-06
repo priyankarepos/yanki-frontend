@@ -27,6 +27,7 @@ import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { classNames } from "../Utils/stringConstant/stringConstant";
 
 const AdminEnterpriseRequest = () => {
   const { drawerOpen } = useContext(Context);
@@ -46,6 +47,7 @@ const AdminEnterpriseRequest = () => {
   const [enterpriseIdToDelete, setEnterpriseIdToDelete] = useState(null);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
   const [query, setQuery] = useState("");
+  const [loadingData, setLoadingData] = useState(false);
 
   const openSnackbar = (message, severity) => {
     setSnackbarMessage(message);
@@ -56,6 +58,7 @@ const AdminEnterpriseRequest = () => {
   useEffect(() => {
     const fetchEnterpriseCategories = async () => {
       try {
+        setLoadingData(true);
         const response = await axios.get(
           `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprises-categories`
         );
@@ -69,6 +72,8 @@ const AdminEnterpriseRequest = () => {
       } catch (error) {
         setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
+      } finally {
+        setLoadingData(false);
       }
     };
 
@@ -229,12 +234,12 @@ const AdminEnterpriseRequest = () => {
         />
       </Snackbar>
       <Box sx={{
-          width:
-            drawerOpen && !isSmallScreen
-              ? agentChatResponse.drawerOpenWidth
-              : agentChatResponse.zeroWidth,
-              transition: agentChatResponse.transitionStyle,
-        }}>
+        width:
+          drawerOpen && !isSmallScreen
+            ? agentChatResponse.drawerOpenWidth
+            : agentChatResponse.zeroWidth,
+        transition: agentChatResponse.transitionStyle,
+      }}>
         <AdminDashboard />
       </Box>
       <Box
@@ -242,7 +247,7 @@ const AdminEnterpriseRequest = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="enterprise-content">
@@ -296,151 +301,154 @@ const AdminEnterpriseRequest = () => {
             component={Paper}
             className="enterprise-request-table marginBottom-0"
           >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className="enterprise-headerCell">
-                    Enterprise Name
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell">Email</TableCell>
-                  <TableCell className="enterprise-headerCell">
-                    Phone Number
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell">
-                    Contact Person
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell">
-                    Website
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell">
-                    Request Date
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell">
-                    Status
-                  </TableCell>
-                  <TableCell className="enterprise-headerCell text-center">
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {enterpriseRequests && enterpriseRequests.data ? (
-                  enterpriseRequests.data.map((row) => (
-                    <TableRow key={row.enterpriseId}>
-                      <TableCell className="enterprise-cell">
-                        {row.enterpriseName}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {row.email}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {row.phoneNumber}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {row.contactPersonName}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {row.website ? (
-                          <a href={row.website} className="white-color">
-                            {row.website}
-                          </a>
-                        ) : (
-                          "NA"
-                        )}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {" "}
-                        {new Date(row.requestDate).toLocaleDateString("en-GB")}
-                      </TableCell>
-                      <TableCell className="enterprise-cell">
-                        {row.status}
-                      </TableCell>
-                      <TableCell>
-                        <div className="enterprise-cell-button-container">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            className="enterprise-cell-button"
-                            disabled={
-                              loadingRows.includes(row.enterpriseId) ||
-                              row.status === "Approved"
-                            }
-                            onClick={() => {
-                              setIsApproving(true);
-                              handleApprove(
-                                row.enterpriseId,
-                                row.userId,
-                                row.enterpriseName
-                              );
-                            }}
-                          >
-                            {isApproving &&
-                            loadingRows.includes(row.enterpriseId) ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Approve"
-                            )}
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className="enterprise-cell-button"
-                            disabled={
-                              loadingRows.includes(row.enterpriseId) ||
-                              row.status === "Rejected"
-                            }
-                            onClick={async () => {
-                              setIsRejecting(true);
-                              await handleReject(
-                                row.enterpriseId,
-                                row.userId,
-                                row.enterpriseName
-                              );
-                              setIsRejecting(false);
-                            }}
-                          >
-                            {isRejecting &&
-                            loadingRows.includes(row.enterpriseId) ? (
-                              <CircularProgress size={24} />
-                            ) : (
-                              "Reject"
-                            )}
-                          </Button>
-                          {row.status === "Rejected" && (
+            {loadingData ? (
+              <div className={classNames.noDataFoundClass}>
+                <CircularProgress />
+              </div>) : (<Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className="enterprise-headerCell">
+                      Enterprise Name
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">Email</TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Phone Number
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Contact Person
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Website
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Request Date
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell">
+                      Status
+                    </TableCell>
+                    <TableCell className="enterprise-headerCell text-center">
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {enterpriseRequests && enterpriseRequests.data ? (
+                    enterpriseRequests.data.map((row) => (
+                      <TableRow key={row.enterpriseId}>
+                        <TableCell className="enterprise-cell">
+                          {row.enterpriseName}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {row.email}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {row.phoneNumber}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {row.contactPersonName}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {row.website ? (
+                            <a href={row.website} className="white-color">
+                              {row.website}
+                            </a>
+                          ) : (
+                            "NA"
+                          )}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {" "}
+                          {new Date(row.requestDate).toLocaleDateString("en-GB")}
+                        </TableCell>
+                        <TableCell className="enterprise-cell">
+                          {row.status}
+                        </TableCell>
+                        <TableCell>
+                          <div className="enterprise-cell-button-container">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              className="enterprise-cell-button"
+                              disabled={
+                                loadingRows.includes(row.enterpriseId) ||
+                                row.status === "Approved"
+                              }
+                              onClick={() => {
+                                setIsApproving(true);
+                                handleApprove(
+                                  row.enterpriseId,
+                                  row.userId,
+                                  row.enterpriseName
+                                );
+                              }}
+                            >
+                              {isApproving &&
+                                loadingRows.includes(row.enterpriseId) ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Approve"
+                              )}
+                            </Button>
                             <Button
                               variant="contained"
                               color="secondary"
                               size="small"
                               className="enterprise-cell-button"
-                              disabled={loadingRows.includes(row.enterpriseId)}
-                              onClick={() =>
-                                handleDeleteClick(
+                              disabled={
+                                loadingRows.includes(row.enterpriseId) ||
+                                row.status === "Rejected"
+                              }
+                              onClick={async () => {
+                                setIsRejecting(true);
+                                await handleReject(
                                   row.enterpriseId,
                                   row.userId,
                                   row.enterpriseName
-                                )
-                              }
+                                );
+                                setIsRejecting(false);
+                              }}
                             >
-                              Delete
+                              {isRejecting &&
+                                loadingRows.includes(row.enterpriseId) ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Reject"
+                              )}
                             </Button>
-                          )}
-                        </div>
+                            {row.status === "Rejected" && (
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                size="small"
+                                className="enterprise-cell-button"
+                                disabled={loadingRows.includes(row.enterpriseId)}
+                                onClick={() =>
+                                  handleDeleteClick(
+                                    row.enterpriseId,
+                                    row.userId,
+                                    row.enterpriseName
+                                  )
+                                }
+                              >
+                                Delete
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8}>
+                        {selectedCategory
+                          ? "Loading or no data available"
+                          : "Please select a category"}
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8}>
-                      {selectedCategory
-                        ? "Loading or no data available"
-                        : "Please select a category"}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  )}
+                </TableBody>
+              </Table>)}
             {totalPages > 1 && (
               <Pagination
                 count={totalPages}
@@ -459,7 +467,7 @@ const AdminEnterpriseRequest = () => {
         handleConfirm={handleConfirmDelete}
         confirmationText={confirmationText}
       />
-    </Box>
+    </Box >
   );
 };
 

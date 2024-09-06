@@ -36,10 +36,12 @@ const AdminAddEventPublicationArea = () => {
   const [selectedAreaId, setSelectedAreaId] = useState(null);
   const [confirmationText, setConfirmationText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
     const fetchEventPublicationArea = async () => {
       try {
+        setLoadingData(true);
         const response = await axios.get(
           `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
         );
@@ -53,6 +55,8 @@ const AdminAddEventPublicationArea = () => {
       } catch (error) {
         setSnackbarMessage(error);
         setSnackbarOpen(true);
+      } finally {
+        setLoadingData(false);
       }
     };
 
@@ -209,7 +213,9 @@ const AdminAddEventPublicationArea = () => {
             <AddIcon /> Add
           </IconButton>
         </Box>
-        {publicationArea.length > 0 ? (
+        {loadingData ? <div className={classNames.noDataFoundClass}>
+          <CircularProgress />
+        </div> : publicationArea.length > 0 ? (
           <TableContainer component={Paper} className="marginBottom-0">
             <Table>
               <TableHead>

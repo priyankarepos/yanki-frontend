@@ -36,10 +36,12 @@ const AdminAddEventType = () => {
   const [selectedEventTypeId, setSelectedEventTypeId] = useState(null);
   const [confirmationText, setConfirmationText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
     const fetchEventTypes = async () => {
       try {
+        setLoadingData(true);
         const response = await axios.get(
           `${import.meta.env.VITE_APP_API_HOST}/api/event-type/get-events-types`
         );
@@ -53,6 +55,8 @@ const AdminAddEventType = () => {
       } catch (error) {
         setSnackbarMessage("Error:", error);
         setSnackbarOpen(true);
+      } finally {
+        setLoadingData(false);
       }
     };
 
@@ -198,7 +202,9 @@ const AdminAddEventType = () => {
             <AddIcon /> Add
           </IconButton>
         </Box>
-        {eventTypes.length > 0 ? (
+        {loadingData ? <div className={classNames.noDataFoundClass}>
+          <CircularProgress />
+        </div> : eventTypes.length > 0 ? (
           <TableContainer component={Paper} className="marginBottom-0">
             <Table>
               <TableHead>
