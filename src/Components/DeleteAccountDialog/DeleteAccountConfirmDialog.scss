@@ -3,6 +3,9 @@
   max-width: 500px !important;
   padding: 15px 15px !important;
 }
+.confirm-dialog.account-delete-confirm-dialog{
+  z-index: 9999999 !important;
+}
 
 .confirm-dialog {
   .confirm-dialog-title {
