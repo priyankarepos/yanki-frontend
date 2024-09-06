@@ -276,6 +276,7 @@ const HatzalahGlobalAssist = ({ answer }) => {
 
       <Dialog
         open={open}
+      className="z-index-style"
         sx={{
           "& .MuiDialog-paper": {
             backgroundColor: "#f0f0f0",

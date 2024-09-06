@@ -63,7 +63,7 @@ const GovadenAnswer = ({ answer }) => {
               </div>
             </Tooltip>
           </TableCell>
-          <TableCell>{row.phone}</TableCell>
+          <TableCell>{row.phone ? row.phone : "N/A"}</TableCell>
         </TableRow>
         <TableRow sx={{ "& > *": { borderBottom: "1px solid #3f7baf" } }}>
           <TableCell className='govaden-answer-prayer-table' colSpan={6}>
