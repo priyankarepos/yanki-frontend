@@ -43,6 +43,14 @@ const UserChatList = () => {
     userListRef.current = userList;
   }, [userList]);
 
+  let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);
+  if(finishChatId) {
+    setUserList(prevUserList => 
+      prevUserList.filter(user => user.chatSessionId !== finishChatId)
+    );
+    localStorage.removeItem(agentChatResponse.finishChatId);
+  }
+
   const handleUserStatus = (senderUser) => {    
     setUserStatus((prevStatus) => {
       if (prevStatus[senderUser.chatSessionId]) {
