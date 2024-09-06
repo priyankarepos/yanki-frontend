@@ -499,7 +499,6 @@
 
 .chat-session-conteriner {
     height: 100%;
-    overflow: hidden;
 }
 
 .agent-chat-session-list {
@@ -509,9 +508,10 @@
 }
 
 .ya-chat-session-list {
-    min-height: 68%;
-    max-height: 68%;
+    min-height: 70%;
+    max-height: 70%;
     overflow-y: auto;
+    padding-bottom: 5px;
 }
 
 .ya-chat-session-list-empty-screen {
