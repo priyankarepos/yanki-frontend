@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, IconButton, Typography, useMediaQuery } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,22 +12,25 @@ import CloseIcon from "../../Assets/images/closeIcon.svg";
 const UserInformations = ({userInfoModalOpen}) => {
   const [userDetails, setUserDetails] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const isLargeScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.largeScreen)
   );
-  const { id } = useParams();
+  const { chatSessionId } = useParams();
 
   useEffect(() => {
     const fetchDetails = async () => {
+      setIsLoadingData(true);
       const response = await axios.get(
-        `${apiUrls.getUserGeneralInformation(id)}`
+        `${apiUrls.getUserGeneralInformation(chatSessionId)}`
       );      
       setUserDetails(response.data);
       setIsLoading(true);
+      setIsLoadingData(false);
     };
 
     fetchDetails();
-  }, [id]);
+  }, [chatSessionId]);
 
   const handleClosModal = () => {
     userInfoModalOpen(false);
@@ -35,7 +38,12 @@ const UserInformations = ({userInfoModalOpen}) => {
 
   return (
     <React.Fragment>
-      {isLoading && (
+      {isLoadingData && (
+      <Typography className={agentChatResponse.adminChatProgressbar}>
+          <CircularProgress />
+        </Typography>
+      )}
+      {isLoading && !isLoadingData && (
         <Box
           className={` ${agentChatResponse.userGeneralInfoContainer} ${
             isLargeScreen
