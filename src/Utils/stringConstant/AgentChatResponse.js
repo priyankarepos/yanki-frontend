@@ -174,6 +174,7 @@ export const agentChatResponse = {
     enterpriseContent:"enterprise-content",
     offline: "offline",
     adminFaqProgressbar: "admin-faq-progressbar",
+    adminChatProgressbar: "admin-chat-progressbar",
 }
 
 export const apiUrls = {
