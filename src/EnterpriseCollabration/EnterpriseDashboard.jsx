@@ -70,9 +70,12 @@ const EnterpriseDashboard = () => {
                             className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/profile")}>
+                            <ListItem className='highlightStyle' onClick={() => {
+                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                navigate("/enterprise/profile");
+                            }} >
                                 <ListItemIcon>
-                                    <BusinessIcon className='enterprise-white-color'/>
+                                    <BusinessIcon className='enterprise-white-color' />
                                 </ListItemIcon>
                                 <ListItemText primary="Enterprise Profile" />
                             </ListItem>
@@ -82,7 +85,10 @@ const EnterpriseDashboard = () => {
                             className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/departments")}>
+                            <ListItem className='highlightStyle' onClick={() => {
+                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                navigate("/enterprise/departments");
+                            }}>
                                 <ListItemIcon>
                                     <AccountBalanceIcon className='enterprise-white-color' />
                                 </ListItemIcon>
@@ -94,7 +100,10 @@ const EnterpriseDashboard = () => {
                             className='enterprise-dashboard-link enterprise-white-color'
                             activeClassName="active"
                         >
-                            <ListItem className='highlightStyle' onClick={() => navigate("/enterprise/upload-files")}>
+                            <ListItem className='highlightStyle' onClick={() => {
+                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                navigate("/enterprise/upload-files");
+                            }}>
                                 <ListItemIcon>
                                     <UploadIcon className='enterprise-white-color' />
                                 </ListItemIcon>
