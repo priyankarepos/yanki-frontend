@@ -230,7 +230,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <Typography variant="h6">{t('eventSubmissionForm')}</Typography>
+                                <Typography variant="h6" sx={{pt:2}}>{t('eventSubmissionForm')}</Typography>
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
                                 <InputLabel>{t('openForm')}</InputLabel>

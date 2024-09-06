@@ -96,6 +96,10 @@ td.coordinates-label {
   background-color: #6fa8dd;
 }
 
+.z-index-style {
+  z-index: 999999 !important;
+}
+
 @media (min-width: 0px) {
   .switch-button {
     min-width: 40vw;
