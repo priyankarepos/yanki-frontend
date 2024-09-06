@@ -342,11 +342,11 @@
 }
 
 .ya-new-chat-box-filled {
-    height: 65%;
+    height: 70%;
 }
 
 .ya-new-chat-box-empty {
-    height: 80%;
+    height: 95%;
 }
 
 .ya-chat-session-btn {
@@ -509,26 +509,14 @@
 }
 
 .ya-chat-session-list {
-    min-height: calc(100% - 160px);
-    max-height: calc(100% - 160px);
+    min-height: 68%;
+    max-height: 68%;
     overflow-y: auto;
 }
 
-.ya-chat-session-list-small-screen {
-    min-height: calc(100% - 290px);
-    max-height: calc(100% - 290px);
-    overflow-y: auto;
-}
-
-.ya-chat-session-list-empty-small-screen {
-    min-height: calc(100% - 100px);
-    max-height: calc(100% - 100px);
-    overflow-y: auto;
-}
-
-.ya-chat-session-list-XLScreen {
-    min-height: calc(100% - 130px);
-    max-height: calc(100% - 130px);
+.ya-chat-session-list-empty-screen {
+    min-height: 65%;
+    max-height: 65%;
     overflow-y: auto;
 }
 
@@ -595,16 +583,6 @@
     .ya-answer {
         min-height: calc(100vh - 290px);
         max-height: calc(100vh - 290px);
-    }
-
-    .ya-new-chat-box {
-        min-height: calc(100vh - 250px);
-        max-height: calc(100vh - 250px);
-    }
-
-    .ya-new-chat-box-empty {
-        min-height: calc(100vh - 320px);
-        max-height: calc(100vh - 320px);
     }
 
     .ya-task-msg-text {

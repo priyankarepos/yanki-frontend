@@ -1045,14 +1045,7 @@ const NewHomePageMui = () => {
 
               <Box
                 className={`${agentChatSession.length > 0
-                  ? isSmallScreen
-                    ? classNames.chatSessionListSmallScreen
-                    : classNames.chatSessionList
-                  : isXLScreen
-                    ? classNames.chatSessionListXLScreen
-                      : isSmallScreen
-                      ? classNames.chatSessionListEmptySmallScreen
-                      : classNames.chatSessionList
+                  ? classNames.chatSessionList : classNames.chatSessionListEmptyScreen
                 }`}
               >
                 {chatSessions.map((chatSession) => (
