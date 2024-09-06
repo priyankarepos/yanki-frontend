@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import OfflineUserAvtar from "../../Assets/images/OfflineUserAvtar.svg";
@@ -42,6 +43,9 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isChangeStatus, setIsChangeStatus] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [statusOffline, setStatusOffline] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const chatSessionIdRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -55,56 +59,46 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const navigate = useNavigate();
   const chatContainerRef = useRef(null);
 
-  const { id } = useParams();
+  const { chatSessionId } = useParams();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${apiUrls.getUserListById(id)}`);
-        let finishChat = localStorage.getItem(agentChatResponse.finishChatId);
-        if (finishChat && response.data.userId === finishChat) {
-          setIsChatFinished(true);
-        } else {
-          setIsChatFinished(false);
-        }
-        setUserList(response.data);
-      } catch (err) {}
+      setIsLoading(true);
+      const response = await axios.get(`${apiUrls.getUserListByChatSessionId(chatSessionId)}`);
+      setIsChatFinished(false);
+      setCurrentUserId(response.data.userId);
+      setUserList(response.data);
+      setStatusOffline(false);
+      setIsLoading(false);
     };
     fetchUsers();
-  }, [id]);
+  }, [chatSessionId]);
 
   useEffect(() => {
-    chatSessionIdRef.current = id;
-  }, [id]);
+    chatSessionIdRef.current = currentUserId;
+  }, [currentUserId]);
 
   useEffect(() => {
-    var finishChat = localStorage.getItem(agentChatResponse.finishChatId);
-    if (finishChat) {
-      localStorage.removeItem(agentChatResponse.finishChatId);
-    }
-  }, []);
-
-  useEffect(() => {
+    setIsLoading(true);
     const fetchUsersMessage = async () => {
-      try {
-        const response = await axios.get(`${apiUrls.getAdminMessage(id)}`);
-        const processedMessages = response.data.map((message) => {
-          const date = new Date(message.timestamp);
-          const options = {
-            hour: agentChatResponse.numeric,
-            minute: agentChatResponse.numeric,
-            hour12: true,
-          };
-          const localTimeString = date.toLocaleTimeString(undefined, options);
+      const response = await axios.get(`${apiUrls.getAdminMessage(chatSessionId)}`);
+      const processedMessages = response.data.map((message) => {
+        const date = new Date(message.timestamp);
+        const options = {
+          hour: agentChatResponse.numeric,
+          minute: agentChatResponse.numeric,
+          hour12: true,
+        };
+        const localTimeString = date.toLocaleTimeString(undefined, options);
 
-          return { ...message, timestamplabel: localTimeString };
-        });
+        return { ...message, timestamplabel: localTimeString };
+      });
 
-        setMessageList(processedMessages);
-      } catch (err) {}
+      setMessageList(processedMessages);
+      setIsLoading(false);
     };
     fetchUsersMessage();
-  }, [id]);
+  }, [currentUserId]);
 
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
@@ -112,37 +106,37 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-      const response = await axios.post(`${apiUrls.sendMessage}`, {
-        content: searchQuery,
-        reciverId: id,
-        userType: agentChatResponse.admin,
-      });
-      let message = response.data.data;
+    const response = await axios.post(`${apiUrls.sendMessage}`, {
+      content: searchQuery,
+      reciverId: currentUserId,
+      userType: agentChatResponse.admin,
+    });
+    let message = response.data.data;
 
-      const date = new Date(message.timestamp);
+    const date = new Date(message.timestamp);
 
-      const options = {
-        hour: agentChatResponse.numeric,
-        minute: agentChatResponse.numeric,
-        hour12: true,
-      };
-      const localTimeString = date.toLocaleTimeString(undefined, options);
+    const options = {
+      hour: agentChatResponse.numeric,
+      minute: agentChatResponse.numeric,
+      hour12: true,
+    };
+    const localTimeString = date.toLocaleTimeString(undefined, options);
 
-      message.timestamplabel = localTimeString;
+    message.timestamplabel = localTimeString;
 
-      onUserList(message);
+    onUserList(message);
 
-      setMessageList((prevMessages) => [...prevMessages, message]);
+    setMessageList((prevMessages) => [...prevMessages, message]);
 
-      setSearchQuery("");
+    setSearchQuery("");
   };
 
   const handleChangeStatus = async () => {
-    await axios.put(apiUrls.changeStatus(id));
+    await axios.put(apiUrls.changeStatus(currentUserId));
   };
 
   useEffect(() => {
-    const handleReceivedMessage = (message) => {      
+    const handleReceivedMessage = (message) => {
       const date = new Date(message.timestamp);
 
       const options = {
@@ -155,8 +149,8 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       message.timestamplabel = localTimeString;
 
       onUserList(message);
-      
-      if (message.senderId === chatSessionIdRef.current && message.senderId !== message.receiverId) {
+
+      if (message.senderId === chatSessionIdRef.current && message.senderId !== message.receiverId && message.chatSessionId === chatSessionId) {
         setMessageList((prevMessages) => [...prevMessages, message]);
       }
 
@@ -170,14 +164,11 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
       if (connection) {
         connection.on(agentChatResponse.receiveMessage, (message) => {
-          var finishChat = localStorage.getItem(agentChatResponse.finishChatId);
-          if (finishChat && message.senderId === finishChat) {
-            setMessageList([]);
-            setIsChatFinished(false);
-            setSnackbarOpen(false);
-            localStorage.removeItem(agentChatResponse.finishChatId);
-          }
           handleReceivedMessage(message);
+          let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);
+          if (finishChatId) {
+            setStatusOffline(true);
+          }
         });
 
         connection.on(agentChatResponse.newUser, (senderUser) => {
@@ -207,20 +198,20 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
     const fetchUserStatus = async () => {
       var response = await axios.get(`${apiUrls.getUserStatus}`);
       const currentUserDetails = response.data.find(
-        (user) => user.userId === id
+        (user) => user.chatSessionId === chatSessionId
       );
       setUserStatus(currentUserDetails);
       setIsChangeStatus(true);
     };
     fetchUserStatus();
-  }, [id]);
+  }, [chatSessionId]);
 
   const handleFinishedChat = () => {
     try {
-      var response = axios.put(apiUrls.finishChat(id));
+      var response = axios.put(apiUrls.finishChat(currentUserId));
       if (response) {
-        localStorage.setItem(agentChatResponse.finishChatId, id);
         setIsChatFinished(true);
+        localStorage.setItem(agentChatResponse.finishChatId, chatSessionId);
         setSnackbarMessage(agentChatResponse.chatFinished);
         setSnackbarOpen(true);
       }
@@ -248,17 +239,19 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
   return (
     <Box
-      className={`${agentChatResponse.messageListContainer} ${
-        isLargeScreen || isModalOpen
+      className={`${agentChatResponse.messageListContainer} ${isLargeScreen || isModalOpen
           ? agentChatResponse.userListHideClass
           : agentChatResponse.userListShow
-      }`}
+        }`}
     >
-      {userList && isChangeStatus &&  (
+      {isLoading ? (
+        <Typography className={agentChatResponse.adminFaqProgressbar}>
+          <CircularProgress />
+        </Typography>
+      ) : userList && isChangeStatus && (
         <Box
-          className={`${agentChatResponse.chatHeader} ${
-            isLargeScreen ? agentChatResponse.chatHeaderHideUserList : ""
-          }`}
+          className={`${agentChatResponse.chatHeader} ${isLargeScreen ? agentChatResponse.chatHeaderHideUserList : ""
+            }`}
         >
           <Box className={agentChatResponse.headerInformation}>
             {(isLargeScreen || isModalOpen) && (
@@ -271,30 +264,28 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
               </IconButton>
             )}
             <img
-              className={`${agentChatResponse.chatHeaderUserImage} ${
-                isLargeScreen
+              className={`${agentChatResponse.chatHeaderUserImage} ${isLargeScreen
                   ? agentChatResponse.userListHideImage
                   : agentChatResponse.userListShowImage
-              }`}
+                }`}
               src={
-                userStatus.status === agentChatResponse.online
+                userStatus.status === agentChatResponse.online && !statusOffline
                   ? OnlineUserAvatar
                   : OfflineUserAvtar
               }
               alt={userList.email}
             />
             <Box
-              className={`${
-                isLargeScreen
+              className={`${isLargeScreen
                   ? agentChatResponse.chatHeaderInfoHide
                   : agentChatResponse.chatHeaderInfo
-              }`}
+                }`}
             >
               <Typography className={agentChatResponse.chatHeaderInfoEmail}>
                 {userList.email}
               </Typography>
               <span className={agentChatResponse.chatHeaderInfoStatus}>
-                {userStatus.status}
+                { !statusOffline ? userStatus.status : 'offline' }
               </span>
             </Box>
           </Box>
@@ -388,9 +379,8 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
         </Box>
       )}
       <Box
-        className={`${agentChatResponse.messageContentContainer} ${
-          isChatFinished ? agentChatResponse.finished : ""
-        }`}
+        className={`${agentChatResponse.messageContentContainer} ${isChatFinished ? agentChatResponse.finished : ""
+          }`}
       >
         <div className={agentChatResponse.chatBackground}></div>
         <Box
@@ -402,80 +392,78 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
               <Box
                 key={message.id}
                 className={`${agentChatResponse.messageItem}
-                ${
-                  message.userType === agentChatResponse.admin
+                ${message.userType === agentChatResponse.admin
                     ? agentChatResponse.messageOutgoing
                     : agentChatResponse.messageIncoming
-                }
+                  }
               `}
               >
                 <Typography>{message.content}</Typography>
                 <img src={TickDouble} alt={TickDouble} />
               </Box>
               <span
-                className={`${agentChatResponse.messageTime} ${
-                  message.userType === agentChatResponse.admin
+                className={`${agentChatResponse.messageTime} ${message.userType === agentChatResponse.admin
                     ? agentChatResponse.timestampOutgoing
                     : agentChatResponse.timestampIncoming
-                }`}
+                  }`}
               >
                 {message.timestamplabel}
               </span>
             </React.Fragment>
           ))}
         </Box>
-        <Box className={agentChatResponse.chatBox}>
-          <form>
-            <Box className={agentChatResponse.chatInputContainer}>
-              {isChatFinished ? (
-                <Box
-                  className={`${agentChatResponse.chatFinishedNotice} ${
-                    isModalOpen
-                      ? agentChatResponse.inputFieldOpenModal
-                      : isSmallScreen
-                      ? agentChatResponse.inputFieldHide
-                      : agentChatResponse.inputFieldShow
-                  }`}
-                >
-                  The chat has been finished
-                </Box>
-              ) : (
-                <TextField
-                  fullWidth
-                  name={agentChatResponse.searchQuery}
-                  value={searchQuery}
-                  onChange={handleChange}
-                  placeholder={agentChatResponse.typeMessage}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position={agentChatResponse.start}>
-                        <SentimentSatisfiedAltIcon
-                          className={agentChatResponse.smileyIcon}
-                        />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <IconButton
-                        type={agentChatResponse.submit}
-                        onClick={onSubmit}
-                        disabled={!searchQuery.trim()}
-                      >
-                        <img src={SendIcon} alt={SendIcon} />
-                      </IconButton>
-                    ),
-                  }}
-                  className={`${agentChatResponse.chatInputField} ${
-                    isModalOpen
-                      ? agentChatResponse.inputFieldOpenModal
-                      : isSmallScreen
-                      ? agentChatResponse.inputFieldHide
-                      : agentChatResponse.inputFieldShow
-                  }`}
-                />
-              )}
-            </Box>
-          </form>
-        </Box>
+        {!isLoading && (
+          <Box className={agentChatResponse.chatBox}>
+            <form>
+              <Box className={agentChatResponse.chatInputContainer}>
+                {isChatFinished ? (
+                  <Box
+                    className={`${agentChatResponse.chatFinishedNotice} ${isModalOpen
+                        ? agentChatResponse.inputFieldOpenModal
+                        : isSmallScreen
+                          ? agentChatResponse.inputFieldHide
+                          : agentChatResponse.inputFieldShow
+                      }`}
+                  >
+                    The chat has been finished
+                  </Box>
+                ) : (
+                  <TextField
+                    fullWidth
+                    name={agentChatResponse.searchQuery}
+                    value={searchQuery}
+                    onChange={handleChange}
+                    placeholder={agentChatResponse.typeMessage}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position={agentChatResponse.start}>
+                          <SentimentSatisfiedAltIcon
+                            className={agentChatResponse.smileyIcon}
+                          />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <IconButton
+                          type={agentChatResponse.submit}
+                          onClick={onSubmit}
+                          disabled={!searchQuery.trim()}
+                        >
+                          <img src={SendIcon} alt={SendIcon} />
+                        </IconButton>
+                      ),
+                    }}
+                    className={`${agentChatResponse.chatInputField} ${isModalOpen
+                        ? agentChatResponse.inputFieldOpenModal
+                        : isSmallScreen
+                          ? agentChatResponse.inputFieldHide
+                          : agentChatResponse.inputFieldShow
+                      }`}
+                  />
+                )}
+              </Box>
+            </form>
+          </Box>
+        )}
       </Box>
       <Snackbar
         open={snackbarOpen}

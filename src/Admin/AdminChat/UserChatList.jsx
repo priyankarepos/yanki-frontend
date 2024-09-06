@@ -26,9 +26,10 @@ const UserChatList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userStatus, setUserStatus] = useState({});
+  const [currentUserId, setCurrentUserId] = useState("");
   const { drawerOpen } = useContext(Context);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { chatSessionId } = useParams();
   const userListRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -36,23 +37,23 @@ const UserChatList = () => {
   const isLargeScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.largeScreen)
   );
-  const latestUser = userList[0]?.userId;
+  const latestUser = userList[0]?.chatSessionId;
 
   useEffect(() => {
     userListRef.current = userList;
   }, [userList]);
 
-  const handleUserStatus = (senderUser) => {
+  const handleUserStatus = (senderUser) => {    
     setUserStatus((prevStatus) => {
-      if (prevStatus[senderUser.userId]) {
+      if (prevStatus[senderUser.chatSessionId]) {
         return {
           ...prevStatus,
-          [senderUser.userId]: senderUser.status,
+          [senderUser.chatSessionId]: senderUser.status,
         };
       } else {
         return {
           ...prevStatus,
-          [senderUser.userId]: senderUser.status,
+          [senderUser.chatSessionId]: senderUser.status,
         };
       }
     });
@@ -63,7 +64,7 @@ const UserChatList = () => {
 
     if (connection) {
       connection.on(agentChatResponse.newUser, (senderUser) => {
-        handleUserStatus(senderUser);
+        handleUserStatus(senderUser);        
       });
     }
   }, []);
@@ -104,8 +105,8 @@ const UserChatList = () => {
     if (userList.length > 0) {
       userIndex = userList.findIndex(
         (user) =>
-          user.userId === message.senderId || message.receiverId === user.userId
-      );
+         user.chatSessionId === message.chatSessionId && (user.userId === message.senderId || message.receiverId === user.userId)
+      );      
     }
     if (userIndex !== -1) {
       const updatedUserList = [...userList];
@@ -115,7 +116,7 @@ const UserChatList = () => {
         lastMessageTime: message.timestamplabel,
         unseenMessageCount: message.receiverId
           ? 0
-          : id === message.senderId
+          : currentUserId === message.senderId
           ? 0
           : updatedUserList[userIndex].unseenMessageCount
           ? updatedUserList[userIndex].unseenMessageCount + 1
@@ -134,6 +135,7 @@ const UserChatList = () => {
         lastMessage: message.content,
         lastMessageTime: message.timestamplabel,
         unseenMessageCount: 1,
+        chatSessionId: message.chatSessionId
       };
 
       const updatedUserList = [newUser, ...userList];
@@ -150,7 +152,7 @@ const UserChatList = () => {
 
   const updateUserList = (id) => {
     setUserList((prevList) => {
-      const userIndex = prevList.findIndex((user) => user.userId === id);
+      const userIndex = prevList.findIndex((user) => user.chatSessionId === id);
 
       if (userIndex !== -1) {
         const updatedList = [...prevList];
@@ -165,23 +167,25 @@ const UserChatList = () => {
   };
 
   useEffect(() => {
-    if (!id && latestUser && !isLargeScreen) {
+    if (!chatSessionId && latestUser && !isLargeScreen) {
       updateUserList(latestUser);
+      let currentUserId = userList.find(user => user.chatSessionId === chatSessionId)?.userId;
+      setCurrentUserId(currentUserId);
       navigate(`${apiUrls.chatNavigateUrlById(latestUser)}`);
     }
-  }, [id, latestUser, navigate, isLargeScreen]);
+  }, [chatSessionId, latestUser, navigate, isLargeScreen]);
 
-  const handleListItemClick = (id) => {
-    updateUserList(id);
-    navigate(`${apiUrls.chatNavigateUrlById(id)}`);
-    let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);  
+  const handleListItemClick = (chatSessionId, userId) => {
+    updateUserList(chatSessionId);
+    setCurrentUserId(userId)
+    navigate(`${apiUrls.chatNavigateUrlById(chatSessionId)}`);
+    let finishChatId = localStorage.getItem(agentChatResponse.finishChatId);
     if(finishChatId) {
       setUserList(prevUserList => 
-        prevUserList.filter(user => user.userId !== finishChatId)
+        prevUserList.filter(user => user.chatSessionId !== finishChatId)
       );
-    } 
-
-    localStorage.removeItem(agentChatResponse.finishChatId);
+      localStorage.removeItem(agentChatResponse.finishChatId);
+    }
   };
 
   const handleUserInfoModalOpen = (res) => {
@@ -189,13 +193,13 @@ const UserChatList = () => {
   };
 
   const fetchUserStatus = async () => {
-    var response = await axios.get(`${apiUrls.getUserStatus}`);
+    var response = await axios.get(`${apiUrls.getUserStatus}`);    
     const statusDict = response.data.reduce((acc, status) => {
-      acc[status.userId] = status.status;
+      acc[status.chatSessionId] = status.status;
       return acc;
     }, {});
     setUserStatus(statusDict);
-  };
+  }
 
   useEffect(() => {
     fetchUserStatus();
@@ -263,7 +267,7 @@ const UserChatList = () => {
                     {!isModalOpen && (
                       <Box
                         className={`${
-                          isLargeScreen && id
+                          isLargeScreen && chatSessionId
                             ? agentChatResponse.userListHide
                             : agentChatResponse.userListContainer
                         }`}
@@ -274,16 +278,16 @@ const UserChatList = () => {
                             className={`${
                               agentChatResponse.userInfoContainer
                             } ${
-                              user.userId === id
+                              user.chatSessionId === chatSessionId
                                 ? agentChatResponse.activeChatSession
                                 : agentChatResponse.deactivateChatSession
                             }`}
-                            onClick={() => handleListItemClick(user.userId)}
+                            onClick={() => handleListItemClick(user.chatSessionId, user.userId)}
                           >
                             <img
                               className={agentChatResponse.userImage}
                               src={
-                                userStatus[user.userId] ===
+                                userStatus[user.chatSessionId] ===
                                 agentChatResponse.online
                                   ? OnlineUserAvatar
                                   : OfflineUserAvtar
@@ -327,7 +331,7 @@ const UserChatList = () => {
                         ))}
                       </Box>
                     )}
-                    {id && (
+                    {chatSessionId && (
                       <Conversation
                         onUserList={handleUserList}
                         isModalOpen={isModalOpen}

@@ -545,7 +545,7 @@ function App() {
                     />
 
                     <Route
-                      path="/admin/chat/:id"
+                      path="/admin/chat/:chatSessionId"
                       element={
                         <UserPagesProtection>
                           <UserChatList />
