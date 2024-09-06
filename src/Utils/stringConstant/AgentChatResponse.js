@@ -190,7 +190,7 @@ export const apiUrls = {
     getUserStatus: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/user-status`,
     finishChat: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/finish-chat?id=${id}`,
     getAgentChatSession: `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-agent-chat-session`,
-    getUserGeneralInformation: (Id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-custom-prompt-id?userId=${Id}`,
+    getUserGeneralInformation: (Id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/get-custom-prompt-id?chatSessionId=${Id}`,
     personalAssistantEmail: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/personal-assistant-email`,
     changeStatus: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/change-status?userId=${id}`,
     changeStatusByUser: (id) => `${import.meta.env.VITE_APP_API_HOST}/api/agent-chat/change-status?receiverId=${id}`,
