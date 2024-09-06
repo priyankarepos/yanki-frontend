@@ -28,11 +28,11 @@ import { classNames } from "../../Utils/stringConstant/stringConstant";
 
 const UserChatSession = () => {
   const { t } = useTranslation();
-  const [messageList, setMessageList] = useState([]);
+  const [messageList, setMessageList] = useState([]);``
   const [searchQuery, setSearchQuery] = useState("");
   const [isChatFinish, setIsChatFinish] = useState(null);
-  const [isChatFetched, setIsChatFinished] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDataFetch, setIsDataFetch] = useState(null);
   const chatContainerRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -82,7 +82,6 @@ const UserChatSession = () => {
 
         connection.on(agentChatResponse.finishChatConnection, () => {
           setIsChatFinish(true);
-          setIsChatFinished(true);
         });
       }
     };
@@ -91,13 +90,13 @@ const UserChatSession = () => {
   }, []);
 
   useEffect(() => {
+    setIsDataFetch(true);
     const fetchMessage = async () => {
       const response = await axios.get(
         `${apiUrls.getUserMessage(chatSessionId)}`
       );      
             
       setIsChatFinish(response.data.isChatSessionActive);
-      setIsChatFinished(true);
 
       const processedMessages = response.data.messages.map((message) => {
         const date = new Date(message.timestamp);
@@ -112,6 +111,7 @@ const UserChatSession = () => {
       });
 
       setMessageList(processedMessages);
+      setIsDataFetch(false);
     };
 
     fetchMessage();
@@ -178,6 +178,11 @@ const UserChatSession = () => {
           }`}
           ref={chatContainerRef}
         >
+          {isDataFetch && (
+              <Typography className={agentChatResponse.adminFaqProgressbar}>
+                <CircularProgress />
+              </Typography>
+            )}
           {messageList.map((message) => (
             <div key={message.id}>
               <Box className={agentChatResponse.messageContainer}>
@@ -227,7 +232,8 @@ const UserChatSession = () => {
             </div>
           ))}
         </Box>
-
+        
+        {!isDataFetch &&
         <Box className={agentChatResponse.chatWithAgentContainer}>
           {!isChatFinish ? (
             <form>
@@ -272,6 +278,7 @@ const UserChatSession = () => {
             <Typography className={agentChatResponse.chatFinishedTitle}>{t('chatFinishedByAdmin')}</Typography>
           ) }
         </Box>
+        }
       </Box>
     </Paper>
   );
