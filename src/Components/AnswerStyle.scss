@@ -253,6 +253,7 @@ p.kosher-text strong {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999999 !important;
 }
 
 .error-answer-container {

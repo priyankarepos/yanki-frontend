@@ -28,6 +28,7 @@ const SourceSelectionMenu = ({ anchorEl, open, handleClose,selectedOption, setSe
             className={sourceSelectionStrings.menuClassName}
             anchorOrigin={{ horizontal: sourceSelectionStrings.anchorOriginHorizontal, vertical: sourceSelectionStrings.anchorOriginVertical }}
             transformOrigin={{ horizontal: sourceSelectionStrings.transformOriginHorizontal, vertical: sourceSelectionStrings.transformOriginVertical }}
+            disableAutoFocusItem={true}
         >
             {sourceSelectionOptions.map((option) => (
                 <MenuItem
