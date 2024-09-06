@@ -92,7 +92,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/search-query-report")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/search-query-report");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={AssignmentIcon} alt={messages.assignmentIcon} />
@@ -107,7 +110,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/change-role")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/change-role");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={CreateAdminIcon} alt={messages.createAdminIcon} />
@@ -123,10 +129,13 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/chat")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/chat");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
-                <img src={BubbleChatUser} alt={messages.bubbleChatUser} />
+                  <img src={BubbleChatUser} alt={messages.bubbleChatUser} />
                 </ListItemIcon>
                 <ListItemText primary={messages.adminChat} />
               </ListItem>
@@ -139,7 +148,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/enterprise-request")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/enterprise-request");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={RuleIcon} alt={messages.ruleIcon} />
@@ -154,7 +166,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/enterprise-categories")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/enterprise-categories");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={CategoryIcon} alt={messages.categoryIcon} />
@@ -169,7 +184,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/enterprise-categories")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/enterprise-categories");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={AddIcon} alt={messages.addIcon} />
@@ -184,7 +202,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/enterprise-department")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/enterprise-department");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={AccountBalanceIcon} alt={messages.accountBalanceIcon} />
@@ -199,7 +220,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/upload-files")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/upload-files");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={Upload} alt={messages.upload} />
@@ -214,7 +238,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/event-request")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/event-request");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={EventIcon} alt={messages.eventIcon} />
@@ -229,7 +256,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/add-event-location")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/add-event-location");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={AddLocationAltIcon} alt={messages.addLocationAltIcon} />
@@ -244,7 +274,10 @@ const AdminDashboard = () => {
             >
               <ListItem
                 className="highlightStyle"
-                onClick={() => navigate("/admin/add-faq")}
+                onClick={() => {
+                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  navigate("/admin/add-faq");
+                }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
                   <img src={LiveHelpIcon} alt={messages.liveHelpIcon} />
