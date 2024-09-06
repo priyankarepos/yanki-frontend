@@ -175,7 +175,7 @@ const YoutubeContent = ({ answer }) => {
                       <Vimeo
                         id={item.link.split("v=")[1]}
                         onReady={(event) => onReady(event, index)}
-                        onPlay={() => handleVideoPlay(index)}
+                        onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], "vimeo", item._id)}
                         video={item.link}
                         width="100%"
                         height="150px"
@@ -222,13 +222,17 @@ const YoutubeContent = ({ answer }) => {
                               controls
                               width="100%"
                               height="150px"
-                              onPlay={() =>
-                                handlePlayMedia(
-                                  item._source.vimeo_video_links[0],
-                                  "video",
-                                  item._id
-                                )
-                              }
+                              onPlay={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                  pauseCurrentlyPlayingMedia();
+                                }
+                                handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                              }}
+                              onPause={() => {
+                                if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                  handlePlayMedia(null, messages.videoText, item._id);
+                                }
+                              }}
                             />
                           ) : (
                             <Vimeo
@@ -244,13 +248,7 @@ const YoutubeContent = ({ answer }) => {
                               showPortrait={false}
                               loop={false}
                               autopause={true}
-                              onPlay={() =>
-                                handlePlayMedia(
-                                  modifyVimeoVideoLinks(item._source.vimeo_video_links)[0],
-                                  "vimeo",
-                                  item._id
-                                )
-                              }
+                              onPlay={() => handlePlayMedia(modifyVimeoVideoLinks(item._source.vimeo_video_links)[0], "vimeo", item._id)}
                             />
                           )
                         ) : (
@@ -261,13 +259,17 @@ const YoutubeContent = ({ answer }) => {
                             controls
                             width="100%"
                             height="150px"
-                            onPlay={() =>
-                              handlePlayMedia(
-                                item._source.vimeo_video_links[0],
-                                "video",
-                                item._id
-                              )
-                            }
+                            onPlay={() => {
+                              if (currentlyPlayingMedia && currentlyPlayingMedia.itemId !== item._id) {
+                                pauseCurrentlyPlayingMedia();
+                              }
+                              handlePlayMedia(item._source.vimeo_video_links[0], messages.videoText, item._id);
+                            }}
+                            onPause={() => {
+                              if (currentlyPlayingMedia && currentlyPlayingMedia.itemId === item._id) {
+                                handlePlayMedia(null, messages.videoText, item._id);
+                              }
+                            }}
                           />
                         )}
                       </div>
