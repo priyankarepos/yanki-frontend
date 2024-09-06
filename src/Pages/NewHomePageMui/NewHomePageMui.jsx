@@ -911,7 +911,7 @@ const NewHomePageMui = () => {
       >
         <Toolbar>
           <Box className="ya-home-sidebar-box">
-            <Box sx={{ cursor: messages.cursorPointer }} onClick={resetPage}>
+            <Box sx={{ cursor: messages.cursorPointer }} onClick={() => resetPage(false)}>
               <img
                 src={
                   activeTab === 0
