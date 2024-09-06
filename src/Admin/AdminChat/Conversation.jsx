@@ -46,6 +46,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const [currentUserId, setCurrentUserId] = useState("");
   const [statusOffline, setStatusOffline] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
   const chatSessionIdRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -62,7 +63,12 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const { chatSessionId } = useParams();
 
   useEffect(() => {
+    setMessageList([]);
+  }, [chatSessionId])
+
+  useEffect(() => {
     const fetchUsers = async () => {
+      setMessageList([]);
       setIsLoading(true);
       const response = await axios.get(`${apiUrls.getUserListByChatSessionId(chatSessionId)}`);
       setIsChatFinished(false);
@@ -79,7 +85,8 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   }, [currentUserId]);
 
   useEffect(() => {
-    setIsLoading(true);
+    setMessageList([]);
+    setIsLoadingData(true);
     const fetchUsersMessage = async () => {
       const response = await axios.get(`${apiUrls.getAdminMessage(chatSessionId)}`);
       const processedMessages = response.data.map((message) => {
@@ -95,7 +102,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
       });
 
       setMessageList(processedMessages);
-      setIsLoading(false);
+      setIsLoadingData(false);
     };
     fetchUsersMessage();
   }, [currentUserId]);
@@ -244,8 +251,8 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
           : agentChatResponse.userListShow
         }`}
     >
-      {isLoading ? (
-        <Typography className={agentChatResponse.adminFaqProgressbar}>
+      {isLoading || isLoadingData ? (
+        <Typography className={agentChatResponse.adminChatProgressbar}>
           <CircularProgress />
         </Typography>
       ) : userList && isChangeStatus && (
@@ -412,7 +419,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
             </React.Fragment>
           ))}
         </Box>
-        {!isLoading && (
+        {!isLoading && !isLoadingData && (
           <Box className={agentChatResponse.chatBox}>
             <form>
               <Box className={agentChatResponse.chatInputContainer}>
