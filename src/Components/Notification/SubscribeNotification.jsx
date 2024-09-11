@@ -21,6 +21,8 @@ const SubscribeNotification = ({ answer }) => {
     const [isSelectedLocations, setIsSelectedLocations] = useState(false);
     const [isSelectedPublicationArea, setIsSelectedPublicationArea] = useState(false);
     const [isSelectedEventTypes, setIsSelectedEventTypes] = useState(false);
+    const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+    const [isUnsubscribeLoading, setIsUnsubscribeLoading] = useState(false);
 
     const yankiUser = JSON.parse(window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) || '{}');
     const userRoles = yankiUser?.userObject?.userRoles || '';
@@ -98,7 +100,7 @@ const SubscribeNotification = ({ answer }) => {
 
     const onSubmit = async (data) => {
         try {
-            setIsLoading(true);
+            setIsSubscribeLoading(true);
             const addSubscriptionData = {
                 userId: userId,
                 eventLocation: data.locations.map(item => item.name),
@@ -121,7 +123,7 @@ const SubscribeNotification = ({ answer }) => {
             setSnackbarMessage(t('errorAddingSubscription'), error);
             setSnackbarOpen(true);
         } finally {
-            setIsLoading(false);
+            setIsSubscribeLoading(false);
         }
     };
 
@@ -188,7 +190,7 @@ const SubscribeNotification = ({ answer }) => {
 
     const handleUnsubscribe = async (data) => {
         try {
-            setIsLoading(true);
+            setIsUnsubscribeLoading(true);
             const apiUrl = apiUrls.deleteSubscription(subscribeNotification?.subscriptionId);
             const deleteSubscriptionResponse = await axios.delete(apiUrl);
             if (deleteSubscriptionResponse.status === 200) {
@@ -204,12 +206,12 @@ const SubscribeNotification = ({ answer }) => {
             setSnackbarMessage(t('errorDeletingSubscription'), error);
             setSnackbarOpen(true);
         } finally {
-            setIsLoading(false);
+            setIsUnsubscribeLoading(false);
         }
     };
 
     return (
-        <Box sx={{mb:2}}>
+        <Box sx={{ mb: 2 }}>
             <Paper className={userRoles === "Enterprise" ? "notification-wrapper-light" : "notification-wrapper"} elevation={3}>
                 <Typography variant="body2" color="textSecondary">
                     {answer?.message}
@@ -317,23 +319,23 @@ const SubscribeNotification = ({ answer }) => {
                                 type="submit"
                                 variant="contained"
                                 color="primary"
-                                disabled={isLoading || !(isSelectedLocations || isSelectedPublicationArea || isSelectedEventTypes) }
+                                disabled={isSubscribeLoading || !(isSelectedLocations || isSelectedPublicationArea || isSelectedEventTypes)}
                             >
-                                {isLoading ? (
-                                    <CircularProgress size={24} className='notification-button-loader'/>
+                                {isSubscribeLoading || isLoading ? (
+                                    <CircularProgress size={24} className='notification-button-loader' />
                                 ) : (
                                     subscribeNotification ? t('update') : t('subscribe')
                                 )}
                             </Button>
 
-                            <Button sx={{ mx: 1 }} variant="contained" color="error" onClick={handleUnsubscribe} disabled={!subscribeNotification || (subscribeNotification.isSubscribeToEvent === false)}>
-                                {isLoading ? (
-                                    <CircularProgress size={24} className='notification-button-loader'/>
+                            <Button sx={{ mx: 1 }} variant="contained" color="error" onClick={handleUnsubscribe} disabled={!subscribeNotification || (subscribeNotification.isSubscribeToEvent === false) || isUnsubscribeLoading}>
+                                {isUnsubscribeLoading ? (
+                                    <CircularProgress size={24} className='notification-button-loader' />
                                 ) : (
                                     t('unsubscribe')
                                 )}
                             </Button>
-                            
+
                         </div>
                     </div>
                 </form>
