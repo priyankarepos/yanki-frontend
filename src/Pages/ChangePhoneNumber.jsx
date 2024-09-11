@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import Link from "@mui/material/Link";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { InputLabel, Snackbar } from "@mui/material";
+import { CircularProgress, InputLabel, Snackbar } from "@mui/material";
 import LinkBehavior from "../Components/Helpers/LinkBehavior";
 import ReactPhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -22,10 +22,10 @@ const ChangePhoneNumber = () => {
   const { t } = useTranslation();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [currentPhoneNumber, setCurrentPhoneNumber] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCurrentPhoneNumber = async () => {
@@ -40,8 +40,6 @@ const ChangePhoneNumber = () => {
         setSnackbarOpen(true);
       }
     };
-
-    // Call the fetch function when the component mounts
     fetchCurrentPhoneNumber();
   }, []);
 
@@ -62,10 +60,10 @@ const ChangePhoneNumber = () => {
 
   useEffect(() => {
     setValue("signInPhone", "1", { shouldValidate: false });
-    // setValue('currentSignInPhone', '1', { shouldValidate: false });
   }, [setValue]);
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.put(
         apiUrls.changePhoneNumber,
@@ -79,11 +77,13 @@ const ChangePhoneNumber = () => {
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
         setTimeout(() => {
+          setIsLoading(false);
           navigate("/");
         }, 2000);
       }
     } catch (e) {
       setIsSubmitError(true);
+      setIsLoading(false);
       if (e?.response?.data?.message) {
         setErrorMsg(e?.response?.data?.message);
       } else {
@@ -97,14 +97,14 @@ const ChangePhoneNumber = () => {
       <Container maxWidth="xl">
         <Box className="flex justify-center items-center min-h-70-screen">
           <Box sx={{ maxWidth: "360px", width: { sm: "360px" } }}>
-          <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
+            <Typography className="profile-logo text-center" onClick={() => navigate("/")}>
               <img
                 src={YankiLogo}
                 alt="logo"
                 width={messages.imgSize200}
                 height={messages.imgSize150}
               />
-          </Typography>
+            </Typography>
             <Typography
               component="h1"
               variant="h5"
@@ -113,7 +113,7 @@ const ChangePhoneNumber = () => {
               {t('changePhoneNumberTxt')}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <InputLabel sx={{pb:1}}>Current Phone:</InputLabel>
+              <InputLabel sx={{ pb: 1 }}>Current Phone:</InputLabel>
               <Controller
                 control={control}
                 name="currentSignInPhone"
@@ -145,7 +145,7 @@ const ChangePhoneNumber = () => {
                   </div>
                 )}
               />
-              <InputLabel sx={{pb:1}}>{t('newPhone')}</InputLabel>
+              <InputLabel sx={{ pb: 1 }}>{t('newPhone')}</InputLabel>
               <Controller
                 control={control}
                 name="signInPhone"
@@ -197,8 +197,13 @@ const ChangePhoneNumber = () => {
                 fullWidth
                 className="marginBottom-20 bold"
                 type="submit"
+                disabled={isLoading}
               >
-                {t('updateButton')}
+                {isLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  t('updateButton')
+                )}
               </Button>
             </form>
             <Link
