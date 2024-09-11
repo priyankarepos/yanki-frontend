@@ -8,17 +8,11 @@ import CheckCircleIcon from '../Assets/images/Checkbox.svg';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { apiUrls, classNames, messages } from '../Utils/stringConstant/stringConstant';
+import { languages } from '../Utils/functions/uiFunctions';
 
 const ChangeLanguage = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-
-    const languages = [
-        { code: 'en', lang: 'English', name: 'English' },
-        { code: 'he', lang: 'עברית', name: 'Hebrew' },
-        { code: 'es', lang: 'Español', name: 'Spanish' },
-        { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
-    ];
 
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0].code);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
