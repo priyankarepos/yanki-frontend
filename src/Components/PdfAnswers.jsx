@@ -11,6 +11,7 @@ import "./AnswerStyle.scss";
 import { Box } from '@mui/system';
 import { useTranslation } from "react-i18next";
 import { classNames, messages } from '../Utils/stringConstant/stringConstant';
+import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
 
 const PdfAnswers = ({ answer }) => {
     const { t } = useTranslation();
@@ -23,9 +24,19 @@ const PdfAnswers = ({ answer }) => {
     const pdfNames = useMemo(() => answer?.pdfNames || [], [answer?.pdfNames]);
     const s3BaseUrl = import.meta.env.VITE_APP_S3_BASE_URL;
 
+    const isLargeScreenOne = useMediaQuery((theme) => theme.breakpoints.up(agentChatResponse.largeScreen));
+    const isMediumScreen = useMediaQuery((theme) => theme.breakpoints.between(agentChatResponse.mediumScreen, agentChatResponse.largeScreen));
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.between(agentChatResponse.smallScreen, agentChatResponse.mediumScreen));
+
     useEffect(() => {
-        setVisiblePdfCount(2);
-    }, [pdfNames]);
+        if (isLargeScreenOne) {
+            setVisiblePdfCount(3);
+        } else if (isMediumScreen) {
+            setVisiblePdfCount(3);
+        } else if (isSmallScreen) {
+            setVisiblePdfCount(2);
+        }
+    }, [isLargeScreenOne, isMediumScreen, isSmallScreen, pdfNames])
 
     const openPdfModal = (pdfName) => {
         const cleanPdfName = pdfName.replace(/%27/g, '');
