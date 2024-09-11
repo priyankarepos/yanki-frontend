@@ -31,14 +31,9 @@ import { Snackbar, useMediaQuery } from "@mui/material";
 import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
 import { startConnection } from "../SignalR/signalRService";
 import { useTranslation } from 'react-i18next';
+import { languages } from "../Utils/functions/uiFunctions";
 
 const LoginPage = () => {
-  const languages = [
-    { code: 'en', lang: 'English', name: 'English' },
-    { code: 'he', lang: 'עברית', name: 'Hebrew' },
-    { code: 'es', lang: 'Español', name: 'Spanish' },
-    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
-  ];
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(false);

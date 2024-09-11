@@ -33,16 +33,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InputAdornment from "@mui/material/InputAdornment";
 import SendIcon from "@mui/icons-material/Send";
 import SearchIcon from "@mui/icons-material/Search";
-import Carousel from "react-multi-carousel";
 import SearchHistoryItem from "../SearchHistoryItem";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
-import {
-  initialQuestions1,
-  initialQuestions2,
-  initialQuestions3,
-  initialQuestions4,
-} from "../../Utils/promptData/promptData";
 import "./NewHomePageStyle.scss";
 import { useNavigate } from "react-router-dom";
 import {
@@ -61,6 +54,8 @@ import {
 import { getConnectionPromise } from "../../SignalR/signalRService";
 import Avatar from "@mui/material/Avatar";
 import SourceSelectionMenu from './SourceSelectionMenu';
+import { languages } from "../../Utils/functions/uiFunctions";
+import { NewHomePageSlider, NewHomePageMuiMobile } from "./HomePageSlider";
 
 const NewHomePageMui = () => {
   const { t, i18n } = useTranslation();
@@ -111,7 +106,6 @@ const NewHomePageMui = () => {
   const chatSessionIdRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
-  const isXLScreen = useMediaQuery(agentChatResponse.isXLScreen);
   const fontSize = isSmallScreen ? "14px" : "16px";
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
@@ -132,13 +126,6 @@ const NewHomePageMui = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const languages = [
-    { code: 'en', lang: 'English', name: 'English' },
-    { code: 'he', lang: 'עברית', name: 'Hebrew' },
-    { code: 'es', lang: 'Español', name: 'Spanish' },
-    { code: 'yi', lang: 'ייִדיש', name: 'Yiddish' },
-  ];
 
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
@@ -219,29 +206,6 @@ const NewHomePageMui = () => {
     }, 1500);
   }, []);
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 4,
-      partialVisibilityGutter: 10,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-      partialVisibilityGutter: 10,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 3,
-      partialVisibilityGutter: 10,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-      partialVisibilityGutter: 10,
-    },
-  };
-
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -286,8 +250,6 @@ const NewHomePageMui = () => {
             TimeZone: timezone,
             "User-Lat": userLatitude,
             "User-Long": userLongitude,
-            // It might be used in future
-            // "Chat-Id": chatIdToUse,
           },
         }
       );
@@ -812,27 +774,6 @@ const NewHomePageMui = () => {
     };
   }, [navigate]);
 
-  const getTranslationKey = (arrayName, index) => `${arrayName}.${index}`;
-
-  const allQuestions = [
-    {
-      questions: initialQuestions1,
-      name: classNames.languageInitialQuestions1,
-    },
-    {
-      questions: initialQuestions2,
-      name: classNames.languageInitialQuestions2,
-    },
-    {
-      questions: initialQuestions3,
-      name: classNames.languageInitialQuestions3,
-    },
-    {
-      questions: initialQuestions4,
-      name: classNames.languageInitialQuestions4,
-    },
-  ];
-
   const handleReceivedMessage = (message) => {
     if (message.senderId === currentUserId) {
       setAgentChatSession((prevData) => {
@@ -1205,214 +1146,13 @@ const NewHomePageMui = () => {
                   searchHistory.length <= 0 &&
                   !chatId &&
                   !isSubmitting && (
-                    <div>
-                      <Carousel
-                        responsive={responsive}
-                        itemClass="carousel-item"
-                        swipeable={true}
-                        draggable={false}
-                        showDots={false}
-                        arrows={false}
-                        autoPlay={true}
-                        autoPlaySpeed={2000}
-                        infinite={true}
-                        className="new-home-initial-questions"
-                        customTransition="transform 500ms ease 0s"
-                      >
-                        {initialQuestions1.map((question, index) => (
-                          <div key={question.id} className="carousel-item">
-                            <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() =>
-                                handleQuestionClick(
-                                  `initialQuestions1.${question.id - 1}`
-                                )
-                              }
-                            >
-                              <Tooltip
-                                title={
-                                  <span>
-                                    {t(`initialQuestions1.${question.id - 1}`)}
-                                  </span>
-                                }
-                              >
-                                <span>
-                                  {t(`initialQuestions1.${question.id - 1}`)}
-                                </span>
-                              </Tooltip>
-                            </Button>
-                          </div>
-                        ))}
-                      </Carousel>
-                      <Carousel
-                        responsive={responsive}
-                        itemClass="carousel-item"
-                        swipeable={true}
-                        draggable={false}
-                        showDots={false}
-                        arrows={false}
-                        autoPlay={true}
-                        autoPlaySpeed={2000}
-                        infinite={true}
-                        customTransition="transform 500ms ease 0s"
-                        className="new-home-initial-questions"
-                      >
-                        {initialQuestions2.map((question, index) => (
-                          <div key={question.id} className="carousel-item">
-                            <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() =>
-                                handleQuestionClick(
-                                  `initialQuestions2.${question.id - 11}`
-                                )
-                              }
-                            >
-                              <Tooltip
-                                title={
-                                  <span>
-                                    {t(`initialQuestions2.${question.id - 11}`)}
-                                  </span>
-                                }
-                              >
-                                <span>
-                                  {t(`initialQuestions2.${question.id - 11}`)}
-                                </span>
-                              </Tooltip>
-                            </Button>
-                          </div>
-                        ))}
-                      </Carousel>
-                      <Carousel
-                        responsive={responsive}
-                        itemClass="carousel-item"
-                        swipeable={true}
-                        draggable={false}
-                        showDots={false}
-                        arrows={false}
-                        autoPlay={true}
-                        autoPlaySpeed={2000}
-                        infinite={true}
-                        customTransition="transform 500ms ease 0s"
-                        className="new-home-initial-questions"
-                      >
-                        {initialQuestions3.map((question, index) => (
-                          <div key={question.id} className="carousel-item">
-                            <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() =>
-                                handleQuestionClick(
-                                  `initialQuestions3.${question.id - 21}`
-                                )
-                              }
-                            >
-                              <Tooltip
-                                title={
-                                  <span>
-                                    {t(`initialQuestions3.${question.id - 21}`)}
-                                  </span>
-                                }
-                              >
-                                <span>
-                                  {t(`initialQuestions3.${question.id - 21}`)}
-                                </span>
-                              </Tooltip>
-                            </Button>
-                          </div>
-                        ))}
-                      </Carousel>
-                      <Carousel
-                        responsive={responsive}
-                        itemClass="carousel-item"
-                        swipeable={true}
-                        draggable={false}
-                        showDots={false}
-                        arrows={false}
-                        autoPlay={true}
-                        autoPlaySpeed={2000}
-                        infinite={true}
-                        customTransition="transform 500ms ease 0s"
-                        className="new-home-initial-questions"
-                      >
-                        {initialQuestions4.map((question, index) => (
-                          <div key={question.id} className="carousel-item">
-                            <Button
-                              className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                              onClick={() =>
-                                handleQuestionClick(
-                                  `initialQuestions4.${question.id - 31}`
-                                )
-                              }
-                            >
-                              <Tooltip
-                                title={
-                                  <span>
-                                    {t(`initialQuestions4.${question.id - 31}`)}
-                                  </span>
-                                }
-                              >
-                                <span>
-                                  {t(`initialQuestions4.${question.id - 31}`)}
-                                </span>
-                              </Tooltip>
-                            </Button>
-                          </div>
-                        ))}
-                      </Carousel>
-                    </div>
+                    <NewHomePageSlider activeTab={activeTab} t={t} handleQuestionClick={handleQuestionClick} />
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
                   !chatId &&
                   !isSubmitting && (
-                    <div className="home-table-scroll">
-                      {allQuestions.map((group, groupIndex) => (
-                        <Typography
-                          className="ya-mobile-prompt"
-                          key={groupIndex}
-                        >
-                          {group.questions.map((question, index) => (
-                            <span
-                              key={question.id}
-                              onClick={() =>
-                                handleQuestionClick(
-                                  getTranslationKey(group.name, index)
-                                )
-                              }
-                              className={`ya-home-table-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
-                                }`}
-                            >
-                              <Tooltip
-                                title={
-                                  <span>
-                                    {t(getTranslationKey(group.name, index), {
-                                      defaultValue: question.text,
-                                    })}
-                                  </span>
-                                }
-                              >
-                                {t(getTranslationKey(group.name, index), {
-                                  defaultValue: question.text,
-                                })}
-                              </Tooltip>
-                            </span>
-                          ))}
-                        </Typography>
-                      ))}
-                    </div>
+                    <NewHomePageMuiMobile activeTab={activeTab} t={t} handleQuestionClick={handleQuestionClick} />
                   )}
                 <form>
                   {userRoles !== "Admin" && (
