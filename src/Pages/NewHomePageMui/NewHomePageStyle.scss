@@ -440,9 +440,11 @@
 .new-home-initial-questions .react-multi-carousel-item {
     transform-style: preserve-3d;
     backface-visibility: hidden;
-    width: auto !important;
     min-width: 240px;
     flex: none !important;
+    @media (max-width: 1700px) {
+        width: auto !important;
+    }
 }
 
 .ya-task-msg-text {
