@@ -56,7 +56,7 @@ export const sourceSelectionOptions = [
     { label: 'Library', value: 'YankiLibrary', clickable: true },
     { label: 'MyZmanim', value: 'MyZmanim', clickable: true },
     { label: 'GoDaven', value: 'Godaven', clickable: true },
-    { label: 'Torahanytime', value: 'Torahanytime', clickable: true },
+    { label: 'TorahAnytime', value: 'Torahanytime', clickable: true },
     { label: 'Is it kosher', value: 'IsItKosher', clickable: true },
     { label: 'Mikvah .org', value: 'Mikvah', clickable: true },
   ];
