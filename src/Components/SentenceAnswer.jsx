@@ -97,7 +97,6 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     const phoneRegex = /\b\d{10,}\b/g;
-    const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
 
     let content = "";
 
@@ -110,8 +109,6 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
         content += `[${word}](mailto:${word})`;
       } else if (word.match(phoneRegex)) {
         content += `[${word}](tel:${word})`;
-      } else if (word.match(urlRegex)) {
-        content += `[${word}](${word})`;
       } else {
         content += word;
       }

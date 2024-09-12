@@ -179,7 +179,6 @@ const EnterpriseProfile = () => {
       EnterpriseLatitude: enterpriseDetails.latitude || "",
       EnterpriseLongitude: enterpriseDetails.longitude || "",
       PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
-      WebsiteUrl: enterpriseDetails.website || "",
       WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
       InstagramUsername: enterpriseDetails.instagramUsername || "",
       LinkedinUsername: enterpriseDetails.linkedInUsername || "",
@@ -263,7 +262,6 @@ const EnterpriseProfile = () => {
     setValue(messages.enterpriseLatitudeField, enterpriseDetails[0]?.latitude || "");
     setValue(messages.enterpriseLongitudeField, enterpriseDetails[0]?.longitude || "");
     setValue("PhoneNumber", enterpriseDetails[0]?.enterprisePhoneNumber || "");
-    setValue("WebsiteUrl", enterpriseDetails[0]?.website || "");
     setValue("WhatsappPhoneNumber", enterpriseDetails[0]?.whatsAppPhoneNumber || "");
     setValue("InstagramUsername", enterpriseDetails[0]?.instagramUsername || "");
     setValue("LinkedinUsername", enterpriseDetails[0]?.linkedInUsername || "");
@@ -396,7 +394,6 @@ const EnterpriseProfile = () => {
           enterpriseName: formData.EnterpriseName,
           categoryId: selectedCategory || formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
-          website: formData.WebsiteUrl ? formData.WebsiteUrl : null,
           enterpriseAddress: formData.EnterpriseAddress,
           latitude: String(formData.EnterpriseLatitude),
           longitude: String(formData.EnterpriseLongitude),
@@ -751,25 +748,6 @@ const EnterpriseProfile = () => {
                   {errors['PhoneNumber'] && (
                     <FormHelperText className='error-handling'>{errors['PhoneNumber'].message}</FormHelperText>
                   )}
-                </div>
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className={messages.enterpriseInputLabel}>{messages.websiteUrlLabel}</InputLabel>
-            <Controller
-              control={control}
-              name="WebsiteUrl"
-              render={({ field }) => (
-                <div>
-                  <TextField
-                    className={messages.enterpriseProfileInputField}
-                    {...field}
-                    type="outlined"
-                    placeholder="Type website URL here"
-                    fullWidth
-                  />
                 </div>
               )}
             />

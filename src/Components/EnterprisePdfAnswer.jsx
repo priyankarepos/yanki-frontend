@@ -40,7 +40,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
               </Worker>
             ) : (
               <img
-              className='enterprise-pdf-img'
+                className='enterprise-pdf-img'
                 src={pdfUrl}
                 alt="PDF Document"
                 onError={() => setPdfLoadError(true)}
@@ -77,7 +77,6 @@ const EnterprisePdfAnswer = ({ answer }) => {
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     const phoneRegex = /\b\d{10,}\b/g;
-    const urlRegex = /\b(?:https?|ftp):\/\/\S+|\bwww\.\S+\.com\b/g;
 
     let content = [];
 
@@ -110,19 +109,6 @@ const EnterprisePdfAnswer = ({ answer }) => {
         if (index !== array.length - 1) {
           content.push(" ");
         }
-      } else if (word.match(urlRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.open(word, '_blank')}
-          >
-            {word}
-          </span>
-        );
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
       } else {
         const punctuation = ['.', ',', '-'];
         let cleanedWord = word;
@@ -143,6 +129,7 @@ const EnterprisePdfAnswer = ({ answer }) => {
     return content;
   };
 
+
   return (
     <Paper sx={{
       p: 2,
@@ -162,7 +149,7 @@ const EnterprisePdfAnswer = ({ answer }) => {
           {answer?.enterprisePdfNames.map((pdfName, index) => (
             <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
               <div
-              className='enterprise-pdf-thumbnail'
+                className='enterprise-pdf-thumbnail'
                 onClick={() => handleItemClick(pdfName)}
               >
                 <Tooltip title={pdfName} arrow>
