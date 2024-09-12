@@ -134,7 +134,6 @@ const AdminCreateEnterprise = () => {
       EnterpriseLongitude: enterpriseDetails.longitude || "",
       EmailAddress: enterpriseDetails.enterpriseEmail || "",
       PhoneNumber: enterpriseDetails.enterprisePhoneNumber || "",
-      WebsiteUrl: enterpriseDetails.website || "",
       WhatsappPhoneNumber: enterpriseDetails.whatsAppPhoneNumber || "",
       InstagramUsername: enterpriseDetails.instagramUsername || "",
       LinkedinUsername: enterpriseDetails.linkedInUsername || "",
@@ -271,7 +270,6 @@ const AdminCreateEnterprise = () => {
           enterpriseName: formData.EnterpriseName,
           categoryId: formData.EnterpriseCategories,
           contactPersonName: formData.EnterprisePointOfContact,
-          website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
           enterpriseAddress: formData.EnterpriseAddress,
           latitude: String(formData.EnterpriseLatitude),
           longitude: String(formData.EnterpriseLongitude),
@@ -324,7 +322,6 @@ const AdminCreateEnterprise = () => {
     setValue(messages.enterpriseLongitudeField, enterprise.longitude || "");
     setValue("EmailAddress", enterprise.enterpriseEmail || "");
     setValue("PhoneNumber", enterprise.enterprisePhoneNumber || "");
-    setValue("WebsiteUrl", enterprise.website || "");
     setValue("WhatsappPhoneNumber", enterprise.whatsAppPhoneNumber || "");
     setValue("InstagramUsername", enterprise.instagramUsername || "");
     setValue("LinkedinUsername", enterprise.linkedInUsername || "");
@@ -376,7 +373,6 @@ const AdminCreateEnterprise = () => {
         enterpriseName: formData.EnterpriseName,
         categoryId: formData.EnterpriseCategories,
         contactPersonName: formData.EnterprisePointOfContact,
-        website: formData.WebsiteUrl ? formData.WebsiteUrl : "",
         enterpriseAddress: formData.EnterpriseAddress,
         latitude: String(formData.EnterpriseLatitude),
         longitude: String(formData.EnterpriseLongitude),
@@ -736,24 +732,6 @@ const AdminCreateEnterprise = () => {
                       {errors["PhoneNumber"].message}
                     </FormHelperText>
                   )}
-                </div>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={4}>
-            <InputLabel className={messages.enterpriseLabelClass}>{messages.websiteUrlLabel}</InputLabel>
-            <Controller
-              control={control}
-              name="WebsiteUrl"
-              render={({ field }) => (
-                <div>
-                  <TextField
-                    className={messages.enterpriseInputFieldClass}
-                    {...field}
-                    type="outlined"
-                    placeholder="Type website URL here"
-                    fullWidth
-                  />
                 </div>
               )}
             />
@@ -1127,9 +1105,6 @@ const AdminCreateEnterprise = () => {
                       Enterprise point of contact
                     </TableCell>
                     <TableCell className="enterprise-headerCell">
-                      Website URL
-                    </TableCell>
-                    <TableCell className="enterprise-headerCell">
                       Enterprise Categories
                     </TableCell>
                     <TableCell className="enterprise-headerCell">
@@ -1145,9 +1120,6 @@ const AdminCreateEnterprise = () => {
                         <TableRow key={key}>
                           <TableCell>{enterprise.enterpriseName}</TableCell>
                           <TableCell>{enterprise.contactPersonName}</TableCell>
-                          <TableCell>
-                            {enterprise.website ? enterprise.website : "NA"}
-                          </TableCell>
                           <TableCell>{enterprise.categoryName}</TableCell>
                           <TableCell>
                             <IconButton

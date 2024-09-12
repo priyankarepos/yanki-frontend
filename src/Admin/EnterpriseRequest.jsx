@@ -318,9 +318,6 @@ const AdminEnterpriseRequest = () => {
                       Contact Person
                     </TableCell>
                     <TableCell className="enterprise-headerCell">
-                      Website
-                    </TableCell>
-                    <TableCell className="enterprise-headerCell">
                       Request Date
                     </TableCell>
                     <TableCell className="enterprise-headerCell">
@@ -346,15 +343,6 @@ const AdminEnterpriseRequest = () => {
                         </TableCell>
                         <TableCell className="enterprise-cell">
                           {row.contactPersonName}
-                        </TableCell>
-                        <TableCell className="enterprise-cell">
-                          {row.website ? (
-                            <a href={row.website} className="white-color">
-                              {row.website}
-                            </a>
-                          ) : (
-                            "NA"
-                          )}
                         </TableCell>
                         <TableCell className="enterprise-cell">
                           {" "}

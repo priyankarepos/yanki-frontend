@@ -67,7 +67,6 @@ const EnterpriseSignup = () => {
       EnterpriseName: "",
       EnterpriseCategory: "",
       PointOfContact: "",
-      Website: "",
       UserName: "",
       PhoneNumber: "",
       Email: "",
@@ -110,7 +109,6 @@ const EnterpriseSignup = () => {
         phoneNumber: data.signInPhone,
         enterpriseName: data.EnterpriseName,
         contactPersonName: data.PointOfContact,
-        website: data.Website ? data.Website : null,
         categoryId: selectedCategory,
         userType: "Enterprise",
       };
@@ -474,45 +472,6 @@ const EnterpriseSignup = () => {
                           ? errors["PointOfContact"].message
                           : ""
                       }
-                      disabled={signinLoading}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                style={{ paddingTop: isSubmitted ? "0px" : "16px" }}
-              >
-                <Controller
-                  control={control}
-                  name="Website"
-                  render={({ field }) => (
-                    <TextField
-                      className={
-                        activeTab === 1
-                          ? "EnterpriseInputFieldColor inputField"
-                          : ""
-                      }
-                      {...field}
-                      type="outlined"
-                      placeholder="Website"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LinkIcon
-                              style={{
-                                color:
-                                  activeTab === 1
-                                    ? "#8bbae5"
-                                    : "defaultIconColor",
-                              }}
-                            />
-                          </InputAdornment>
-                        ),
-                      }}
-                      fullWidth
                       disabled={signinLoading}
                     />
                   )}
