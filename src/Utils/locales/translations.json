@@ -417,7 +417,8 @@
                 "What's Bikur Cholim of Los Angeles contact",
                 "Help me find an anniversary gift for my wife",
                 "Tell me everything you can do"
-            ]
+            ],
+            "agentAvailableMessage": "Thank you for your message! You will be notified as soon as an agent is available to assist you. We appreciate your patience and will get back to you shortly."
         }
     },
     "he": {
@@ -838,7 +839,8 @@
                 "מה הקשר של ביקור חולים בלוס אנג'לס",
                 "עזור לי למצוא מתנת יום נישואין לאשתי",
                 "ספר לי כל מה שאתה יכול לעשות"
-            ]
+            ],
+            "agentAvailableMessage": "תודה על ההודעה שלך! תקבל התראה ברגע שסוכן יהיה זמין לעזור לך. אנו מעריכים את סבלנותך ונחזור אליך בהקדם"
         }
     },
     "es": {
@@ -1259,7 +1261,8 @@
                 "¿Cuál es el contacto de Bikur Cholim de Los Ángeles?",
                 "Ayúdame a encontrar un regalo de aniversario para mi esposa",
                 "Dime todo lo que puedes hacer"
-            ]
+            ],
+            "agentAvailableMessage": "¡Gracias por tu mensaje! Serás notificado tan pronto como un agente esté disponible para asistirte. Agradecemos tu paciencia y te contactaremos en breve."
         }
     },
     "yi": {
@@ -1681,7 +1684,8 @@
                 "וואָס איז ביקור חולים פון לאָס אַנדזשעלעס קאָנטאַקט",
                 "עלפֿן מיר געפֿינען אַ יאָרצייַט מתּנה פֿאַר מיין ווייַב",
                 "זאָגן מיר אַלץ וואָס דו קענסט טאָן"
-            ]
+            ],
+            "agentAvailableMessage": "אַ דאַנק פֿאַר דיין אָנזאָג! דו וועסט פאַרשטאַנען ווי אַזוי צו א גיין-אייגנטונג שייך פֿאַר שטיצן. מיר מער וויִנקרייך דיין געשטעלונג און וועלן צוריק קומען צו אייך שטענדיק"
         }
     }
 }

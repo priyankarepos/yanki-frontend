@@ -33,9 +33,13 @@ const UserChatSession = () => {
   const [isChatFinish, setIsChatFinish] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDataFetch, setIsDataFetch] = useState(null);
+  const [showAvalibleMessage, setShowAvalibleMessage] = useState(false);
   const chatContainerRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
+  );
+  const isMediumScreen = useMediaQuery((theme) =>
+    theme.breakpoints.up(agentChatResponse.mediumScreen)
   );
 
   const { chatSessionId } = useParams();
@@ -51,7 +55,14 @@ const UserChatSession = () => {
   } 
 
   useEffect(() => {
-    const handleReceivedMessage = (message) => {      
+    const handleReceivedMessage = (message) => {
+
+      if (message.senderId === currentUserId && message.receiverId === null) {
+        setShowAvalibleMessage(true);
+      } else {
+        setShowAvalibleMessage(false);
+      }
+
       if (message.receiverId === currentUserId) {
         const date = new Date(message.timestamp);
 
@@ -63,25 +74,35 @@ const UserChatSession = () => {
         const localTimeString = date.toLocaleTimeString(undefined, options);
 
         message.timestamplabel = localTimeString;
-        
-        setMessageList((prevMessages) => [...prevMessages, message]);
-      }
 
-      if(message.receiverId != null) {
-        handleChangeStatus(message.receiverId)
-      }
-    };
+        setMessageList((prevMessages) => {
+
+          let messageExist = prevMessages.find((prev) => prev.id === message.id);
+
+          if (!messageExist) {
+            return [...prevMessages, message];
+          } else {
+            return prevMessages;
+          }
+        })
+
+        if (message.receiverId != null) {
+          handleChangeStatus(message.receiverId)
+        }
+      };
+    }
 
     const initializeConnection = async () => {
       const connection = await getConnectionPromise();
 
-      if(connection) {
-        connection.on(agentChatResponse.receiveMessage, (message) => {                    
+      if (connection) {
+        connection.on(agentChatResponse.receiveMessage, (message) => {
           handleReceivedMessage(message);
         });
 
         connection.on(agentChatResponse.finishChatConnection, () => {
           setIsChatFinish(true);
+          setShowAvalibleMessage(false);
         });
       }
     };
@@ -94,8 +115,13 @@ const UserChatSession = () => {
     const fetchMessage = async () => {
       const response = await axios.get(
         `${apiUrls.getUserMessage(chatSessionId)}`
-      );      
-            
+      );
+
+      let totalMessage = response.data.messages.length;
+      if (response.data.messages[totalMessage - 1].senderId === currentUserId && response.data.messages[totalMessage - 1].receiverId === null) {
+        setShowAvalibleMessage(true);
+      }
+
       setIsChatFinish(response.data.isChatSessionActive);
 
       const processedMessages = response.data.messages.map((message) => {
@@ -164,18 +190,19 @@ const UserChatSession = () => {
             : agentChatResponse.chatAgentContainer
         }`}
       >
-        <Typography className={agentChatResponse.chatAgentHeading}>
+        <Typography className={`${isSmallScreen ? agentChatResponse.chatAgentHeadingSmallScreen : agentChatResponse.chatAgentHeading}`}>
           {t('chatWithYankiAgent')}
         </Typography>
         <Typography className={agentChatResponse.chatAgentTitle}>
           {t('describeNeedHelp')}
         </Typography>
         <Box
-          className={`${
-            isSmallScreen
-              ? agentChatResponse.smallUserChatContainer
-              : agentChatResponse.userChatContainer
-          }`}
+          className={` ${agentChatResponse.userChatContainer} ${showAvalibleMessage && !isChatFinish
+            ? agentChatResponse.userChatContainerAvalibaleMessage
+            : isMediumScreen
+              ? agentChatResponse.largeUserChatContainer
+              : agentChatResponse.smallUserChatContainer
+            }`}
           ref={chatContainerRef}
         >
           {isDataFetch && (
@@ -233,52 +260,61 @@ const UserChatSession = () => {
           ))}
         </Box>
         
-        {!isDataFetch &&
-        <Box className={agentChatResponse.chatWithAgentContainer}>
-          {!isChatFinish ? (
-            <form>
-              <Box
-                className={`${
-                  isSmallScreen
-                    ? agentChatResponse.smallChatWithAgent
-                    : agentChatResponse.chatWithAgent
-                }`}
-              >
-                <TextField
-                  fullWidth
-                  name={agentChatResponse.searchQuery}
-                  value={searchQuery}
-                  onChange={handleChange}
-                  placeholder={t('chatWithAgent')}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        className={agentChatResponse.sendButton}
-                        type={agentChatResponse.submit}
-                        onClick={onSubmit}
-                        disabled={!searchQuery.trim()}
-                      >
-                        {isLoading ? (
-                          <CircularProgress size={24} className={classNames.copyLinkLoader} />
-                        ) : (
-                          <React.Fragment>
-                            <span className={agentChatResponse.sendButtonMessage}>
-                              {t('send')}
-                            </span>
-                            <img src={SendIcon} alt={agentChatResponse.userAvtar} />
-                            </React.Fragment>
-                      )}
-                      </IconButton>
-                    ),
-                  }}
-                />
-              </Box>
-            </form>
-          ) : (
-            <Typography className={agentChatResponse.chatFinishedTitle}>{t('chatFinishedByAdmin')}</Typography>
-          ) }
+        <Box className={agentChatResponse.agentSearchContainer}>
+          {showAvalibleMessage && !isChatFinish && (
+            <Box className={agentChatResponse.agentUnavailableMessage}>
+              <Typography sx={{ whiteSpace: 'pre-line' }}>
+                {t('agentAvailableMessage')}
+              </Typography>
+            </Box>
+          )}
+
+          {!isDataFetch &&
+            <Box className={agentChatResponse.chatWithAgentContainer}>
+              {!isChatFinish ? (
+                <form>
+                  <Box
+                    className={`${isSmallScreen
+                        ? agentChatResponse.smallChatWithAgent
+                        : agentChatResponse.chatWithAgent
+                      }`}
+                  >
+                    <TextField
+                      fullWidth
+                      name={agentChatResponse.searchQuery}
+                      value={searchQuery}
+                      onChange={handleChange}
+                      placeholder={t('chatWithAgent')}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            className={agentChatResponse.sendButton}
+                            type={agentChatResponse.submit}
+                            onClick={onSubmit}
+                            disabled={!searchQuery.trim()}
+                          >
+                            {isLoading ? (
+                              <CircularProgress size={24} className={classNames.copyLinkLoader} />
+                            ) : (
+                              <React.Fragment>
+                                <span className={agentChatResponse.sendButtonMessage}>
+                                  {t('send')}
+                                </span>
+                                <img src={SendIcon} alt={agentChatResponse.userAvtar} />
+                              </React.Fragment>
+                            )}
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </form>
+              ) : (
+                <Typography className={agentChatResponse.chatFinishedTitle}>{t('chatFinishedByAdmin')}</Typography>
+              )}
+            </Box>
+          }
         </Box>
-        }
       </Box>
     </Paper>
   );
