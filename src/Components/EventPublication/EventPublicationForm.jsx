@@ -233,7 +233,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 <Typography variant="h6">{t('eventSubmissionForm')}</Typography>
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('openForm')}</InputLabel>
+                                <InputLabel>{t('eventName')}</InputLabel>
                                 <Controller
                                     control={control}
                                     name="EventName"
