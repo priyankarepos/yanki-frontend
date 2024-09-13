@@ -9,6 +9,8 @@ import { Box, CircularProgress } from '@mui/material';
 import './DeleteAccountConfirmDialog.scss';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { useTranslation } from 'react-i18next';
+import { Context } from '../../App';
+import { classNames, sourceSelectionStrings } from '../../Utils/stringConstant/stringConstant';
 
 const DeleteAccountConfirmDialog = ({
     open,
@@ -18,35 +20,36 @@ const DeleteAccountConfirmDialog = ({
     confirmationTitle,
 }) => {
     const { t } = useTranslation();
+    const { activeTab } = React.useContext(Context);
 
     return (
-        <Box className="Delete-account-MuiDialog-container">
-            <Dialog open={open} onClose={handleClose} className="confirm-dialog account-delete-confirm-dialog">
-                <DialogTitle className="confirm-dialog-title">
+        <Box className={classNames.deleteAccountDialogContainer}>
+            <Dialog open={open} onClose={handleClose} className={classNames.accountDeleteConfirmDialog}>
+                <DialogTitle className={`${classNames.confirmDialogTitle} ${activeTab === 1 && classNames.confirmDialogLightHeading}`}>
                     {!confirmationTitle ? t('confirmDeletionTitle') : confirmationTitle}
                 </DialogTitle>
-                <DialogContent className="confirm-dialog-content">
-                    <DialogContentText className="confirm-dialog-text confirm-dialog-text-heading ">
+                <DialogContent className={classNames.confirmDialogContent}>
+                    <DialogContentText className={`${classNames.confirmDialogText} ${activeTab === 1 && classNames.confirmDialogLightHeading}`}>
                     {t('beforeYouGo')}
                     </DialogContentText>
-                    <DialogContentText className="confirm-dialog-text">
+                    <DialogContentText className={classNames.confirmDialogTextOne}>
                     {t('feedbackRequest')}
                     </DialogContentText>
-                    <DialogContentText className="confirm-dialog-text confirm-dialog-text-heading">
+                    <DialogContentText className={`${classNames.confirmDialogText} ${activeTab === 1 && classNames.confirmDialogLightHeading}`}>
                     {t('accountDeletionDetailsTitle')}
                     </DialogContentText>
-                    <div className="confirm-dialog-text">
+                    <div className={classNames.confirmDialogTextOne}>
                         <ul>
-                            <li><FiberManualRecordIcon fontSize="small" /> {t('accountDeletionDetail1')}</li>
-                            <li><FiberManualRecordIcon fontSize="small" /> {t('accountDeletionDetail2')}</li>
+                            <li><FiberManualRecordIcon fontSize={sourceSelectionStrings.small} /> {t('accountDeletionDetail1')}</li>
+                            <li><FiberManualRecordIcon fontSize={sourceSelectionStrings.small} /> {t('accountDeletionDetail2')}</li>
                         </ul>
                     </div>
                 </DialogContent>
-                <DialogActions className="confirm-dialog-actions">
-                    <Button className="confirm-delete-button" onClick={handleConfirm} color="error" disabled={loading}>
-                        {loading ? <CircularProgress size={24} className="loading-spinner" /> : `${t('deleteButton')}`}
+                <DialogActions className={classNames.confirmDialogActions}>
+                    <Button className={`${classNames.confirmDeleteButton} ${activeTab === 1 && classNames.confirmDeleteLightButton}`} onClick={handleConfirm} color="error" disabled={loading}>
+                        {loading ? <CircularProgress size={24} className={classNames.loadingSpinner} /> : `${t('deleteButton')}`}
                     </Button>
-                    <Button className="confirm-cancel-button" onClick={handleClose}>
+                    <Button className={classNames.confirmCancelButton} onClick={handleClose}>
                         {t('cancelButton')}
                     </Button>
                 </DialogActions>

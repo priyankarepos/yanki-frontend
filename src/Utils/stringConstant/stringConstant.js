@@ -145,6 +145,19 @@ export const classNames = {
     noDataFoundClass: "no-data-found",
     fixedSearchBox: "fixed-search-Box",
     hiddenFixedBox: "hidden",
+    confirmDialogTitle: "confirm-dialog-title",
+    confirmDialogLightHeading: "confirm-dialog-light-heading",
+    confirmDialogText: "confirm-dialog-text confirm-dialog-text-heading",
+    confirmDeleteLightButton: "confirm-delete-light-button",
+    confirmDeleteButton: "confirm-delete-button",
+    deleteAccountDialogContainer: "Delete-account-MuiDialog-container",
+    accountDeleteConfirmDialog: "confirm-dialog account-delete-confirm-dialog",
+    confirmDialogContent: "confirm-dialog-content",
+    confirmDialogTextOne: "confirm-dialog-text",
+    confirmDialogActions: "confirm-dialog-actions",
+    confirmCancelButton: "confirm-cancel-button",
+    loadingSpinner: "loading-spinner",
+    whiteColor: "white-color",
 };
 
 export const apiUrls = {
