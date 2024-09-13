@@ -85,6 +85,7 @@ export const messages = {
     activeTab: "activeTab",
     generatedChatLink: "generatedChatLink",
     locationAllowed: "Location allowed",
+    enterpriseEventMsg: "This feature is not available for Enterprise accounts. For any queries, please use the prompt ‘Ask for help’.",
 };
 
 export const classNames = {

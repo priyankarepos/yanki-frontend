@@ -23,6 +23,7 @@ import MikvahAnswer from "../Components/MikvahList/MikvahList";
 import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
 import UserChatSession from "../Components/PersonalAssistant/UserChatSesion";
+import EnterpriseEventMsg from "../Components/EventPublication/EnterpriseEvent";
 
 const SearchHistoryItem = forwardRef(
   (
@@ -308,6 +309,16 @@ const SearchHistoryItem = forwardRef(
             </div>
           </Paper>
         )}
+        {response?.isSuccess &&
+          response?.isEvent &&
+          response?.message &&
+          activeTab === 1 && (
+            <Paper elevation={3} className={messages.marginBottom10}>
+              <div>
+                <EnterpriseEventMsg />
+              </div>
+            </Paper>
+          )}
       </div>
     );
   }
