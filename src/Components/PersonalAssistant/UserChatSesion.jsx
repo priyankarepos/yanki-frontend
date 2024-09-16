@@ -147,8 +147,8 @@ const UserChatSession = () => {
       } finally {
         setIsDataFetch(false);
       }
-      fetchMessage();
     };
+    fetchMessage();
   }, [chatSessionId]);
 
   const handleChange = (e) => {
