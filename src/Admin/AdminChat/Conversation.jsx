@@ -64,13 +64,15 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
   useEffect(() => {
     setMessageList([]);
+    setCurrentUserId("");
+    
   }, [chatSessionId])
 
   useEffect(() => {
     const fetchUsers = async () => {
       setMessageList([]);
       setIsLoading(true);
-      const response = await axios.get(`${apiUrls.getUserListByChatSessionId(chatSessionId)}`);
+      const response = await axios.get(`${apiUrls.getUserListByChatSessionId(chatSessionId)}`);      
       setIsChatFinished(false);
       setCurrentUserId(response.data.userId);
       setUserList(response.data);
@@ -100,7 +102,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
 
         return { ...message, timestamplabel: localTimeString };
       });
-
+      
       setMessageList(processedMessages);
       setIsLoadingData(false);
     };
