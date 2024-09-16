@@ -604,8 +604,8 @@ const NewHomePageMui = () => {
   };
 
   const handleScroll = (e) => {
-    const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    const container = e.target;
+    const bottom = container.scrollHeight - container.scrollTop <= container.clientHeight;   
     if (bottom && hasMore) {
       setPageNumber(pageNumber + 1);
     }
@@ -905,9 +905,11 @@ const NewHomePageMui = () => {
         <div className="ya-sidebar-styles">
           <Box className="chat-session-conteriner">
             <Box
-              className={`${agentChatSession.length > 0
-                ? classNames.yaNewAssistantChat
-                : classNames.yaNewAssistantEmptyChat
+              className={`${agentChatSession.length === 0
+                ? classNames.yaNewAssistantEmptyChat
+                : agentChatSession.length === 1 || agentChatSession.length === 2
+                  ? classNames.yaNewAssistantChatNoScroll
+                  : classNames.yaNewAssistantChat
                 }`}
             >
               <span
@@ -960,11 +962,12 @@ const NewHomePageMui = () => {
             </Box>
 
             <Box
-              className={`${classNames.yaNewChatBox} ${agentChatSession.length > 0
-                ? classNames.yaNewChatBoxFilled
-                : classNames.yaNewChatBoxEmpty
+               className={`${classNames.yaNewChatBox} ${agentChatSession.length === 0
+                ? classNames.yaNewChatBoxEmpty
+                : agentChatSession.length === 1 
+                  ? classNames.yaNewChatBoxOneChat
+                  : classNames.yaNewChatBoxFilled
                 }`}
-              onScroll={handleScroll}
             >
               <span
                 className={`${activeTab === 0 ? "ya-home-blue-color" : "ya-home-gray-color"
@@ -989,6 +992,7 @@ const NewHomePageMui = () => {
                 className={`${agentChatSession.length > 0
                   ? classNames.chatSessionList : classNames.chatSessionListEmptyScreen
                   }`}
+                  onScroll={handleScroll}
               >
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>

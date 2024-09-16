@@ -158,6 +158,8 @@ export const classNames = {
     confirmCancelButton: "confirm-cancel-button",
     loadingSpinner: "loading-spinner",
     whiteColor: "white-color",
+    yaNewChatBoxOneChat: "ya-new-chat-box-one-chat",
+    yaNewAssistantChatNoScroll: "ya-new-assistant-chat-no-scroll", 
 };
 
 export const apiUrls = {

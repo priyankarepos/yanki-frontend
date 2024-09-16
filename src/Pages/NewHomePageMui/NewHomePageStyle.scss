@@ -200,6 +200,7 @@
     overflow-y: auto;
     min-height: calc(100vh - 200px);
     max-height: calc(100vh - 200px);
+    overflow-x: hidden;
 }
 
 .custom-html-css,
@@ -344,12 +345,16 @@
     overflow: hidden;
 }
 
-.ya-new-chat-box-filled {
+.ya-new-chat-box-one-chat {
     height: 70%;
 }
 
+.ya-new-chat-box-filled {
+    height: 57%;
+}
+
 .ya-new-chat-box-empty {
-    height: 95%;
+    height: 97%;
 }
 
 .ya-chat-session-btn {
@@ -495,7 +500,7 @@
 }
 
 .ya-new-assistant-chat {
-    height: 30%;
+    height: 32%;
     margin-top: 10px;
 }
 

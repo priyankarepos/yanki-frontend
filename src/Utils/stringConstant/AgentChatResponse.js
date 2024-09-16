@@ -175,6 +175,11 @@ export const agentChatResponse = {
     offline: "offline",
     adminFaqProgressbar: "admin-faq-progressbar",
     adminChatProgressbar: "admin-chat-progressbar",
+    agentUnavailableMessage: "agent-unavailable-message",
+    chatAgentHeadingSmallScreen: "chat-agent-heading-small-screen",
+    largeUserChatContainer: "large-user-chat-container",
+    userChatContainerAvalibaleMessage: "user-chat-container-avalibale-message",
+    agentSearchContainer: "agent-search-container"
 }
 
 export const apiUrls = {

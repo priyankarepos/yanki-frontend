@@ -78,7 +78,7 @@ const SigninPage = () => {
   });
 
   useEffect(() => {
-    setValue("signInPhone", "+44", { shouldValidate: false });
+    setValue("signInPhone", "+1", { shouldValidate: false });
   }, [setValue]);
 
   const onSubmit = async (data) => {
@@ -226,6 +226,7 @@ const SigninPage = () => {
                     value={field.value}
                     preferredCountries={["us", "il", "gb", "ca", "mx"]}
                     placeholder="Phone number"
+                    defaultCountry="US"
                     onChange={(value, country, event) => {
                       field.onChange(value);
                     }}
