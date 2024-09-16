@@ -47,6 +47,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   const [statusOffline, setStatusOffline] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isDataSubmit, setIsDataSubmit] = useState(false);
   const chatSessionIdRef = useRef();
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -114,6 +115,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
   };
 
   const onSubmit = async (event) => {
+    setIsDataSubmit(true);
     event.preventDefault();
     const response = await axios.post(`${apiUrls.sendMessage}`, {
       content: searchQuery,
@@ -138,6 +140,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
     setMessageList((prevMessages) => [...prevMessages, message]);
 
     setSearchQuery("");
+    setIsDataSubmit(false);
   };
 
   const handleChangeStatus = async () => {
@@ -455,7 +458,7 @@ const Conversation = ({ onUserList, isModalOpen, userInfoModalOpen }) => {
                         <IconButton
                           type={agentChatResponse.submit}
                           onClick={onSubmit}
-                          disabled={!searchQuery.trim()}
+                          disabled={!searchQuery.trim() || isDataSubmit}
                         >
                           <img src={SendIcon} alt={SendIcon} />
                         </IconButton>
