@@ -4,6 +4,7 @@ import {
   CircularProgress,
   IconButton,
   Paper,
+  Snackbar,
   TextField,
   Typography,
   useMediaQuery,
@@ -28,12 +29,14 @@ import { classNames } from "../../Utils/stringConstant/stringConstant";
 
 const UserChatSession = () => {
   const { t } = useTranslation();
-  const [messageList, setMessageList] = useState([]);``
+  const [messageList, setMessageList] = useState([]); ``
   const [searchQuery, setSearchQuery] = useState("");
   const [isChatFinish, setIsChatFinish] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDataFetch, setIsDataFetch] = useState(null);
   const [showAvalibleMessage, setShowAvalibleMessage] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const chatContainerRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) =>
     theme.breakpoints.down(agentChatResponse.smallScreen)
@@ -46,13 +49,13 @@ const UserChatSession = () => {
 
   const yankiUser = JSON.parse(
     window.localStorage.getItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN) ||
-      "{}"
+    "{}"
   );
   const currentUserId = yankiUser?.userObject?.userId || "";
 
   const handleChangeStatus = async (receiverId) => {
     await axios.put(apiUrls.changeStatusByUser(receiverId));
-  } 
+  }
 
   useEffect(() => {
     const handleReceivedMessage = (message) => {
@@ -113,34 +116,39 @@ const UserChatSession = () => {
   useEffect(() => {
     setIsDataFetch(true);
     const fetchMessage = async () => {
-      const response = await axios.get(
-        `${apiUrls.getUserMessage(chatSessionId)}`
-      );
+      try {
+        const response = await axios.get(
+          `${apiUrls.getUserMessage(chatSessionId)}`
+        );
 
-      let totalMessage = response.data.messages.length;
-      if (response.data.messages[totalMessage - 1].senderId === currentUserId && response.data.messages[totalMessage - 1].receiverId === null) {
-        setShowAvalibleMessage(true);
+        let totalMessage = response.data.messages.length;
+        if (response.data.messages[totalMessage - 1].senderId === currentUserId && response.data.messages[totalMessage - 1].receiverId === null) {
+          setShowAvalibleMessage(true);
+        }
+
+        setIsChatFinish(response.data.isChatSessionActive);
+
+        const processedMessages = response.data.messages.map((message) => {
+          const date = new Date(message.timestamp);
+          const options = {
+            hour: agentChatResponse.numeric,
+            minute: agentChatResponse.numeric,
+            hour12: true,
+          };
+          const localTimeString = date.toLocaleTimeString(undefined, options);
+
+          return { ...message, timestamplabel: localTimeString };
+        });
+
+        setMessageList(processedMessages);
+      } catch (err) {
+        setSnackbarMessage(err.message);
+        setSnackbarOpen(true);
+      } finally {
+        setIsDataFetch(false);
       }
-
-      setIsChatFinish(response.data.isChatSessionActive);
-
-      const processedMessages = response.data.messages.map((message) => {
-        const date = new Date(message.timestamp);
-        const options = {
-          hour: agentChatResponse.numeric,
-          minute: agentChatResponse.numeric,
-          hour12: true,
-        };
-        const localTimeString = date.toLocaleTimeString(undefined, options);
-
-        return { ...message, timestamplabel: localTimeString };
-      });
-
-      setMessageList(processedMessages);
-      setIsDataFetch(false);
+      fetchMessage();
     };
-
-    fetchMessage();
   }, [chatSessionId]);
 
   const handleChange = (e) => {
@@ -150,28 +158,34 @@ const UserChatSession = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    const response = await axios.post(`${apiUrls.sendMessage}`, {
-      content: searchQuery,
-      userType: agentChatResponse.user,
-    });
+    try {
+      const response = await axios.post(`${apiUrls.sendMessage}`, {
+        content: searchQuery,
+        userType: agentChatResponse.user,
+      });
 
-    let message = response.data.data;
+      let message = response.data.data;
 
-    const date = new Date(message.timestamp);
+      const date = new Date(message.timestamp);
 
-    const options = {
-      hour: agentChatResponse.numeric,
-      minute: agentChatResponse.numeric,
-      hour12: true,
-    };
-    const localTimeString = date.toLocaleTimeString(undefined, options);
+      const options = {
+        hour: agentChatResponse.numeric,
+        minute: agentChatResponse.numeric,
+        hour12: true,
+      };
+      const localTimeString = date.toLocaleTimeString(undefined, options);
 
-    message.timestamplabel = localTimeString;
+      message.timestamplabel = localTimeString;
 
-    setMessageList((prevMessages) => [...prevMessages, message]);
+      setMessageList((prevMessages) => [...prevMessages, message]);
 
-    setSearchQuery("");
-    setIsLoading(false);
+      setSearchQuery("");
+    } catch (err) {
+      setSnackbarMessage(err.message);
+      setSnackbarOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -184,11 +198,10 @@ const UserChatSession = () => {
   return (
     <Paper sx={{ p: 2 }} className={agentChatResponse.agentChatSessionContainer}>
       <Box
-        className={`${
-          chatSessionId
+        className={`${chatSessionId
             ? agentChatResponse.agentChatSessionContainer
             : agentChatResponse.chatAgentContainer
-        }`}
+          }`}
       >
         <Typography className={`${isSmallScreen ? agentChatResponse.chatAgentHeadingSmallScreen : agentChatResponse.chatAgentHeading}`}>
           {t('chatWithYankiAgent')}
@@ -206,41 +219,39 @@ const UserChatSession = () => {
           ref={chatContainerRef}
         >
           {isDataFetch && (
-              <Typography className={agentChatResponse.adminFaqProgressbar}>
-                <CircularProgress />
-              </Typography>
-            )}
+            <Typography className={agentChatResponse.adminFaqProgressbar}>
+              <CircularProgress />
+            </Typography>
+          )}
           {messageList.map((message) => (
             <div key={message.id}>
               <Box className={agentChatResponse.messageContainer}>
                 <Box
-                  className={`${
-                    message.userType === agentChatResponse.user
+                  className={`${message.userType === agentChatResponse.user
                       ? agentChatResponse.messageOutgoingContainer
                       : agentChatResponse.messageIncomingContainer
-                  }`}
+                    }`}
                 >
-                  {message.userType !== agentChatResponse.user && !isSmallScreen &&(
+                  {message.userType !== agentChatResponse.user && !isSmallScreen && (
                     <Avatar className={agentChatResponse.agentAvtar}>
                       <img src={AgentLogo} alt={agentChatResponse.agentLogo} />
                     </Avatar>
                   )}
                   <Box
                     key={message.id}
-                    className={`${ isSmallScreen ? agentChatResponse.messageSmallScreen : agentChatResponse.message}
-                ${
-                  message.userType === agentChatResponse.user
-                    ? agentChatResponse.outgoing
-                    : agentChatResponse.incoming
-                }
+                    className={`${isSmallScreen ? agentChatResponse.messageSmallScreen : agentChatResponse.message}
+                ${message.userType === agentChatResponse.user
+                        ? agentChatResponse.outgoing
+                        : agentChatResponse.incoming
+                      }
               `}
                   >
                     <Typography>{message.content}</Typography>
                     <img src={TickDouble} alt={TickDouble} />
                     <span
                       className={`${agentChatResponse.userMessageTime} ${isSmallScreen ? agentChatResponse.userMessageTimeSmallScreen : agentChatResponse.userMessageTimeLargeScreen} ${message.userType === agentChatResponse.user
-                          ? agentChatResponse.outgoingTime
-                          : agentChatResponse.incomingTime
+                        ? agentChatResponse.outgoingTime
+                        : agentChatResponse.incomingTime
                         }`}
                     >
                       {message.timestamplabel}
@@ -259,7 +270,7 @@ const UserChatSession = () => {
             </div>
           ))}
         </Box>
-        
+
         <Box className={agentChatResponse.agentSearchContainer}>
           {showAvalibleMessage && !isChatFinish && (
             <Box className={agentChatResponse.agentUnavailableMessage}>
@@ -275,8 +286,8 @@ const UserChatSession = () => {
                 <form>
                   <Box
                     className={`${isSmallScreen
-                        ? agentChatResponse.smallChatWithAgent
-                        : agentChatResponse.chatWithAgent
+                      ? agentChatResponse.smallChatWithAgent
+                      : agentChatResponse.chatWithAgent
                       }`}
                   >
                     <TextField
@@ -316,6 +327,12 @@ const UserChatSession = () => {
           }
         </Box>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Paper>
   );
 };
