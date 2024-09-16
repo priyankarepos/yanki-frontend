@@ -457,6 +457,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-left: 15px;
 
     p {
         font-size: 15px;
@@ -526,8 +527,8 @@
 }
 
 .ya-chat-session-list-empty-screen {
-    min-height: 65%;
-    max-height: 65%;
+    min-height: 62%;
+    max-height: 62%;
     overflow-y: auto;
 }
 
