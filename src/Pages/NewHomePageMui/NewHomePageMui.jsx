@@ -55,7 +55,7 @@ import { getConnectionPromise } from "../../SignalR/signalRService";
 import Avatar from "@mui/material/Avatar";
 import SourceSelectionMenu from './SourceSelectionMenu';
 import { languages } from "../../Utils/functions/uiFunctions";
-import { NewHomePageSlider, NewHomePageMuiMobile } from "./HomePageSlider";
+import { MainDescriptionRenderer, MobileSliderRenderer, SliderRenderer } from "./SliderRenderer";
 
 const NewHomePageMui = () => {
   const { t, i18n } = useTranslation();
@@ -94,9 +94,10 @@ const NewHomePageMui = () => {
   const [showChatSession, setShowChatSession] = useState(false);
   const [agentChatSessionId, setAgentChatSessionId] = useState(null);
   const [selectedOption, setSelectedOption] = useState(() => {
-    const storedOption = sessionStorage.getItem(sourceSelectionStrings.localStorageKey);
+    const storedOption = localStorage.getItem(sourceSelectionStrings.localStorageKey);
     return storedOption || sourceSelectionStrings.defaultOption;
   });
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
@@ -220,7 +221,6 @@ const NewHomePageMui = () => {
 
   const storedSearchQuery = sessionStorage.getItem("searchQuery");
 
-
   const onSubmit = async () => {
     sessionStorage.setItem("searchQuery", searchQuery);
     try {
@@ -237,7 +237,7 @@ const NewHomePageMui = () => {
       const chatIdToUse =
         (searchHistory.length > 0 && searchHistory[0].chatId) || selectedChatId;
       const selectedSourceName = activeTab === 0
-        ? (sessionStorage.getItem(sourceSelectionStrings.localStorageKey) || sourceSelectionStrings.defaultOption)
+        ? (localStorage.getItem(sourceSelectionStrings.localStorageKey) || sourceSelectionStrings.defaultOption)
         : sourceSelectionStrings.defaultOption;
       const response = await axios.post(
         `${membershipApiUrls.allAnswers(chatIdToUse)}&selectedSourceName=${selectedSourceName}`,
@@ -408,7 +408,7 @@ const NewHomePageMui = () => {
       setShowChatSession(false);
       setSelectedChatId(chatId);
       setIsLoading(false);
-      sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
+      localStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
       setSelectedOption(sourceSelectionStrings.defaultOption);
       navigate(`/${chatId}`);
       if (isSmallScreen) {
@@ -439,7 +439,6 @@ const NewHomePageMui = () => {
   );
 
   const handleAgentChatSessionClick = (chatSessionId) => {
-    sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption2);
     setAgentChatSessionId(chatSessionId);
     setSearchHistory([]);
     setShowChatSession(true);
@@ -590,7 +589,7 @@ const NewHomePageMui = () => {
         setChatSessions(updatedChatSessions);
         setSnackbarMessage(response?.data?.message);
         setSnackbarOpen(true);
-        resetPage(false);
+        resetPage(false, true);
       } else {
         setSnackbarMessage("Failed to delete chat session");
         setSnackbarOpen(true);
@@ -605,14 +604,13 @@ const NewHomePageMui = () => {
 
   const handleScroll = (e) => {
     const container = e.target;
-    const bottom = container.scrollHeight - container.scrollTop <= container.clientHeight;   
-    
+    const bottom = container.scrollHeight - container.scrollTop <= container.clientHeight;
     if (bottom && hasMore) {
       setPageNumber(pageNumber + 1);
     }
   };
 
-  const resetPage = (isAssistantChat) => {
+  const resetPage = (isAssistantChat, shouldResetToDefault) => {
     setIsSubmitting(false);
     setIsError(false);
     setErrorMsg("");
@@ -625,8 +623,10 @@ const NewHomePageMui = () => {
     setIsLoading(false);
     setRemainingSearchHistory([]);
     setIsChatFetching(false);
-    sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
-    setSelectedOption(sourceSelectionStrings.defaultOption);
+    if (shouldResetToDefault) {
+      localStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption);
+      setSelectedOption(sourceSelectionStrings.defaultOption);
+    }
     navigate("/");
     if (isSmallScreen) {
       setDrawerOpen(false);
@@ -639,8 +639,8 @@ const NewHomePageMui = () => {
   };
 
   const resetAssistantChat = () => {
-    resetPage(true);
-    sessionStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption2);
+    resetPage(true, false);
+    localStorage.setItem(sourceSelectionStrings.localStorageKey, sourceSelectionStrings.defaultOption2);
     setSelectedOption(sourceSelectionStrings.defaultOption2);
   };
 
@@ -715,37 +715,6 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    if (chatId) {
-      let timeoutId;
-
-      const resetTimer = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          resetPage(false);
-        }, 3600000);
-      };
-
-      document.onmousemove = resetTimer;
-      document.onkeydown = resetTimer;
-      document.ontouchstart = resetTimer;
-      document.onclick = resetTimer;
-      document.onscroll = resetTimer;
-      document.onfocus = resetTimer;
-      resetTimer();
-
-      return () => {
-        clearTimeout(timeoutId);
-        document.onmousemove = null;
-        document.onkeydown = null;
-        document.ontouchstart = null;
-        document.onclick = null;
-        document.onscroll = null;
-        document.onfocus = null;
-      };
-    }
-  }, [chatId, navigate]);
-
-  useEffect(() => {
     const handleActivity = () => {
       const currentTime = new Date().toISOString();
       localStorage.setItem(messages.lastActiveTime, currentTime);
@@ -756,7 +725,7 @@ const NewHomePageMui = () => {
       if (savedTime) {
         const elapsedTime = new Date() - new Date(savedTime);
         if (elapsedTime > 60 * 60 * 1000) {
-          resetPage(false);
+          resetPage(false, true);
         }
       }
     };
@@ -853,7 +822,7 @@ const NewHomePageMui = () => {
       >
         <Toolbar>
           <Box className="ya-home-sidebar-box">
-            <Box sx={{ cursor: messages.cursorPointer }} onClick={() => resetPage(false)}>
+            <Box sx={{ cursor: messages.cursorPointer }} onClick={() => resetPage(false, true)}>
               <img
                 src={
                   activeTab === 0
@@ -965,9 +934,9 @@ const NewHomePageMui = () => {
             </Box>
 
             <Box
-               className={`${classNames.yaNewChatBox} ${agentChatSession.length === 0
+              className={`${classNames.yaNewChatBox} ${agentChatSession.length === 0
                 ? classNames.yaNewChatBoxEmpty
-                : agentChatSession.length === 1 
+                : agentChatSession.length === 1
                   ? classNames.yaNewChatBoxOneChat
                   : classNames.yaNewChatBoxFilled
                 }`}
@@ -985,7 +954,7 @@ const NewHomePageMui = () => {
                   ? "ya-home-new-chat-dark-theme"
                   : "ya-home-new-chat-light-theme"
                   }`}
-                onClick={() => resetPage(false)}
+                onClick={() => resetPage(false, true)}
               >
                 <AddIcon />
                 &nbsp; {t("newChatTxt")}
@@ -995,7 +964,7 @@ const NewHomePageMui = () => {
                 className={`${agentChatSession.length > 0
                   ? classNames.chatSessionList : classNames.chatSessionListEmptyScreen
                   }`}
-                  onScroll={handleScroll}
+                onScroll={handleScroll}
               >
                 {chatSessions.map((chatSession) => (
                   <div key={chatSession.id}>
@@ -1135,9 +1104,7 @@ const NewHomePageMui = () => {
             {(agentChatSessionId && showChatSession) ||
               (!chatId && searchHistory.length <= 0 && !isSubmitting && (
                 <Box className="ya-answer-container-response">
-                  <Typography className="ya-main-text-heading">
-                    {t("homeMainCenterText")}
-                  </Typography>
+                  <MainDescriptionRenderer activeTab={activeTab} selectedOption={selectedOption} />
                 </Box>
               ))}
           </Box>
@@ -1153,13 +1120,22 @@ const NewHomePageMui = () => {
                   searchHistory.length <= 0 &&
                   !chatId &&
                   !isSubmitting && (
-                    <NewHomePageSlider activeTab={activeTab} t={t} handleQuestionClick={handleQuestionClick} />
+                    <SliderRenderer
+                      selectedOption={selectedOption}
+                      activeTab={activeTab}
+                      t={t}
+                      handleQuestionClick={handleQuestionClick}
+                    />
                   )}
                 {!isLargeScreen &&
                   searchHistory.length <= 0 &&
                   !chatId &&
                   !isSubmitting && (
-                    <NewHomePageMuiMobile activeTab={activeTab} t={t} handleQuestionClick={handleQuestionClick} />
+                    <MobileSliderRenderer
+                      selectedOption={selectedOption}
+                      activeTab={activeTab}
+                      t={t}
+                      handleQuestionClick={handleQuestionClick} />
                   )}
                 <form>
                   {userRoles !== "Admin" && (
@@ -1211,6 +1187,8 @@ const NewHomePageMui = () => {
                         handleClose={handleClose}
                         selectedOption={selectedOption}
                         setSelectedOption={setSelectedOption}
+                        chatId={chatId}
+                        resetPage={resetPage}
                       />
                     </Box>}
                     <TextField

@@ -67,11 +67,12 @@ const EnterpriseDashboard = () => {
                     <List>
                         <NavLink
                             to="/enterprise/profile"
-                            className='enterprise-dashboard-link enterprise-white-color'
-                            activeClassName="active"
+                            className={({ isActive }) =>
+                                `enterprise-dashboard-link ${isActive ? 'enterprise-white-color active' : 'enterprise-white-color'}`
+                            }
                         >
                             <ListItem className='highlightStyle' onClick={() => {
-                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                { isSmallScreen && setDrawerOpen(!drawerOpen) }
                                 navigate("/enterprise/profile");
                             }} >
                                 <ListItemIcon>
@@ -82,11 +83,12 @@ const EnterpriseDashboard = () => {
                         </NavLink>
                         <NavLink
                             to="/enterprise/departments"
-                            className='enterprise-dashboard-link enterprise-white-color'
-                            activeClassName="active"
+                            className={({ isActive }) =>
+                                `enterprise-dashboard-link ${isActive ? 'enterprise-white-color active' : 'enterprise-white-color'}`
+                            }
                         >
                             <ListItem className='highlightStyle' onClick={() => {
-                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                { isSmallScreen && setDrawerOpen(!drawerOpen) }
                                 navigate("/enterprise/departments");
                             }}>
                                 <ListItemIcon>
@@ -97,11 +99,12 @@ const EnterpriseDashboard = () => {
                         </NavLink>
                         <NavLink
                             to="/enterprise/upload-files"
-                            className='enterprise-dashboard-link enterprise-white-color'
-                            activeClassName="active"
+                            className={({ isActive }) =>
+                                `enterprise-dashboard-link ${isActive ? 'enterprise-white-color active' : 'enterprise-white-color'}`
+                            }
                         >
                             <ListItem className='highlightStyle' onClick={() => {
-                                {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                                { isSmallScreen && setDrawerOpen(!drawerOpen) }
                                 navigate("/enterprise/upload-files");
                             }}>
                                 <ListItemIcon>

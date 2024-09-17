@@ -3,6 +3,7 @@ import {
     Typography,
     Button,
     Tooltip,
+    Box,
 } from "@mui/material";
 import Carousel from "react-multi-carousel";
 import {
@@ -16,33 +17,17 @@ import {
     classNames,
 } from "../../Utils/stringConstant/stringConstant";
 import { responsiveHomeSlider } from "../../Utils/functions/uiFunctions";
+import { useTranslation } from "react-i18next";
+import { sourceSelectionStrings } from "../../Utils/stringConstant/stringConstant";
 
 const getTranslationKey = (arrayName, index) => `${arrayName}.${index}`;
-const allQuestions = [
-    {
-        questions: initialQuestions1,
-        name: classNames.languageInitialQuestions1,
-    },
-    {
-        questions: initialQuestions2,
-        name: classNames.languageInitialQuestions2,
-    },
-    {
-        questions: initialQuestions3,
-        name: classNames.languageInitialQuestions3,
-    },
-    {
-        questions: initialQuestions4,
-        name: classNames.languageInitialQuestions4,
-    },
-];
 
-export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
+export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick }) => {
     return (
         <div>
             <Carousel
                 responsive={responsiveHomeSlider}
-                itemClass="carousel-item"
+                itemClass={sourceSelectionStrings.carouselItem}
                 swipeable={true}
                 draggable={false}
                 showDots={false}
@@ -50,32 +35,26 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
                 autoPlay={true}
                 autoPlaySpeed={2000}
                 infinite={true}
-                className="new-home-initial-questions"
-                customTransition="transform 500ms ease 0s"
+                className={sourceSelectionStrings.newHomeInitialQuestions}
+                customTransition={sourceSelectionStrings.transformAnimation}
             >
                 {initialQuestions1.map((question, index) => (
-                    <div key={question.id} className="carousel-item">
+                    <div key={question.id} className={sourceSelectionStrings.carouselItem}>
                         <Button
-                            className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
+                            className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                                ? sourceSelectionStrings.yaSearchDarkTheme
+                                : sourceSelectionStrings.yaSearchLightTheme
                                 }`}
                             onClick={() =>
                                 handleQuestionClick(
-                                    `initialQuestions1.${question.id - 1}`
+                                    `initialQuestions1.${index}`
                                 )
                             }
                         >
                             <Tooltip
-                                title={
-                                    <span>
-                                        {t(`initialQuestions1.${question.id - 1}`)}
-                                    </span>
-                                }
+                                title={<span>{t(`initialQuestions1.${index}`)}</span>}
                             >
-                                <span>
-                                    {t(`initialQuestions1.${question.id - 1}`)}
-                                </span>
+                                <span>{t(`initialQuestions1.${index}`)}</span>
                             </Tooltip>
                         </Button>
                     </div>
@@ -83,7 +62,7 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
             </Carousel>
             <Carousel
                 responsive={responsiveHomeSlider}
-                itemClass="carousel-item"
+                itemClass={sourceSelectionStrings.carouselItem}
                 swipeable={true}
                 draggable={false}
                 showDots={false}
@@ -91,32 +70,26 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
                 autoPlay={true}
                 autoPlaySpeed={2000}
                 infinite={true}
-                customTransition="transform 500ms ease 0s"
-                className="new-home-initial-questions"
+                className={sourceSelectionStrings.newHomeInitialQuestions}
+                customTransition={sourceSelectionStrings.transformAnimation}
             >
                 {initialQuestions2.map((question, index) => (
-                    <div key={question.id} className="carousel-item">
+                    <div key={question.id} className={sourceSelectionStrings.carouselItem}>
                         <Button
-                            className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
+                            className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                                ? sourceSelectionStrings.yaSearchDarkTheme
+                                : sourceSelectionStrings.yaSearchLightTheme
                                 }`}
                             onClick={() =>
                                 handleQuestionClick(
-                                    `initialQuestions2.${question.id - 11}`
+                                    `initialQuestions2.${index}`
                                 )
                             }
                         >
                             <Tooltip
-                                title={
-                                    <span>
-                                        {t(`initialQuestions2.${question.id - 11}`)}
-                                    </span>
-                                }
+                                title={<span>{t(`initialQuestions2.${index}`)}</span>}
                             >
-                                <span>
-                                    {t(`initialQuestions2.${question.id - 11}`)}
-                                </span>
+                                <span>{t(`initialQuestions2.${index}`)}</span>
                             </Tooltip>
                         </Button>
                     </div>
@@ -124,7 +97,7 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
             </Carousel>
             <Carousel
                 responsive={responsiveHomeSlider}
-                itemClass="carousel-item"
+                itemClass={sourceSelectionStrings.carouselItem}
                 swipeable={true}
                 draggable={false}
                 showDots={false}
@@ -132,32 +105,26 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
                 autoPlay={true}
                 autoPlaySpeed={2000}
                 infinite={true}
-                customTransition="transform 500ms ease 0s"
-                className="new-home-initial-questions"
+                className={sourceSelectionStrings.newHomeInitialQuestions}
+                customTransition={sourceSelectionStrings.transformAnimation}
             >
                 {initialQuestions3.map((question, index) => (
-                    <div key={question.id} className="carousel-item">
+                    <div key={question.id} className={sourceSelectionStrings.carouselItem}>
                         <Button
-                            className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
+                            className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                                ? sourceSelectionStrings.yaSearchDarkTheme
+                                : sourceSelectionStrings.yaSearchLightTheme
                                 }`}
                             onClick={() =>
                                 handleQuestionClick(
-                                    `initialQuestions3.${question.id - 21}`
+                                    `initialQuestions3.${index}`
                                 )
                             }
                         >
                             <Tooltip
-                                title={
-                                    <span>
-                                        {t(`initialQuestions3.${question.id - 21}`)}
-                                    </span>
-                                }
+                                title={<span>{t(`initialQuestions3.${index}`)}</span>}
                             >
-                                <span>
-                                    {t(`initialQuestions3.${question.id - 21}`)}
-                                </span>
+                                <span>{t(`initialQuestions3.${index}`)}</span>
                             </Tooltip>
                         </Button>
                     </div>
@@ -165,7 +132,7 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
             </Carousel>
             <Carousel
                 responsive={responsiveHomeSlider}
-                itemClass="carousel-item"
+                itemClass={sourceSelectionStrings.carouselItem}
                 swipeable={true}
                 draggable={false}
                 showDots={false}
@@ -173,32 +140,26 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
                 autoPlay={true}
                 autoPlaySpeed={2000}
                 infinite={true}
-                customTransition="transform 500ms ease 0s"
-                className="new-home-initial-questions"
+                className={sourceSelectionStrings.newHomeInitialQuestions}
+                customTransition={sourceSelectionStrings.transformAnimation}
             >
                 {initialQuestions4.map((question, index) => (
-                    <div key={question.id} className="carousel-item">
+                    <div key={question.id} className={sourceSelectionStrings.carouselItem}>
                         <Button
-                            className={`ya-slider-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
+                            className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                                ? sourceSelectionStrings.yaSearchDarkTheme
+                                : sourceSelectionStrings.yaSearchLightTheme
                                 }`}
                             onClick={() =>
                                 handleQuestionClick(
-                                    `initialQuestions4.${question.id - 31}`
+                                    `initialQuestions4.${index}`
                                 )
                             }
                         >
                             <Tooltip
-                                title={
-                                    <span>
-                                        {t(`initialQuestions4.${question.id - 31}`)}
-                                    </span>
-                                }
+                                title={<span>{t(`initialQuestions4.${index}`)}</span>}
                             >
-                                <span>
-                                    {t(`initialQuestions4.${question.id - 31}`)}
-                                </span>
+                                <span>{t(`initialQuestions4.${index}`)}</span>
                             </Tooltip>
                         </Button>
                     </div>
@@ -208,15 +169,30 @@ export const NewHomePageSlider = ({ activeTab, t, handleQuestionClick, }) => {
     );
 };
 
-export const NewHomePageMuiMobile = ({ activeTab, t, handleQuestionClick, }) => {
+export const NewHomePageMuiMobile = ({ activeTab, t, handleQuestionClick }) => {
+    const allQuestions = [
+        {
+            questions: initialQuestions1,
+            name: classNames.languageInitialQuestions1,
+        },
+        {
+            questions: initialQuestions2,
+            name: classNames.languageInitialQuestions2,
+        },
+        {
+            questions: initialQuestions3,
+            name: classNames.languageInitialQuestions3,
+        },
+        {
+            questions: initialQuestions4,
+            name: classNames.languageInitialQuestions4,
+        },
+    ];
 
     return (
-        <div className="home-table-scroll">
+        <div className={sourceSelectionStrings.homeTableScroll}>
             {allQuestions.map((group, groupIndex) => (
-                <Typography
-                    className="ya-mobile-prompt"
-                    key={groupIndex}
-                >
+                <Typography className={sourceSelectionStrings.yaMobilePrompt} key={groupIndex}>
                     {group.questions.map((question, index) => (
                         <span
                             key={question.id}
@@ -225,9 +201,9 @@ export const NewHomePageMuiMobile = ({ activeTab, t, handleQuestionClick, }) => 
                                     getTranslationKey(group.name, index)
                                 )
                             }
-                            className={`ya-home-table-btn ${activeTab === 0
-                                ? "ya-search-dark-theme"
-                                : "ya-search-light-theme"
+                            className={`${sourceSelectionStrings.yaHomeTableBtn} ${activeTab === 0
+                                ? sourceSelectionStrings.yaSearchDarkTheme
+                                : sourceSelectionStrings.yaSearchLightTheme
                                 }`}
                         >
                             <Tooltip
@@ -248,5 +224,25 @@ export const NewHomePageMuiMobile = ({ activeTab, t, handleQuestionClick, }) => 
                 </Typography>
             ))}
         </div>
+    );
+};
+
+export const HomeMainDescription = ({ activeTab }) => {
+    const { t } = useTranslation();
+
+    return (
+        <Box className={sourceSelectionStrings.yaMainTextBbox}>
+            <Typography className={`${activeTab === 1 && classNames.enterpriseLightColor} ${sourceSelectionStrings.yaMainTextHeading}`}
+            >
+                {t('homeMainCenterText')}
+            </Typography>
+            {activeTab === 0 && <img
+                src={sourceSelectionStrings.logoSrc}
+                width={sourceSelectionStrings.logoWidth}
+                height={sourceSelectionStrings.logoHeight}
+                className={sourceSelectionStrings.logoClassName}
+                alt={sourceSelectionStrings.logo}
+            />}
+        </Box>
     );
 };

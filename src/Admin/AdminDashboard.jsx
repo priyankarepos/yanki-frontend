@@ -87,13 +87,14 @@ const AdminDashboard = () => {
           <List>
             <NavLink
               to="/admin/search-query-report"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/search-query-report");
                 }}
               >
@@ -105,13 +106,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/change-role"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/change-role");
                 }}
               >
@@ -124,13 +126,14 @@ const AdminDashboard = () => {
 
             <NavLink
               to="/admin/chat"
-              className="admin-dashboard-navlink"
-              activeClassName="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/chat");
                 }}
               >
@@ -143,13 +146,14 @@ const AdminDashboard = () => {
 
             <NavLink
               to="/admin/enterprise-request"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/enterprise-request");
                 }}
               >
@@ -161,13 +165,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/enterprise-categories"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/enterprise-categories");
                 }}
               >
@@ -179,13 +184,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/create-enterprise"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/enterprise-categories");
                 }}
               >
@@ -197,13 +203,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/create-department"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/enterprise-department");
                 }}
               >
@@ -215,13 +222,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/upload-files"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/upload-files");
                 }}
               >
@@ -233,13 +241,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/event-request"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/event-request");
                 }}
               >
@@ -251,13 +260,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/add-event-location"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/add-event-location");
                 }}
               >
@@ -269,13 +279,14 @@ const AdminDashboard = () => {
             </NavLink>
             <NavLink
               to="/admin/add-faq"
-              className="admin-dashboard-navlink"
-              activeclassname="active"
+              className={({ isActive }) =>
+                isActive ? 'admin-dashboard-navlink active' : 'admin-dashboard-navlink'
+              }
             >
               <ListItem
                 className="highlightStyle"
                 onClick={() => {
-                  {isSmallScreen && setDrawerOpen(!drawerOpen)}
+                  { isSmallScreen && setDrawerOpen(!drawerOpen) }
                   navigate("/admin/add-faq");
                 }}
               >

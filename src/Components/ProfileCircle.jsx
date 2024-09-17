@@ -136,7 +136,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
     );
     window.localStorage.removeItem(import.meta.env.VITE_APP_LOCALSTORAGE_TOKEN);
     window.localStorage.removeItem(messages.i18nextLng);
-    sessionStorage.removeItem(sourceSelectionStrings.localStorageKey);
+    localStorage.removeItem(sourceSelectionStrings.localStorageKey);
     navigate("/auth");
 
   };
@@ -479,13 +479,13 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
         className="admin-faq-model-style"
       >
         <Box className="admin-faq-model-content delete-account-content">
-          <Typography sx={{ mb: 1 }} className={activeTab===1 && classNames.whiteColor}>
+          <Typography sx={{ mb: 1 }} className={`${activeTab === 1 && classNames.whiteColor}`}>
             {t('accountDeletedMessage')}
           </Typography>
-          <Typography sx={{ mb: 1 }} className={activeTab===1 && classNames.whiteColor}>
+          <Typography sx={{ mb: 1 }} className={`${activeTab === 1 && classNames.whiteColor}`}>
             {t('redirectMessage')} <strong>{timer}</strong>
           </Typography>
-          <Typography sx={{ mb: 3 }} className={activeTab===1 && classNames.whiteColor}>
+          <Typography sx={{ mb: 3 }} className={`${activeTab === 1 && classNames.whiteColor}`}>
             {t('contactSupportMessage')}&nbsp;
             <a
               className="linkStyle new-title-email"
@@ -496,7 +496,7 @@ export default function ProfielCircle({ chatId, chatSessionId }) {
               hello@yanki.ai
             </a>
           </Typography>
-          <Typography className={activeTab===1 && classNames.whiteColor}>
+          <Typography className={`${activeTab === 1 && classNames.whiteColor}`}>
             {t('thankYouMessage')}
           </Typography>
         </Box>
