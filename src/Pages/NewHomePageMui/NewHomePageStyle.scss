@@ -338,7 +338,7 @@
 }
 
 .ya-new-chat-box {
-    margin-top: 25px;
+    margin-top: 15px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
@@ -346,15 +346,15 @@
 }
 
 .ya-new-chat-box-one-chat {
-    height: 70%;
+    height: 66%;
 }
 
 .ya-new-chat-box-filled {
-    height: 57%;
+    height: 56%;
 }
 
 .ya-new-chat-box-empty {
-    height: 97%;
+    height: 95%;
 }
 
 .ya-chat-session-btn {
@@ -520,15 +520,15 @@
 }
 
 .ya-chat-session-list {
-    min-height: 70%;
-    max-height: 70%;
+    min-height: calc(100% - 90px);
+    max-height: calc(100% - 90px);
     overflow-y: auto;
     padding-bottom: 5px;
 }
 
 .ya-chat-session-list-empty-screen {
-    min-height: 62%;
-    max-height: 62%;
+    min-height: calc(100% - 245px);
+    max-height: calc(100% - 245px);
     overflow-y: auto;
 }
 
@@ -603,13 +603,6 @@
 }
 
 @media (min-height: 850px)  and (max-height: 950px) {
-    .ya-chat-session-list {
-        min-height: 81%;
-        max-height: 81%;
-        overflow-y: auto;
-        padding-bottom: 5px;
-    }
-    
     .ya-new-chat-box-filled {
         height: 66%;
     }
@@ -621,28 +614,14 @@
 }
 
 @media (min-height: 950px)  and (max-height: 1175px) {
-    .ya-chat-session-list {
-        min-height: 85%;
-        max-height: 85%;
-        overflow-y: auto;
-        padding-bottom: 5px;
-    }   
-
     .ya-new-chat-box-one-chat {
-        height: 77%;
+        height: 75%;
     }
 }
 
 @media (min-height: 1175px) {
-    .ya-chat-session-list {
-        min-height: 85%;
-        max-height: 85%;
-        overflow-y: auto;
-        padding-bottom: 5px;
-    }   
-
     .ya-new-chat-box-one-chat {
-        height: 84%;
+        height: 82%;
     }
 }
 
@@ -665,5 +644,19 @@
     .ya-new-assistant-chat {
         height: 20%;
         margin-bottom: 10px;
+    }
+}
+
+@media (max-height: 655px) {
+    .ya-new-chat-box-filled {
+        height: 49%;
+    }
+
+    .ya-new-assistant-chat-no-scroll {
+        height: 37%;
+    }
+
+    .ya-new-chat-box-one-chat {
+        height: 64%;
     }
 }

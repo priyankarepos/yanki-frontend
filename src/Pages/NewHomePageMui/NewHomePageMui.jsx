@@ -606,6 +606,7 @@ const NewHomePageMui = () => {
   const handleScroll = (e) => {
     const container = e.target;
     const bottom = container.scrollHeight - container.scrollTop <= container.clientHeight;   
+    
     if (bottom && hasMore) {
       setPageNumber(pageNumber + 1);
     }
@@ -907,9 +908,11 @@ const NewHomePageMui = () => {
             <Box
               className={`${agentChatSession.length === 0
                 ? classNames.yaNewAssistantEmptyChat
-                : agentChatSession.length === 1 || agentChatSession.length === 2
+                : agentChatSession.length === 2
                   ? classNames.yaNewAssistantChatNoScroll
-                  : classNames.yaNewAssistantChat
+                  : agentChatSession.length === 1
+                    ? ""
+                    : classNames.yaNewAssistantChat
                 }`}
             >
               <span
