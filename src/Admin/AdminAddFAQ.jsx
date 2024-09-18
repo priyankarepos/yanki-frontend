@@ -20,6 +20,7 @@ import ConfirmDialog from "../EnterpriseCollabration/ConfirmDialog";
 import "./AdminStyle.css";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
 import { classNames } from "../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../Utils/stringConstant/AdminString";
 
 const AdminAddFaq = () => {
   const { drawerOpen } = useContext(Context);
@@ -40,9 +41,7 @@ const AdminAddFaq = () => {
     const fetchFAQs = async () => {
       setLoadingData(true);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/get-faq`
-        );
+        const response = await axios.get(apiUrls.getFAQs);
         setAdminFaqData(response.data);
         setLoadingData(false);
       } catch (error) {
@@ -70,8 +69,7 @@ const AdminAddFaq = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/delete-faq/${selectedFaqId}`;
-      const response = await axios.delete(apiUrl);
+      const response = await axios.delete(apiUrls.deleteFAQs(selectedFaqId));
       const updatedFaqList = adminFaqData.filter(
         (faq) => faq.id !== selectedFaqId
       );
@@ -95,11 +93,10 @@ const AdminAddFaq = () => {
   const handleSaveFaqs = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/add-faq`;
       const trimmedQuestion = question.trim();
       const trimmedAnswer = answer.trim();
 
-      const response = await axios.post(apiUrl, {
+      const response = await axios.post(apiUrls.addFAQs, {
         question: trimmedQuestion,
         answer: trimmedAnswer,
       });
@@ -123,11 +120,10 @@ const AdminAddFaq = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/faqManagement/edit-faq`;
       const trimmedQuestion = question.trim();
       const trimmedAnswer = answer.trim();
 
-      const response = await axios.put(apiUrl, {
+      const response = await axios.put(apiUrls.updateFAQs, {
         id: editFaqId,
         question: trimmedQuestion,
         answer: trimmedAnswer,

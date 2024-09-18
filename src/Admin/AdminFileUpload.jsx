@@ -128,7 +128,9 @@ const AdminFileUpload = () => {
       setLoading(true);
       const formData = new FormData();
       formData.append("file", data.file[0]);
-      const apiUrl = `${apiUrls.indexAndUpload}?PdfName=${encodeURIComponent(data.file[0].name)}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
+      const apiUrl = `${apiUrls.indexAndUpload}?PdfName=${encodeURIComponent(
+        data.file[0].name
+      )}&Keywords=${encodeURIComponent(JSON.stringify(tags))}`;
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -167,15 +169,12 @@ const AdminFileUpload = () => {
     const rowIndex = tableData.findIndex((row) => row.pdfName === pdfName);
     if (rowIndex !== -1) {
       try {
-        const response = await axios.delete(
-          `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
-          {
-            params: {
-              documentId: pdfId,
-              fileName: pdfName,
-            },
-          }
-        );
+        const response = await axios.delete(apiUrls.deleteDocument, {
+          params: {
+            documentId: pdfId,
+            fileName: pdfName,
+          },
+        });
 
         if (response.status === 200) {
           const updatedTableData = [
@@ -295,11 +294,12 @@ const AdminFileUpload = () => {
   return (
     <div className="admin-faq-wrapper">
       <Box sx={{
-          width:
-            drawerOpen && !isSmallScreen
-              ? agentChatResponse.drawerOpenWidth
-              : agentChatResponse.zeroWidth,
-              transition: agentChatResponse.transitionStyle,}}>
+        width:
+          drawerOpen && !isSmallScreen
+            ? agentChatResponse.drawerOpenWidth
+            : agentChatResponse.zeroWidth,
+        transition: agentChatResponse.transitionStyle,
+      }}>
         <AdminDashboard />
       </Box>
       <Box
@@ -307,7 +307,7 @@ const AdminFileUpload = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth,transition: agentChatResponse.transitionStyle,
+            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="admin-faq-heading">
@@ -323,16 +323,16 @@ const AdminFileUpload = () => {
           </IconButton>
         </Box>
         {loading ? (
-              <div className={classNames.noDataFoundClass}>
-                <CircularProgress />
-              </div>
-            ) : (
-          <>
+          <div className={classNames.noDataFoundClass}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <React.Fragment>
             {(tableData && tableData.length === 0) ? (
-          <Typography variant="h6" className={classNames.noDataFoundClass}>
-            No data available.
-          </Typography>
-        )  : (
+              <Typography variant="h6" className={classNames.noDataFoundClass}>
+                No data available.
+              </Typography>
+            ) : (
               <TableContainer component={Paper} className="margin-top-20">
                 <Table>
                   <TableHead>
@@ -344,71 +344,78 @@ const AdminFileUpload = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {tableData && tableData.map((row, index) => (
-                      <TableRow key={index + 1}>
-                        <TableCell>{(pageNumber - 1) * itemsPerPage + index + 1}</TableCell>
-                        <TableCell>{row.pdfName}</TableCell>
-                        <TableCell>
-                          {Array.isArray(row.keywords) ? (
-                            row.keywords.map((keyword, index) => {
-                              try {
-                                const parsedKeyword = JSON.parse(keyword);
-                                if (Array.isArray(parsedKeyword)) {
-                                  return (
-                                    <span key={index}>
-                                      {index > 0 && ", "}
-                                      {parsedKeyword.join(", ").toLowerCase()}
-                                    </span>
-                                  );
+                    {tableData &&
+                      tableData.map((row, index) => (
+                        <TableRow key={index + 1}>
+                          <TableCell>
+                            {(pageNumber - 1) * itemsPerPage + index + 1}
+                          </TableCell>
+                          <TableCell>{row.pdfName}</TableCell>
+                          <TableCell>
+                            {Array.isArray(row.keywords) ? (
+                              row.keywords.map((keyword, index) => {
+                                try {
+                                  const parsedKeyword = JSON.parse(keyword);
+                                  if (Array.isArray(parsedKeyword)) {
+                                    return (
+                                      <span key={index}>
+                                        {index > 0 && ", "}
+                                        {parsedKeyword.join(", ").toLowerCase()}
+                                      </span>
+                                    );
+                                  }
+                                } catch (error) {
+                                  setSnackbarMessage(messages.error, error);
+                                  setSnackbarOpen(true);
                                 }
-                              } catch (error) {
-                                setSnackbarMessage("Error:", error);
-                                setSnackbarOpen(true);
+                                return (
+                                  <span key={index}>
+                                    {index > 0 && ", "}
+                                    {String(keyword).toLowerCase()}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span>{String(row.keywords).toLowerCase()}</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => openPdfModal(row.pdfName)}
+                            >
+                              <VisibilityIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={() =>
+                                handleDelete(row.pdfName, row.documentId)
                               }
-                              return (
-                                <span key={index}>
-                                  {index > 0 && ", "}
-                                  {String(keyword).toLowerCase()}
-                                </span>
-                              );
-                            })
-                          ) : (
-                            <span>{String(row.keywords).toLowerCase()}</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton onClick={() => openPdfModal(row.pdfName)}>
-                            <VisibilityIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={() =>
-                              handleDelete(row.pdfName, row.documentId)
-                            }
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => handleUpdate(row, row.documentId)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleUpdate(row, row.documentId)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
-                {totalPages > 1 && <Box marginTop={2}>
-                  <Pagination
-                    count={totalPages}
-                    page={pageNumber}
-                    onChange={handlePageChange}
-                    color={messages.primaryColor}
-                    className={messages.enterprisePaginationClass}
-                  />
-                </Box>}
+                {totalPages > 1 && (
+                  <Box marginTop={2}>
+                    <Pagination
+                      count={totalPages}
+                      page={pageNumber}
+                      onChange={handlePageChange}
+                      color={messages.primaryColor}
+                      className={messages.enterprisePaginationClass}
+                    />
+                  </Box>
+                )}
               </TableContainer>
             )}
-          </>
+          </React.Fragment>
         )}
       </Box>
       {renderPdfModal()}
@@ -420,10 +427,7 @@ const AdminFileUpload = () => {
         className="event-pdf-modal-open"
       >
         <Box className="admin-faq-model-content">
-          <Typography
-            variant="h5"
-            className="enterprise-add-category-modal-title"
-          >
+          <Typography variant="h5" className="enterprise-add-category-modal-title">
             Upload File
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -497,7 +501,10 @@ const AdminFileUpload = () => {
               disabled={loading}
             >
               {loading ? (
-                <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
+                <CircularProgress
+                  size={24}
+                  className={messages.eventFormSubmitButtonLoader}
+                />
               ) : (
                 "Upload"
               )}
@@ -513,7 +520,10 @@ const AdminFileUpload = () => {
         className="event-pdf-modal-open"
       >
         <Box className="admin-faq-model-content">
-          <Typography variant="h5" className="enterprise-add-category-modal-title">
+          <Typography
+            variant="h5"
+            className="enterprise-add-category-modal-title"
+          >
             Update Keyword
           </Typography>
           <form className="keyword-update-box">
@@ -576,7 +586,10 @@ const AdminFileUpload = () => {
               onClick={(e) => updateKeywords(e)}
             >
               {loading ? (
-                <CircularProgress size={24} className={messages.eventFormSubmitButtonLoader} />
+                <CircularProgress
+                  size={24}
+                  className={messages.eventFormSubmitButtonLoader}
+                />
               ) : (
                 "Update"
               )}

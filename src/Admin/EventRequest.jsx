@@ -38,7 +38,9 @@ import { FormControl } from "@mui/base";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
-import { apiUrls, classNames } from "../Utils/stringConstant/stringConstant";
+import { classNames } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, message } from "../Utils/stringConstant/AdminString";
+import { headers } from "../Utils/stringConstant/stringConstant";
 
 const AdminEventRequest = () => {
   const {
@@ -132,6 +134,7 @@ const AdminEventRequest = () => {
   useEffect(() => {
     fetchEventRequest(pageNumber);
   }, [isFormModalOpen, pageNumber]);
+  
   useEffect(() => {
     const fetchEventLocations = async () => {
       try {
@@ -154,7 +157,7 @@ const AdminEventRequest = () => {
   useEffect(() => {
     const fetchEventPublicationArea = async () => {
       try {
-        const response = await axios.get(apiUrls.getEventsPublicationAreas);
+        const response = await axios.get(apiUrls.getEventPublicationAreas);
 
         if (response.status === 200) {
           setPublicationArea(response.data);
@@ -197,7 +200,6 @@ const AdminEventRequest = () => {
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      const addEventUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/add-event`;
       const addEventData = {
         eventName: data.EventName,
         eventAddress: data.EventLocationAddress,
@@ -207,7 +209,7 @@ const AdminEventRequest = () => {
         eventDetails: data.eventDetails,
         eventDateAndTime: `${data.date}T${data.time}`,
       };
-      const addEventResponse = await axios.post(addEventUrl, addEventData);
+      const addEventResponse = await axios.post(apiUrls.addEvent, addEventData);
       const eventId = addEventResponse.data;
       if (!uploadedFiles || uploadedFiles.length === 0) {
         window.location.reload();
@@ -222,11 +224,8 @@ const AdminEventRequest = () => {
         return;
       }
 
-      const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${eventId}`;
-      await axios.post(imageUploadUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await axios.post(apiUrls.eventImageUpload(eventId), formData, {
+        headers: headers,
       });
       setIsLoading(false);
       setUploadedFiles([]);
@@ -298,8 +297,7 @@ const AdminEventRequest = () => {
         eventDateAndTime: `${formData.date}T${formData.time}`,
       };
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/update-event`;
-      await axios.put(apiUrl, requestData);
+      await axios.put(apiUrls.updateEvent, requestData);
       if (
         Array.isArray(formData.uploadedFiles) &&
         formData.uploadedFiles.length > 0
@@ -308,13 +306,10 @@ const AdminEventRequest = () => {
         formData.uploadedFiles.forEach((file) => {
           formDataImages.append("imageFiles", file);
         });
-        const imageUploadUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/event-image-upload?eventId=${editEventId}`;
-        await axios.post(imageUploadUrl, formDataImages, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        await axios.post(apiUrls.imageUploadUrl(editEventId), formDataImages, {
+          headers: headers,
         });
-        setSnackbarMessage("Image(s) uploaded successfully.");
+        setSnackbarMessage(message.imageUploadedSuccess);
         setSnackbarOpen(true);
       }
 
@@ -336,15 +331,12 @@ const AdminEventRequest = () => {
     try {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
-      const approveUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/approve`;
-      const approveResponse = await axios.post(approveUrl);
+      const approveResponse = await axios.post(
+        apiUrls.approveRejectEventsRequests(eventId, "approve")
+      );
       if (approveResponse.status === 200) {
-        const emailUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/send-email-to-eventSubscribers?eventId=${eventId}`;
-        await axios.post(emailUrl);
-        setSnackbarMessage(
-          `Event ${EventName} approved successfully`,
-          "success"
-        );
+        await axios.post(apiUrls.sendEmailEventSubscribers(eventId));
+        setSnackbarMessage(message.eventApproved(EventName), message.success);
         setSnackbarOpen(true);
         fetchEventRequest(pageNumber);
       } else {
@@ -367,14 +359,12 @@ const AdminEventRequest = () => {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/reject`;
-      const response = await axios.post(url);
+      const response = await axios.post(
+        apiUrls.approveRejectEventsRequests(eventId, "reject")
+      );
 
       if (response.status === 200) {
-        setSnackbarMessage(
-          `Event ${EventName} rejected successfully`,
-          "success"
-        );
+        setSnackbarMessage(message.eventRejected(EventName), message.success);
         setSnackbarOpen(true);
         fetchEventRequest(pageNumber);
       } else {
@@ -397,13 +387,12 @@ const AdminEventRequest = () => {
       const updatedLoadingRows = [...loadingRows, eventId];
       setLoadingRows(updatedLoadingRows);
 
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/approve-reject-events-requests/${eventId}/askformoreinformation`;
-      const response = await axios.post(url);
+      const response = await axios.post(
+        apiUrls.approveRejectEventsRequests(eventId, "askformoreinformation")
+      );
 
       if (response.status === 200) {
-        setSnackbarMessage(
-          `The request for more information has been sent successfully`
-        );
+        setSnackbarMessage(message.askformoreinformation);
         setSnackbarOpen(true);
         fetchEventRequest(pageNumber);
       } else {
@@ -429,12 +418,11 @@ const AdminEventRequest = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const url = `${import.meta.env.VITE_APP_API_HOST}/api/events/delete-event/${eventIdToDelete}`;
-      const response = await axios.delete(url);
+      const response = await axios.delete(apiUrls.deleteEvent(eventIdToDelete));
 
       if (response.status === 200) {
         fetchEventRequest(pageNumber);
-        setSnackbarMessage(`Request deleted successfully`, "success");
+        setSnackbarMessage(message.requestDeletedSuccess, message.success);
         setSnackbarOpen(true);
       } else {
         setSnackbarMessage("Failed to delete the request", "error");
@@ -505,9 +493,8 @@ const AdminEventRequest = () => {
 
   const handleDeleteImage = async (imageId) => {
     try {
-      const deleteImageUrl = `${import.meta.env.VITE_APP_API_HOST}/api/events/delete-event-image/${imageId}`;
-      await axios.delete(deleteImageUrl);
-      setSnackbarMessage("Image deleted successfully");
+      await axios.delete(apiUrls.deleteEventImage(imageId));
+      setSnackbarMessage(message.imageDeletedSuccess);
       setSnackbarOpen(true);
       const updatedImages = editEventData.imageUrl.filter(
         (image) => image.imageId !== imageId
@@ -772,9 +759,9 @@ const AdminEventRequest = () => {
         aria-describedby="form-modal-description"
         className="event-add-form-modal"
       >
-        <Paper
-          elevation={3}
-          className="event-modal-content"
+        <Paper 
+          elevation={3} 
+          className="event-modal-content" 
         >
           <div className="event-model-close-btn">
             <IconButton onClick={closeFormModal} aria-label="close">
@@ -817,7 +804,7 @@ const AdminEventRequest = () => {
                         type="outlined"
                         placeholder="Event name"
                         fullWidth
-                        value={field.value}
+                        value={field.value} 
                         onChange={field.onChange}
                       />
                       {errors["EventName"] && (
@@ -863,12 +850,12 @@ const AdminEventRequest = () => {
                         customArrow={
                           !isLocationDropdownOpen ? (
                             <ArrowDropDownCircleIcon
-                              className="cursor-pointer"
+                            className="cursor-pointer"
                               onClick={handleLocationDropdownToggle}
                             />
                           ) : (
                             <CancelIcon
-                              className="cursor-pointer"
+                            className="cursor-pointer"
                               onClick={handleLocationDropdownToggle}
                             />
                           )
@@ -1229,7 +1216,7 @@ const AdminEventRequest = () => {
                 <img
                   src={URL.createObjectURL(selectedPdf)}
                   alt={selectedPdf.name}
-                  className="event-select-img"
+                className="event-select-img"
                 />
               ) : (
                 <Worker

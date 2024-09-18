@@ -14,6 +14,8 @@ import { Worker, Viewer } from '@react-pdf-viewer/core';
 import CloseIcon from '@mui/icons-material/Close';
 import EnterpriseDashboard from './EnterpriseDashboard';
 import { agentChatResponse } from '../Utils/stringConstant/AgentChatResponse';
+import { apiUrls, message } from '../Utils/stringConstant/AdminString';
+import { headers } from '../Utils/stringConstant/stringConstant';
 
 const EnterpriseFileUpload = () => {
     const { drawerOpen } = useContext(Context);
@@ -37,7 +39,7 @@ const EnterpriseFileUpload = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_APP_API_HOST}/api/EnterpriseDocumentUpload/get-enterprise-document`);
+                const response = await axios.get(apiUrls.getEnterpriseDocumentUpload);
 
                 setTableData(response.data.map((pdfUrl, index) => ({ id: index + 1, pdfUrl })));
 
@@ -79,14 +81,10 @@ const EnterpriseFileUpload = () => {
             setLoading(true);
 
             const formData = new FormData();
-            formData.append('file', data.file[0]);
+            formData.append(message.file, data.file[0]);
 
-            const apiUrl = `${import.meta.env.VITE_APP_HOST}/api/EnterpriseDocumentUpload/upload-enterprise-document?IsCertificate=false`;
-
-            const response = await axios.post(apiUrl, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await axios.post(apiUrls.uploadEnterpriseDocument, formData, {
+                headers: headers
             });
 
             if (response.status === 200) {
@@ -128,7 +126,7 @@ const EnterpriseFileUpload = () => {
         if (rowIndex !== -1) {
             try {
                 setLoading(true);
-                const response = await axios.delete(`${import.meta.env.VITE_APP_HOST}/api/EnterpriseDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(pdfName)}`);
+                const response = await axios.delete(apiUrls.deleteEnterpriseDocument(pdfName));
 
                 if (response.status === 200) {
                     const updatedTableData = [...tableData];

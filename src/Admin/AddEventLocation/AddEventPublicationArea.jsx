@@ -24,6 +24,7 @@ import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
+import { apiUrls } from "../../Utils/stringConstant/AdminString";
 
 const AdminAddEventPublicationArea = () => {
   const [publicationArea, setPublicationArea] = useState([]);
@@ -41,10 +42,7 @@ const AdminAddEventPublicationArea = () => {
   useEffect(() => {
     const fetchEventPublicationArea = async () => {
       try {
-        setLoadingData(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/get-events-publicationAreas`
-        );
+        const response = await axios.get(apiUrls.getEventPublicationAreas);
 
         if (response.status === 200) {
           setPublicationArea(response.data);
@@ -83,7 +81,7 @@ const AdminAddEventPublicationArea = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/delete-event-publicationArea/${selectedAreaId}`
+        apiUrls.deleteEventPublicationAreas(selectedAreaId)
       );
 
       if (response.status === 200) {
@@ -125,9 +123,7 @@ const AdminAddEventPublicationArea = () => {
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/add-event-publicationArea`;
-
-      const response = await axios.post(apiUrl, {
+      const response = await axios.post(apiUrls.addEventPublicationAreas, {
         eventPublicationAreaName: publicationAreaName,
       });
 
@@ -166,9 +162,7 @@ const AdminAddEventPublicationArea = () => {
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/event-publication-area/update-event-publicationArea`;
-
-      const response = await axios.put(apiUrl, {
+      const response = await axios.put(apiUrls.updateEventPublicationAreas, {
         id: editPublicationAreaId,
         eventPublicationAreaName: publicationAreaName,
       });

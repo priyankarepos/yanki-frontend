@@ -39,6 +39,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { pdfjs } from "react-pdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { apiUrls, message } from "../Utils/stringConstant/AdminString";
+import { headers } from "../Utils/stringConstant/stringConstant";
 
 const AdminCreateDepartment = () => {
   const { drawerOpen } = useContext(Context);
@@ -73,9 +75,7 @@ const AdminCreateDepartment = () => {
   useEffect(() => {
     const getEnterpriseDetails = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-all-enterprise-details`
-        );
+        const response = await axios.get(apiUrls.getEnterpriseAllDetails);
 
         if (response.status === 200) {
           const responseData = response.data;
@@ -153,7 +153,7 @@ const AdminCreateDepartment = () => {
   const checkEnterpriseKeyword = async (tag, enterpriseId) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/check-enterprise-department-keyword/${selectedEnterpriseId}/${tag}`
+        apiUrls.checkEnterpriseKeyword(selectedEnterpriseId, tag)
       );
       setSnackbarMessage("Keyword Check Response:", response.data);
       setSnackbarOpen(true);
@@ -257,7 +257,7 @@ const AdminCreateDepartment = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-departments/${selectedEnterpriseId}`
+          apiUrls.getEnterpriseDepartments(selectedEnterpriseId)
         );
 
         if (response.status === 200) {
@@ -351,8 +351,9 @@ const AdminCreateDepartment = () => {
   const deleteDepartment = async () => {
     const { departmentId } = departmentsData[selectedDepartmentIndex];
     try {
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/delete-enterprise-department/${departmentId}`;
-      const response = await axios.delete(apiUrl);
+      const response = await axios.delete(
+        apiUrls.deleteEnterpriseDepartments(departmentId)
+      );
 
       if (response.status === 200) {
         setSnackbarMessage("Department deleted successfully");
@@ -379,11 +380,7 @@ const AdminCreateDepartment = () => {
       try {
         setLoading(true);
         const response = await axios.delete(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
-            pdfName
-          )}`
+          apiUrls.deleteAdminDocument(pdfName)
         );
 
         if (response.status === 200) {
@@ -419,11 +416,7 @@ const AdminCreateDepartment = () => {
       try {
         setLoading(true);
         const response = await axios.delete(
-          `${
-            import.meta.env.VITE_APP_API_HOST
-          }/api/AdminDocumentUpload/delete-enterprise-document?fileName=${encodeURIComponent(
-            pdfName
-          )}`
+          apiUrls.deleteAdminDocument(pdfName)
         );
 
         if (response.status === 200) {
@@ -481,7 +474,7 @@ const AdminCreateDepartment = () => {
       };
 
       const response = await axios.put(
-        `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/update-enterprise-department`,
+        apiUrls.updateEnterpriseDepartment,
         payload
       );
       setTriggerEffect((prev) => !prev);
@@ -520,8 +513,6 @@ const AdminCreateDepartment = () => {
     }
     try {
       const tagsAsString = tags.join(",");
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/add-enterprise-department`;
-
       const requestBody = {
         departmentId: data.DepartmentId,
         departmentName: data.DepartmentName,
@@ -532,7 +523,10 @@ const AdminCreateDepartment = () => {
         enterpriseId: selectedEnterpriseId,
       };
 
-      const response = await axios.post(apiUrl, requestBody);
+      const response = await axios.post(
+        apiUrls.addEnterpriseDepartment,
+        requestBody
+      );
 
       if (response.status === 200) {
         const result = response.data;
@@ -574,15 +568,15 @@ const AdminCreateDepartment = () => {
       setLoading(true);
 
       const formData = new FormData();
-      formData.append("file", data.file[0]);
+      formData.append(message.file, data.file[0]);
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=false&EnterpriseId=${selectedEnterpriseId}`;
-
-      const response = await axios.post(apiUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        apiUrls.adminUploadDocument(selectedEnterpriseId, false),
+        formData,
+        {
+          headers: headers
+        }
+      );
 
       if (response.status === 200) {
         setSnackbarMessage(
@@ -615,15 +609,15 @@ const AdminCreateDepartment = () => {
       setLoading(true);
 
       const formData = new FormData();
-      formData.append("file", data.file[0]);
+      formData.append(message.file, data.file[0]);
 
-      const apiUrl = `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/admin-upload-document?IsCertificate=true&EnterpriseId=${selectedEnterpriseId}`;
-
-      const response = await axios.post(apiUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        apiUrls.adminUploadDocument(selectedEnterpriseId, true),
+        formData,
+        {
+          headers: headers
+        }
+      );
 
       if (response.status === 200) {
         setSnackbarMessage(
@@ -658,7 +652,7 @@ const AdminCreateDepartment = () => {
       setTableData([]);
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-document?EnterpriseId=${selectedEnterpriseId}`
+          getEnterpriseDocument(selectedEnterpriseId)
         );
 
         if (response.status === 200) {
@@ -686,7 +680,7 @@ const AdminCreateDepartment = () => {
       setCertificateDetails([]);
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_HOST}/api/AdminDocumentUpload/get-enterprise-certificate?EnterpriseId=${selectedEnterpriseId}`
+          apiUrls.getEnterpriseCertificate(selectedEnterpriseId)
         );
 
         if (response.status === 200) {
