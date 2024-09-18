@@ -44,6 +44,19 @@ const AdminFileUpload = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [tableData, setTableData] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const [pdfLoadError, setPdfLoadError] = useState(false);
+  const [pdfName, setPdfName] = useState("");
+  const [pdfId, setpdfId] = useState("");
+  const [isEditModalOpen, setEditIsModalOpen] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isUploadFile, setIsUploadFile] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -58,25 +71,14 @@ const AdminFileUpload = () => {
       keywords: "",
     },
   });
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
-  const [tableData, setTableData] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState(null);
-  const [pdfLoadError, setPdfLoadError] = useState(false);
-  const [pdfName, setPdfName] = useState("");
-  const [pdfId, setpdfId] = useState("");
-  const [isEditModalOpen, setEditIsModalOpen] = useState(false);
-  const [fileName, setFileName] = useState("");
-  const [fetchDataState, setFetchDataState] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+
   const itemsPerPage = 10;
 
   const s3BaseUrl = import.meta.env.VITE_APP_S3_BASE_URL;
 
   const fetchData = async (pageNumber) => {
     try {
-      setLoading(true);
+      setLoading(true);      
       const response = await axios.get(apiUrls.documentMapping(pageNumber));
       setTableData(response.data.pdfList);
       setTotalPages(Math.ceil(response.data.totalCount / 10));
@@ -90,7 +92,7 @@ const AdminFileUpload = () => {
 
   useEffect(() => {
     fetchData(pageNumber);
-  }, [fetchDataState, pageNumber]);
+  }, [pageNumber]);
 
   const handlePageChange = (event, newPage) => {
     setPageNumber(newPage);
@@ -125,7 +127,7 @@ const AdminFileUpload = () => {
 
   const onSubmit = async (data) => {
     try {
-      setLoading(true);
+      setIsUploadFile(true);      
       const formData = new FormData();
       formData.append("file", data.file[0]);
       const apiUrl = `${apiUrls.indexAndUpload}?PdfName=${encodeURIComponent(
@@ -144,17 +146,13 @@ const AdminFileUpload = () => {
         setIsModalOpen(false);
         reset();
         setTags([]);
-        setLoading(false);
-        setFetchDataState(true);
-        setTimeout(() => {
-          setFetchDataState(false);
-        }, 2000);
+        fetchData(pageNumber);
       }
     } catch (error) {
       setSnackbarMessage("An error occurred while uploading the file.");
       setSnackbarOpen(true);
     } finally {
-      setLoading(false);
+      setIsUploadFile(false);
     }
   };
 
@@ -230,7 +228,7 @@ const AdminFileUpload = () => {
 
   const updateKeywords = async (data) => {
     try {
-      setLoading(true);
+      setIsUploadFile(true);
       const response = await axios.put(
         apiUrls.updateDocumentKeywords(pdfId, tags)
       );
@@ -259,7 +257,7 @@ const AdminFileUpload = () => {
       setSnackbarMessage("Error updating keywords:", error);
       setSnackbarOpen(true);
     } finally {
-      setLoading(false);
+      setIsUploadFile(false);
       setEditIsModalOpen(false);
     }
   };
@@ -290,6 +288,10 @@ const AdminFileUpload = () => {
   };
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pageNumber]);
 
   return (
     <div className="admin-faq-wrapper">
@@ -479,7 +481,7 @@ const AdminFileUpload = () => {
                       },
                     }}
                   />
-                  {isSubmitted && Array.isArray(tags) && tags.length === 0 && (
+                  {Array.isArray(tags) && tags.length === 0 && (
                     <FormHelperText className="error-message">
                       At least one keyword is required
                     </FormHelperText>
@@ -498,9 +500,9 @@ const AdminFileUpload = () => {
               color="primary"
               className="enterprise-add-category-save-button"
               type="submit"
-              disabled={loading}
+              disabled={isUploadFile || tags.length === 0}
             >
-              {loading ? (
+              {isUploadFile ? (
                 <CircularProgress
                   size={24}
                   className={messages.eventFormSubmitButtonLoader}
@@ -582,10 +584,10 @@ const AdminFileUpload = () => {
               color="primary"
               className="enterprise-add-category-save-button"
               type="submit"
-              disabled={tags.length === 0 || loading}
+              disabled={tags.length === 0 || isUploadFile}
               onClick={(e) => updateKeywords(e)}
             >
-              {loading ? (
+              {isUploadFile ? (
                 <CircularProgress
                   size={24}
                   className={messages.eventFormSubmitButtonLoader}
