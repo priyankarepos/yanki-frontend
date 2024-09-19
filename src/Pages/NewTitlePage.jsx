@@ -11,7 +11,7 @@ import "react-multi-carousel/lib/styles.css";
 import partnershipLogoLightOne from "../Assets/images/partnet-logo4.png";
 import partnershipLogoLightTwo from "../Assets/images/partnet-logo1.png";
 import partnershipLogoLightThree from "../Assets/images/partnet-logo2.png";
-import partnershipLogoLightFour from "../Assets/images/partnet-logo3.png";
+import partnershipLogoLightFour from "../Assets/images/isItKosher.png";
 import partnershipLogoLightFive from "../Assets/images/partnet-logo5.png";
 import partnershipLogoLightSix from "../Assets/images/partnet-logo6.png";
 import partnershipLogoLightSeven from "../Assets/images/partnet-logo7.png";
@@ -181,8 +181,8 @@ const NewTitlePage = () => {
                     src={partner.imageSrc}
                     alt={partner.altText}
                     className="margin-10"
-                    width={messages.imgSize60}
-                    height={messages.imgSize60}
+                    width={messages.imgSize70}
+                    height={messages.imgSize70}
                   />
                 ))}
               </Box>

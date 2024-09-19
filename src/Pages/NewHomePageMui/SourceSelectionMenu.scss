@@ -8,12 +8,27 @@
         top: unset !important;
         bottom: 0 !important;
         margin-bottom: 90px;
-        min-height: 220px;
-        max-height: 220px;
+        min-height: 280px;
+        max-height: 280px;
     }
 
     ul.MuiMenu-list {
         padding: 0 !important;
+        max-height: 280px; 
+        overflow-y: auto;  
+    &::-webkit-scrollbar {
+        width: 2px; 
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #6fa8dd; 
+        border-radius: 2px; 
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: #153860; 
+    }
+
 
         .menu-item {
             margin-bottom: 5px;
@@ -24,6 +39,7 @@
             justify-content: space-between;
             align-items: center;
             opacity: 1;
+            min-height: 40px;
 
             &:last-child {
                 margin-bottom: 0;
@@ -57,5 +73,15 @@
                 font-weight: 600;
             }
         }
+    }
+}
+
+button.menu-item-button {
+    height: 20px;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    &:hover {
+        background-color: transparent;
     }
 }
