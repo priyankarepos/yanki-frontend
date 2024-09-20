@@ -22,6 +22,9 @@ const SourceSelectionMenu = ({ anchorEl, open, handleClose, selectedOption, setS
     }, [selectedOption]);
 
     const handleSelectOption = (option) => {
+        if (option === selectedOption) {
+            return;
+        }
         localStorage.setItem(sourceSelectionStrings.localStorageKey, option);
         setSelectedOption(option);
         resetPage(false, false);
