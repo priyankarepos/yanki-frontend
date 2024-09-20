@@ -93,7 +93,7 @@ export const GoDavenDescription = () => {
             <img
                 src={godavenLogo}
                 width={sourceSelectionStrings.logoWidth}
-                height={sourceSelectionStrings.imgSize44}
+                height={sourceSelectionStrings.godavenLogoHeight}
                 alt={sourceSelectionStrings.logo}
                 className={sourceSelectionStrings.marginBottom20}
             />
