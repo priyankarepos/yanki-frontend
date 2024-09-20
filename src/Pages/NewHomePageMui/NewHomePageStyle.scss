@@ -98,22 +98,32 @@
 .ya-main-text-box {
     text-align: center;
 
-    img {
-        margin-top: 10px;
-    }
-
     .ya-main-text-heading {
-        font-size: 26px !important;
+        font-size: 20px !important;
         text-align: center;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 600 !important;
+        margin-top: -15px;
     }
+
     .Enterprise-Light-Color {
         color: #6fa8dd;
         font-size: 32px !important;
     }
+}
+
+.home-minus-margin {
+    margin-top: -50px;
+
+    .ya-main-text-heading {
+        margin-top: -20px;
+    }
+}
+
+img.margin-bottom-20 {
+    margin-bottom: 20px;
 }
 
 .ya-answer-wrapper {
@@ -607,8 +617,8 @@
 
 @media (max-width: 640px) {
     .ya-answer {
-        min-height: calc(100vh - 290px);
-        max-height: calc(100vh - 290px);
+        min-height: calc(100vh - 230px);
+        max-height: calc(100vh - 230px);
     }
 
     .ya-task-msg-text {
@@ -616,7 +626,7 @@
     }
 }
 
-@media (min-height: 850px)  and (max-height: 950px) {
+@media (min-height: 850px) and (max-height: 950px) {
     .ya-new-chat-box-filled {
         height: 66%;
     }
@@ -627,7 +637,7 @@
     }
 }
 
-@media (min-height: 950px)  and (max-height: 1175px) {
+@media (min-height: 950px) and (max-height: 1175px) {
     .ya-new-chat-box-one-chat {
         height: 75%;
     }
@@ -639,7 +649,7 @@
     }
 }
 
-@media (min-height: 950px)  and (max-height: 1100px) {
+@media (min-height: 950px) and (max-height: 1100px) {
     .ya-new-chat-box-filled {
         height: 68%;
     }

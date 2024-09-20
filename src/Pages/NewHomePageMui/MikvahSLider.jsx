@@ -90,16 +90,16 @@ export const MikvahDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
-            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
-                {t('mikvahDescription')}
-            </Typography>
             <img
                 src={partnershipLogoLightSeven}
                 width={sourceSelectionStrings.logoWidth}
                 height={sourceSelectionStrings.logoHeight}
-                className={sourceSelectionStrings.logoClassName}
+                className={`${sourceSelectionStrings.logoClassName} ${sourceSelectionStrings.marginBottom20}`}
                 alt={sourceSelectionStrings.logo}
             />
+            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
+                {t('mikvahDescription')}
+            </Typography>
         </Box>
     );
 };

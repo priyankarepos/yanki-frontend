@@ -286,6 +286,9 @@ export const sourceSelectionStrings = {
     logoHeight: "50px", 
     logoClassName: "ya-logo-img",
     myZamninLogoWidth: "110px",
+    yankiLogoWidth: "140px",
+    homeMinusMargin: "home-minus-margin",
+    marginBottom20: "margin-bottom-20",
 }
 export const headers = {
     "Content-Type": "multipart/form-data",

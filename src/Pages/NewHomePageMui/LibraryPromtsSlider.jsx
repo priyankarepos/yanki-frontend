@@ -8,6 +8,7 @@ import {
 } from "../../Utils/promptData/promptData";
 import { useTranslation } from "react-i18next";
 import { sourceSelectionStrings } from "../../Utils/stringConstant/stringConstant";
+import YankiLogo from "../../Assets/images/yanki-logo2.png"
 
 const getTranslationKey = (index) => `libraryPrompts.${index}`;
 
@@ -29,7 +30,7 @@ export const LibrarySlider = ({ activeTab, t, handleQuestionClick }) => {
             {libraryPrompts.map((prompt, index) => (
                 <div key={prompt.id} className={sourceSelectionStrings.carouselItem}>
                     <Button
-                         className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                        className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
                             ? sourceSelectionStrings.yaSearchDarkTheme
                             : sourceSelectionStrings.yaSearchLightTheme
                             }`}
@@ -89,16 +90,15 @@ export const LibraryDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
+            <img
+                src={YankiLogo}
+                width={sourceSelectionStrings.yankiLogoWidth}
+                height={sourceSelectionStrings.myZamninLogoWidth}
+                alt={sourceSelectionStrings.logo}
+            />
             <Typography className={sourceSelectionStrings.yaMainTextHeading}>
                 {t('libraryDescription')}
             </Typography>
-            <img
-                src={sourceSelectionStrings.logoSrc} 
-                width={sourceSelectionStrings.logoWidth} 
-                height={sourceSelectionStrings.logoHeight} 
-                className={sourceSelectionStrings.logoClassName}
-                alt={sourceSelectionStrings.logo}
-            />
         </Box>
     );
 };

@@ -90,15 +90,16 @@ export const GoDavenDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
-            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
-                {t('goDavenDescription')}
-            </Typography>
             <img
                 src={godavenLogo}
                 width={sourceSelectionStrings.logoWidth}
                 height={sourceSelectionStrings.imgSize44}
                 alt={sourceSelectionStrings.logo}
+                className={sourceSelectionStrings.marginBottom20}
             />
+            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
+                {t('goDavenDescription')}
+            </Typography>
         </Box>
     );
 };

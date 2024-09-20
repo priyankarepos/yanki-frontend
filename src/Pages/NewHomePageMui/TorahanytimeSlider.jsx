@@ -90,15 +90,16 @@ export const TorahAnytimeDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
+            <img
+                src={partnershipLogoLightTwo}
+                width={sourceSelectionStrings.yaMainTextHeading90px}
+                height={sourceSelectionStrings.yaMainTextHeading70px}
+                alt={sourceSelectionStrings.logo}
+                className={sourceSelectionStrings.marginBottom20}
+            />
             <Typography className={sourceSelectionStrings.yaMainTextHeading}>
                 {t('torahAnytimeDescription')}
             </Typography>
-            <img
-               src={partnershipLogoLightTwo}
-               width={sourceSelectionStrings.yaMainTextHeading90px}
-               height={sourceSelectionStrings.yaMainTextHeading70px}
-               alt={sourceSelectionStrings.logo}
-            />
         </Box>
     );
 };
