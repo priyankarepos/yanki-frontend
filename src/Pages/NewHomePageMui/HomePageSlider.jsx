@@ -236,7 +236,7 @@ export const HomeMainDescription = ({ activeTab }) => {
             {activeTab === 0 && <img
                 src={YankiLogo}
                 width={sourceSelectionStrings.yankiLogoWidth}
-                height={sourceSelectionStrings.myZamninLogoWidth}
+                height={sourceSelectionStrings.yankiLogoHeight}
                 alt={sourceSelectionStrings.logo}
             />}
             <Typography className={`${activeTab === 1 && classNames.enterpriseLightColor} ${sourceSelectionStrings.yaMainTextHeading}`}

@@ -286,7 +286,10 @@ export const sourceSelectionStrings = {
     logoHeight: "50px", 
     logoClassName: "ya-logo-img",
     myZamninLogoWidth: "110px",
-    yankiLogoWidth: "140px",
+    yankiLogoWidth: "180px",
+    yankiLogoHeight: "140px",
+    isItKosherLogoHeight: "65px",
+    godavenLogoHeight: "50px",
     homeMinusMargin: "home-minus-margin",
     marginBottom20: "margin-bottom-20",
 }

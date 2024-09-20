@@ -93,6 +93,7 @@ export const IsItKosherDescription = () => {
             <img
                 src={isItKosherLogo}
                 width={sourceSelectionStrings.myZamninLogoWidth}
+                height={sourceSelectionStrings.isItKosherLogoHeight}
                 alt={sourceSelectionStrings.logo}
                 className={sourceSelectionStrings.marginBottom20}
             />

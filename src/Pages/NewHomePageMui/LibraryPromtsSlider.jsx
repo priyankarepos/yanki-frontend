@@ -93,7 +93,7 @@ export const LibraryDescription = () => {
             <img
                 src={YankiLogo}
                 width={sourceSelectionStrings.yankiLogoWidth}
-                height={sourceSelectionStrings.myZamninLogoWidth}
+                height={sourceSelectionStrings.yankiLogoHeight}
                 alt={sourceSelectionStrings.logo}
             />
             <Typography className={sourceSelectionStrings.yaMainTextHeading}>
