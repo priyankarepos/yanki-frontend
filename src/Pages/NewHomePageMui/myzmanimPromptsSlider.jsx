@@ -90,15 +90,16 @@ export const MyzmanimDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
-            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
-                {t('myzmanimDescription')}
-            </Typography>
             <img
                 src={myzamnimLogo}
                 width={sourceSelectionStrings.myZamninLogoWidth}
                 height={sourceSelectionStrings.yaMainTextHeading70px}
                 alt={sourceSelectionStrings.logo}
+                className={sourceSelectionStrings.marginBottom20}
             />
+            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
+                {t('myzmanimDescription')}
+            </Typography>
         </Box>
     );
 };

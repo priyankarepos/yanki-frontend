@@ -8,6 +8,7 @@ import {
 } from "../../Utils/promptData/promptData";
 import { useTranslation } from "react-i18next";
 import { sourceSelectionStrings } from "../../Utils/stringConstant/stringConstant";
+import YankiLogo from "../../Assets/images/yanki-logo2.png"
 
 const getTranslationKey = (index) => `directoryPrompts.${index}`;
 
@@ -89,16 +90,15 @@ export const DirectoryDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
+            <img
+                src={YankiLogo}
+                width={sourceSelectionStrings.yankiLogoWidth}
+                height={sourceSelectionStrings.myZamninLogoWidth}
+                alt={sourceSelectionStrings.logo}
+            />
             <Typography className={sourceSelectionStrings.yaMainTextHeading}>
                 {t('directoryDescription')}
             </Typography>
-            <img
-                src={sourceSelectionStrings.logoSrc}
-                width={sourceSelectionStrings.logoWidth}
-                height={sourceSelectionStrings.logoHeight}
-                className={sourceSelectionStrings.logoClassName}
-                alt={sourceSelectionStrings.logo}
-            />
         </Box>
     );
 };

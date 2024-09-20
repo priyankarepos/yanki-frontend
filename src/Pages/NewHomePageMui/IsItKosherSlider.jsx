@@ -90,14 +90,15 @@ export const IsItKosherDescription = () => {
 
     return (
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
-            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
-                {t('isItKosherDescription')}
-            </Typography>
             <img
                 src={isItKosherLogo}
                 width={sourceSelectionStrings.myZamninLogoWidth}
                 alt={sourceSelectionStrings.logo}
+                className={sourceSelectionStrings.marginBottom20}
             />
+            <Typography className={sourceSelectionStrings.yaMainTextHeading}>
+                {t('isItKosherDescription')}
+            </Typography>
         </Box>
     );
 };
