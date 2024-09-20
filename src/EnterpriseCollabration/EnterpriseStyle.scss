@@ -48,7 +48,7 @@
 }
 
 .enterprise-profile-category .MuiSelect-select {
-  min-height: 38px !important;
+  min-height: 42px !important;
 }
 
 .Enterprise-Description textarea::placeholder {
@@ -378,6 +378,28 @@
 
 .enterprise-file-upload-container {
   padding-left: 16px;
+}
+
+.EnterpriseCreateCategorySelect {
+  background-color: #eaf5ff;
+  color: #6fa8dd !important;
+}
+
+.EnterpriseCreateCategorySelect .MuiSelect-icon {
+  color: #6fa8dd; 
+}
+
+.EnterpriseCreateCategorySelect.Mui-focused .MuiSelect-icon {
+  color: #6fa8dd; 
+}
+
+.EnterpriseCreateCategorySelect .MuiOutlinedInput-notchedOutline {
+  border-color: #6fa8dd;
+  border-radius: 8px !important;
+}
+
+.EnterpriseCreateCategorySelect .MuiInputLabel-root {
+  color: #6fa8dd;
 }
 
 /* responsive.css */

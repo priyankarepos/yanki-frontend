@@ -17,6 +17,7 @@ import axios from "axios";
 import YankiLogo from "../Assets/images/yanki-logo2.png"
 import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 import { useTranslation } from 'react-i18next';
+import { phoneRegex } from "../Utils/validations/validation";
 
 const ChangePhoneNumber = () => {
   const { t } = useTranslation();
@@ -59,7 +60,7 @@ const ChangePhoneNumber = () => {
   });
 
   useEffect(() => {
-    setValue("signInPhone", "1", { shouldValidate: false });
+    setValue("signInPhone", "+1", { shouldValidate: false });
   }, [setValue]);
 
   const onSubmit = async (data) => {
@@ -152,6 +153,10 @@ const ChangePhoneNumber = () => {
                 rules={{
                   required: {
                     value: true,
+                    message: `${t('phoneNumberRequired')}`,
+                  },
+                  pattern: {
+                    value: phoneRegex,
                     message: `${t('phoneNumberRequired')}`,
                   },
                 }}

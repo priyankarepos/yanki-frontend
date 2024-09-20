@@ -39,7 +39,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { pdfjs } from "react-pdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
-import { apiUrls, message } from "../Utils/stringConstant/AdminString";
+import { apiUrls, className, message } from "../Utils/stringConstant/AdminString";
 import { headers } from "../Utils/stringConstant/stringConstant";
 
 const AdminCreateDepartment = () => {
@@ -99,6 +99,7 @@ const AdminCreateDepartment = () => {
     setValue: setDepartmentValue,
     getValues: getDepartmentValues,
     reset: resetDepartmentForm,
+    setFocus: setFocusDepartmentForm,
     formState: { errors: departmentErrors, isSubmitted: isDepartmentSubmitted },
   } = useForm({
     mode: "onChange",
@@ -149,6 +150,13 @@ const AdminCreateDepartment = () => {
     name: "DepartmentIdentificationKeywords",
     defaultValue: [],
   });
+
+  useEffect(() => {
+    const firstErrorField = Object.keys(departmentErrors)[0];    
+    if(firstErrorField) {
+      setFocusDepartmentForm(firstErrorField);      
+    }
+  }, [departmentErrors, isDepartmentSubmitted, setFocusDepartmentForm])
 
   const checkEnterpriseKeyword = async (tag, enterpriseId) => {
     try {
@@ -511,6 +519,9 @@ const AdminCreateDepartment = () => {
       setSnackbarOpen(true);
       return;
     }
+    
+    if (tags.length === 0) return;
+
     try {
       const tagsAsString = tags.join(",");
       const requestBody = {
@@ -763,6 +774,10 @@ const AdminCreateDepartment = () => {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Box className="admin-faq-wrapper">
       <Box sx={{
@@ -827,11 +842,12 @@ const AdminCreateDepartment = () => {
                   message: "Department name should not exceed 30 characters.",
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className="admin-search-report-inputField"
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder="Customer Service"
                     fullWidth
@@ -866,11 +882,12 @@ const AdminCreateDepartment = () => {
                     "Name of representative should not exceed 30 characters.",
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className="admin-search-report-inputField"
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder="John Deo"
                     fullWidth
@@ -902,11 +919,12 @@ const AdminCreateDepartment = () => {
                   message: "Enter valid email address.",
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className="admin-search-report-inputField"
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder="Type email address here"
                     fullWidth
@@ -965,6 +983,7 @@ const AdminCreateDepartment = () => {
                     inputProps={{
                       ...field,
                       value: tagInput,
+                      ref: field.ref,
                       onChange: (e) => setTagInput(e.target.value),
                       onKeyDown: (e) => {
                         if (e.key === "Enter") {
@@ -1037,22 +1056,22 @@ const AdminCreateDepartment = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Department
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Name of Representative
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Email Address
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Description
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Identification Keywords
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className={className.createDepartmentTableHeaderCell}>
                       Actions
                     </TableCell>
                   </TableRow>
@@ -1138,13 +1157,13 @@ const AdminCreateDepartment = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       Sr No.
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       PDF Name
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       Actions
                     </TableCell>
                   </TableRow>
@@ -1210,13 +1229,13 @@ const AdminCreateDepartment = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       Sr No.
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       PDF Name
                     </TableCell>
-                    <TableCell className="create-department-table-cell">
+                    <TableCell className="create-department-table-header-cell">
                       Actions
                     </TableCell>
                   </TableRow>

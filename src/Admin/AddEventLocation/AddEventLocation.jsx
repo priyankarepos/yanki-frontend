@@ -24,8 +24,9 @@ import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
-import { apiUrls, message } from "../../Utils/stringConstant/AdminString";
+import { apiUrls, message, className } from "../../Utils/stringConstant/AdminString";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
+import CloseIcon from "@mui/icons-material/Close";
 
 const AdminAddEventLocation = () => {
   const [eventLocations, setEventLocations] = useState([]);
@@ -193,13 +194,20 @@ const AdminAddEventLocation = () => {
           <Typography variant="h6" sx={{ pb: 2 }}>
             Add Event Location
           </Typography>
-          <IconButton color="primary" size="small" onClick={handleAddLocation}>
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={handleAddLocation}
+            className="event-add-button"
+          >
             <AddIcon /> Add
           </IconButton>
         </Box>
-        {loadingData ? <div className={classNames.noDataFoundClass}>
-          <CircularProgress />
-        </div> : eventLocations.length > 0 ? (
+        {loadingData ? (
+          <div className={classNames.noDataFoundClass}>
+            <CircularProgress />
+          </div>
+        ) : eventLocations.length > 0 ? (
           <TableContainer component={Paper} className="marginBottom-0">
             <Table>
               <TableHead>
@@ -243,14 +251,20 @@ const AdminAddEventLocation = () => {
         className="event-pdf-modal-open"
       >
         <Box className="enterprise-add-category-container">
-          <Typography
-            variant="h5"
-            className="enterprise-add-category-modal-title"
-          >
-            {editLocationId !== null
-              ? "Edit Event Location"
-              : "Add Event Location"}
-          </Typography>
+          <Box className={className.adminModalContainer}>
+            <Typography
+              variant="h5"
+              className="enterprise-add-category-modal-title"
+            >
+              {editLocationId !== null
+                ? "Edit Event Location"
+                : "Add Event Location"}
+            </Typography>
+
+            <Button onClick={() => {setIsModalOpen(false)}}>
+              <CloseIcon />
+            </Button>
+          </Box>
           <form
             className="admin-faq-form-model"
             onSubmit={(e) => {

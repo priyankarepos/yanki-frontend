@@ -166,6 +166,7 @@ export const classNames = {
     commonText: "Common",
     webText: "Web",
     requiredIcon : "required-icon",
+    adminPanelIcon: "admin-panel-icon"
 };
 
 export const apiUrls = {

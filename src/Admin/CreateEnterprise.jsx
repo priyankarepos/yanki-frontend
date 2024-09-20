@@ -86,6 +86,7 @@ const AdminCreateEnterprise = () => {
       setIsLoading(false);
     }
   }, [pageNumber, query]);
+
   useEffect(() => {
     getEnterpriseDetails();
   }, [getEnterpriseDetails, pageNumber, query]);
@@ -120,9 +121,12 @@ const AdminCreateEnterprise = () => {
 
   const {
     control,
+    setFocus,
     setValue,
     getValues,
     handleSubmit,
+    trigger,
+    reset,
     formState: { errors, isSubmitted },
   } = useForm({
     mode: "onChange",
@@ -162,6 +166,13 @@ const AdminCreateEnterprise = () => {
       return validationErrors;
     },
   });
+
+  useEffect(() => {
+    const firstErrorField = Object.keys(errors)[0];    
+    if(firstErrorField) {
+        setFocus(firstErrorField);      
+    }
+  }, [errors, isSubmitted, setFocus])
 
   const checkEnterpriseKeyword = async (tag) => {
     try {
@@ -258,7 +269,35 @@ const AdminCreateEnterprise = () => {
     setTagCount(tags.length);
   }, [tags]);
 
+  const resetField = () => {
+    reset({
+      EnterpriseName: "",
+      EnterprisePointOfContact: "",
+      EnterpriseAddress: "",
+      EnterpriseLatitude: "",
+      EnterpriseLongitude: "",
+      EmailAddress: "",
+      PhoneNumber: "+1",
+      WhatsappPhoneNumber: "",
+      InstagramUsername: "",
+      LinkedinUsername: "",
+      EnterpriseDescription: "",
+      EnterpriseCategories: "",
+      BusinessHoursOpeningTime: "",
+      BusinessHoursClosingTime: "",
+      FoundedYear: "",
+      FrequentlyAskedQuestions: "",
+      EnterpriseIdentificationKeywords: [],
+    });
+
+    setTags([]);
+    setTagInput("");
+  }
+
   const createAdminEnterprise = async () => {
+    
+  if (tags.length === 0) return;
+
     try {
       setIsLoading(true);
 
@@ -298,6 +337,7 @@ const AdminCreateEnterprise = () => {
         }
         setSnackbarOpen(true);
         getEnterpriseDetails();
+        resetField();
       } else {
         setSnackbarMessage(messages.EnterpriseCreatedFailed);
         setSnackbarOpen(true);
@@ -400,6 +440,7 @@ const AdminCreateEnterprise = () => {
         }
         setSnackbarOpen(true);
         getEnterpriseDetails();
+        resetField();
       } else {
         setSnackbarMessage(messages.updateFailed);
         setSnackbarOpen(true);
@@ -430,6 +471,8 @@ const AdminCreateEnterprise = () => {
           setValue(messages.enterpriseAddressField, place.formatted_address);
           setValue(messages.enterpriseLatitudeField, place.geometry.location.lat());
           setValue(messages.enterpriseLongitudeField, place.geometry.location.lng());
+
+          trigger([messages.enterpriseLatitudeField, messages.enterpriseLongitudeField]);
         });
       } else {
         setSnackbarMessage(messages.googleMapAPIFullyLoaded);
@@ -472,7 +515,15 @@ const AdminCreateEnterprise = () => {
         subtree: true
       });
     }
+  }, [setValue, trigger]);
+
+  useEffect(() => {
+    setValue("PhoneNumber", "+1", { shouldValidate: false });
   }, [setValue]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
@@ -519,11 +570,12 @@ const AdminCreateEnterprise = () => {
                   message: messages.enterpriseNameMax30,
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder={messages.enterpriseNamePlaceholder}
                     fullWidth
@@ -555,11 +607,12 @@ const AdminCreateEnterprise = () => {
                   message: messages.enterprisePointOfContactMax30,
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder={messages.enterprisePointOfContactPlaceholder}
                     fullWidth
@@ -587,6 +640,7 @@ const AdminCreateEnterprise = () => {
                     className="TextareaAutosize"
                     id={messages.addressElementId}
                     {...field}
+                    ref={field.ref}
                     placeholder={messages.enterpriseAddressPlaceholder}
                     onFocus={(e) => (e.target.style.outline = "none")}
                     onMouseOver={(e) =>
@@ -611,11 +665,12 @@ const AdminCreateEnterprise = () => {
               control={control}
               name={messages.enterpriseLatitudeField}
               rules={{ required: messages.latitudeRequired }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={ref}
                     placeholder={messages.enterpriseLatitude}
                     fullWidth
                     error={!!errors.EnterpriseLatitude}
@@ -635,11 +690,12 @@ const AdminCreateEnterprise = () => {
               control={control}
               name={messages.enterpriseLongitudeField}
               rules={{ required: messages.longitudeRequired }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={ref}
                     placeholder={messages.enterpriseLongitude}
                     fullWidth
                     error={!!errors.EnterpriseLongitude}
@@ -670,11 +726,12 @@ const AdminCreateEnterprise = () => {
                   message: messages.enterpriseEmailAddressValid,
                 },
               }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={ref}
                     type="outlined"
                     placeholder={messages.enterpriseEmailAddressplaceholder}
                     fullWidth
@@ -709,14 +766,12 @@ const AdminCreateEnterprise = () => {
                 <div className="currentSignInPhone-style">
                   <ReactPhoneInput
                     className="enterprise-phone-input"
-                    style={{
-                      border: errors["PhoneNumber"]
-                        ? "1px solid #ffc9c9"
-                        : "1px solid #6fa8dd",
-                    }}
                     inputExtraProps={{
                       name: field.name,
                       onBlur: field.onBlur,
+                    }}
+                    inputProps= {{
+                      ref: field.ref
                     }}
                     value={field.value}
                     preferredCountries={["us", "il", "gb", "ca", "mx"]}
@@ -728,7 +783,7 @@ const AdminCreateEnterprise = () => {
                     error={!!errors["PhoneNumber"]}
                   />
                   {errors["PhoneNumber"] && (
-                    <FormHelperText className="phone-number-error">
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
                       {errors["PhoneNumber"].message}
                     </FormHelperText>
                   )}
@@ -824,6 +879,7 @@ const AdminCreateEnterprise = () => {
                   <TextareaAutosize
                     className="TextareaAutosize"
                     {...field}
+                    ref={field.ref}
                     placeholder={placeholderText}
                     onFocus={(e) => (e.target.style.outline = "none")}
                     onMouseOver={(e) =>
@@ -855,18 +911,23 @@ const AdminCreateEnterprise = () => {
             </InputLabel>
             <FormControl
               fullWidth
-              error={!!errors["EnterpriseCategories"]}
+              error={!!errors.EnterpriseCategories}
               required
             >
               <Controller
                 name="EnterpriseCategories"
                 control={control}
+                rules={{ required: "Enterprise Category is required" }}
                 defaultValue=""
-                render={({ field }) => (
+                render={({ field: { ref, ...field } }) => (
                   <Select
                     {...field}
+                    inputRef={ref}
                     displayEmpty
-                    className="EnterpriseCategorySelect marginBottom-10"
+                    className="EnterpriseCategorySelect EnterpriseCreateCategorySelect marginBottom-10"
+                    MenuProps={{
+                      classes: { paper: 'custom-select-dropdown' },
+                    }}
                   >
                     <MenuItem value="" disabled>
                       Select an Enterprise Category
@@ -879,6 +940,11 @@ const AdminCreateEnterprise = () => {
                   </Select>
                 )}
               />
+              {errors.EnterpriseCategories && (
+                <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                  {errors.EnterpriseCategories.message}
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4}>
@@ -889,14 +955,16 @@ const AdminCreateEnterprise = () => {
               control={control}
               name="BusinessHoursOpeningTime"
               rules={{ required: "Business Hours Opening Time is required" }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className="enterprise-input-field enterprise-text-color"
                     {...field}
+                    inputRef={ref}
                     type="time"
                     placeholder="Office opening time"
                     fullWidth
+                    onClick={(e) => e.target.showPicker()}
                   />
                   {errors["BusinessHoursOpeningTime"] && (
                     <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
@@ -915,14 +983,16 @@ const AdminCreateEnterprise = () => {
               control={control}
               name="BusinessHoursClosingTime"
               rules={{ required: "Business Hours Closing Time is required" }}
-              render={({ field }) => (
+              render={({ field : { ref, ...field } }) => (
                 <div>
                   <TextField
                     className="enterprise-input-field enterprise-text-color"
                     {...field}
+                    inputRef={ref}
                     type="time"
                     placeholder="Office closing time"
                     fullWidth
+                    onClick={(e) => e.target.showPicker()}
                   />
                   {errors.BusinessHoursClosingTime && (
                     <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
@@ -946,6 +1016,7 @@ const AdminCreateEnterprise = () => {
                   <TextField
                     className={messages.enterpriseInputFieldClass}
                     {...field}
+                    inputRef={field.ref}
                     type="outlined"
                     inputProps={{ maxLength: 4 }}
                     placeholder="Type founded year here"

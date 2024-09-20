@@ -30,7 +30,7 @@ import EventIcon from "../Assets/images/calendar-04.svg";
 import AddLocationAltIcon from "../Assets/images/EventIcon.svg";
 import LiveHelpIcon from "../Assets/images/LiveHelpIcon.svg";
 import BubbleChatUser from "../Assets/images/bubble-chat-user.svg";
-import { messages } from "../Utils/stringConstant/stringConstant";
+import { messages, classNames } from "../Utils/stringConstant/stringConstant";
 
 const AdminDashboard = () => {
   const { setDrawerOpen, drawerOpen } = useContext(Context);
@@ -158,7 +158,7 @@ const AdminDashboard = () => {
                 }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
-                  <img src={RuleIcon} alt={messages.ruleIcon} />
+                  <img src={RuleIcon} alt={messages.ruleIcon} className={classNames.adminPanelIcon} />
                 </ListItemIcon>
                 <ListItemText primary="Enterprise Request" />
               </ListItem>
@@ -177,7 +177,7 @@ const AdminDashboard = () => {
                 }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
-                  <img src={CategoryIcon} alt={messages.categoryIcon} />
+                  <img src={CategoryIcon} alt={messages.categoryIcon} className={classNames.adminPanelIcon} />
                 </ListItemIcon>
                 <ListItemText primary="Enterprise Categories" />
               </ListItem>
@@ -272,7 +272,7 @@ const AdminDashboard = () => {
                 }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
-                  <img src={AddLocationAltIcon} alt={messages.addLocationAltIcon} />
+                  <img src={AddLocationAltIcon} alt={messages.addLocationAltIcon} className={classNames.adminPanelIcon} />
                 </ListItemIcon>
                 <ListItemText primary="Add Event Location" />
               </ListItem>
@@ -291,7 +291,7 @@ const AdminDashboard = () => {
                 }}
               >
                 <ListItemIcon className={messages.adminDashboardSidebarIcon}>
-                  <img src={LiveHelpIcon} alt={messages.liveHelpIcon} />
+                  <img src={LiveHelpIcon} alt={messages.liveHelpIcon} className={classNames.adminPanelIcon} />
                 </ListItemIcon>
                 <ListItemText primary="Add FAQ's" />
               </ListItem>

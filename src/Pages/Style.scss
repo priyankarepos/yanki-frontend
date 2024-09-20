@@ -1,8 +1,7 @@
 .EnterpriseCategorySelect div {
     display: flex;
-    padding: 8px;
+    padding: 8px 14px;
     align-items: center;
-    border: 1px solid #6fa8dd;
     justify-content: flex-start;
 }
 
@@ -399,4 +398,8 @@
         color: #bfe2ff;
         font-weight: 700;
     }
+}
+
+.EnterpriseCategorySelect fieldset {
+    border-color: rgba(255, 255, 255, 0.23) !important;
 }

@@ -36,9 +36,17 @@ const AdminSearchRepostPage = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedPageSize, setSelectedPageSize] = useState(10);
   const [ascending, setAscending] = useState(true);
+  const [showStartDateError, setShowStartDateError] = useState(false);
 
   const fetchData = async () => {
     try {
+
+      if(!startDate) {
+        setShowStartDateError(true);
+      } else {
+        setShowStartDateError(false);
+      }
+
       setIsSubmitting(true);
       setIsError(false);
       setErrorMsg("");
@@ -133,16 +141,19 @@ const AdminSearchRepostPage = () => {
                   label="Start Date"
                   type="date"
                   value={startDate}
-                  onChange={(e) => handleStartDateChange(e.target.value)}
+                  onChange={(e) => { 
+                    handleStartDateChange(e.target.value);
+                    setShowStartDateError(false);
+                  }}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   fullWidth
                   onClick={(e) => e.target.showPicker()}
                   required
-                  error={!startDate}
-                  helperText={!startDate ? "Start date is required" : ""}
-                  className={!startDate ? "required-error" : ""}
+                  error={showStartDateError}
+                  helperText={showStartDateError ? "Start date is required" : ""}
+                  className={showStartDateError ? "required-error" : ""}
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4} lg={3}>
