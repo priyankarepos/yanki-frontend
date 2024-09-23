@@ -161,6 +161,7 @@ export const classNames = {
     yaNewChatBoxOneChat: "ya-new-chat-box-one-chat",
     yaNewAssistantChatNoScroll: "ya-new-assistant-chat-no-scroll", 
     enterpriseLightColor: "Enterprise-Light-Color",
+    sharechatModalClose: "sharechat-modal-close",
 };
 
 export const apiUrls = {
