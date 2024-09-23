@@ -7,6 +7,7 @@ import {
   TextField,
   Snackbar,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import shareChatIcon1 from "../../Assets/images/share-chat1.svg";
@@ -19,6 +20,7 @@ import {
   messages,
 } from "../../Utils/stringConstant/stringConstant";
 import { useTranslation } from "react-i18next";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
   const { t } = useTranslation();
@@ -135,6 +137,11 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
         className={classNames.shareLinkModal}
         sx={{ bgcolor: `${classNames.backgroundPaper}` }}
       >
+        <Typography className={classNames.sharechatModalClose}>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </Typography>
         <Box mb={2}>
           <Typography className={classNames.sharedChatMsgTitle}>
             {t('sharePublicLinkToChat')}
@@ -174,10 +181,10 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             variant={messages.buttonContainedVariant}
             color={messages.primaryColor}
             className={classNames.sharedChatButton}
-            onClick={linkGenerated ? handleCopyLink :  handleCreateLink}
+            onClick={linkGenerated ? handleCopyLink : handleCreateLink}
             disabled={isLoading}
           >
-             {isLoading ? (
+            {isLoading ? (
               <CircularProgress size={24} className={classNames.copyLinkLoader} />
             ) : (
               buttonText
