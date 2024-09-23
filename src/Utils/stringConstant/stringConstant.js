@@ -159,9 +159,12 @@ export const classNames = {
     loadingSpinner: "loading-spinner",
     whiteColor: "white-color",
     yaNewChatBoxOneChat: "ya-new-chat-box-one-chat",
-    yaNewAssistantChatNoScroll: "ya-new-assistant-chat-no-scroll", 
+    yaNewAssistantChatNoScroll: "ya-new-assistant-chat-no-scroll",
     enterpriseLightColor: "Enterprise-Light-Color",
     sharechatModalClose: "sharechat-modal-close",
+    platformDisableText: "platform-disable-text",
+    commonText: "Common",
+    webText: "Web",
 };
 
 export const apiUrls = {
@@ -282,9 +285,9 @@ export const sourceSelectionStrings = {
     isItKosher: "IsItKosher",
     mikvah: "Mikvah",
     personalAssistant: "PersonalAssistant",
-    logoSrc: "/auth-logo-dark.svg", 
-    logoWidth: "160px", 
-    logoHeight: "50px", 
+    logoSrc: "/auth-logo-dark.svg",
+    logoWidth: "160px",
+    logoHeight: "50px",
     logoClassName: "ya-logo-img",
     myZamninLogoWidth: "110px",
     yankiLogoWidth: "180px",

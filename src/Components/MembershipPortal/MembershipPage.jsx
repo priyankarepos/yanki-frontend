@@ -309,6 +309,7 @@ const MembershipPage = () => {
                     isSubscriptionCanceled={
                       updateCustomerId?.isSubscriptionCanceled
                     }
+                    isCustomerPlatform = {updateCustomerId?.platform}
                   />
                 ))
             )}

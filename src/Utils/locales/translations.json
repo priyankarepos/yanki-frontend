@@ -505,7 +505,8 @@
             "goDavenDescription": "The worldwide searchable database for minyanim locations, shuls, and davening times.",
             "torahAnytimeDescription": "Over 100000 Torah videos and lectures from hundreds of Rabbis and Speakers.",
             "isItKosherDescription": "Search in hundreds of databases worldwide and find kosher products.",
-            "mikvahDescription": "Promoting and helping to observe the mitzvah of Mikvah and family purity."
+            "mikvahDescription": "Promoting and helping to observe the mitzvah of Mikvah and family purity.",
+            "platformManageSubscription": "Please manage your subscription through the {platform} app"
         }
     },
     "he": {
@@ -1014,7 +1015,8 @@
             "goDavenDescription": "מאגר חיפוש עולמי למיקומי מניינים, בתי כנסת וזמני תפילה.",
             "torahAnytimeDescription": "מעל 100,000 סרטונים והרצאות תורה ממאות רבנים ומרצים.",
             "isItKosherDescription": "חפש במאות מאגרי מידע ברחבי העולם ומצא מוצרים כשרים.",
-            "mikvahDescription": "קידום וסיוע בשמירת מצוות המקווה וטהרת המשפחה."
+            "mikvahDescription": "קידום וסיוע בשמירת מצוות המקווה וטהרת המשפחה.",
+            "platformManageSubscription": "אנא נהל את המנוי שלך דרך אפליקציית {platform}"
         }
     },
     "es": {
@@ -1523,7 +1525,8 @@
             "goDavenDescription": "La base de datos mundial para la búsqueda de ubicaciones de minyanim, sinagogas y horarios de oración.",
             "torahAnytimeDescription": "Más de 100,000 videos y conferencias de Torah de cientos de Rabinos y oradores.",
             "isItKosherDescription": "Busca en cientos de bases de datos en todo el mundo y encuentra productos kosher.",
-            "mikvahDescription": "Promover y ayudar a cumplir con la mitzvá del mikvah y la pureza familiar."
+            "mikvahDescription": "Promover y ayudar a cumplir con la mitzvá del mikvah y la pureza familiar.",
+            "platformManageSubscription": "Por favor, gestiona tu suscripción a través de la aplicación {platform}"
         }
     },
     "yi": {
@@ -2032,7 +2035,8 @@
             "goDavenDescription": "די וועלט-רויִכדיקע זוכבאַרער דאַטאַבאַזע פֿאַר מִנְיָנִים אָרטער, שולעס, און דאַווענען צייטן.",
             "torahAnytimeDescription": "איבער 100,000 תּורה ווידעאָס און לעקציעס פון הונדערטער רבנים און רעדנער.",
             "isItKosherDescription": "זוך אין הונדערטער דאַטאַבייסעס ווערלדווייד און געפֿינען כָּשֵׁר פּראָדוקטן.",
-            "mikvahDescription": "פּראָמאָטירן און העלפֿן צו היטן די מצווה פֿון מִקְוֶה און משפּחה ריינקייט."
+            "mikvahDescription": "פּראָמאָטירן און העלפֿן צו היטן די מצווה פֿון מִקְוֶה און משפּחה ריינקייט.",
+            "platformManageSubscription": "ביטע פירן דיין אַבאָנעמענט דורך די {platform} אַפּ"
         }
     }
 }
