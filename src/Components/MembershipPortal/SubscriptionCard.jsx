@@ -3,8 +3,9 @@ import { Box, Button, CircularProgress, Divider, Grid, Typography } from "@mui/m
 import './SubscriptionCard.scss';
 import { Context } from '../../App';
 import { useTranslation } from "react-i18next";
+import { classNames } from '../../Utils/stringConstant/stringConstant';
 
-const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed, price, isPlanSubscribed, upgradeLoading, isPaymentDecline, handleDeclinedPayment, handleUpgradeCancelPlan, isDowngrade, isUpgrade, isSubscriptionCanceled }) => {
+const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed, price, isPlanSubscribed, upgradeLoading, isPaymentDecline, handleDeclinedPayment, handleUpgradeCancelPlan, isDowngrade, isUpgrade, isSubscriptionCanceled, isCustomerPlatform }) => {
   const { t } = useTranslation();
   const { activeTab } = React.useContext(Context);
   const getClassNames = () => {
@@ -14,6 +15,8 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
     }
     return className;
   };
+
+  const isButtonEnabled = isCustomerPlatform === classNames.commonText || isCustomerPlatform === classNames.webText;
 
   const cardClassName = getClassNames();
   return (
@@ -28,15 +31,15 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
           <li className="description-item"><strong>{t('additionalTaskColon')} </strong>{taskCost}</li>
         </ul>
         {!isPlanSubscribed && !isPaymentDecline ? (
-          <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={isSubscribed || upgradeLoading}>
+          <Button onClick={onClick} variant="contained" className="subscribe-btn" disabled={isSubscribed || upgradeLoading || !isButtonEnabled}>
             {upgradeLoading ? <CircularProgress size={24} /> : `${t('subscribe')}`}
           </Button>
         ) : isPaymentDecline && !isPlanSubscribed ? (
-          <Button onClick={handleDeclinedPayment} variant="contained" className="subscribe-btn" disabled={upgradeLoading || isPlanSubscribed}>
+          <Button onClick={handleDeclinedPayment} variant="contained" className="subscribe-btn" disabled={upgradeLoading || isPlanSubscribed || !isButtonEnabled}>
             {upgradeLoading ? <CircularProgress size={24} /> : isSubscribed ? `${t('tryAgain')}` : `${t('subscribe')}`}
           </Button>
         ) : (
-          <Button onClick={handleUpgradeCancelPlan} variant="contained" className="subscribe-btn" disabled={upgradeLoading}>
+          <Button onClick={handleUpgradeCancelPlan} variant="contained" className="subscribe-btn" disabled={upgradeLoading || !isButtonEnabled}>
             {upgradeLoading ? (
               <CircularProgress size={24} />
             ) : (
@@ -60,6 +63,7 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
             )}
           </Button>
         )}
+        <Typography className={classNames.platformDisableText}>{!isButtonEnabled && t('platformManageSubscription')}</Typography>
       </Box>
     </Grid>
   );
