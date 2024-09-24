@@ -35,6 +35,7 @@ export const initialQuestions4 = [
     { id: 25, text: "how can I contact humans in Yanki?" },
     { id: 26, text: "Show my reminders" },
     { id: 27, text: "what date is june 20th this year in Hebrew calendar" },
+    { id: 28, text: "Play a video to keep my body healthy" },
 ];
 
 export const personalAssistantPrompts = [
@@ -67,7 +68,6 @@ export const directoryPrompts = [
 export const libraryPrompts = [
     { id: 1, text: "Mincha Edut Hamizrach" },
     { id: 2, text: "Show me Tehilim" },
-    { id: 3, text: "Play a video to keep my body healthy" },
     { id: 4, text: "Shnaim Mikra" },
     { id: 5, text: "Eggplant Roulade Recipe" },
     { id: 6, text: "Kidushin 22" },
