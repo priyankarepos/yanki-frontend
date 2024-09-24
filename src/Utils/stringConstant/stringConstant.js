@@ -298,7 +298,7 @@ export const sourceSelectionStrings = {
     isItKosherLogoWidth: "110px",
     godavenLogoHeight: "50px",
     torahAnytimeLogoHeight: "80px",
-    torahAnytimeLogoWidth: "80px",
+    torahAnytimeLogoWidth: "105px",
     homeMinusMargin: "home-minus-margin",
     marginBottom20: "margin-bottom-20",
     yaHomeTableBtnSingle: "ya-home-table-btn-single",
