@@ -2073,7 +2073,8 @@ const TermsOfUse = () => {
               last modified on March 12th 2024
             </Typography>
 
-            <Box className="home-page-btn-container">
+            {/* Temporarily commented out this section to address an iOS approval issue.  */}
+            {/* <Box className="home-page-btn-container">
               <Button
                 variant="contained"
                 onClick={onGoToHome}
@@ -2081,7 +2082,7 @@ const TermsOfUse = () => {
               >
                 Go to home
               </Button>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </Container>
