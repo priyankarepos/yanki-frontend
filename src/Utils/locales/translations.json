@@ -403,7 +403,8 @@
                 "When is Rosh Hashana",
                 "How can I contact humans in Yanki?",
                 "Show my reminders",
-                "What date is June 20th this year in Hebrew calendar"
+                "What date is June 20th this year in Hebrew calendar",
+                "Play a video to keep my body healthy"
             ],
             "personalAssistantPrompts": [
                 "Find me a babysitter in the community",
@@ -433,7 +434,6 @@
             "libraryPrompts": [
                 "Mincha Edut Hamizrach",
                 "Show me Tehilim",
-                "Play a video to keep my body healthy",
                 "Shnaim Mikra",
                 "Eggplant Roulade Recipe",
                 "Kidushin 22",
@@ -913,7 +913,8 @@
                 "מתי ראש השנה",
                 "איך אני יכול ליצור קשר עם אנשים ביאנקי?",
                 "הראה לי את התזכורות שלי",
-                "איזה תאריך הוא 20 ביוני השנה בלוח העברי"
+                "איזה תאריך הוא 20 ביוני השנה בלוח העברי",
+                "נגןוידאולשמירהעלהבריאותשלי"
             ],
             "personalAssistantPrompts": [
                 "מצא לי שמרטף בקהילה",
@@ -943,7 +944,6 @@
             "libraryPrompts": [
                 "מנחה עדות המזרח",
                 "הראה לי תהילים",
-                "נגן וידאו לשמירה על הבריאות שלי",
                 "שניים מקרא",
                 "מתכון לרולדה של חציל",
                 "קידושין כב",
@@ -1423,7 +1423,9 @@
                 "¿Cuándo es Rosh Hashaná?",
                 "¿Cómo puedo contactar a personas en Yanki?",
                 "Muestra mis recordatorios",
-                "¿Qué fecha es el 20 de junio de este año en el calendario hebreo?"
+                "¿Qué fecha es el 20 de junio de este año en el calendario hebreo?",
+                "Reproduce un video para mantener mi cuerpo saludable"
+
             ],
             "personalAssistantPrompts": [
                 "Encuéntrame una niñera en la comunidad",
@@ -1453,7 +1455,6 @@
             "libraryPrompts": [
                 "Minjá Edut Hamizraj",
                 "Muéstrame Tehilim",
-                "Reproduce un video para mantener mi cuerpo saludable",
                 "Shnaim Mikra",
                 "Receta de Roulade de Berenjena",
                 "Kidushin 22",
@@ -1933,7 +1934,8 @@
                 "ווען איז ראש השנה?",
                 "ווי קען איך קאָנטאַקט מענטשן אין יאַנקי?",
                 "ווייַז מיין ערינערונגען",
-                "וואָס איז דער דאטום פון 20 יוני הייַנט אין דער העברעיִשן קאַלענדאַר?"
+                "וואָס איז דער דאטום פון 20 יוני הייַנט אין דער העברעיִשן קאַלענדאַר?",
+                "שפּיל אַ ווידעא צו האַלטן מיין קערפּער געזונט"
             ],
             "personalAssistantPrompts": [
                 "געפֿינען מיר אַ קינדער-היטערין אין דער קהילה",
@@ -1963,7 +1965,6 @@
             "libraryPrompts": [
                 "מנחה עדות המזרח",
                 "וויז מיר תהילים",
-                "שפּיל אַ ווידעא צו האַלטן מיין קערפּער געזונט",
                 "שניים מקרא",
                 "אַובערדזשינע ראָולאַדע רעצעפּט",
                 "קידושין 22",
