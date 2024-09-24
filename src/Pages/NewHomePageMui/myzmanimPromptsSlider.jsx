@@ -93,7 +93,7 @@ export const MyzmanimDescription = () => {
             <img
                 src={myzamnimLogo}
                 width={sourceSelectionStrings.myZamninLogoWidth}
-                height={sourceSelectionStrings.yaMainTextHeading70px}
+                height={sourceSelectionStrings.myZamninLogoHeight}
                 alt={sourceSelectionStrings.logo}
                 className={sourceSelectionStrings.marginBottom20}
             />
