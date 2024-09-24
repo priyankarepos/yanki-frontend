@@ -25,6 +25,7 @@ import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
 import { apiUrls } from "../../Utils/stringConstant/AdminString";
+import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AdminAddEventType = () => {
   const [eventTypes, setEventTypes] = useState([]);
@@ -252,7 +253,7 @@ const AdminAddEventType = () => {
               editEventTypeId !== null ? handleUpdate() : handleSaveEventType();
             }}
           >
-            <InputLabel className="enterprise-label">Event Type</InputLabel>
+            <InputLabel className="enterprise-label">Event Type<sup className={messages.requiredIcon}>*</sup></InputLabel>
             <TextField
               variant="outlined"
               value={eventTypeName}

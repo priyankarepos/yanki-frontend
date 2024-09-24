@@ -781,7 +781,7 @@ const AdminEventRequest = () => {
                 <Typography variant="h6" sx={{ pt: 2 }}>Event Submission Form</Typography>
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Event Name</InputLabel>
+                <InputLabel>Event Name <sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="EventName"
@@ -817,7 +817,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Location</InputLabel>
+                <InputLabel>Location<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="locations"
@@ -879,7 +879,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Event Location Address</InputLabel>
+                <InputLabel>Event Location Address<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="EventLocationAddress"
@@ -906,7 +906,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Date</InputLabel>
+                <InputLabel>Date<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="date"
@@ -922,7 +922,7 @@ const AdminEventRequest = () => {
                   }}
                   render={({ field }) => (
                     <div>
-                      <TextField {...field} type="date" fullWidth />
+                      <TextField {...field} type="date" fullWidth onClick={(e) => e.target.showPicker()} />
                       {errors["date"] && (
                         <FormHelperText className="error-message">
                           {errors["date"].message}
@@ -933,7 +933,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Time</InputLabel>
+                <InputLabel>Time<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="time"
@@ -953,7 +953,7 @@ const AdminEventRequest = () => {
                   }}
                   render={({ field }) => (
                     <div>
-                      <TextField {...field} type="time" fullWidth />
+                      <TextField {...field} type="time" fullWidth onClick={(e) => e.target.showPicker()}/>
                       {errors["time"] && (
                         <FormHelperText className="error-message">
                           {errors["time"].message}
@@ -964,7 +964,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Publication Area</InputLabel>
+                <InputLabel>Publication Area<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="publicationArea"
@@ -1026,7 +1026,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <InputLabel>Event Type</InputLabel>
+                <InputLabel>Event Type<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="eventTypes"
@@ -1160,7 +1160,7 @@ const AdminEventRequest = () => {
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
-                <InputLabel>Event Details</InputLabel>
+                <InputLabel>Event Details<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                 <Controller
                   control={control}
                   name="eventDetails"

@@ -542,3 +542,7 @@ span.react-tagsinput-tags,
 .highlightStyle .admin-dashboard-sidebar-icon {
   min-width: 20px !important;
 }
+
+.required-error {
+  margin-bottom: -20px;
+}

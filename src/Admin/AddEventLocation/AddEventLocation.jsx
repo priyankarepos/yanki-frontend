@@ -25,6 +25,7 @@ import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
 import { apiUrls, message } from "../../Utils/stringConstant/AdminString";
+import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AdminAddEventLocation = () => {
   const [eventLocations, setEventLocations] = useState([]);
@@ -257,7 +258,7 @@ const AdminAddEventLocation = () => {
               editLocationId !== null ? handleUpdate() : handleSaveLocation();
             }}
           >
-            <InputLabel className="enterprise-label">Location</InputLabel>
+            <InputLabel className="enterprise-label">Location<sup className={messages.requiredIcon}>*</sup></InputLabel>
             <TextField
               variant="outlined"
               value={locationName}

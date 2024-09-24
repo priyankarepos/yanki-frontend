@@ -165,6 +165,7 @@ export const classNames = {
     platformDisableText: "platform-disable-text",
     commonText: "Common",
     webText: "Web",
+    requiredIcon : "required-icon",
 };
 
 export const apiUrls = {
@@ -296,6 +297,8 @@ export const sourceSelectionStrings = {
     godavenLogoHeight: "50px",
     homeMinusMargin: "home-minus-margin",
     marginBottom20: "margin-bottom-20",
+    yaHomeTableBtnSingle: "ya-home-table-btn-single",
+    yaSliderBtnSingle: "ya-slider-btn-single",
 }
 export const headers = {
     "Content-Type": "multipart/form-data",
