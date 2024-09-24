@@ -63,7 +63,7 @@ const SubscriptionCard = ({ tier, message, onClick, task, taskCost, isSubscribed
             )}
           </Button>
         )}
-        <Typography className={classNames.platformDisableText}>{isButtonEnabled && t('platformManageSubscription', { platform: isCustomerPlatform })}</Typography>
+        <Typography className={classNames.platformDisableText}>{!isButtonEnabled && t('platformManageSubscription', { platform: isCustomerPlatform })}</Typography>
       </Box>
     </Grid>
   );
