@@ -1383,7 +1383,8 @@ const PrivacyPolicy = () => {
               and information at your own risk.
             </Typography>
 
-            <Box className="home-page-btn-container">
+            {/* Temporarily commented out this section to address an iOS approval issue.  */}
+            {/* <Box className="home-page-btn-container">
               <Button
                 variant="contained"
                 onClick={onGoToHome}
@@ -1391,7 +1392,8 @@ const PrivacyPolicy = () => {
               >
                 Go to home
               </Button>
-            </Box>
+            </Box> */}
+            
           </Box>
         </Box>
       </Container>
