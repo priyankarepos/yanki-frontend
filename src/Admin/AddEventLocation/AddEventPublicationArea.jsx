@@ -25,6 +25,7 @@ import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
 import { apiUrls } from "../../Utils/stringConstant/AdminString";
+import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AdminAddEventPublicationArea = () => {
   const [publicationArea, setPublicationArea] = useState([]);
@@ -273,7 +274,7 @@ const AdminAddEventPublicationArea = () => {
             }}
           >
             <InputLabel className="enterprise-label">
-              Publication Area
+              Publication Area<sup className={messages.requiredIcon}>*</sup>
             </InputLabel>
             <TextField
               variant="outlined"

@@ -30,7 +30,7 @@ export const TorahanytimeSlider = ({ activeTab, t, handleQuestionClick }) => {
             {torahAnytimePrompts.map((prompt, index) => (
                 <div key={prompt.id} className={sourceSelectionStrings.carouselItem}>
                     <Button
-                        className={`${sourceSelectionStrings.yaSliderBtn} ${activeTab === 0
+                        className={`${sourceSelectionStrings.yaSliderBtn} ${sourceSelectionStrings.yaSliderBtnSingle} ${activeTab === 0
                             ? sourceSelectionStrings.yaSearchDarkTheme
                             : sourceSelectionStrings.yaSearchLightTheme
                             }`}
@@ -60,7 +60,7 @@ export const TorahanytimeMuiMobile = ({ activeTab, t, handleQuestionClick }) => 
                         onClick={() =>
                             handleQuestionClick(getTranslationKey(index))
                         }
-                        className={`${sourceSelectionStrings.yaHomeTableBtn} ${activeTab === 0
+                        className={`${sourceSelectionStrings.yaHomeTableBtn} ${sourceSelectionStrings.yaHomeTableBtnSingle} ${activeTab === 0
                             ? sourceSelectionStrings.yaSearchDarkTheme
                             : sourceSelectionStrings.yaSearchLightTheme
                             }`}

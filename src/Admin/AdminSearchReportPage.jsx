@@ -18,6 +18,7 @@ import AdminDashboard from "./AdminDashboard";
 import SearchQueryReport from "./SearchQueryReport";
 import { Outlet } from "react-router-dom";
 import { apiUrls } from "../Utils/stringConstant/AdminString";
+import "./AdminStyle.css";
 
 const AdminSearchRepostPage = () => {
   const { drawerOpen } = useContext(Context);
@@ -71,7 +72,7 @@ const AdminSearchRepostPage = () => {
       setQueryAnswer(null);
 
       if (error.response) {
-        setErrorMsg(error.response.data.message || 'Something went wrong');
+        setErrorMsg(error.response.data.message);
       } else if (error.request) {
         setErrorMsg('No response from the server');
       } else {
@@ -137,6 +138,11 @@ const AdminSearchRepostPage = () => {
                     shrink: true,
                   }}
                   fullWidth
+                  onClick={(e) => e.target.showPicker()}
+                  required
+                  error={!startDate}
+                  helperText={!startDate ? "Start date is required" : ""}
+                  className={!startDate ? "required-error" : ""}
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -150,6 +156,7 @@ const AdminSearchRepostPage = () => {
                     shrink: true,
                   }}
                   fullWidth
+                  onClick={(e) => e.target.showPicker()}
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4} lg={2}>

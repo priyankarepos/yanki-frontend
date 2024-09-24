@@ -12,7 +12,7 @@ import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import { useTranslation } from 'react-i18next';
-import { apiUrls, messages } from '../../Utils/stringConstant/stringConstant';
+import { apiUrls, classNames, messages } from '../../Utils/stringConstant/stringConstant';
 
 const EventPublicationForm = ({ answer, clickableOff }) => {
     const { t } = useTranslation();
@@ -233,7 +233,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 <Typography variant="h6">{t('eventSubmissionForm')}</Typography>
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('eventName')}</InputLabel>
+                                <InputLabel>{t('eventName')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="EventName"
@@ -264,7 +264,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('location')}</InputLabel>
+                                <InputLabel>{t('location')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="locations"
@@ -300,7 +300,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('eventLocationAddress')}</InputLabel>
+                                <InputLabel>{t('eventLocationAddress')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="EventLocationAddress"
@@ -323,7 +323,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('dateLabel')}</InputLabel>
+                                <InputLabel>{t('dateLabel')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="date"
@@ -336,6 +336,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                                 {...field}
                                                 type="date"
                                                 fullWidth
+                                                onClick={(e) => e.target.showPicker()}
                                             />
                                             {errors['date'] && (
                                                 <FormHelperText className='error-message'>{errors['date'].message}</FormHelperText>
@@ -345,7 +346,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('time')}</InputLabel>
+                                <InputLabel>{t('time')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="time"
@@ -358,6 +359,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                                 {...field}
                                                 type="time"
                                                 fullWidth
+                                                onClick={(e) => e.target.showPicker()}
                                             />
                                             {errors['time'] && (
                                                 <FormHelperText className='error-message'>{errors['time'].message}</FormHelperText>
@@ -367,7 +369,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('publicationArea')}</InputLabel>
+                                <InputLabel>{t('publicationArea')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="publicationArea"
@@ -403,7 +405,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={6} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('eventType')}</InputLabel>
+                                <InputLabel>{t('eventType')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="eventTypes"
@@ -472,7 +474,7 @@ const EventPublicationForm = ({ answer, clickableOff }) => {
                                 />
                             </Grid>
                             <Grid item lg={12} md={12} sm={12} xs={12}>
-                                <InputLabel>{t('eventDetails')}</InputLabel>
+                                <InputLabel>{t('eventDetails')}<sup className={classNames.requiredIcon}>*</sup></InputLabel>
                                 <Controller
                                     control={control}
                                     name="eventDetails"

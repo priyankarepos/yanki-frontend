@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./AiCustomization.scss";
 import { useTranslation } from 'react-i18next';
-import { apiUrls } from "../../Utils/stringConstant/stringConstant";
+import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AiCustomization = () => {
   const { t } = useTranslation();
@@ -624,7 +624,7 @@ const AiCustomization = () => {
                   watch("isInterestInVolunteer") === true) && (
                     <Grid item xs={12}>
                       <InputLabel className="ai-input-label">
-                        {t('volunteerInterestsLabel')}
+                        {t('volunteerInterestsLabel')}<sup className={messages.requiredIcon}>*</sup>
                       </InputLabel>
                       <Controller
                         control={control}
@@ -743,7 +743,7 @@ const AiCustomization = () => {
                   watch("isInterestInReligiousStudies") === true) && (
                     <Grid item xs={12}>
                       <InputLabel className="ai-input-label">
-                        {t('religiousStudiesLabel')}
+                        {t('religiousStudiesLabel')}<sup className={messages.requiredIcon}>*</sup>
                       </InputLabel>
                       <Controller
                         control={control}
