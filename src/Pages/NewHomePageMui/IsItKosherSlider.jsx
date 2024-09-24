@@ -92,7 +92,7 @@ export const IsItKosherDescription = () => {
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
             <img
                 src={isItKosherLogo}
-                width={sourceSelectionStrings.myZamninLogoWidth}
+                width={sourceSelectionStrings.isItKosherLogoWidth}
                 height={sourceSelectionStrings.isItKosherLogoHeight}
                 alt={sourceSelectionStrings.logo}
                 className={sourceSelectionStrings.marginBottom20}

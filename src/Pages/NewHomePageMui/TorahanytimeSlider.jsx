@@ -92,8 +92,8 @@ export const TorahAnytimeDescription = () => {
         <Box className={sourceSelectionStrings.yaMainTextBbox}>
             <img
                 src={partnershipLogoLightTwo}
-                width={sourceSelectionStrings.yaMainTextHeading90px}
-                height={sourceSelectionStrings.yaMainTextHeading70px}
+                width={sourceSelectionStrings.torahAnytimeLogoWidth}
+                height={sourceSelectionStrings.torahAnytimeLogoHeight}
                 alt={sourceSelectionStrings.logo}
                 className={sourceSelectionStrings.marginBottom20}
             />
