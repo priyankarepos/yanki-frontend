@@ -1189,6 +1189,7 @@ const NewHomePageMui = () => {
                         setSelectedOption={setSelectedOption}
                         chatId={chatId}
                         resetPage={resetPage}
+                        drawerOpen={drawerOpen}
                       />
                     </Box>}
                     <TextField
