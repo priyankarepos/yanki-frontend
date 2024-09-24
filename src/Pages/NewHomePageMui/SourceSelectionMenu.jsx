@@ -5,7 +5,7 @@ import "./SourceSelectionMenu.scss"
 import { sourceSelectionOptions } from '../../Utils/promptData/promptData';
 import { sourceSelectionStrings } from '../../Utils/stringConstant/stringConstant';
 
-const SourceSelectionMenu = ({ anchorEl, open, handleClose, selectedOption, setSelectedOption, resetPage }) => {
+const SourceSelectionMenu = ({ anchorEl, open, handleClose, selectedOption, setSelectedOption, resetPage, drawerOpen }) => {
     const MAX_VISIBLE_OPTIONS = 5;
     const [visibleOptions, setVisibleOptions] = useState(MAX_VISIBLE_OPTIONS);
     const [showMore, setShowMore] = useState(false);
@@ -42,8 +42,14 @@ const SourceSelectionMenu = ({ anchorEl, open, handleClose, selectedOption, setS
             open={open}
             onClose={handleClose}
             className={sourceSelectionStrings.menuClassName}
-            anchorOrigin={{ horizontal: sourceSelectionStrings.anchorOriginHorizontal, vertical: sourceSelectionStrings.anchorOriginVertical }}
-            transformOrigin={{ horizontal: sourceSelectionStrings.transformOriginHorizontal, vertical: sourceSelectionStrings.transformOriginVertical }}
+            anchorOrigin={{
+                horizontal: drawerOpen ? 300 : sourceSelectionStrings.anchorOriginHorizontal, 
+                vertical: sourceSelectionStrings.anchorOriginVertical
+            }}
+            transformOrigin={{
+                horizontal: drawerOpen ? 300 : sourceSelectionStrings.transformOriginHorizontal,
+                vertical: sourceSelectionStrings.transformOriginVertical
+            }}
             disableAutoFocusItem={true}
             slotProps={{
                 paper: {
