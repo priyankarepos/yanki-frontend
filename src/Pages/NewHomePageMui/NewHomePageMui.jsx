@@ -104,6 +104,7 @@ const NewHomePageMui = () => {
     useContext(Context);
   const chatContainerRef = useRef(null);
   const itemRefs = useRef({});
+  const textFieldRef = useRef(null);
   const chatSessionIdRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
@@ -117,7 +118,6 @@ const NewHomePageMui = () => {
   const onClickMembershipPortal = () => {
     navigate("/membership");
   };
-
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -535,6 +535,9 @@ const NewHomePageMui = () => {
 
   const handleQuestionClick = (question) => {
     setSearchQuery(t(question));
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+    }
   };
 
   useEffect(() => {
@@ -1194,6 +1197,7 @@ const NewHomePageMui = () => {
                     </Box>}
                     <TextField
                       fullWidth
+                      inputRef={textFieldRef}
                       name="searchQuery"
                       value={searchQuery}
                       onChange={handleChange}
