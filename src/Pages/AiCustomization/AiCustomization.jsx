@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./AiCustomization.scss";
 import { useTranslation } from 'react-i18next';
+import { apiUrls } from "../../Utils/stringConstant/stringConstant";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AiCustomization = () => {
@@ -46,15 +47,10 @@ const AiCustomization = () => {
 
   useEffect(() => {
     const fetchCurrentAiCustomizeData = async () => {
-      try {
-        const response = await axios.get(apiUrls.getCustomPrompt);
+      const response = await axios.get(apiUrls.getCustomPrompt);
 
-        if (response.status === 200) {
-          setCustomizeMessage(response.data);
-        }
-      } catch (error) {
-        setSnackbarMessage(`${t('errorFetchingPhoneNumber')}: ${error}`);
-        setSnackbarOpen(true);
+      if (response.status === 200) {
+        setCustomizeMessage(response.data);
       }
     };
     fetchCurrentAiCustomizeData();
