@@ -98,6 +98,9 @@ export const messages = {
     enterpriseProfileInputField : "enterprise-input-field",
     scriptText : "script",
     googleMapAPIFullyLoaded : "Google Maps API or places library not fully loaded.",
+    confirmDialogDeleteCustomization : "Are you sure you want to delete this information?",
+    isInterestInVolunteer: "isInterestInVolunteer",
+    isInterestInReligiousStudies: "isInterestInReligiousStudies",
 };
 
 export const apiUrls = {
