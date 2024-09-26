@@ -209,8 +209,9 @@ const EnterpriseProfile = () => {
   });
 
   const { isDirty } = formState;
+
   useEffect(() => {
-    setValue('PhoneNumber', '44',);
+    setValue("PhoneNumber", "+1", { shouldValidate: false });
   }, [setValue]);
 
   useEffect(() => {
@@ -886,6 +887,7 @@ const EnterpriseProfile = () => {
                     type="time"
                     placeholder="Office opening time"
                     fullWidth
+                    onClick={(e) => e.target.showPicker()}
                   />
                   {errors['BusinessHoursOpeningTime'] && (
                     <FormHelperText className='error-handling'>{errors['BusinessHoursOpeningTime'].message}</FormHelperText>
@@ -909,6 +911,7 @@ const EnterpriseProfile = () => {
                     type="time"
                     placeholder="Office closing time"
                     fullWidth
+                    onClick={(e) => e.target.showPicker()}
                   />
                   {errors.BusinessHoursClosingTime && (
                     <FormHelperText className='error-handling'>{errors.BusinessHoursClosingTime.message}</FormHelperText>

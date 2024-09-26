@@ -24,7 +24,7 @@ import axios from "axios";
 import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
-import { apiUrls } from "../../Utils/stringConstant/AdminString";
+import { apiUrls, className } from "../../Utils/stringConstant/AdminString";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
 
 const AdminAddEventPublicationArea = () => {
@@ -204,6 +204,7 @@ const AdminAddEventPublicationArea = () => {
             color="primary"
             size="small"
             onClick={handleAddPublicationArea}
+            className={className.eventAddButton}
           >
             <AddIcon /> Add
           </IconButton>

@@ -22,6 +22,13 @@ export const message = {
     failedFetchEnterpriseDetails: "Failed to fetch enterprise details",
 }
 
+export const className = {
+    adminModalContainer: "admin-modal-container",
+    eventAddButton: "event-add-button",
+    enterpriseHeaderCell: "enterprise-headerCell",
+    createDepartmentTableHeaderCell: "create-department-table-header-cell",
+}
+
 export const apiUrls = { 
     getEventLocations: `${import.meta.env.VITE_APP_API_HOST}/api/event-location/get-events-locations`,
     deleteEventLocations: (selectedLocationId) => `${import.meta.env.VITE_APP_API_HOST}/api/event-location/delete-event-location/${selectedLocationId}`,

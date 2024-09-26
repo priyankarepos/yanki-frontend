@@ -35,6 +35,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
 import { agentChatResponse } from "../Utils/stringConstant/AgentChatResponse";
+import { className } from "../Utils/stringConstant/AdminString";
 
 const AdminFileUpload = () => {
   const { drawerOpen } = useContext(Context);
@@ -295,13 +296,15 @@ const AdminFileUpload = () => {
 
   return (
     <div className="admin-faq-wrapper">
-      <Box sx={{
-        width:
-          drawerOpen && !isSmallScreen
-            ? agentChatResponse.drawerOpenWidth
-            : agentChatResponse.zeroWidth,
-        transition: agentChatResponse.transitionStyle,
-      }}>
+      <Box
+        sx={{
+          width:
+            drawerOpen && !isSmallScreen
+              ? agentChatResponse.drawerOpenWidth
+              : agentChatResponse.zeroWidth,
+          transition: agentChatResponse.transitionStyle,
+        }}
+      >
         <AdminDashboard />
       </Box>
       <Box
@@ -309,17 +312,19 @@ const AdminFileUpload = () => {
         sx={{
           width: drawerOpen
             ? agentChatResponse.drawerOpenCalcWidth
-            : agentChatResponse.hundredWidth, transition: agentChatResponse.transitionStyle,
+            : agentChatResponse.hundredWidth,
+          transition: agentChatResponse.transitionStyle,
         }}
       >
         <Box className="admin-faq-heading">
-          <Typography variant="h6">
-            Upload Files
-          </Typography>
+          <Typography variant="h6">Upload Files</Typography>
           <IconButton
             color="secondary"
             size="small"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setIsModalOpen(true);
+              setTags([]);
+            }}
           >
             <AddIcon /> Add Files
           </IconButton>
@@ -330,7 +335,7 @@ const AdminFileUpload = () => {
           </div>
         ) : (
           <React.Fragment>
-            {(tableData && tableData.length === 0) ? (
+            {tableData && tableData.length === 0 ? (
               <Typography variant="h6" className={classNames.noDataFoundClass}>
                 No data available.
               </Typography>
@@ -339,10 +344,18 @@ const AdminFileUpload = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Sr No.</TableCell>
-                      <TableCell>PDF Name</TableCell>
-                      <TableCell>Keywords</TableCell>
-                      <TableCell>Actions</TableCell>
+                      <TableCell className={className.enterpriseHeaderCell}>
+                        Sr No.
+                      </TableCell>
+                      <TableCell className={className.enterpriseHeaderCell}>
+                        PDF Name
+                      </TableCell>
+                      <TableCell className={className.enterpriseHeaderCell}>
+                        Keywords
+                      </TableCell>
+                      <TableCell className={className.enterpriseHeaderCell}>
+                        Actions
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -429,9 +442,17 @@ const AdminFileUpload = () => {
         className="event-pdf-modal-open"
       >
         <Box className="admin-faq-model-content">
-          <Typography variant="h5" className="enterprise-add-category-modal-title">
-            Upload File
-          </Typography>
+          <Box className={className.adminModalContainer}>
+            <Typography
+              variant="h5"
+              className="enterprise-add-category-modal-title"
+            >
+              Upload File
+            </Typography>
+            <IconButton onClick={() => setIsModalOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* File Upload */}
             <Controller
