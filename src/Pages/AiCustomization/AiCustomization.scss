@@ -40,3 +40,13 @@ h4.Ai-Heading {
 .ai-customization-button {
     margin-right: 16px !important;
 }
+
+.response-usage-text-container {
+    display: flex;
+    justify-content: center;
+
+    p {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+}
