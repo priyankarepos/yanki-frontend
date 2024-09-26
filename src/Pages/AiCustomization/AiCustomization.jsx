@@ -22,6 +22,7 @@ import "./AiCustomization.scss";
 import { useTranslation } from 'react-i18next';
 import { apiUrls } from "../../Utils/stringConstant/stringConstant";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
+import ConfirmDialog from "../../EnterpriseCollabration/ConfirmDialog";
 
 const AiCustomization = () => {
   const { t } = useTranslation();
@@ -33,6 +34,10 @@ const AiCustomization = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [customizeMessage, setCustomizeMessage] = useState("");
+  const [isDataAvalibale, setIsDataAvalibale] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmationText, setConfirmationText] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
     control,
@@ -40,6 +45,7 @@ const AiCustomization = () => {
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -51,6 +57,9 @@ const AiCustomization = () => {
 
       if (response.status === 200) {
         setCustomizeMessage(response.data);
+        if(response.data.isSuccess) {
+          setIsDataAvalibale(true);          
+        }   
       }
     };
     fetchCurrentAiCustomizeData();
@@ -102,9 +111,9 @@ const AiCustomization = () => {
             },
           }
         );
+        setIsDataAvalibale(true);
         setSnackbarMessage(response.data.message);
         setSnackbarOpen(true);
-        window.location.reload();
       } else {
         setSnackbarMessage(`${t('errorReligiousPracticesNotArray')}`);
         setSnackbarOpen(true);
@@ -115,14 +124,22 @@ const AiCustomization = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
+    setConfirmDialogOpen(true);
+    setConfirmationText(messages.confirmDialogDeleteCustomization);
+  };
+
+  const handleConfirmation = async () => {
+    setLoading(true);
     try {
       const response = await axios.delete(apiUrls.deleteCustomPrompt);
 
       if (response.status === 200) {
+        setIsDataAvalibale(false);
+        setCustomizeMessage("");
         setSnackbarMessage(`${t('promptDeletedSuccessfully')}`);
         setSnackbarOpen(true);
-        window.location.reload();
+        reset();
       } else {
         setSnackbarMessage(`${t('failedToDeletePrompt')}`);
         setSnackbarOpen(true);
@@ -130,6 +147,10 @@ const AiCustomization = () => {
     } catch (error) {
       setSnackbarMessage(`${t('errorFailedToDeletePrompt')}: ${error}`);
       setSnackbarOpen(true);
+    }
+    finally {
+      setLoading(false);
+      setConfirmDialogOpen(false);
     }
   };
 
@@ -177,7 +198,6 @@ const AiCustomization = () => {
       if (response.status === 200) {
         setSnackbarMessage(`${t('promptUpdatedSuccessfully')}`);
         setSnackbarOpen(true);
-        window.location.reload();
       } else {
         setSnackbarMessage(`${t('failedToUpdatePrompt')}`);
         setSnackbarOpen(true);
@@ -221,6 +241,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="judaismBranch"
+                    defaultValue={customizeMessage?.judaismBranch || ""}
                     render={({ field }) => (
                       <TextField
                         className="Ai-TextField"
@@ -238,6 +259,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="ageRange"
+                    defaultValue={customizeMessage?.ageRange || ""}
                     rules={{ min: 1, max: 200 }}
                     render={({ field }) => (
                       <div>
@@ -308,6 +330,7 @@ const AiCustomization = () => {
                         {...field}
                         fullWidth
                         variant="outlined"
+                        defaultValue={customizeMessage?.numberOfChildren || ""}
                         placeholder={t('enterChildInfoPlaceholder')}
                       />
                     )}
@@ -320,6 +343,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="location"
+                    defaultValue={customizeMessage?.location || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -343,6 +367,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="levelOfReligiousObservance"
+                    defaultValue={customizeMessage?.levelOfReligiousObservance || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -563,6 +588,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="synagogueCommunity"
+                    defaultValue={customizeMessage?.synagogueCommunity || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -580,6 +606,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="updatedWithCommunityEvents"
+                    defaultValue={customizeMessage?.updatedWithCommunityEvents || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -593,11 +620,13 @@ const AiCustomization = () => {
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
                     {t('interestInVolunteerLabel')}
+                    <sup className={messages.requiredIcon}>*</sup>
                   </InputLabel>
                   <Controller
                     control={control}
                     name="isInterestInVolunteer"
                     defaultValue={customizeMessage?.isInterestInVolunteer || ""}
+                    rules={{ required: `${t('thisFieldIsRequired')}` }}
                     render={({ field }) => (
                       <RadioGroup {...field} row>
                         <FormControlLabel
@@ -615,6 +644,11 @@ const AiCustomization = () => {
                       </RadioGroup>
                     )}
                   />
+                   {errors[messages.isInterestInVolunteer] && (
+                    <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                      {errors[messages.isInterestInVolunteer].message}
+                    </FormHelperText>
+                  )}
                 </Grid>
                 {(watch("isInterestInVolunteer") === "true" ||
                   watch("isInterestInVolunteer") === true) && (
@@ -659,6 +693,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="religiousChallenges"
+                    defaultValue={customizeMessage?.religiousChallenges || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -678,6 +713,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="toolForOvercomeChallenges"
+                    defaultValue={customizeMessage?.toolForOvercomeChallenges || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -697,6 +733,7 @@ const AiCustomization = () => {
                   <Controller
                     control={control}
                     name="ideaToEnhanceReligiousExperience"
+                    defaultValue={customizeMessage?.ideaToEnhanceReligiousExperience || ""}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -712,6 +749,7 @@ const AiCustomization = () => {
                 <Grid item xs={12}>
                   <InputLabel className="ai-input-label">
                     {t('interestInReligiousStudiesLabel')}
+                    <sup className={messages.requiredIcon}>*</sup>
                   </InputLabel>
                   <Controller
                     control={control}
@@ -719,6 +757,7 @@ const AiCustomization = () => {
                     defaultValue={
                       customizeMessage?.isInterestInReligiousStudies || ""
                     }
+                    rules={{ required: `${t('thisFieldIsRequired')}` }}
                     render={({ field }) => (
                       <RadioGroup {...field} row>
                         <FormControlLabel
@@ -735,6 +774,11 @@ const AiCustomization = () => {
                     )}
                   />
                 </Grid>
+                {errors[messages.isInterestInReligiousStudies] && (
+                  <FormHelperText className={messages.createAdminEnterpriseErrorclass}>
+                    {errors[messages.isInterestInReligiousStudies].message}
+                  </FormHelperText>
+                )}
                 {(watch("isInterestInReligiousStudies") === "true" ||
                   watch("isInterestInReligiousStudies") === true) && (
                     <Grid item xs={12}>
@@ -776,7 +820,7 @@ const AiCustomization = () => {
               variant="contained"
               color="primary"
               className="ai-customization-button"
-              disabled={!customizeMessage?.isSuccess}
+              disabled={!isDataAvalibale}
             >
               {t('updateButton')}
             </Button>
@@ -785,7 +829,7 @@ const AiCustomization = () => {
               variant="contained"
               color="error"
               className="ai-customization-button"
-              disabled={!customizeMessage?.isSuccess}
+              disabled={!isDataAvalibale}
             >
               {t('deleteButton')}
             </Button>
@@ -800,7 +844,7 @@ const AiCustomization = () => {
               variant="contained"
               color="primary"
               type="submit"
-              disabled={customizeMessage?.isSuccess}
+              disabled={isDataAvalibale}
             >
               {t('saveButton')}
             </Button>
@@ -817,6 +861,13 @@ const AiCustomization = () => {
         autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
+      />
+       <ConfirmDialog
+        open={confirmDialogOpen}
+        handleClose={() => setConfirmDialogOpen(false)}
+        handleConfirm={() => handleConfirmation()}
+        confirmationText={confirmationText}
+        loading={loading}
       />
     </Container>
   );

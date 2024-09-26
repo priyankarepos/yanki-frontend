@@ -89,7 +89,7 @@ const SubscribeNotification = ({ answer }) => {
                 setSubscribeNotification(response.data);
             } catch (error) {
                 setSnackbarMessage(t('noDataAvailable'));
-                setSnackbarOpen(true);
+                setSnackbarOpen(false);
             }
         };
 
