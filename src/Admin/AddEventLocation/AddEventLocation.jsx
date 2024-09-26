@@ -261,9 +261,9 @@ const AdminAddEventLocation = () => {
                 : "Add Event Location"}
             </Typography>
 
-            <Button onClick={() => {setIsModalOpen(false)}}>
+            <IconButton onClick={() => {setIsModalOpen(false)}}>
               <CloseIcon />
-            </Button>
+            </IconButton>
           </Box>
           <form
             className="admin-faq-form-model"

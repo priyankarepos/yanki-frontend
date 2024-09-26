@@ -26,6 +26,8 @@ import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
 import { apiUrls, className } from "../../Utils/stringConstant/AdminString";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
+import CloseIcon from "@mui/icons-material/Close";
+
 
 const AdminAddEventPublicationArea = () => {
   const [publicationArea, setPublicationArea] = useState([]);
@@ -257,14 +259,21 @@ const AdminAddEventPublicationArea = () => {
         className="event-pdf-modal-open"
       >
         <Box className="enterprise-add-category-container">
-          <Typography
-            variant="h5"
-            className="enterprise-add-category-modal-title"
-          >
-            {editPublicationAreaId !== null
-              ? "Edit Event Publication Area"
-              : "Add Event Publication Area"}
-          </Typography>
+          <Box className={className.adminModalContainer}>
+            <Typography
+              variant="h5"
+              className="enterprise-add-category-modal-title"
+            >
+              {editPublicationAreaId !== null
+                ? "Edit Event Publication Area"
+                : "Add Event Publication Area"}
+            </Typography>
+
+            <IconButton onClick={() => {setIsModalOpen(false)}}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
           <form
             className="admin-faq-form-model"
             onSubmit={(e) => {

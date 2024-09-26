@@ -26,6 +26,7 @@ import "./EventLocation.scss";
 import { classNames } from "../../Utils/stringConstant/stringConstant";
 import { apiUrls, className } from "../../Utils/stringConstant/AdminString";
 import { messages } from "../../Utils/stringConstant/EnterpriseProfileString";
+import CloseIcon from "@mui/icons-material/Close";
 
 const AdminAddEventType = () => {
   const [eventTypes, setEventTypes] = useState([]);
@@ -243,9 +244,15 @@ const AdminAddEventType = () => {
         className="event-pdf-modal-open"
       >
         <Box className="enterprise-add-category-container">
-          <Typography variant="h5"className="enterprise-add-category-modal-title">
-            {editEventTypeId !== null ? "Edit Event Type" : "Add Event Type"}
-          </Typography>
+          <Box className={className.adminModalContainer}>
+            <Typography variant="h5"className="enterprise-add-category-modal-title">
+              {editEventTypeId !== null ? "Edit Event Type" : "Add Event Type"}
+            </Typography>
+            <IconButton onClick={() => {setIsModalOpen(false)}}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
           <form
             className="admin-faq-form-model"
             onSubmit={(e) => {
