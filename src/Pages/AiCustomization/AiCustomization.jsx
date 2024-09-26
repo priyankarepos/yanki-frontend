@@ -850,7 +850,7 @@ const AiCustomization = () => {
             </Button>
           </Box>
         </form>
-        <Box mt={2}>
+        <Box mt={2} className={messages.responseUsageTextContainer}>
           <Typography variant="body1" gutterBottom>
             {t('responseUsageText')}
           </Typography>

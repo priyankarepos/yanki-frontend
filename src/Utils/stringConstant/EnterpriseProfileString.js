@@ -101,6 +101,7 @@ export const messages = {
     confirmDialogDeleteCustomization : "Are you sure you want to delete this information?",
     isInterestInVolunteer: "isInterestInVolunteer",
     isInterestInReligiousStudies: "isInterestInReligiousStudies",
+    responseUsageTextContainer: "response-usage-text-container"
 };
 
 export const apiUrls = {
