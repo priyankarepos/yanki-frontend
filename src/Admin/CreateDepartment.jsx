@@ -663,7 +663,7 @@ const AdminCreateDepartment = () => {
       setTableData([]);
       try {
         const response = await axios.get(
-          getEnterpriseDocument(selectedEnterpriseId)
+          apiUrls.getEnterpriseDocument(selectedEnterpriseId)
         );
 
         if (response.status === 200) {

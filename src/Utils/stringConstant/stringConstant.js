@@ -86,6 +86,7 @@ export const messages = {
     generatedChatLink: "generatedChatLink",
     locationAllowed: "Location allowed",
     enterpriseEventMsg: "This feature is not available for Enterprise accounts. For any queries, please use the prompt ‘Ask for help’.",
+    validePhoneNumber : "Enter valid phone number"
 };
 
 export const classNames = {

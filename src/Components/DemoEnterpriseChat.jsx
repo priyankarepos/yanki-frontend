@@ -66,8 +66,8 @@ const DemoEnterpriseChat = ({ answer, fetchRemainingMessage, clickableOff}) => {
                     </div>
                     <List>
                         <Grid container spacing={2}>
-                            {answer.enterpriseSelections && answer?.enterpriseSelections.map((enterprise) => (
-                                <Grid item xs={12} sm={6} md={6} key={enterprise.id}>
+                            {answer.enterpriseSelections && answer?.enterpriseSelections.map((enterprise, index) => (
+                                <Grid item xs={12} sm={6} md={6} key={enterprise.id || index}>
                                     <Box className="enterprise-info-box">
                                         <div>
                                             {enterprise.enterpriseName && <div>{t('enterpriseName')} {enterprise.enterpriseName}</div>}
