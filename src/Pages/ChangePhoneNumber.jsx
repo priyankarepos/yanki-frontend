@@ -157,7 +157,7 @@ const ChangePhoneNumber = () => {
                   },
                   pattern: {
                     value: phoneRegex,
-                    message: `${t('phoneNumberRequired')}`,
+                    message: messages.validePhoneNumber,
                   },
                 }}
                 render={({ field }) => (
