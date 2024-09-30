@@ -7,13 +7,13 @@ export const languages = [
 
 export const responsiveHomeSlider = {
     superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
+      breakpoint: { max: 4000, min: 1700 },
       items: 3,
       partialVisibilityGutter: 10,
     },
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3,
+      breakpoint: { max: 1700, min: 1024 },
+      items: 4,
       partialVisibilityGutter: 10,
     },
     tablet: {
