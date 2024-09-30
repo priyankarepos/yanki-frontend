@@ -88,13 +88,27 @@ const EnterprisePdfAnswer = ({ answer }) => {
 
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-    const phoneRegex = /\b\d{10,}\b/g;
+    const phoneRegex = /(?:(?:\+?(\d{1,3}))?[ -]?(\d{1,4})[ -]?(\d{1,4})[ -]?(\d{1,4})|\(\d{1,4}\)\s*\d{1,4}[- ]?\d{1,4}[- ]?\d{1,4})/g;
 
-    const modifiedText = text
-      .replace(emailRegex, (email) => `[${email}](${messages.mailto}:${email})`)
-      .replace(phoneRegex, (phone) => `[${phone}](${messages.tel}:${phone})`);
+    const excludePatterns = [
+      messages.foundedYear,
+    ];
 
-    return modifiedText;
+    const lines = text.split('\n');
+
+    const modifiedLines = lines.map((line) => {
+      const isExcluded = excludePatterns.some(pattern => line.includes(pattern));
+
+      if (isExcluded) {
+        return line;
+      }
+
+      return line
+        .replace(emailRegex, (email) => `[${email}](${messages.mailto}:${email})`)
+        .replace(phoneRegex, (phone) => `[${phone}](${messages.tel}:${phone.replace(/\s+/g, '')})`);
+    });
+
+    return modifiedLines.join('\n');
   };
 
   const renderContentResponse = () => {
@@ -106,7 +120,7 @@ const EnterprisePdfAnswer = ({ answer }) => {
     const markdownContent = renderClickableContent(content);
 
     return (
-      <Typography>
+      <Typography className={messages.enterpriseDetailText}>
         <Markdown>{markdownContent}</Markdown>
       </Typography>
     );

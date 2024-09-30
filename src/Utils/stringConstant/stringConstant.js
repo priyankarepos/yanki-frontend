@@ -90,6 +90,8 @@ export const messages = {
     noContentAvailable:"No content available.",
     mailto: "mailto",
     tel: "tel",
+    enterpriseDetailText: "enterprise-detail-text",
+    foundedYear: "Founded Year:",
 };
 
 export const classNames = {
