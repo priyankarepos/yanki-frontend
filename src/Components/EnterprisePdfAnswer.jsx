@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { pdfjs } from 'react-pdf';
 import Modal from '@mui/material/Modal';
@@ -10,6 +10,8 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import "./AnswerStyle.scss";
 import Tooltip from '@mui/material/Tooltip';
 import { useTranslation } from "react-i18next";
+import Markdown from "react-markdown";
+import { messages } from '../Utils/stringConstant/stringConstant';
 
 const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
   const { t } = useTranslation();
@@ -58,6 +60,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
 const EnterprisePdfAnswer = ({ answer }) => {
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [showPdfGrid, setShowPdfGrid] = useState(false);
+  const [processedContentResponse, setProcessedContentResponse] = useState([]);
 
   const getShortPdfName = (pdfName) => pdfName ? pdfName.split('/').pop() : '';
 
@@ -74,59 +77,39 @@ const EnterprisePdfAnswer = ({ answer }) => {
     setSelectedPdf(null);
   };
 
+  useEffect(() => {
+    if (answer?.contentResponse) {
+      const answerArray = Array.isArray(answer.contentResponse)
+        ? answer.contentResponse
+        : [answer.contentResponse];
+      setProcessedContentResponse(answerArray);
+    }
+  }, [answer]);
+
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     const phoneRegex = /\b\d{10,}\b/g;
 
-    let content = [];
+    const modifiedText = text
+      .replace(emailRegex, (email) => `[${email}](${messages.mailto}:${email})`)
+      .replace(phoneRegex, (phone) => `[${phone}](${messages.tel}:${phone})`);
 
-    const cleanedText = text.replace(/(^-|^\.)+/gm, match => match.replace(/[-.]/g, ''));
+    return modifiedText;
+  };
 
-    cleanedText.split(/\s+/).forEach((word, index, array) => {
-      if (word.match(emailRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.location.href = `mailto:${word}`}
-          >
-            {word}
-          </span>
-        );
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
-      } else if (word.match(phoneRegex)) {
-        content.push(
-          <span
-            key={index}
-            className='enterprise-pdf-link'
-            onClick={() => window.location.href = `tel:${word}`}
-          >
-            {word}
-          </span>
-        );
-        if (index !== array.length - 1) {
-          content.push(" ");
-        }
-      } else {
-        const punctuation = ['.', ',', '-'];
-        let cleanedWord = word;
-        let lastChar = "";
-        // Check if the word ends with punctuation, and remove only comma and dot
-        if (punctuation.includes(word.slice(-1))) {
-          lastChar = word.slice(-1);
-          cleanedWord = word.slice(0, -1);
-        }
-        content.push(
-          <span key={index}>
-            {cleanedWord}{lastChar}{" "}
-          </span>
-        );
-      }
-    });
+  const renderContentResponse = () => {
+    if (!Array.isArray(processedContentResponse) || processedContentResponse.length === 0) {
+      return <Typography>{messages.noContentAvailable}</Typography>;
+    }
 
-    return content;
+    const content = processedContentResponse[0];
+    const markdownContent = renderClickableContent(content);
+
+    return (
+      <Typography>
+        <Markdown>{markdownContent}</Markdown>
+      </Typography>
+    );
   };
 
 
@@ -135,9 +118,7 @@ const EnterprisePdfAnswer = ({ answer }) => {
       p: 2,
     }}>
       <Box>
-        <Typography className='enterprise-pdf-text' variant="h6" component="div">
-          {renderClickableContent(answer?.contentResponse)}
-        </Typography>
+        {renderContentResponse()}
       </Box>
       <Typography variant="h6" component="div" className="enterprise-pdf-icon" onClick={handleSeePdfClick}>
         <Tooltip title="Enterprise document" arrow>
