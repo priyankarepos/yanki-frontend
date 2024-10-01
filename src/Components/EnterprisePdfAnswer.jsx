@@ -1,66 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Worker, Viewer } from '@react-pdf-viewer/core';
-import { pdfjs } from 'react-pdf';
-import Modal from '@mui/material/Modal';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import "./AnswerStyle.scss";
 import Tooltip from '@mui/material/Tooltip';
-import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
 import { messages } from '../Utils/stringConstant/stringConstant';
-
-const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
-  const { t } = useTranslation();
-  const [pdfLoadError, setPdfLoadError] = useState(false);
-  const closeModal = () => {
-    setPdfLoadError(false);
-    onClose();
-  };
-
-  return (
-    <Modal
-      open={isOpen}
-      onClose={closeModal}
-      className='enterprise-pdfAnswer-modal'
-    >
-      <div className="pdf-modal">
-        <IconButton
-          onClick={closeModal}
-          aria-label="close"
-        >
-          <CloseIcon />
-        </IconButton>
-        {!pdfLoadError ? (
-          <div>
-            {isPdf ? (
-              <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`}>
-                <Viewer fileUrl={pdfUrl} />
-              </Worker>
-            ) : (
-              <img
-                className='enterprise-pdf-img'
-                src={pdfUrl}
-                alt="PDF Document"
-                onError={() => setPdfLoadError(true)}
-              />
-            )}
-          </div>
-        ) : (
-          <div>{t('errorLoadingContent')}</div>
-        )}
-      </div>
-    </Modal>
-  );
-};
+import PdfModal from './PdfModal';
 
 const EnterprisePdfAnswer = ({ answer }) => {
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [showPdfGrid, setShowPdfGrid] = useState(false);
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
+  const phoneRegex = /\b\d{10,}\b/g;    
 
   const getShortPdfName = (pdfName) => pdfName ? pdfName.split('/').pop() : '';
 
@@ -79,51 +31,59 @@ const EnterprisePdfAnswer = ({ answer }) => {
 
   useEffect(() => {
     if (answer?.contentResponse) {
-      const answerArray = Array.isArray(answer.contentResponse)
-        ? answer.contentResponse
-        : [answer.contentResponse];
+      const answerArray = answer.contentResponse.split("\n");
       setProcessedContentResponse(answerArray);
     }
   }, [answer]);
 
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-    const phoneRegex = /(?:(?:\+?(\d{1,3}))?[ -]?(\d{1,4})[ -]?(\d{1,4})[ -]?(\d{1,4})|\(\d{1,4}\)\s*\d{1,4}[- ]?\d{1,4}[- ]?\d{1,4})/g;
 
-    const excludePatterns = [
-      messages.foundedYear,
-    ];
+    let content = "";
 
-    const lines = text.split('\n');
-
-    const modifiedLines = lines.map((line) => {
-      const isExcluded = excludePatterns.some(pattern => line.includes(pattern));
-
-      if (isExcluded) {
-        return line;
+    const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
+      match.replace(/[-.]/g, "")
+    );    
+    
+    cleanedText.split(/\s+/).forEach((word, index, array) => {  
+          
+      if (word.match(emailRegex)) {
+        content += `[${word}](${messages.mailto}:${word})`;
+      } else if (word.match(phoneRegex)) {
+        content += `[${word}](${messages.tel}:${word})`;
+      } else {
+        content += word;
       }
-
-      return line
-        .replace(emailRegex, (email) => `[${email}](${messages.mailto}:${email})`)
-        .replace(phoneRegex, (phone) => `[${phone}](${messages.tel}:${phone.replace(/\s+/g, '')})`);
+      if (index !== array.length - 1) {
+        content += " ";
+      }
     });
-
-    return modifiedLines.join('\n');
+    return content;
   };
 
   const renderContentResponse = () => {
-    if (!Array.isArray(processedContentResponse) || processedContentResponse.length === 0) {
-      return <Typography>{messages.noContentAvailable}</Typography>;
-    }
-
-    const content = processedContentResponse[0];
-    const markdownContent = renderClickableContent(content);
-
-    return (
-      <Typography className={messages.enterpriseDetailText}>
-        <Markdown>{markdownContent}</Markdown>
+    return processedContentResponse.map((ans, index) => (
+      <Typography
+        variant="h6"
+        component="div"
+        key={index}
+        className="sentence-answer-container"
+      >
+        <Markdown
+          components={{
+            a: ({ node, ...props }) => {
+              if (props.children.match(phoneRegex)) {
+                return <a href={`${messages.tel}:${props.children}`}>{props.children}</a>;
+              } else {
+                return <a href={props.href}>{props.children}</a>;
+              }
+            },
+          }}
+        >
+          {renderClickableContent(ans)}
+        </Markdown>
       </Typography>
-    );
+    ));
   };
 
 

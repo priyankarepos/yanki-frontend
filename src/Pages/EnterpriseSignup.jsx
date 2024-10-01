@@ -494,7 +494,7 @@ const EnterpriseSignup = () => {
                       setSelectedCategory(event.target.value)
                     }
                     displayEmpty
-                    className="EnterpriseCategorySelect marginBottom-10"
+                    className="EnterpriseCategorySelect EnterpriseCategorySelectSignup  marginBottom-10"
                   >
                     <MenuItem value="" disabled>
                       <ListItemIcon>
