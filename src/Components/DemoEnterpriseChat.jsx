@@ -207,7 +207,7 @@ const DemoEnterpriseChat = ({
               )}
             </Typography>
           )}
-          {answer.enterprisePdfNames && (
+          {answer.enterprisePdfNames?.length !== 0 && (
             <React.Fragment>
               <Typography
                 variant="h6"
