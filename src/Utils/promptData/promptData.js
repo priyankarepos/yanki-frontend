@@ -91,14 +91,14 @@ export const myzmanimPrompts = [
 ];
 
 export const goDavenPrompts = [
-    { id: 1, text: "minyan near me" },
-    { id: 2, text: "Shul Kehillas Yaacov" },
-    { id: 3, text: "Phone number of Toldos Aharon" },
-    { id: 4, text: "Ohel Itzchak davening time" },
+    { id: 1, text: "Minyan near me" },
+    { id: 2, text: "How many minyanim are in Manhattan" },
+    { id: 3, text: "Details for minyan near me" },
+    { id: 4, text: "Is Ohel Moshe near me" },
     { id: 5, text: "Minyan in Manhattan" },
     { id: 6, text: "Where is Maariv now?" },
     { id: 7, text: "Haminyan Hakehilati in Ranana" },
-    { id: 8, text: "Bet Hakneset Share Bina" },
+    { id: 8, text: "Flatbush minyan" },
     { id: 9, text: "Minyan in London" },
     { id: 10, text: "Details of Shacharis" },
 ];
