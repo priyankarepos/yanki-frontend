@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./AnswerStyle.scss";
 import Markdown from "react-markdown";
-import { apiUrls } from "../Utils/stringConstant/stringConstant";
+import { apiUrls, messages } from "../Utils/stringConstant/stringConstant";
 
 const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   const [processedContentResponse, setProcessedContentResponse] = useState([]);
@@ -20,6 +20,7 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   const [direction, setDirection] = useState("ltr");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const phoneRegex = /\b\d{10,}\b/g;
 
   React.useEffect(() => {
     const containsHebrew = /[\u0590-\u05FF]/.test(answer.contentResponse);
@@ -38,12 +39,10 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
   }, [answer.contentResponse]);
 
   useEffect(() => {
-    try {
-      if (answer?.contentResponse) {
-        const answerArray = answer.contentResponse.split("\n");
-        setProcessedContentResponse(answerArray);
-      }
-    } catch (e) {}
+    if (answer?.contentResponse) {
+      const answerArray = answer.contentResponse.split("\n");
+      setProcessedContentResponse(answerArray);
+    }
   }, [answer]);
 
   const handleTextFieldChange = (event) => {
@@ -89,16 +88,27 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
         className="sentence-answer-container"
         dir={direction}
       >
-        <Markdown>{renderClickableContent(ans)}</Markdown>
+        <Markdown
+          components={{
+            a: ({ node, ...props }) => {
+              if (props.children.match(phoneRegex)) {
+                return <a href={`${messages.tel}:${props.children}`}>{props.children}</a>;
+              } else {
+                return <a href={props.href}>{props.children}</a>;
+              }
+            },
+          }}
+        >
+          {renderClickableContent(ans)}
+        </Markdown>
       </Typography>
     ));
   };
 
   const renderClickableContent = (text) => {
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-    const phoneRegex = /\b\d{10,}\b/g;
 
-    let content = "";
+    let content = "";    
 
     const cleanedText = text.replace(/(^-|^\.)+/gm, (match) =>
       match.replace(/[-.]/g, "")
@@ -106,9 +116,9 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
 
     cleanedText.split(/\s+/).forEach((word, index, array) => {
       if (word.match(emailRegex)) {
-        content += `[${word}](mailto:${word})`;
+        content += `[${word}](${messages.mailto}:${word})`;
       } else if (word.match(phoneRegex)) {
-        content += `[${word}](tel:${word})`;
+        content += `[${word}](${messages.tel}:${word})`;
       } else {
         content += word;
       }
@@ -127,7 +137,6 @@ const SentenceAnswer = ({ answer, fetchRemainingMessage }) => {
             p: 2,
           }}
         >
-
           <Typography
             variant="h6"
             component="div"

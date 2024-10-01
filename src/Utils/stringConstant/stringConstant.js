@@ -87,11 +87,12 @@ export const messages = {
     locationAllowed: "Location allowed",
     enterpriseEventMsg: "This feature is not available for Enterprise accounts. For any queries, please use the prompt ‘Ask for help’.",
     validePhoneNumber : "Enter valid phone number",
-    noContentAvailable:"No content available.",
     mailto: "mailto",
     tel: "tel",
     enterpriseDetailText: "enterprise-detail-text",
     foundedYear: "Founded Year:",
+    close: "close",
+    pdfDocument: "PDF Document"
 };
 
 export const classNames = {
@@ -172,7 +173,10 @@ export const classNames = {
     commonText: "Common",
     webText: "Web",
     requiredIcon : "required-icon",
-    adminPanelIcon: "admin-panel-icon"
+    adminPanelIcon: "admin-panel-icon",
+    enterprisePdfAnswerModal: "enterprise-pdfAnswer-modal",
+    pdfModal: "pdf-modal",
+    enterprisePdfImg: "enterprise-pdf-img",
 };
 
 export const apiUrls = {
@@ -225,6 +229,7 @@ export const apiUrls = {
     getAllEvents: (pageNumber) =>
         `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`,
     deleteDocument: `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
+    workerUrl: (version) => `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`,
 };
 
 export const membershipApiUrls = {

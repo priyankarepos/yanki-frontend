@@ -403,3 +403,11 @@
 .EnterpriseCategorySelect fieldset {
     border-color: rgba(255, 255, 255, 0.23) !important;
 }
+
+.EnterpriseCategorySelectSignup div {
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid #6fa8dd;
+}
