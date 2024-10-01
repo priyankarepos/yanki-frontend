@@ -207,35 +207,39 @@ const DemoEnterpriseChat = ({
               )}
             </Typography>
           )}
-          <Typography
-            variant="h6"
-            component="div"
-            className="enterprise-pdf-icon"
-            onClick={handleSeePdfClick}
-          >
-            <Tooltip title="Enterprise document" arrow>
-              <span className="cursor-pointer flex">
-                <PictureAsPdfIcon />
-              </span>
-            </Tooltip>
-          </Typography>
-          {showPdfGrid && (
-            <Grid container spacing={2} className="enterprise-pdf-btn">
-              {answer?.enterprisePdfNames.map((pdfName, index) => (
-                <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
-                  <div
-                    className="enterprise-pdf-thumbnail"
-                    onClick={() => handleItemClick(pdfName)}
-                  >
-                    <Tooltip title={pdfName} arrow>
-                      <Typography className="enterprise-pdf-name">
-                        {getShortPdfName(pdfName)}
-                      </Typography>
-                    </Tooltip>
-                  </div>
+          {answer.enterprisePdfNames && (
+            <React.Fragment>
+              <Typography
+                variant="h6"
+                component="div"
+                className="enterprise-pdf-icon"
+                onClick={handleSeePdfClick}
+              >
+                <Tooltip title="Enterprise document" arrow>
+                  <span className="cursor-pointer flex">
+                    <PictureAsPdfIcon />
+                  </span>
+                </Tooltip>
+              </Typography>
+              {showPdfGrid && (
+                <Grid container spacing={2} className="enterprise-pdf-btn">
+                  {answer?.enterprisePdfNames.map((pdfName, index) => (
+                    <Grid item lg={4} md={6} sm={6} xs={12} key={index}>
+                      <div
+                        className="enterprise-pdf-thumbnail"
+                        onClick={() => handleItemClick(pdfName)}
+                      >
+                        <Tooltip title={pdfName} arrow>
+                          <Typography className="enterprise-pdf-name">
+                            {getShortPdfName(pdfName)}
+                          </Typography>
+                        </Tooltip>
+                      </div>
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
+              )}
+            </React.Fragment>
           )}
         </Paper>
         <PdfModal
