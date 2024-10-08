@@ -134,7 +134,7 @@ const NewHomePageMui = () => {
   };
 
   useEffect(() => {
-    setIsSubmitting(false);
+    setIsSubmitting(false);    
     activeChatIdRef.current = chatId;
     sessionStorage.removeItem(agentChatResponse.searchQuery);
   }, [chatId])
@@ -264,36 +264,34 @@ const NewHomePageMui = () => {
       if (response.status === 200 || response.status >= 300) {
         setHasMore(true);
         setInitialChatOpen(false);
-        if (activeChatIdRef.current === response.data.chatId) {
-          navigate(`/${response.data.chatId}`);
-          if (
-            remainingMsgData?.totalMessageLeft <= 0 &&
-            remainingMsgData?.totalTaskLeft <= 0 &&
-            updateCustomerId?.isPlanSubscribed
-          ) {
-            navigate("/membership");
-            return;
-          } else {
-            setShouldScroll(true);
-            setIsSubmitting(false);
-            setQueryAnswer(response.data);
-            setIsError(false);
-            setErrorMsg("");
-            const newChatId = response.data.chatId;
-            if (!selectedChatId && !searchHistory.length) {
-              setSelectedChatId(newChatId);
-            }
-
-            setSearchHistory((prevHistory) => {
-              const updatedHistory = [
-                ...prevHistory,
-                { query: searchQuery, response: response.data },
-              ];
-              sessionStorage.removeItem(agentChatResponse.searchQuery);
-              return updatedHistory;
-            });
-            fetchRemainingMessage();
+        navigate(`/${response.data.chatId}`);
+        if (
+          remainingMsgData?.totalMessageLeft <= 0 &&
+          remainingMsgData?.totalTaskLeft <= 0 &&
+          updateCustomerId?.isPlanSubscribed
+        ) {
+          navigate("/membership");
+          return;
+        } else {
+          setShouldScroll(true);
+          setIsSubmitting(false);
+          setQueryAnswer(response.data);
+          setIsError(false);
+          setErrorMsg("");
+          const newChatId = response.data.chatId;
+          if (!selectedChatId && !searchHistory.length) {
+            setSelectedChatId(newChatId);
           }
+
+          setSearchHistory((prevHistory) => {
+            const updatedHistory = [
+              ...prevHistory,
+              { query: searchQuery, response: response.data },
+            ];
+            sessionStorage.removeItem(agentChatResponse.searchQuery);
+            return updatedHistory;
+          });
+          fetchRemainingMessage();
         }
       }
     } catch (error) {
