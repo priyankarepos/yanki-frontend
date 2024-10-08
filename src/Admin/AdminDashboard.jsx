@@ -82,6 +82,7 @@ const AdminDashboard = () => {
         open={isSmallScreen ? !drawerOpen : drawerOpen}
         onClose={() => toggleDrawer()}
         variant="persistent"
+        className={classNames.adminDashboardSidebarDrawer}
       >
         <div className="admin-dashboard-sidebar">
           <List>

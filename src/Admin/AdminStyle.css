@@ -525,9 +525,12 @@ span.react-tagsinput-tags,
 .admin-dashboard-appbar {
   background-color:  #022b4f !important;
   color: #fff !important;
-  z-index: 9999 !important;
   box-shadow: none !important;
   background-image: none !important;
+}
+
+.admin-dashboard-sidebar-drawer div{
+  z-index: 0;
 }
 
 .search-query-cell {

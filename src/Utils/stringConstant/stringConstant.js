@@ -177,6 +177,9 @@ export const classNames = {
     enterprisePdfAnswerModal: "enterprise-pdfAnswer-modal",
     pdfModal: "pdf-modal",
     enterprisePdfImg: "enterprise-pdf-img",
+    pdfContent: "pdfContent",
+    adminDashboardSidebarDrawer: "admin-dashboard-sidebar-drawer",
+    naText: "N/A",
 };
 
 export const apiUrls = {

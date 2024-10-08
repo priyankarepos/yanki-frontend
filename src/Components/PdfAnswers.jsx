@@ -94,14 +94,11 @@ const PdfAnswers = ({ answer }) => {
             const viewport = page.getViewport({ scale: 1.0 });
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport,
-            };
+            const renderContext = { canvasContext: context, viewport: viewport };
             await page.render(renderContext).promise;
-            return canvas.toDataURL();
+            const thumbnailUrl = canvas.toDataURL();
+            return thumbnailUrl;
         } catch (error) {
-            console.error(`Failed to generate thumbnail for ${pdfName}:`, error);
             return null;
         }
     }, [s3BaseUrl]);
@@ -111,24 +108,30 @@ const PdfAnswers = ({ answer }) => {
 
         const loadThumbnails = async () => {
             const newThumbnails = await Promise.all(
-                pdfNames.slice(thumbnailUrls.length, visiblePdfCount).map(async (pdfName) => {
-                    setLoadingThumbnails((prev) => [...prev, true]);
+                pdfNames.slice(thumbnailUrls.length, visiblePdfCount).map(async (pdfName, index) => {
+                    setLoadingThumbnails((prev) => {
+                        const updatedLoading = [...prev];
+                        updatedLoading[thumbnailUrls.length + index] = true;
+                        return updatedLoading;
+                    });
+
                     const thumbnailUrl = await generateThumbnail(pdfName);
-                    return { thumbnailUrl, index: thumbnailUrls.length };
+
+                    setLoadingThumbnails((prev) => {
+                        const updatedLoading = [...prev];
+                        updatedLoading[thumbnailUrls.length + index] = false;
+                        return updatedLoading;
+                    });
+
+                    return thumbnailUrl;
                 })
             );
 
-            setThumbnailUrls((prev) => [
-                ...prev,
-                ...newThumbnails.map(({ thumbnailUrl }) => thumbnailUrl),
-            ]);
-            setLoadingThumbnails((prev) => [
-                ...prev.slice(0, thumbnailUrls.length),
-                ...newThumbnails.map(() => false),
-            ]);
+            setThumbnailUrls((prev) => [...prev, ...newThumbnails]);
         };
 
         if (pdfNames.length > thumbnailUrls.length) {
+            setLoadingThumbnails(new Array(pdfNames.length).fill(false));
             loadThumbnails();
         }
     }, [pdfNames, visiblePdfCount, generateThumbnail, thumbnailUrls.length]);

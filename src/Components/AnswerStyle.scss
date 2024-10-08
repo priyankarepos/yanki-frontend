@@ -248,7 +248,8 @@ p.kosher-text strong {
   cursor: pointer;
 }
 
-.enterprise-detail-text a, a:active {
+.enterprise-detail-text a,
+a:active {
   color: #007bff;
 }
 
@@ -363,11 +364,12 @@ ul {
   padding-right: 0 !important;
   padding-left: 0 !important;
 }
-.pdf-loader-container{
+
+.pdf-loader-container {
   display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150px;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
 }
 
 audio {
@@ -375,6 +377,11 @@ audio {
   margin-bottom: 10px;
 }
 
-.white-color{
+.white-color {
   color: #fff;
+}
+
+.pdfContent {
+  height: 100%;
+  overflow-y: auto;
 }

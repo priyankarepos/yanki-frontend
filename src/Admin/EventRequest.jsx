@@ -602,7 +602,7 @@ const AdminEventRequest = () => {
                       <TableRow key={index}>
                         <TableCell className="event-cell">{event.eventName}</TableCell>
                         <TableCell className="event-cell">{event.eventLocation.join(", ")}</TableCell>
-                        <TableCell className="event-cell">{event.eventAddress}</TableCell>
+                        <TableCell className="event-cell">{event.eventAddress ? event.eventAddress : classNames.naText}</TableCell>
                         <TableCell className="event-cell">
                           {new Date(event.eventDateAndTime).toLocaleDateString()}
                         </TableCell>
