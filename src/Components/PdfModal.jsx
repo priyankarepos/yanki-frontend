@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { apiUrls, classNames, messages } from "../Utils/stringConstant/stringConstant";
+import "./AnswerStyle.scss";
 
 const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ const PdfModal = ({ isOpen, onClose, pdfUrl, isPdf }) => {
           <CloseIcon />
         </IconButton>
         {!pdfLoadError ? (
-          <div>
+          <div className={classNames.pdfContent}>
             {isPdf ? (
               <Worker
                 workerUrl={apiUrls.workerUrl(pdfjs.version)}
