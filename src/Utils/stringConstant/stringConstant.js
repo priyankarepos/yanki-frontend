@@ -92,7 +92,10 @@ export const messages = {
     enterpriseDetailText: "enterprise-detail-text",
     foundedYear: "Founded Year:",
     close: "close",
-    pdfDocument: "PDF Document"
+    pdfDocument: "PDF Document",
+    shareTextMessage: "Share text Message",
+    shareOnWhatsApp: "Share on WhatsApp",
+    shareViaEmail: "Share via Email"
 };
 
 export const classNames = {

@@ -97,8 +97,8 @@ const NewHomePageMui = () => {
     const storedOption = localStorage.getItem(sourceSelectionStrings.localStorageKey);
     return storedOption || sourceSelectionStrings.defaultOption;
   });
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedDeleteChatId, setSelectedDeleteChatId] = useState(null);
   const { themeMode } = useContext(ThemeModeContext);
   const { userLatitude, userLongitude, isLocationAllowed } =
     useContext(Context);
@@ -106,6 +106,7 @@ const NewHomePageMui = () => {
   const itemRefs = useRef({});
   const textFieldRef = useRef(null);
   const chatSessionIdRef = useRef(null);
+  const activeChatIdRef = useRef(null);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isLargeScreen = useMediaQuery("(min-width: 567px)");
   const fontSize = isSmallScreen ? "14px" : "16px";
@@ -131,6 +132,12 @@ const NewHomePageMui = () => {
   const changeLanguage = (code) => {
     i18n.changeLanguage(code);
   };
+
+  useEffect(() => {
+    setIsSubmitting(false);
+    activeChatIdRef.current = chatId;
+    sessionStorage.removeItem(agentChatResponse.searchQuery);
+  }, [chatId])
 
   const handleChangeLanguage = async () => {
     try {
@@ -257,34 +264,36 @@ const NewHomePageMui = () => {
       if (response.status === 200 || response.status >= 300) {
         setHasMore(true);
         setInitialChatOpen(false);
-        navigate(`/${response.data.chatId}`);
-        if (
-          remainingMsgData?.totalMessageLeft <= 0 &&
-          remainingMsgData?.totalTaskLeft <= 0 &&
-          updateCustomerId?.isPlanSubscribed
-        ) {
-          navigate("/membership");
-          return;
-        } else {
-          setShouldScroll(true);
-          setIsSubmitting(false);
-          setQueryAnswer(response.data);
-          setIsError(false);
-          setErrorMsg("");
-          const newChatId = response.data.chatId;
-          if (!selectedChatId && !searchHistory.length) {
-            setSelectedChatId(newChatId);
-          }
+        if (activeChatIdRef.current === response.data.chatId) {
+          navigate(`/${response.data.chatId}`);
+          if (
+            remainingMsgData?.totalMessageLeft <= 0 &&
+            remainingMsgData?.totalTaskLeft <= 0 &&
+            updateCustomerId?.isPlanSubscribed
+          ) {
+            navigate("/membership");
+            return;
+          } else {
+            setShouldScroll(true);
+            setIsSubmitting(false);
+            setQueryAnswer(response.data);
+            setIsError(false);
+            setErrorMsg("");
+            const newChatId = response.data.chatId;
+            if (!selectedChatId && !searchHistory.length) {
+              setSelectedChatId(newChatId);
+            }
 
-          setSearchHistory((prevHistory) => {
-            const updatedHistory = [
-              ...prevHistory,
-              { query: searchQuery, response: response.data },
-            ];
-            sessionStorage.removeItem("searchQuery");
-            return updatedHistory;
-          });
-          fetchRemainingMessage();
+            setSearchHistory((prevHistory) => {
+              const updatedHistory = [
+                ...prevHistory,
+                { query: searchQuery, response: response.data },
+              ];
+              sessionStorage.removeItem(agentChatResponse.searchQuery);
+              return updatedHistory;
+            });
+            fetchRemainingMessage();
+          }
         }
       }
     } catch (error) {
@@ -575,19 +584,19 @@ const NewHomePageMui = () => {
 
   const handleDeleteClick = (id) => {
     setConfirmDialogOpen(true);
-    setSelectedChatId(id);
+    setSelectedDeleteChatId(id);
     setConfirmationText(`Are you sure you want to delete this chat?`);
   };
 
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        membershipApiUrls.deleteChatSession(selectedChatId)
+        membershipApiUrls.deleteChatSession(selectedDeleteChatId)
       );
 
       if (response.status === 200) {
         const updatedChatSessions = chatSessions.filter(
-          (session) => session.id !== selectedChatId
+          (session) => session.id !== selectedDeleteChatId
         );
         setChatSessions(updatedChatSessions);
         setSnackbarMessage(response?.data?.message);
