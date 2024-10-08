@@ -8,6 +8,7 @@ import {
   Snackbar,
   CircularProgress,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 import shareChatIcon1 from "../../Assets/images/share-chat1.svg";
@@ -144,25 +145,36 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
         </Typography>
         <Box mb={2}>
           <Typography className={classNames.sharedChatMsgTitle}>
-            {t('sharePublicLinkToChat')}
+            {t("sharePublicLinkToChat")}
           </Typography>
           <Typography className={classNames.sharedChatMsgTxt}>
             {linkGenerated
-              ? t('publicLinkCreated')
-              : t('yourNameAndMessagesStayPrivate')}
+              ? t("publicLinkCreated")
+              : t("yourNameAndMessagesStayPrivate")}
           </Typography>
         </Box>
         {linkGenerated && (
           <Box className={classNames.sharedChatLinkIcons} mt={2}>
-            <Button onClick={handleShareMessage}>
-              <img src={shareChatIcon1} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button onClick={handleShareWhatsApp}>
-              <img src={shareChatIcon2} alt={messages.shareLinkIconAlt} />
-            </Button>
-            <Button className="sharechat-mail-icon" onClick={handleShareEmail}>
-              <EmailIcon />
-            </Button>
+            <Tooltip title={messages.shareTextMessage}>
+              <Button onClick={handleShareMessage}>
+                <img src={shareChatIcon1} alt={messages.shareLinkIconAlt} />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title={messages.shareOnWhatsApp}>
+              <Button onClick={handleShareWhatsApp}>
+                <img src={shareChatIcon2} alt={messages.shareLinkIconAlt} />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title={messages.shareViaEmail}>
+              <Button
+                className="sharechat-mail-icon"
+                onClick={handleShareEmail}
+              >
+                <EmailIcon />
+              </Button>
+            </Tooltip>
           </Box>
         )}
         <Box className={classNames.sharedChatLinkInputBox}>
@@ -185,7 +197,10 @@ const ShareLinkModal = ({ open, onClose, selectedChatId }) => {
             disabled={isLoading}
           >
             {isLoading ? (
-              <CircularProgress size={24} className={classNames.copyLinkLoader} />
+              <CircularProgress
+                size={24}
+                className={classNames.copyLinkLoader}
+              />
             ) : (
               buttonText
             )}
