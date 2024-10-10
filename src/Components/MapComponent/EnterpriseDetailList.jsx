@@ -17,7 +17,6 @@ import {
     Button,
 } from "@mui/material";
 import {
-    Home as HomeIcon,
     Business as BusinessIcon,
     Phone as PhoneIcon,
     Schedule as ScheduleIcon,
@@ -43,7 +42,7 @@ import {
 } from "@react-google-maps/api";
 import { useTranslation } from "react-i18next";
 import PdfModal from "../PdfModal";
-import "./KosherMapComponent.scss";
+import "./EnterpriseDetailList.scss";
 
 const EnterpriseDetailList = ({ answer }) => {
 
@@ -56,7 +55,7 @@ const EnterpriseDetailList = ({ answer }) => {
     });
 
     const Row = ({ row }) => {
-        const [open, setOpen] = useState(false);
+        const [openDetails, setOpenDetails] = useState(false);
         const [enterpriseDetails, setEnterpriseDetail] = useState(null);
         const [response, setResponse] = useState(null);
         const [origin, setOrigin] = useState('');
@@ -65,6 +64,23 @@ const EnterpriseDetailList = ({ answer }) => {
         const [showMap, setShowMap] = useState(false);
         const [loadingDetails, setLoadingDetails] = useState(false);
         const [selectedPdf, setSelectedPdf] = useState(null);
+
+        const handleOpenEmailClient = (event) => {
+            event.preventDefault();
+            const emailToUse = enterpriseDetails?.enterpriseEmail;
+            const mailtoLink = `mailto:${emailToUse}?subject=${messages.emailSubject}&body=${messages.emailBody}`;
+            window.open(mailtoLink, '_blank');
+        };
+
+        const handleCall = (phoneNumber, event) => {
+            event.preventDefault();
+            if (phoneNumber && phoneNumber.trim() !== "") {
+                window.open(`tel:${phoneNumber}`, '_self');
+            } else {
+                setSnackbarMessage(t('invalidPhoneNumber'));
+                setSnackbarOpen(true);
+            }
+        };
 
         const getShortPdfName = (pdfUrl) => {
             return pdfUrl ? pdfUrl.split('/').pop() : '';
@@ -82,7 +98,7 @@ const EnterpriseDetailList = ({ answer }) => {
             if (isLocationAllowed === messages.locationAllowed && open && !origin) {
                 checkPermissionsAndFetchLocation();
             }
-        }, [isLocationAllowed, open, origin]);
+        }, [isLocationAllowed, openDetails, origin]);
 
         const fetchEnterpriseDetails = async () => {
             setLoadingDetails(true);
@@ -184,13 +200,12 @@ const EnterpriseDetailList = ({ answer }) => {
                 checkPermissionsAndFetchLocation();
             }
             if (isLocationAllowed === messages.locationAllowed) {
-                handleShowDetails();
+                handleShowDetails(false);
             }
         };
-
-        const handleShowDetails = () => {
-            setOpen(prevOpen => {
-                const newOpen = !prevOpen;
+        const handleShowDetails = (toggle = true) => {
+            setOpenDetails(prevOpen => {
+                const newOpen = toggle ? !prevOpen : prevOpen;
                 if (newOpen) {
                     fetchEnterpriseDetails();
                 } else {
@@ -201,11 +216,15 @@ const EnterpriseDetailList = ({ answer }) => {
         };
         const handleLocationIconClick = () => {
             if (isLocationAllowed === messages.locationAllowed) {
+                if (!openDetails) {
+                    // Open both the details and map on the first click
+                    setOpenDetails(true);
+                }
                 handleSetDestination();
             } else {
                 setSnackbarMessage(`${t('enableLocationAccess')}`);
                 setSnackbarOpen(true);
-                handleShowDetails();
+                handleShowDetails(false);
             }
         };
 
@@ -220,15 +239,15 @@ const EnterpriseDetailList = ({ answer }) => {
         return (
             <>
                 <TableRow>
-                    <TableCell onClick={handleShowDetails} sx={{ cursor: messages.cursorPointer }}>
-                        <p>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
+                    <TableCell onClick={() => handleShowDetails()} sx={{ cursor: messages.cursorPointer }}>
+                        <p>{openDetails ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
                     </TableCell>
-                    <TableCell onClick={handleShowDetails} sx={{ cursor: messages.cursorPointer }}>
+                    <TableCell onClick={() => handleShowDetails()} sx={{ cursor: messages.cursorPointer }}>
                         <Tooltip title={row.enterpriseName}>
                             <span>{row.enterpriseName ? row.enterpriseName : messages.notAvailable}</span>
                         </Tooltip>
                     </TableCell>
-                    <TableCell onClick={handleShowDetails} sx={{ cursor: messages.cursorPointer }}>
+                    <TableCell onClick={() => handleShowDetails()} sx={{ cursor: messages.cursorPointer }}>
                         <Tooltip title={row.enterpriseAddress.trim() || messages.notAvailable}>
                             <div className={messages.govadenAnswerTooltip}>
                                 {row.enterpriseAddress.trim() ? row.enterpriseAddress : messages.notAvailable}
@@ -245,7 +264,7 @@ const EnterpriseDetailList = ({ answer }) => {
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
-                        <Collapse in={open} unmountOnExit>
+                        <Collapse in={openDetails} unmountOnExit>
                             <Box sx={{ margin: 1 }} className={`${showMap ? messages.displayNoneClass : ""} ${messages.mikvahDetailBox}`}>
                                 {enterpriseDetails ? (
                                     <Grid container spacing={2}>
@@ -299,8 +318,10 @@ const EnterpriseDetailList = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('emailAddress')}:</strong>
                                                     </Typography>
-                                                    <Typography>
-                                                        {enterpriseDetails?.enterpriseEmail?.trim() ? enterpriseDetails.enterpriseEmail : messages.notAvailable}
+                                                    <Typography className={classNames.emailClick}>
+                                                        <a onClick={handleOpenEmailClient}>
+                                                            {enterpriseDetails?.enterpriseEmail ? enterpriseDetails.enterpriseEmail : messages.notAvailable}
+                                                        </a>
                                                     </Typography>
                                                 </Box>
                                             </Box>
@@ -314,7 +335,11 @@ const EnterpriseDetailList = ({ answer }) => {
                                                     <Typography>
                                                         <strong>{t('phoneNumber')}</strong>
                                                     </Typography>
-                                                    {enterpriseDetails?.enterprisePhoneNumber.trim() ? <div><Typography>{enterpriseDetails.enterprisePhoneNumber}</Typography>
+                                                    {enterpriseDetails?.enterprisePhoneNumber.trim() ? <div><Typography className={classNames.emailClick}>
+                                                        <a onClick={(event) => handleCall(enterpriseDetails?.enterprisePhoneNumber, event)}>
+                                                            {enterpriseDetails?.enterprisePhoneNumber ? enterpriseDetails.enterprisePhoneNumber : messages.notAvailable}
+                                                        </a>
+                                                    </Typography>
                                                     </div> : <Typography>NA</Typography>}
                                                 </Box>
                                             </Box>

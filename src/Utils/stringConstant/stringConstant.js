@@ -95,7 +95,9 @@ export const messages = {
     pdfDocument: "PDF Document",
     shareTextMessage: "Share text Message",
     shareOnWhatsApp: "Share on WhatsApp",
-    shareViaEmail: "Share via Email"
+    shareViaEmail: "Share via Email",
+    emailSubject: "Email subject",
+    emailBody: "Email body",
 };
 
 export const classNames = {
@@ -187,6 +189,7 @@ export const classNames = {
     enterprisePdfThumbnail: "enterprise-pdf-thumbnail",
     enterpriseDetailPdfThumbnail: "enterprise-detail-pdf-thumbnail",
     enterprisePdfName: "enterprise-pdf-name",
+    emailClick: "email-click",
 };
 
 export const apiUrls = {
