@@ -51,7 +51,7 @@ const MikvahAnswer = ({ answer }) => {
     });
 
     const Row = ({ row }) => {
-        const [open, setOpen] = useState(false);
+        const [openDetails, setOpenDetails] = useState(false);
         const [mikvahDetails, setMikvahDetails] = useState(null);
         const [response, setResponse] = useState(null);
         const [origin, setOrigin] = useState('');
@@ -161,14 +161,14 @@ const MikvahAnswer = ({ answer }) => {
             } else {
                 checkPermissionsAndFetchLocation();
             }
-            if(isLocationAllowed === messages.locationAllowed){
-                handleShowDetails();
+            if (isLocationAllowed === messages.locationAllowed) {
+                handleShowDetails(false);
             }
         };
 
-        const handleShowDetails = () => {
-            setOpen(prevOpen => {
-                const newOpen = !prevOpen;
+        const handleShowDetails = (toggle = true) => {
+            setOpenDetails(prevOpen => {
+                const newOpen = toggle ? !prevOpen : prevOpen;
                 if (newOpen) {
                     fetchMikvahDetails();
                 } else {
@@ -179,11 +179,14 @@ const MikvahAnswer = ({ answer }) => {
         };
         const handleLocationIconClick = () => {
             if (isLocationAllowed === messages.locationAllowed) {
+                if (!openDetails) {
+                    setOpenDetails(true);
+                }
                 handleSetDestination();
-            }else {
+            } else {
                 setSnackbarMessage(`${t('enableLocationAccess')}`);
-                setSnackbarOpen(true); 
-                handleShowDetails(); 
+                setSnackbarOpen(true);
+                handleShowDetails(false);
             }
         };
 
@@ -199,7 +202,7 @@ const MikvahAnswer = ({ answer }) => {
             <>
                 <TableRow>
                     <TableCell onClick={handleShowDetails} sx={{ cursor: messages.cursorPointer }}>
-                        <p>{open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
+                        <p>{openDetails ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}</p>
                     </TableCell>
                     <TableCell onClick={handleShowDetails} sx={{ cursor: messages.cursorPointer }}>
                         <Tooltip title={row.name}>
@@ -223,7 +226,7 @@ const MikvahAnswer = ({ answer }) => {
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
-                        <Collapse in={open} unmountOnExit>
+                        <Collapse in={openDetails} unmountOnExit>
                             <Box sx={{ margin: 1 }} className={`${showMap ? messages.displayNoneClass : ""} ${messages.mikvahDetailBox}`}>
                                 {mikvahDetails ? (
                                     <Grid container spacing={2}>

@@ -98,6 +98,7 @@ export const messages = {
     shareViaEmail: "Share via Email",
     emailSubject: "Email subject",
     emailBody: "Email body",
+    enterpriseDetailBox: "enterprise-Detail-Box",
 };
 
 export const classNames = {
@@ -190,6 +191,7 @@ export const classNames = {
     enterpriseDetailPdfThumbnail: "enterprise-detail-pdf-thumbnail",
     enterprisePdfName: "enterprise-pdf-name",
     emailClick: "email-click",
+    mobileLastBorderHide: "mobile-last-border-hide",
 };
 
 export const apiUrls = {

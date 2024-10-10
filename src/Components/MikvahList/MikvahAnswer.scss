@@ -21,3 +21,15 @@
     border: 1px solid #4a6a86;
 }
 
+@media (max-width: 768px) { 
+    .mikvah-detail-box {
+        .mikvah-detail-info:last-child {
+            border-bottom: 1px solid #4a6a86;
+            padding-bottom: 15px; 
+        }
+        .mobile-last-border-hide{
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+        }
+    }
+}

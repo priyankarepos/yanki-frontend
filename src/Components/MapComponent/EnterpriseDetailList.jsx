@@ -265,10 +265,10 @@ const EnterpriseDetailList = ({ answer }) => {
                 <TableRow>
                     <TableCell sx={{ py: 0 }} colSpan={6} className={activeTab === 0 && messages.mikvahDetailWrapper}>
                         <Collapse in={openDetails} unmountOnExit>
-                            <Box sx={{ margin: 1 }} className={`${showMap ? messages.displayNoneClass : ""} ${messages.mikvahDetailBox}`}>
+                            <Box sx={{ margin: 1 }} className={`${showMap ? messages.displayNoneClass : ""} ${messages.mikvahDetailBox} ${messages.enterpriseDetailBox}`}>
                                 {enterpriseDetails ? (
                                     <Grid container spacing={2}>
-                                        <Grid item lg={6} md={6} sm={6} xs={12}>
+                                        <Grid item lg={6} md={6} sm={12} xs={12}>
                                             <Box className={messages.mikvahDetailInfo}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
                                                     <BusinessIcon />
@@ -319,14 +319,14 @@ const EnterpriseDetailList = ({ answer }) => {
                                                         <strong>{t('emailAddress')}:</strong>
                                                     </Typography>
                                                     <Typography className={classNames.emailClick}>
-                                                        <a onClick={handleOpenEmailClient}>
+                                                        <a href="#" onClick={handleOpenEmailClient}>
                                                             {enterpriseDetails?.enterpriseEmail ? enterpriseDetails.enterpriseEmail : messages.notAvailable}
                                                         </a>
                                                     </Typography>
                                                 </Box>
                                             </Box>
                                         </Grid>
-                                        <Grid item lg={6} md={6} sm={6} xs={12}>
+                                        <Grid item lg={6} md={6} sm={12} xs={12}>
                                             <Box className={messages.mikvahDetailInfo}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
                                                     <PhoneIcon />
@@ -367,7 +367,7 @@ const EnterpriseDetailList = ({ answer }) => {
                                                     </div> : <Typography>NA</Typography>}
                                                 </Box>
                                             </Box>
-                                            <Box className={messages.mikvahDetailInfo}>
+                                            <Box className={`${messages.mikvahDetailInfo} ${classNames.mobileLastBorderHide}`}>
                                                 <Typography className={messages.mikvahDetailInfoLogo}>
                                                     <ScheduleIcon />
                                                 </Typography>
