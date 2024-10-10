@@ -183,6 +183,10 @@ export const classNames = {
     pdfContent: "pdfContent",
     adminDashboardSidebarDrawer: "admin-dashboard-sidebar-drawer",
     naText: "N/A",
+    enterpriseDetailPdfBox: "enterprise-detail-pdf-box",
+    enterprisePdfThumbnail: "enterprise-pdf-thumbnail",
+    enterpriseDetailPdfThumbnail: "enterprise-detail-pdf-thumbnail",
+    enterprisePdfName: "enterprise-pdf-name",
 };
 
 export const apiUrls = {
@@ -236,6 +240,7 @@ export const apiUrls = {
         `${import.meta.env.VITE_APP_API_HOST}/api/events/get-allevents?pageNumber=${pageNumber}`,
     deleteDocument: `${import.meta.env.VITE_APP_API_HOST}/api/JewishPrayerTextIndex/delete-document`,
     workerUrl: (version) => `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`,
+    enterpriseDetailList: `${import.meta.env.VITE_APP_API_HOST}/api/yanki-ai/get-enterprise-details-by-id`,
 };
 
 export const membershipApiUrls = {

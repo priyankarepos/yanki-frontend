@@ -20,10 +20,10 @@ import ReminderNotification from "../Components/ReminderNotification/ReminderNot
 import HelpAgent from "../Components/HelpAgent/HelpAgent";
 import InteractiveQuestionnaire from "../Components/InteractiveQuestionnaire/InteractiveQuestionnaire";
 import MikvahAnswer from "../Components/MikvahList/MikvahList";
-import KosherMapComponent from "../Components/MapComponent/KosherMapComponent";
 import { messages } from "../Utils/stringConstant/stringConstant";
 import UserChatSession from "../Components/PersonalAssistant/UserChatSesion";
 import EnterpriseEventMsg from "../Components/EventPublication/EnterpriseEvent";
+import EnterpriseDetailList from "../Components/MapComponent/EnterpriseDetailList";
 
 const SearchHistoryItem = forwardRef(
   (
@@ -305,7 +305,7 @@ const SearchHistoryItem = forwardRef(
         {response?.isSuccess && response?.enterpriseLocation?.length > 0 && (
           <Paper elevation={3} className={messages.marginBottom10}>
             <div>
-              <KosherMapComponent answer={response} />
+              <EnterpriseDetailList answer={response} />
             </div>
           </Paper>
         )}

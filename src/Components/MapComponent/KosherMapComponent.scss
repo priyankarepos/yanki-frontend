@@ -14,3 +14,13 @@
         min-width: 30px !important;
     }
 }
+
+.enterprise-detail-pdf-box {
+    display: flex;
+    flex-wrap: wrap;
+
+    .enterprise-detail-pdf-thumbnail {
+        margin-bottom: 7px;
+        margin-right: 7px;
+    }
+}

@@ -506,7 +506,13 @@
             "torahAnytimeDescription": "Over 100000 Torah videos and lectures from hundreds of Rabbis and Speakers.",
             "isItKosherDescription": "Search in hundreds of databases worldwide and find kosher products.",
             "mikvahDescription": "Promoting and helping to observe the mitzvah of Mikvah and family purity.",
-            "platformManageSubscription": "Please manage your subscription through the {{platform}} app"
+            "platformManageSubscription": "Please manage your subscription through the {{platform}} app",
+            "errorFetchingenterpriseDetails": "Error fetching enterprise details",
+            "enterprisePointOfContact": "Enterprise Point of Contact",
+            "enterpriseDescription": "Enterprise Description",
+            "businessHoursOpeningTime": "Business Hours Opening Time",
+            "businessHoursClosingTime": "Business Hours Closing Time",
+            "filesOfInformationAndCertificates": "Files of Information and Certificates"
         }
     },
     "he": {
@@ -1016,7 +1022,13 @@
             "torahAnytimeDescription": "מעל 100,000 סרטונים והרצאות תורה ממאות רבנים ומרצים.",
             "isItKosherDescription": "חפש במאות מאגרי מידע ברחבי העולם ומצא מוצרים כשרים.",
             "mikvahDescription": "קידום וסיוע בשמירת מצוות המקווה וטהרת המשפחה.",
-            "platformManageSubscription": "אנא נהל את המנוי שלך דרך אפליקציית {{platform}}"
+            "platformManageSubscription": "אנא נהל את המנוי שלך דרך אפליקציית {{platform}}",
+            "errorFetchingenterpriseDetails": "שגיאה באחזור פרטי העסק",
+            "enterprisePointOfContact": "איש קשר של העסק",
+            "enterpriseDescription": "תיאור העסק",
+            "businessHoursOpeningTime": "שעת פתיחה של שעות הפעילות",
+            "businessHoursClosingTime": "שעת סגירה של שעות הפעילות",
+            "filesOfInformationAndCertificates": "קבצים של מידע ותעודות"
         }
     },
     "es": {
@@ -1527,7 +1539,13 @@
             "torahAnytimeDescription": "Más de 100,000 videos y conferencias de Torah de cientos de Rabinos y oradores.",
             "isItKosherDescription": "Busca en cientos de bases de datos en todo el mundo y encuentra productos kosher.",
             "mikvahDescription": "Promover y ayudar a cumplir con la mitzvá del mikvah y la pureza familiar.",
-            "platformManageSubscription": "Por favor, gestiona tu suscripción a través de la aplicación {{platform}}"
+            "platformManageSubscription": "Por favor, gestiona tu suscripción a través de la aplicación {{platform}}",
+            "errorFetchingenterpriseDetails": "Error al obtener los detalles de la empresa",
+            "enterprisePointOfContact": "Punto de contacto de la empresa",
+            "enterpriseDescription": "Descripción de la empresa",
+            "businessHoursOpeningTime": "Hora de apertura del horario comercial",
+            "businessHoursClosingTime": "Hora de cierre del horario comercial",
+            "filesOfInformationAndCertificates": "Archivos de información y certificados"
         }
     },
     "yi": {
@@ -2037,7 +2055,13 @@
             "torahAnytimeDescription": "איבער 100,000 תּורה ווידעאָס און לעקציעס פון הונדערטער רבנים און רעדנער.",
             "isItKosherDescription": "זוך אין הונדערטער דאַטאַבייסעס ווערלדווייד און געפֿינען כָּשֵׁר פּראָדוקטן.",
             "mikvahDescription": "פּראָמאָטירן און העלפֿן צו היטן די מצווה פֿון מִקְוֶה און משפּחה ריינקייט.",
-            "platformManageSubscription": "ביטע פירן דיין אַבאָנעמענט דורך די {{platform}} אַפּ"
+            "platformManageSubscription": "ביטע פירן דיין אַבאָנעמענט דורך די {{platform}} אַפּ",
+            "errorFetchingenterpriseDetails": "טעות אין באקומען געשעפט דעטאלן",
+            "enterprisePointOfContact": "קאָנטאַקט פערסאן פֿון די געשעפט",
+            "enterpriseDescription": "באַשרייַבונג פון די געשעפט",
+            "businessHoursOpeningTime": "עפֿן צייט פון געשעפט שעות",
+            "businessHoursClosingTime": "פֿאַרמאַכן צייט פון געשעפט שעות",
+            "filesOfInformationAndCertificates": "טעקעס פון אינפֿאָרמאַציע און סערטיפיקאַץ"
         }
     }
 }
