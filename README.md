@@ -35,3 +35,4 @@ The build is minified and the filenames include the hashes and app is ready to b
 ## Acknowledgements
 
 The yanki-frontend is built using API that uses the MyZmanim service, which provides accurate and comprehensive Jewish prayer time calculations. The API also incorporates NLP capabilities using the OpenAI to generate dynamic responses based on user queries.
+"# yanki-frontend" 
